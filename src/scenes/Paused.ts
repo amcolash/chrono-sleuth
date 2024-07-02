@@ -11,10 +11,10 @@ export class Paused extends Scene {
 
     this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.75);
 
-    this.add.text(width / 2, 300, 'Paused', { fontSize: 96 }).setOrigin(0.5);
+    this.add.text(width / 2, 300, 'Paused', { fontFamily: 'sans', fontSize: 96 }).setOrigin(0.5);
 
     const resume = this.add
-      .text(width / 2, 450, 'Resume', { fontSize: 48, backgroundColor: '#05a', padding: { x: 20, y: 20 } })
+      .text(width / 2, 450, 'Resume', { fontFamily: 'sans', fontSize: 48, backgroundColor: '#05a', padding: { x: 20, y: 20 } })
       .setOrigin(0.5);
 
     // Button interactions

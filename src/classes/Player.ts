@@ -1,3 +1,4 @@
+import { rewindInterval, rewindSpeed } from '../scenes/Game';
 import { createWalkAnimations, updateAnim } from '../utils/animations';
 import { Interactive, Rewindable } from './types';
 
@@ -5,12 +6,11 @@ const texture = 'robot';
 const size = 2.5;
 const speed = 120 * size;
 
-let counter = 0;
-
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined;
   interactive?: Interactive;
 
+  counter: number = 0;
   history: Phaser.Math.Vector3[] = [];
   rewinding = false;
 
@@ -26,6 +26,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     this.setBodySize(24, 36);
     this.setOffset(0, 0);
     this.setPushable(false);
+    this.depth = 1;
 
     this.scale = size;
 
@@ -41,11 +42,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
   update(_time: number, delta: number) {
     if (this.rewinding) {
-      if (counter + delta > 50) {
+      if (this.counter + delta > rewindInterval / rewindSpeed) {
         this.rewind();
-        counter = 0;
+        this.counter = 0;
       }
-      counter += delta;
+      this.counter += delta;
     } else {
       this.updateVelocity();
     }
@@ -62,7 +63,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   }
 
   record() {
-    this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
+    if (this.history.length < 1000) this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
   }
 
   rewind() {
@@ -78,6 +79,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
   setRewind(rewind: boolean): void {
     this.rewinding = rewind;
+    this.counter = 0;
   }
 
   setInteractiveObject(interactive?: Interactive) {

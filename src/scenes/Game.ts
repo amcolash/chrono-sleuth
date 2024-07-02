@@ -4,17 +4,22 @@ import { Colors } from '../utils/colors';
 import { Stairs } from '../classes/Stairs';
 import { Rewindable } from '../classes/types';
 
-const gameTime = 1000 * 60 * 5;
-const rewindStep = 250;
-let count = 0;
+export const gameTime = 1000 * 10;
+export const rewindInterval = 250;
+export const rewindSpeed = 8;
 
 export class Game extends Scene {
   player: Player;
   text: GameObjects.Text;
+  text2: GameObjects.Text;
+  bar: GameObjects.Rectangle;
   stairs: GameObjects.Group;
-  clock: number;
   keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined;
+
+  clock: number;
   rewindable: Rewindable[];
+  rewinding: boolean = false;
+  count: number = 0;
 
   constructor() {
     super('Game');
@@ -33,7 +38,8 @@ export class Game extends Scene {
     const stairs1 = new Stairs(this, 0, this.player);
     const stairs2 = new Stairs(this, 1, this.player);
 
-    this.text = this.add.text(10, 10, '', { font: '16px sans', color: `#${Colors.White}` }).setScrollFactor(0);
+    this.text = this.add.text(10, 20, '', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }).setScrollFactor(0);
+    this.bar = this.add.rectangle(0, this.game.config.height - 6, 0, 6, 0xccaa00).setScrollFactor(0);
 
     // groups (for automatically updating)
 
@@ -66,10 +72,12 @@ export class Game extends Scene {
     });
 
     this.input.keyboard?.on('keydown-SHIFT', () => {
+      this.rewinding = true;
       this.rewindable.forEach((r) => r.setRewind(true));
     });
 
     this.input.keyboard?.on('keyup-SHIFT', () => {
+      this.rewinding = false;
       this.rewindable.forEach((r) => r.setRewind(false));
     });
 
@@ -78,22 +86,36 @@ export class Game extends Scene {
   }
 
   update(_time: number, delta: number): void {
+    if (this.clock > gameTime) {
+      this.text2 = this.add.text(250, 250, 'Day Over', { fontFamily: 'sans', fontSize: 96 }).setScrollFactor(0);
+
+      this.rewinding = true;
+      this.rewindable.forEach((r) => r.setRewind(true));
+    }
+
     if (!this.physics.overlap(this.player, this.stairs)) {
       this.player.setInteractiveObject(undefined);
     }
 
-    if (this.keys?.SHIFT.isDown && this.clock > rewindStep) {
-      this.clock -= (delta / 1000) * rewindStep;
-    } else {
-      if (count > rewindStep) {
-        this.rewindable.forEach((r) => r.record());
-        count = 0;
+    if (this.rewinding) {
+      if (this.clock > 0) {
+        this.clock = Math.max(0, this.clock - delta * rewindSpeed);
+      } else {
+        this.rewinding = false;
+        this.rewindable.forEach((r) => r.setRewind(false));
+        this.text2?.destroy();
       }
-      count += delta;
+    } else {
+      if (this.count > rewindInterval) {
+        this.rewindable.forEach((r) => r.record());
+        this.count = 0;
+      }
 
+      this.count += delta;
       this.clock += delta;
     }
 
     this.text.setText(`Time: ${Math.floor(this.clock / 1000)}`);
+    this.bar.width = (this.clock / gameTime) * this.game.config.width;
   }
 }
