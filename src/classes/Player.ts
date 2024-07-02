@@ -1,17 +1,18 @@
 import { createWalkAnimations, updateAnim } from '../utils/animations';
-import { Interactive } from './types';
+import { Interactive, Rewindable } from './types';
 
 const texture = 'robot';
 const size = 2.5;
 const speed = 120 * size;
 
-const steps = 30;
+let counter = 0;
 
-export class Player extends Phaser.Physics.Arcade.Sprite {
+export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined;
   interactive?: Interactive;
-  history: { x: number; y: number }[] = [];
-  count: number = 0;
+
+  history: Phaser.Math.Vector3[] = [];
+  rewinding = false;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, texture, 6);
@@ -38,23 +39,45 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.anims.play('walk');
   }
 
-  update() {
-    this.updateVelocity();
+  update(_time: number, delta: number) {
+    if (this.rewinding) {
+      if (counter + delta > 50) {
+        this.rewind();
+        counter = 0;
+      }
+      counter += delta;
+    } else {
+      this.updateVelocity();
+    }
 
-    if (Math.abs(this.body?.velocity.x || 0) > 0) {
+    const v = this.body?.velocity.x || 0;
+    const flipped = v < 0;
+    if (Math.abs(v) > 0) {
       this.anims.resume();
-      this.flipX = (this.body?.velocity.x || 0) < 0;
+      this.flipX = this.rewinding ? !flipped : flipped;
     } else this.anims.pause();
     // updateAnim(texture, this);
 
-    this.setTint(this.interactive ? 0xff0000 : 0xffffff);
+    this.setTint(this.interactive ? 0xffcccc : 0xffffff);
+  }
 
-    if (this.history.length < 2000 && this.count % steps === 0) {
-      this.history.push({ x: this.x, y: this.y });
-      this.count = 0;
+  record() {
+    this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
+  }
+
+  rewind() {
+    this.setVelocityX(0);
+
+    const point = this.history.pop();
+    if (point) {
+      this.x = point.x;
+      this.y = point.y;
+      this.setVelocityX(-point.z);
     }
+  }
 
-    this.count++;
+  setRewind(rewind: boolean): void {
+    this.rewinding = rewind;
   }
 
   setInteractiveObject(interactive?: Interactive) {
@@ -72,16 +95,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       };
 
       this.setVelocity(0);
-
-      if (keys.shift && this.history.length > 0) {
-        const point = this.history.pop();
-        if (point) {
-          this.x = point.x;
-          this.y = point.y;
-        }
-
-        return;
-      }
 
       if (this.interactive) {
         const ret = this.interactive.onInteract(this.keys);

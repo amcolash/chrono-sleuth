@@ -2,12 +2,19 @@ import { Scene, GameObjects } from 'phaser';
 import { Player } from '../classes/Player';
 import { Colors } from '../utils/colors';
 import { Stairs } from '../classes/Stairs';
+import { Rewindable } from '../classes/types';
+
+const gameTime = 1000 * 60 * 5;
+const rewindStep = 250;
+let count = 0;
 
 export class Game extends Scene {
   player: Player;
   text: GameObjects.Text;
   stairs: GameObjects.Group;
   clock: number;
+  keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined;
+  rewindable: Rewindable[];
 
   constructor() {
     super('Game');
@@ -15,6 +22,9 @@ export class Game extends Scene {
   }
 
   create() {
+    // input
+    this.keys = this.input.keyboard?.addKeys('SHIFT') as { [key: string]: Phaser.Input.Keyboard.Key };
+
     // game objects
     this.add.sprite(0, 0, 'town').setOrigin(0, 0);
     // const walls = new Walls(this);
@@ -34,6 +44,9 @@ export class Game extends Scene {
     // update items added to the group
     this.add.group([this.player], { runChildUpdate: true });
 
+    // rewindable objects
+    this.rewindable = [this.player];
+
     // TODO: Figure out how to get this to unset when no collisions. Alternatively, find an event for "un-collide"
     // collisions
     this.physics.add.overlap(
@@ -52,16 +65,35 @@ export class Game extends Scene {
       this.scene.launch('Paused');
     });
 
+    this.input.keyboard?.on('keydown-SHIFT', () => {
+      this.rewindable.forEach((r) => r.setRewind(true));
+    });
+
+    this.input.keyboard?.on('keyup-SHIFT', () => {
+      this.rewindable.forEach((r) => r.setRewind(false));
+    });
+
     // setup
     this.cameras.main.startFollow(this.player);
   }
 
-  update(time: number, delta: number): void {
+  update(_time: number, delta: number): void {
     if (!this.physics.overlap(this.player, this.stairs)) {
       this.player.setInteractiveObject(undefined);
     }
 
-    this.clock += delta;
+    if (this.keys?.SHIFT.isDown && this.clock > rewindStep) {
+      this.clock -= (delta / 1000) * rewindStep;
+    } else {
+      if (count > rewindStep) {
+        this.rewindable.forEach((r) => r.record());
+        count = 0;
+      }
+      count += delta;
+
+      this.clock += delta;
+    }
+
     this.text.setText(`Time: ${Math.floor(this.clock / 1000)}`);
   }
 }

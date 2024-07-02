@@ -23,8 +23,8 @@ export class Preloader extends Scene {
     //  Load the assets for the game - Replace with your own assets
     this.load.setPath('assets');
 
-    this.load.spritesheet('robot', 'robot.png', { frameWidth: 48, frameHeight: 64 });
     this.load.image('town', 'concept-art/town2.jpeg');
+    this.load.image('ladder', 'concept-art/ladder.png');
 
     this.load.spritesheet('character', 'concept-art/animation.png', { frameWidth: 24, frameHeight: 36 });
   }

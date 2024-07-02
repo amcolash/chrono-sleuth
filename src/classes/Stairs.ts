@@ -15,9 +15,10 @@ export class Stairs extends Phaser.Physics.Arcade.Sprite implements Interactive 
   constructor(scene: Phaser.Scene, id: number, player: Player) {
     const { x, y, img } = meta[id % meta.length];
 
-    super(scene, x, y, 'tiles', img);
+    super(scene, x, y, 'ladder');
     this.id = id;
     this.player = player;
+    this.scale = 0.5;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
