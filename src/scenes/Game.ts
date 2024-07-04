@@ -16,8 +16,7 @@ export class Game extends Scene {
   text2: GameObjects.Text;
   bar: GameObjects.Rectangle;
 
-  stairs: GameObjects.Group;
-  npcs: GameObjects.Group;
+  interactiveObjects: GameObjects.Group;
 
   keys: { [key: string]: Input.Keyboard.Key } | undefined;
 
@@ -51,41 +50,19 @@ export class Game extends Scene {
 
     // groups (for automatically updating)
 
-    this.stairs = this.add.group([], { runChildUpdate: true });
-    this.stairs.add(stairs1);
-    this.stairs.add(stairs2);
+    this.interactiveObjects = this.add.group([], { runChildUpdate: true });
 
-    this.npcs = this.add.group([], { runChildUpdate: true });
-    this.npcs.add(npc1);
-    this.npcs.add(npc2);
+    this.interactiveObjects.add(stairs1);
+    this.interactiveObjects.add(stairs2);
+
+    this.interactiveObjects.add(npc1);
+    this.interactiveObjects.add(npc2);
 
     // update items added to the group
     this.add.group([this.player], { runChildUpdate: true });
 
     // rewindable objects
     this.rewindable = [this.player];
-
-    // TODO: Figure out how to get this to unset when no collisions. Alternatively, find an event for "un-collide"
-    // collisions
-    this.physics.add.overlap(
-      this.player,
-      this.stairs,
-      (_, stair) => {
-        this.player.setInteractiveObject(stair as Stairs);
-      },
-      undefined,
-      this
-    );
-
-    this.physics.add.overlap(
-      this.player,
-      this.npcs,
-      (_, npc) => {
-        this.player.setInteractiveObject(npc as NPC);
-      },
-      undefined,
-      this
-    );
 
     // events
     this.input.keyboard?.on('keydown-ESC', () => {
@@ -108,6 +85,18 @@ export class Game extends Scene {
   }
 
   update(_time: number, delta: number): void {
+    const isOverlapping = this.physics.overlap(
+      this.interactiveObjects,
+      this.player,
+      this.player.setInteractiveObject,
+      undefined,
+      this.player
+    );
+
+    if (!isOverlapping) {
+      this.player.setInteractiveObject(undefined);
+    }
+
     if (this.clock > gameTime) {
       this.text2 = this.add.text(250, 250, 'Day Over', { fontFamily: 'sans', fontSize: 96 }).setScrollFactor(0);
 
@@ -135,7 +124,5 @@ export class Game extends Scene {
 
     this.text.setText(`Time: ${Math.floor(this.clock / 1000)}`);
     this.bar.width = (this.clock / gameTime) * Config.width;
-
-    // this.cameras.main.centerOn(this.player.x, this.player.y);
   }
 }

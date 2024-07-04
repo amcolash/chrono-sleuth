@@ -3,7 +3,6 @@ import { Game as MainGame } from './scenes/Game';
 import { Paused } from './scenes/Paused';
 import { Preloader } from './scenes/Preloader';
 
-import { Colors } from './utils/colors';
 import { Config } from './config';
 import { Game, Types } from 'phaser';
 
@@ -14,7 +13,7 @@ const config: Types.Core.GameConfig = {
   width: Config.width,
   height: Config.height,
   parent: 'game-container',
-  backgroundColor: Colors.Teal,
+  backgroundColor: 0x111111,
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

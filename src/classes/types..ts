@@ -5,6 +5,8 @@ export enum InteractResult {
 }
 
 export interface Interactive {
+  interactionTimeout?: number;
+
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined): InteractResult;
 }
 

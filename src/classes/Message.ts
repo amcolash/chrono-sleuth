@@ -36,6 +36,7 @@ export class Message extends Phaser.GameObjects.Container {
     // this.text.setCrop(0, 0, width - padding * 4, boxHeight - padding * 2);
 
     this.box = new Phaser.GameObjects.Rectangle(scene, 0, 0, width - padding * 2, boxHeight, getColorNumber(Colors.Black), 0.7);
+    this.box.setStrokeStyle(2, getColorNumber(Colors.White), 1);
     this.box.setOrigin(0, 0);
 
     this.add([this.box, this.text]);

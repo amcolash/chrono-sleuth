@@ -1,3 +1,4 @@
+import { Config } from '../config';
 import { rewindInterval, rewindSpeed } from '../scenes/Game';
 import { Message } from './Message';
 import { Interactive, InteractResult, Rewindable } from './types.';
@@ -8,8 +9,9 @@ const speed = 120 * size;
 const MAX_HISTORY = 1000;
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
-  keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined;
+  keys: { [key: string]: Phaser.Input.Keyboard.Key };
   interactive?: Interactive;
+  interactionTimeout: number = 0;
   message: Message = new Message(this.scene);
 
   counter: number = 0;
@@ -47,7 +49,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   }
 
   update(_time: number, delta: number) {
-    this.setTint(this.body?.touching.none ? 0xffffff : 0xffaaaa);
+    if (Config.debug) this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
 
     if (this.rewinding) {
       if (this.counter + delta > rewindInterval / rewindSpeed) {
@@ -56,7 +58,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       }
       this.counter += delta;
     } else {
-      this.updateVelocity();
+      let ret: InteractResult | undefined = undefined;
+
+      if (this.interactive && Date.now() > this.interactionTimeout) {
+        ret = this.interactive.onInteract(this.keys);
+
+        if (ret !== InteractResult.None) {
+          this.interactionTimeout = Date.now() + (this.interactive.interactionTimeout || 0);
+
+          if (ret === InteractResult.Teleported) this.interactive = undefined;
+        }
+      }
+
+      if (!ret) this.updateVelocity();
     }
 
     const v = this.body?.velocity.x || 0;
@@ -88,43 +102,27 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     this.counter = 0;
   }
 
-  setInteractiveObject(interactive?: Interactive) {
-    console.log('setInteractiveObject', interactive);
+  setInteractiveObject(interactive?: any): undefined {
     this.interactive = interactive;
   }
 
   updateVelocity() {
-    if (this.keys) {
-      const keys = {
-        left: this.keys.LEFT.isDown || this.keys.A.isDown,
-        right: this.keys.RIGHT.isDown || this.keys.D.isDown,
-        up: this.keys.UP.isDown || this.keys.W.isDown,
-        down: this.keys.DOWN.isDown || this.keys.S.isDown,
-        shift: this.keys.SHIFT.isDown,
-      };
+    const keys = {
+      left: this.keys.LEFT.isDown || this.keys.A.isDown,
+      right: this.keys.RIGHT.isDown || this.keys.D.isDown,
+      up: this.keys.UP.isDown || this.keys.W.isDown,
+      down: this.keys.DOWN.isDown || this.keys.S.isDown,
+      shift: this.keys.SHIFT.isDown,
+    };
 
-      this.setVelocity(0);
+    this.setVelocity(0);
 
-      if (this.interactive) {
-        const ret: InteractResult = this.interactive.onInteract(this.keys);
+    let calcSpeed = speed;
 
-        if (ret !== InteractResult.None) {
-          if (ret === InteractResult.Teleported) this.interactive = undefined;
+    if (keys.left) this.setVelocityX(-calcSpeed);
+    if (keys.right) this.setVelocityX(calcSpeed);
 
-          return;
-        }
-      }
-
-      let calcSpeed = speed;
-
-      if (keys.left) this.setVelocityX(-calcSpeed);
-      if (keys.right) this.setVelocityX(calcSpeed);
-      // if (keys.up) this.setVelocityY(-calcSpeed);
-      // if (keys.down) this.setVelocityY(calcSpeed);
-
-      if (keys.left && keys.right) this.setVelocityX(0);
-      // if (keys.up && keys.down) this.setVelocityY(0);
-    }
+    if (keys.left && keys.right) this.setVelocityX(0);
   }
 
   setMessage(message?: string, id?: number) {

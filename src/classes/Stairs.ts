@@ -2,8 +2,8 @@ import { Player } from './Player';
 import { Interactive, InteractResult } from './types.';
 
 const meta = [
-  { x: 300, y: 650, img: 0 },
-  { x: 300, y: 875, img: 1 },
+  { x: 300, y: 650 },
+  { x: 300, y: 875 },
 ];
 
 export class Stairs extends Phaser.Physics.Arcade.Sprite implements Interactive {
@@ -11,7 +11,7 @@ export class Stairs extends Phaser.Physics.Arcade.Sprite implements Interactive 
   player: Player;
 
   constructor(scene: Phaser.Scene, id: number, player: Player) {
-    const { x, y, img } = meta[id % meta.length];
+    const { x, y } = meta[id % meta.length];
 
     super(scene, x, y, 'ladder');
     this.id = id;
