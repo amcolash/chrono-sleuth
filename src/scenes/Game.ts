@@ -4,6 +4,7 @@ import { Stairs } from '../classes/Stairs';
 import { Rewindable } from '../classes/types.';
 import { NPC } from '../classes/NPC';
 import { GameObjects, Input, Scene } from 'phaser';
+import { Config } from '../config';
 
 export const gameTime = 1000 * 60 * 5;
 export const rewindInterval = 250;
@@ -46,7 +47,7 @@ export class Game extends Scene {
     const npc2 = new NPC(this, 1, this.player);
 
     this.text = this.add.text(10, 20, '', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }).setScrollFactor(0);
-    this.bar = this.add.rectangle(0, this.game.config.height - 6, 0, 6, 0xccaa00).setScrollFactor(0);
+    this.bar = this.add.rectangle(0, Config.height - 6, 0, 6, 0xccaa00).setScrollFactor(0);
 
     // groups (for automatically updating)
 
@@ -133,7 +134,7 @@ export class Game extends Scene {
     }
 
     this.text.setText(`Time: ${Math.floor(this.clock / 1000)}`);
-    this.bar.width = (this.clock / gameTime) * this.game.config.width;
+    this.bar.width = (this.clock / gameTime) * Config.width;
 
     // this.cameras.main.centerOn(this.player.x, this.player.y);
   }

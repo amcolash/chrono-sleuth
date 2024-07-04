@@ -1,4 +1,6 @@
+import { GameObjects } from 'phaser';
 import { Colors, getColorNumber } from '../utils/colors';
+import { Config } from '../config';
 
 export class Message extends Phaser.GameObjects.Container {
   text: GameObjects.Text;
@@ -9,7 +11,7 @@ export class Message extends Phaser.GameObjects.Container {
     scene.add.existing(this);
 
     const padding = 20;
-    const { width, height } = scene.game.config;
+    const { width, height } = Config;
     const boxHeight = 180;
 
     this.setScrollFactor(0);

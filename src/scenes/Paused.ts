@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { Config } from '../config';
 
 export class Paused extends Scene {
   constructor() {
@@ -6,8 +7,8 @@ export class Paused extends Scene {
   }
 
   create() {
-    const width = this.game.config.width as number;
-    const height = this.game.config.height as number;
+    const width = Config.width;
+    const height = Config.height;
 
     this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.75);
 
