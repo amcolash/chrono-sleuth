@@ -1,14 +1,16 @@
 import { rewindInterval, rewindSpeed } from '../scenes/Game';
-import { createWalkAnimations, updateAnim } from '../utils/animations';
-import { Interactive, Rewindable } from './types';
+import { Message } from './Message';
+import { Interactive, InteractResult, Rewindable } from './types.';
 
 const texture = 'robot';
 const size = 2.5;
 const speed = 120 * size;
+const MAX_HISTORY = 1000;
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined;
   interactive?: Interactive;
+  message: Message = new Message(this.scene);
 
   counter: number = 0;
   history: Phaser.Math.Vector3[] = [];
@@ -17,7 +19,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, texture, 6);
 
-    this.keys = scene.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT') as { [key: string]: Phaser.Input.Keyboard.Key };
+    this.keys = scene.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT,ENTER,SPACE') as {
+      [key: string]: Phaser.Input.Keyboard.Key;
+    };
 
     // createWalkAnimations(texture, scene, this);
 
@@ -38,9 +42,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     });
 
     this.anims.play('walk');
+
+    this.message = new Message(scene);
   }
 
   update(_time: number, delta: number) {
+    this.setTint(this.body?.touching.none ? 0xffffff : 0xffaaaa);
+
     if (this.rewinding) {
       if (this.counter + delta > rewindInterval / rewindSpeed) {
         this.rewind();
@@ -58,12 +66,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       this.flipX = this.rewinding ? !flipped : flipped;
     } else this.anims.pause();
     // updateAnim(texture, this);
-
-    this.setTint(this.interactive ? 0xffcccc : 0xffffff);
   }
 
   record() {
-    if (this.history.length < 1000) this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
+    if (this.history.length < MAX_HISTORY) this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
   }
 
   rewind() {
@@ -83,6 +89,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   }
 
   setInteractiveObject(interactive?: Interactive) {
+    console.log('setInteractiveObject', interactive);
     this.interactive = interactive;
   }
 
@@ -99,10 +106,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       this.setVelocity(0);
 
       if (this.interactive) {
-        const ret = this.interactive.onInteract(this.keys);
+        const ret: InteractResult = this.interactive.onInteract(this.keys);
 
-        if (ret) {
-          this.interactive = undefined;
+        if (ret !== InteractResult.None) {
+          if (ret === InteractResult.Teleported) this.interactive = undefined;
+
           return;
         }
       }
@@ -117,5 +125,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       if (keys.left && keys.right) this.setVelocityX(0);
       // if (keys.up && keys.down) this.setVelocityY(0);
     }
+  }
+
+  setMessage(message?: string, id?: number) {
+    this.message.setMessage(message);
   }
 }

@@ -1,5 +1,11 @@
+export enum InteractResult {
+  None,
+  Teleported,
+  Talked,
+}
+
 export interface Interactive {
-  onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined): boolean;
+  onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined): InteractResult;
 }
 
 export interface Rewindable {

@@ -1,10 +1,11 @@
-import { Scene, GameObjects } from 'phaser';
 import { Player } from '../classes/Player';
 import { Colors } from '../utils/colors';
 import { Stairs } from '../classes/Stairs';
-import { Rewindable } from '../classes/types';
+import { Rewindable } from '../classes/types.';
+import { NPC } from '../classes/NPC';
+import { GameObjects, Input, Scene } from 'phaser';
 
-export const gameTime = 1000 * 10;
+export const gameTime = 1000 * 60 * 5;
 export const rewindInterval = 250;
 export const rewindSpeed = 8;
 
@@ -13,8 +14,11 @@ export class Game extends Scene {
   text: GameObjects.Text;
   text2: GameObjects.Text;
   bar: GameObjects.Rectangle;
+
   stairs: GameObjects.Group;
-  keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined;
+  npcs: GameObjects.Group;
+
+  keys: { [key: string]: Input.Keyboard.Key } | undefined;
 
   clock: number;
   rewindable: Rewindable[];
@@ -28,7 +32,7 @@ export class Game extends Scene {
 
   create() {
     // input
-    this.keys = this.input.keyboard?.addKeys('SHIFT') as { [key: string]: Phaser.Input.Keyboard.Key };
+    this.keys = this.input.keyboard?.addKeys('SHIFT') as { [key: string]: Input.Keyboard.Key };
 
     // game objects
     this.add.sprite(0, 0, 'town').setOrigin(0, 0);
@@ -38,6 +42,9 @@ export class Game extends Scene {
     const stairs1 = new Stairs(this, 0, this.player);
     const stairs2 = new Stairs(this, 1, this.player);
 
+    const npc1 = new NPC(this, 0, this.player);
+    const npc2 = new NPC(this, 1, this.player);
+
     this.text = this.add.text(10, 20, '', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }).setScrollFactor(0);
     this.bar = this.add.rectangle(0, this.game.config.height - 6, 0, 6, 0xccaa00).setScrollFactor(0);
 
@@ -46,6 +53,10 @@ export class Game extends Scene {
     this.stairs = this.add.group([], { runChildUpdate: true });
     this.stairs.add(stairs1);
     this.stairs.add(stairs2);
+
+    this.npcs = this.add.group([], { runChildUpdate: true });
+    this.npcs.add(npc1);
+    this.npcs.add(npc2);
 
     // update items added to the group
     this.add.group([this.player], { runChildUpdate: true });
@@ -60,6 +71,16 @@ export class Game extends Scene {
       this.stairs,
       (_, stair) => {
         this.player.setInteractiveObject(stair as Stairs);
+      },
+      undefined,
+      this
+    );
+
+    this.physics.add.overlap(
+      this.player,
+      this.npcs,
+      (_, npc) => {
+        this.player.setInteractiveObject(npc as NPC);
       },
       undefined,
       this
@@ -93,10 +114,6 @@ export class Game extends Scene {
       this.rewindable.forEach((r) => r.setRewind(true));
     }
 
-    if (!this.physics.overlap(this.player, this.stairs)) {
-      this.player.setInteractiveObject(undefined);
-    }
-
     if (this.rewinding) {
       if (this.clock > 0) {
         this.clock = Math.max(0, this.clock - delta * rewindSpeed);
@@ -117,5 +134,7 @@ export class Game extends Scene {
 
     this.text.setText(`Time: ${Math.floor(this.clock / 1000)}`);
     this.bar.width = (this.clock / gameTime) * this.game.config.width;
+
+    // this.cameras.main.centerOn(this.player.x, this.player.y);
   }
 }

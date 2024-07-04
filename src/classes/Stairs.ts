@@ -1,11 +1,9 @@
 import { Player } from './Player';
-import { Interactive } from './types';
+import { Interactive, InteractResult } from './types.';
 
 const meta = [
   { x: 300, y: 650, img: 0 },
   { x: 300, y: 875, img: 1 },
-  //  { x: 150, y: 650, img: 0},
-  //  { x: 150, y: 650, img: 0},
 ];
 
 export class Stairs extends Phaser.Physics.Arcade.Sprite implements Interactive {
@@ -32,9 +30,9 @@ export class Stairs extends Phaser.Physics.Arcade.Sprite implements Interactive 
       this.player.x = x;
       this.player.y = y;
 
-      return true;
+      return InteractResult.Teleported;
     }
 
-    return false;
+    return InteractResult.None;
   }
 }
