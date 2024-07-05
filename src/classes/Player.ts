@@ -13,6 +13,10 @@ const MAX_HISTORY = 1000;
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   keys: { [key: string]: Phaser.Input.Keyboard.Key };
+
+  debugText: GameObjects.Text;
+
+  buttonPrompt: GameObjects.Text;
   interactive?: Interactive;
   interactionTimeout: number = 0;
 
@@ -58,6 +62,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
     this.anims.play('walk');
 
+    this.buttonPrompt = scene.add
+      .text(Config.width / 2, Config.height - 50, '', { fontFamily: 'sans', fontSize: 18, color: `#${Colors.White}`, align: 'center' })
+      .setScrollFactor(0)
+      .setDepth(2)
+      .setVisible(false);
     this.message = new Message(scene);
 
     this.inventoryList = scene.add
@@ -87,10 +96,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       .setOrigin(0);
     this.questList.add(this.questRectangle);
     this.questList.add(scene.add.text(10, 10, 'Quests', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }));
+
+    if (Config.debug)
+      this.debugText = scene.add.text(10, 30, '', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }).setScrollFactor(0);
   }
 
   update(_time: number, delta: number) {
-    if (Config.debug) this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
+    if (Config.debug) {
+      this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
+      this.debugText.setText(`x: ${Math.floor(this.x)}, y: ${Math.floor(this.y)}`);
+    }
+    this.buttonPrompt.setVisible((this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false);
 
     if (this.rewinding) {
       if (this.counter + delta > rewindInterval / rewindSpeed) {
@@ -145,6 +161,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
   setInteractiveObject(interactive?: any): undefined {
     this.interactive = interactive;
+    this.buttonPrompt.setText(interactive?.getButtonPrompt?.() || '');
   }
 
   updateVelocity() {

@@ -23,12 +23,17 @@ export class Preloader extends Scene {
     //  Load the assets for the game - Replace with your own assets
     this.load.setPath('assets');
 
+    // backgrounds
     this.load.image('town', 'town.jpg');
+    this.load.image('forest', 'forest.jpg');
+
+    // interactive objects
     this.load.image('ladder', 'ladder.png');
     this.load.image('watch', 'watch.png');
     this.load.image('book', 'book.png');
     this.load.image('ring', 'ring.png');
 
+    // characters
     this.load.spritesheet('character', 'player.png', { frameWidth: 24, frameHeight: 36 });
 
     this.load.image('inventor', 'inventor.png');

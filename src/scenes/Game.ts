@@ -1,11 +1,12 @@
 import { Player } from '../classes/Player';
 import { Colors, getColorNumber } from '../utils/colors';
-import { Stairs } from '../classes/Stairs';
-import { ItemType, Rewindable } from '../classes/types.';
+import { Warp } from '../classes/Warp';
+import { ItemType, Rewindable, WarpType } from '../classes/types.';
 import { NPC } from '../classes/NPC';
 import { GameObjects, Input, Scene } from 'phaser';
 import { Config } from '../config';
 import { Item } from '../classes/Item';
+import { Walls } from '../classes/Walls';
 
 export const gameTime = 1000 * 60 * Config.dayTime;
 export const rewindInterval = 250;
@@ -36,13 +37,18 @@ export class Game extends Scene {
     // input
     this.keys = this.input.keyboard?.addKeys('SHIFT') as { [key: string]: Input.Keyboard.Key };
 
-    // game objects
+    // background
     this.add.sprite(0, 0, 'town').setOrigin(0, 0);
-    // const walls = new Walls(this);
-    this.player = new Player(this, 100, 650);
+    this.add.sprite(2000, 0, 'forest').setOrigin(0, 0);
 
-    const stairs1 = new Stairs(this, 0, this.player);
-    const stairs2 = new Stairs(this, 1, this.player);
+    // game objects
+    const walls = new Walls(this);
+    this.player = new Player(this, 1700, 650);
+
+    const warpTop = new Warp(this, WarpType.STAIRS_TOP, this.player);
+    const warpBottom = new Warp(this, WarpType.STAIRS_BOTTOM, this.player);
+    const warpEast = new Warp(this, WarpType.TOWN_EAST, this.player);
+    const warpForest = new Warp(this, WarpType.FOREST, this.player);
 
     const npc1 = new NPC(this, 0, this.player);
     const npc2 = new NPC(this, 1, this.player);
@@ -69,7 +75,10 @@ export class Game extends Scene {
 
     // groups (for automatically updating)
 
-    this.interactiveObjects = this.add.group([stairs1, stairs2, npc1, npc2, book, ring], { runChildUpdate: true });
+    this.interactiveObjects = this.add.group([warpTop, warpBottom, warpEast, warpForest, npc1, npc2, book, ring], { runChildUpdate: true });
+
+    // collisions
+    this.physics.add.collider(this.player, walls);
 
     // update items added to the group
     this.add.group([this.player], { runChildUpdate: true });

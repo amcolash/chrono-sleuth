@@ -65,4 +65,8 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
     return InteractResult.None;
   }
+
+  getButtonPrompt() {
+    return 'Press CONTINUE';
+  }
 }
