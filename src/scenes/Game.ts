@@ -1,13 +1,13 @@
 import { Player } from '../classes/Player';
 import { Colors, getColorNumber } from '../utils/colors';
 import { Stairs } from '../classes/Stairs';
-import { Rewindable } from '../classes/types.';
+import { ItemType, Rewindable } from '../classes/types.';
 import { NPC } from '../classes/NPC';
 import { GameObjects, Input, Scene } from 'phaser';
 import { Config } from '../config';
+import { Item } from '../classes/Item';
 
-const mins = 1;
-export const gameTime = 1000 * 60 * mins;
+export const gameTime = 1000 * 60 * Config.dayTime;
 export const rewindInterval = 250;
 export const rewindSpeed = 8;
 
@@ -47,24 +47,29 @@ export class Game extends Scene {
     const npc1 = new NPC(this, 0, this.player);
     const npc2 = new NPC(this, 1, this.player);
 
-    // TODO: Make watch a class
-    this.add
-      .sprite(40, Config.height - 60, 'watch')
-      .setScrollFactor(0)
-      .setScale(0.25);
+    if (Config.rewindEnabled) {
+      // TODO: Make watch a class
+      this.add
+        .sprite(40, Config.height - 60, 'watch')
+        .setScrollFactor(0)
+        .setScale(0.25);
 
-    this.hand = this.add
-      .rectangle(40, Config.height - 53, 3, 14, getColorNumber(Colors.Black))
-      .setScrollFactor(0)
-      .setDepth(1)
-      .setOrigin(0, 0);
+      this.hand = this.add
+        .rectangle(40, Config.height - 53, 3, 14, getColorNumber(Colors.Black))
+        .setScrollFactor(0)
+        .setDepth(1)
+        .setOrigin(0, 0);
 
-    this.text = this.add.text(10, 20, '', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }).setScrollFactor(0);
-    this.bar = this.add.rectangle(0, Config.height - 6, 0, 6, 0xccaa00).setScrollFactor(0);
+      this.text = this.add.text(10, 20, '', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }).setScrollFactor(0);
+      this.bar = this.add.rectangle(0, Config.height - 6, 0, 6, 0xccaa00).setScrollFactor(0);
+    }
+
+    const book = new Item(this, ItemType.Book, this.player);
+    const ring = new Item(this, ItemType.Ring, this.player);
 
     // groups (for automatically updating)
 
-    this.interactiveObjects = this.add.group([stairs1, stairs2, npc1, npc2], { runChildUpdate: true });
+    this.interactiveObjects = this.add.group([stairs1, stairs2, npc1, npc2, book, ring], { runChildUpdate: true });
 
     // update items added to the group
     this.add.group([this.player], { runChildUpdate: true });
@@ -78,15 +83,17 @@ export class Game extends Scene {
       this.scene.launch('Paused');
     });
 
-    this.input.keyboard?.on('keydown-SHIFT', () => {
-      this.rewinding = true;
-      this.rewindable.forEach((r) => r.setRewind(true));
-    });
+    if (Config.rewindEnabled) {
+      this.input.keyboard?.on('keydown-SHIFT', () => {
+        this.rewinding = true;
+        this.rewindable.forEach((r) => r.setRewind(true));
+      });
 
-    this.input.keyboard?.on('keyup-SHIFT', () => {
-      this.rewinding = false;
-      this.rewindable.forEach((r) => r.setRewind(false));
-    });
+      this.input.keyboard?.on('keyup-SHIFT', () => {
+        this.rewinding = false;
+        this.rewindable.forEach((r) => r.setRewind(false));
+      });
+    }
 
     // setup
     this.cameras.main.startFollow(this.player);
@@ -104,6 +111,8 @@ export class Game extends Scene {
     if (!isOverlapping) {
       this.player.setInteractiveObject(undefined);
     }
+
+    if (!Config.rewindEnabled) return;
 
     this.hand.setRotation((this.clock / gameTime) * 2 * Math.PI + Math.PI);
 

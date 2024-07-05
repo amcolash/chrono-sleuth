@@ -2,6 +2,7 @@ export enum InteractResult {
   None,
   Teleported,
   Talked,
+  Item,
 }
 
 export interface Interactive {
@@ -17,4 +18,33 @@ export interface Rewindable {
   record(): void;
   rewind(): void;
   setRewind(rewind: boolean): void;
+}
+
+export enum ItemType {
+  Book,
+  Ring,
+}
+
+export enum QuestType {
+  INVENTOR_BOOK,
+  STRANGER_RING,
+}
+
+export enum NPCType {
+  Inventor,
+  Stranger,
+}
+
+export interface Quest {
+  id: QuestType;
+  name: string;
+  completed: boolean;
+}
+
+export enum TalkingPoint {
+  // Inventor
+  INVENTOR_GREETED,
+
+  // Strange
+  STRANGER_GREETED,
 }

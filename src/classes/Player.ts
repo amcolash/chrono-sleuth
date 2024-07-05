@@ -1,7 +1,10 @@
+import { GameObjects } from 'phaser';
 import { Config } from '../config';
 import { rewindInterval, rewindSpeed } from '../scenes/Game';
 import { Message } from './Message';
-import { Interactive, InteractResult, Rewindable } from './types.';
+import { Interactive, InteractResult, ItemType, NPCType, Quest, QuestType, Rewindable, TalkingPoint } from './types.';
+import { meta } from './Item';
+import { Colors, getColorNumber } from '../utils/colors';
 
 const texture = 'robot';
 const size = 2.5;
@@ -12,7 +15,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   keys: { [key: string]: Phaser.Input.Keyboard.Key };
   interactive?: Interactive;
   interactionTimeout: number = 0;
+
   message: Message = new Message(this.scene);
+
+  inventory: ItemType[] = [];
+  inventoryList: GameObjects.Container;
+
+  quests: Quest[] = [];
+  questList: GameObjects.Container;
+  questRectangle: GameObjects.Rectangle;
+
+  talkingPoints: TalkingPoint[] = [];
 
   counter: number = 0;
   history: Phaser.Math.Vector3[] = [];
@@ -46,6 +59,34 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     this.anims.play('walk');
 
     this.message = new Message(scene);
+
+    this.inventoryList = scene.add
+      .container(Config.width - 320, 20)
+      .setScrollFactor(0)
+      .setDepth(1)
+      .setVisible(false);
+
+    this.inventoryList.add(
+      scene.add
+        .rectangle(0, 0, 300, 60, getColorNumber(Colors.Teal))
+        .setStrokeStyle(2, getColorNumber(Colors.White))
+        .setAlpha(0.75)
+        .setOrigin(0)
+    );
+
+    this.questList = scene.add
+      .container(Config.width - 320, 100)
+      .setScrollFactor(0)
+      .setDepth(1)
+      .setVisible(false);
+
+    this.questRectangle = scene.add
+      .rectangle(0, 0, 300, 60, getColorNumber(Colors.Teal))
+      .setStrokeStyle(2, getColorNumber(Colors.White))
+      .setAlpha(0.75)
+      .setOrigin(0);
+    this.questList.add(this.questRectangle);
+    this.questList.add(scene.add.text(10, 10, 'Quests', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }));
   }
 
   update(_time: number, delta: number) {
@@ -70,7 +111,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
         }
       }
 
-      if (!ret) this.updateVelocity();
+      if (!ret && !this.message.visible) this.updateVelocity();
     }
 
     const v = this.body?.velocity.x || 0;
@@ -125,7 +166,66 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     if (keys.left && keys.right) this.setVelocityX(0);
   }
 
-  setMessage(message?: string, id?: number) {
+  setMessage(message?: string, npcType?: NPCType) {
     this.message.setMessage(message);
+  }
+
+  addItem(item: ItemType) {
+    this.inventory.push(item);
+
+    const x = 30 + 50 * (this.inventory.length - 1);
+    const sprite = this.scene.add.sprite(x, 30, meta[item].image);
+    sprite.setScale(0.25);
+    this.inventoryList.add(sprite);
+
+    this.inventoryList.setVisible(true);
+  }
+
+  removeItem(item: ItemType) {
+    const index = this.inventory.indexOf(item);
+    if (index > -1) {
+      this.inventory.splice(index, 1);
+      this.inventoryList.removeAt(index);
+    }
+
+    this.inventoryList.getAll<GameObjects.GameObject>().forEach((item, i) => {
+      if (item instanceof GameObjects.Sprite) {
+        const x = 30 + 50 * i;
+        item.setPosition(x, 30);
+      }
+    });
+    this.inventoryList.setVisible(this.inventory.length > 0);
+  }
+
+  addQuest(quest: Quest) {
+    this.quests.push(quest);
+    const y = 10 + 30 * this.quests.length;
+    this.questList.add(this.scene.add.text(10, y, quest.name, { fontFamily: 'sans', fontSize: 18, color: `#${Colors.White}` }));
+    this.updateQuests();
+  }
+
+  updateQuest(quest: QuestType, completed: boolean) {
+    const q = this.quests.find((q) => q.id === quest);
+    if (q) q.completed = completed;
+    this.updateQuests();
+  }
+
+  updateQuests() {
+    const activeQuests = this.quests.filter((q) => !q.completed);
+
+    let index = 1;
+    this.questList.getAll<GameObjects.Text>().forEach((text) => {
+      if (text instanceof GameObjects.Text) {
+        if (!activeQuests.find((q) => text.text === q.name || text.text === 'Quests')) text.destroy();
+        else if (text.text !== 'Quests') {
+          const y = 10 + 30 * index;
+          text.setPosition(10, y);
+          index++;
+        }
+      }
+    });
+
+    this.questList.setVisible(activeQuests.length > 0);
+    this.questRectangle.setSize(300, 40 + 30 * activeQuests.length);
   }
 }
