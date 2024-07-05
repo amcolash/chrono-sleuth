@@ -172,29 +172,33 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
   addItem(item: ItemType) {
     this.inventory.push(item);
-
     const x = 30 + 50 * (this.inventory.length - 1);
-    const sprite = this.scene.add.sprite(x, 30, meta[item].image);
-    sprite.setScale(0.25);
-    this.inventoryList.add(sprite);
+    this.inventoryList.add(this.scene.add.sprite(x, 30, meta[item].image).setScale(0.25));
+    this.updateItems();
+  }
 
-    this.inventoryList.setVisible(true);
+  updateItems() {
+    let index = 0;
+    this.inventoryList.getAll<GameObjects.GameObject>().forEach((item, i) => {
+      if (item instanceof GameObjects.Sprite) {
+        const x = 30 + 50 * index;
+        item.setPosition(x, 30);
+        index++;
+      }
+    });
+    this.inventoryList.setVisible(this.inventory.length > 0);
   }
 
   removeItem(item: ItemType) {
     const index = this.inventory.indexOf(item);
     if (index > -1) {
       this.inventory.splice(index, 1);
-      this.inventoryList.removeAt(index);
+      this.inventoryList
+        .getAll<GameObjects.Sprite>()
+        .find((i) => i.texture?.key === meta[item].image)
+        ?.destroy();
     }
-
-    this.inventoryList.getAll<GameObjects.GameObject>().forEach((item, i) => {
-      if (item instanceof GameObjects.Sprite) {
-        const x = 30 + 50 * i;
-        item.setPosition(x, 30);
-      }
-    });
-    this.inventoryList.setVisible(this.inventory.length > 0);
+    this.updateItems();
   }
 
   addQuest(quest: Quest) {
@@ -216,7 +220,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     let index = 1;
     this.questList.getAll<GameObjects.Text>().forEach((text) => {
       if (text instanceof GameObjects.Text) {
-        if (!activeQuests.find((q) => text.text === q.name || text.text === 'Quests')) text.destroy();
+        if (!activeQuests.find((q) => text.text === q.name) && text.text !== 'Quests') text.destroy();
         else if (text.text !== 'Quests') {
           const y = 10 + 30 * index;
           text.setPosition(10, y);

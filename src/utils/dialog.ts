@@ -47,13 +47,30 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       },
     },
     {
-      messages: ['Are you new around Here?', 'My name is Johan and I am an inventor.'],
+      messages: ['Are you new around here?', 'My name is Johan and I am an inventor.'],
       onCompleted: (player) => {
         player.talkingPoints.push(TalkingPoint.INVENTOR_GREETED);
       },
     },
   ],
   [NPCType.Stranger]: [
+    {
+      messages: ['I saw her this morning in the forest.'],
+      conditions: {
+        completedQuest: QuestType.STRANGER_RING,
+      },
+    },
+    {
+      messages: ['You found my ring! Thank you!', 'I heard a rumor about the mayor making shady deals...'],
+      conditions: {
+        activeQuest: QuestType.STRANGER_RING,
+        hasItem: ItemType.Ring,
+      },
+      onCompleted: (player) => {
+        player.updateQuest(QuestType.STRANGER_RING, true);
+        player.removeItem(ItemType.Ring);
+      },
+    },
     {
       messages: ['Did you find my ring?'],
       conditions: {
