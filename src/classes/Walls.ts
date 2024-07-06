@@ -1,5 +1,7 @@
-export class Walls extends Phaser.Physics.Arcade.StaticGroup {
-  constructor(scene: Phaser.Scene) {
+import { Physics, Scene } from 'phaser';
+
+export class Walls extends Physics.Arcade.StaticGroup {
+  constructor(scene: Scene) {
     super(scene.physics.world, scene);
 
     const size = 4;

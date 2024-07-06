@@ -2,7 +2,7 @@ import { Player } from '../classes/Player';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types.';
 import { NPC } from '../classes/NPC';
-import { GameObjects, Input, Scene } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 import { Item } from '../classes/Item';
 import { Walls } from '../classes/Walls';
 import { Clock } from '../classes/Clock';

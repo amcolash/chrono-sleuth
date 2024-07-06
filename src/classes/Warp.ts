@@ -1,3 +1,4 @@
+import { Physics } from 'phaser';
 import { Player } from './Player';
 import { Interactive, InteractResult, WarpType } from './types.';
 
@@ -20,7 +21,7 @@ const meta = {
   },
 };
 
-export class Warp extends Phaser.Physics.Arcade.Sprite implements Interactive {
+export class Warp extends Physics.Arcade.Sprite implements Interactive {
   id: WarpType;
   player: Player;
   interactionTimeout = 500;
