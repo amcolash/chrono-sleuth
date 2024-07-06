@@ -2,10 +2,12 @@ import { GameObjects } from 'phaser';
 import { Config } from '../config';
 import { Message } from './Message';
 import { Interactive, InteractResult, NPCType, Rewindable, TalkingPoint } from './types.';
-import { Colors, fontStyle } from '../utils/colors';
+import { fontStyle } from '../utils/colors';
 import { Inventory } from './Inventory';
 import { Quests } from './Quests';
 import { rewindInterval, rewindSpeed } from './Clock';
+import { ButtonPrompt } from './ButtonPrompt';
+import { createAnimation, updateAnimation } from '../utils/animations';
 
 const size = 2.5;
 const speed = 120 * size;
@@ -43,26 +45,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     this.setBodySize(24, 36);
     this.setOffset(0, 0);
     this.depth = 1;
-
     this.scale = size;
 
-    this.anims.create({
-      key: 'walk',
-      frames: this.anims.generateFrameNumbers('character', { start: 0, end: 5 }),
-      frameRate: 4,
-      repeat: -1,
-    });
+    createAnimation(this);
 
-    this.anims.play('walk');
-
-    this.buttonPrompt = scene.add
-      .text(Config.width / 2, Config.height - 50, '', fontStyle)
-      .setBackgroundColor('#' + Colors.Black)
-      .setPadding(10, 5)
-      .setAlpha(0.9)
-      .setScrollFactor(0)
-      .setDepth(2)
-      .setVisible(false);
+    this.buttonPrompt = new ButtonPrompt(scene);
 
     this.message = new Message(scene);
     this.inventory = new Inventory(scene);
@@ -72,67 +59,47 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   }
 
   update(_time: number, delta: number) {
+    // Update UI
     if (Config.debug) {
       this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
       this.debugText.setText(`x: ${Math.floor(this.x)}, y: ${Math.floor(this.y)}`);
     }
     this.buttonPrompt.setVisible((this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false);
 
+    // Update player
+    this.setVelocity(0);
+
+    // Handle rewinding, interactions, and velocity
     if (this.rewinding) {
       if (this.counter + delta > rewindInterval / rewindSpeed) {
         this.rewind();
         this.counter = 0;
+      } else {
+        this.counter += delta;
       }
-      this.counter += delta;
     } else {
-      let ret: InteractResult | undefined = undefined;
-
-      if (this.interactive && Date.now() > this.interactionTimeout) {
-        ret = this.interactive.onInteract(this.keys);
-
-        if (ret !== InteractResult.None) {
-          this.interactionTimeout = Date.now() + (this.interactive.interactionTimeout || 0);
-
-          if (ret === InteractResult.Teleported) this.interactive = undefined;
-        }
-      }
-
-      this.setVelocity(0);
+      let ret: InteractResult | undefined = this.checkInteraction();
       if (!ret && !this.message.visible) this.updateVelocity();
     }
 
-    const v = this.body?.velocity.x || 0;
-    const flipped = v < 0;
-    if (Math.abs(v) > 0) {
-      this.anims.resume();
-      this.flipX = this.rewinding ? !flipped : flipped;
-    } else this.anims.pause();
-    // updateAnim(texture, this);
+    // Update animations
+    updateAnimation(this);
   }
 
-  record() {
-    if (this.history.length < MAX_HISTORY) this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
-  }
+  checkInteraction(): InteractResult | undefined {
+    let ret = undefined;
 
-  rewind() {
-    this.setVelocityX(0);
+    if (this.interactive && Date.now() > this.interactionTimeout) {
+      ret = this.interactive.onInteract(this.keys);
 
-    const point = this.history.pop();
-    if (point) {
-      this.x = point.x;
-      this.y = point.y;
-      this.setVelocityX(-point.z);
+      if (ret !== InteractResult.None) {
+        this.interactionTimeout = Date.now() + (this.interactive.interactionTimeout || 0);
+
+        if (ret === InteractResult.Teleported) this.interactive = undefined;
+      }
     }
-  }
 
-  setRewind(rewind: boolean): void {
-    this.rewinding = rewind;
-    this.counter = 0;
-  }
-
-  setInteractiveObject(interactive?: any): undefined {
-    this.interactive = interactive;
-    this.buttonPrompt.setText(interactive?.getButtonPrompt?.() || '');
+    return ret;
   }
 
   updateVelocity() {
@@ -150,6 +117,29 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     if (keys.right) this.setVelocityX(calcSpeed);
 
     if (keys.left && keys.right) this.setVelocityX(0);
+  }
+
+  record() {
+    if (this.history.length < MAX_HISTORY) this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
+  }
+
+  rewind() {
+    const point = this.history.pop();
+    if (point) {
+      this.x = point.x;
+      this.y = point.y;
+      this.setVelocityX(-point.z);
+    }
+  }
+
+  setRewind(rewind: boolean): void {
+    this.rewinding = rewind;
+    this.counter = 0;
+  }
+
+  setInteractiveObject(interactive?: any): undefined {
+    this.interactive = interactive;
+    this.buttonPrompt.setText(interactive?.getButtonPrompt?.() || '');
   }
 
   setMessage(message?: string, npcType?: NPCType) {

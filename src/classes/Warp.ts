@@ -60,11 +60,11 @@ export class Warp extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
   getButtonPrompt() {
     const buttons = meta[this.id].key.map((key) => {
-      if (key === Phaser.Input.Keyboard.KeyCodes.ENTER || key === Phaser.Input.Keyboard.KeyCodes.SPACE) return 'CONTINUE';
-      if (key === Phaser.Input.Keyboard.KeyCodes.UP) return 'UP';
-      if (key === Phaser.Input.Keyboard.KeyCodes.DOWN) return 'DOWN';
+      if (key === Phaser.Input.Keyboard.KeyCodes.ENTER || key === Phaser.Input.Keyboard.KeyCodes.SPACE) return '[CONTINUE]';
+      if (key === Phaser.Input.Keyboard.KeyCodes.UP) return '[UP]';
+      if (key === Phaser.Input.Keyboard.KeyCodes.DOWN) return '[DOWN]';
 
-      return 'UNKNOWN';
+      return '[UNKNOWN]';
     });
 
     const unique = [...new Set(buttons)];
