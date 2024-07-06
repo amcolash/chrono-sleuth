@@ -15,7 +15,7 @@ export class Walls extends Physics.Arcade.StaticGroup {
     this.add(scene.add.rectangle(1650, 820, size, 100).setOrigin(0)).setVisible(false);
 
     // Forest
-    this.add(scene.add.rectangle(2300, 780, size, 100).setOrigin(0)).setVisible(false);
-    this.add(scene.add.rectangle(3350, 780, size, 100).setOrigin(0)).setVisible(false);
+    this.add(scene.add.rectangle(2600, 780, size, 100).setOrigin(0)).setVisible(false);
+    this.add(scene.add.rectangle(3650, 780, size, 100).setOrigin(0)).setVisible(false);
   }
 }

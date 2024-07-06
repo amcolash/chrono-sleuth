@@ -37,7 +37,10 @@ export class Preloader extends Scene {
     this.load.spritesheet('character', 'player.png', { frameWidth: 24, frameHeight: 36 });
 
     this.load.image('inventor', 'inventor.png');
+    this.load.image('inventor_portrait', 'inventor_portrait.png');
+
     this.load.image('stranger', 'stranger.png');
+    this.load.image('stranger_portrait', 'stranger_portrait.png');
   }
 
   create() {

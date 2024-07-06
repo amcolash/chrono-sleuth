@@ -3,7 +3,7 @@ import { Interactive, InteractResult, ItemType } from './types.';
 
 export const ItemData = {
   [ItemType.Book]: { x: 1500, y: 875, image: 'book' },
-  [ItemType.Ring]: { x: 3200, y: 810, image: 'ring' },
+  [ItemType.Ring]: { x: 3500, y: 810, image: 'ring' },
 };
 
 export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {

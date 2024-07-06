@@ -6,6 +6,7 @@ import { Colors, fontStyle, getColorNumber } from '../utils/colors';
 export class Quests extends GameObjects.Container {
   quests: Quest[] = [];
   questRectangle: GameObjects.Rectangle;
+  shifted: boolean = true;
 
   constructor(scene: Phaser.Scene) {
     super(scene, Config.width - 320, 120);
@@ -43,14 +44,15 @@ export class Quests extends GameObjects.Container {
       if (text instanceof GameObjects.Text) {
         if (!activeQuests.find((q) => text.text === q.name) && text.text !== 'Quests') text.destroy();
         else if (text.text !== 'Quests') {
-          const y = 10 + 30 * index;
+          const y = 20 + 30 * index;
           text.setPosition(10, y);
           index++;
         }
       }
     });
 
+    this.setY(this.shifted ? 130 : 20);
     this.setVisible(activeQuests.length > 0);
-    this.questRectangle.setSize(300, 40 + 30 * activeQuests.length);
+    this.questRectangle.setSize(300, 50 + 30 * activeQuests.length);
   }
 }

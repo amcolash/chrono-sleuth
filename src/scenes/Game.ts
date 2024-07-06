@@ -67,7 +67,7 @@ export class Game extends Scene {
 
   createBackgrounds() {
     this.add.sprite(0, 0, 'town').setOrigin(0);
-    this.add.sprite(2000, 0, 'forest').setOrigin(0);
+    this.add.sprite(2300, 0, 'forest').setOrigin(0);
   }
 
   createWarpers(): Warp[] {

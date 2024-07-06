@@ -13,7 +13,7 @@ const WarpData = {
     visible: false,
   },
   [WarpType.FOREST]: {
-    x: 2350,
+    x: 2650,
     y: 810,
     key: [Phaser.Input.Keyboard.KeyCodes.ENTER, Phaser.Input.Keyboard.KeyCodes.SPACE],
     warpTo: WarpType.TOWN_EAST,

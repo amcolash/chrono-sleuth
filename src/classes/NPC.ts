@@ -2,14 +2,16 @@ import { getDialog, NPCDialog } from '../utils/dialog';
 import { Player } from './Player';
 import { Interactive, InteractResult, NPCType } from './types.';
 
-const NPCData = {
+export const NPCData = {
   [NPCType.Inventor]: {
     x: 550,
     y: 635,
     scale: 0.75,
     img: 'inventor',
+    portrait: 'inventor_portrait',
+    name: 'Johan the Inventor',
   },
-  [NPCType.Stranger]: { x: 750, y: 865, scale: 1.35, img: 'stranger' },
+  [NPCType.Stranger]: { x: 750, y: 865, scale: 1.35, img: 'stranger', portrait: 'stranger_portrait', name: 'Mysterious Stranger' },
 };
 
 export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
@@ -48,9 +50,9 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
       const message = dialog.messages[this.messageIndex];
 
       if (message) {
-        this.player.setMessage(message, this.npcType);
+        this.player.message.setMessage(message, this.npcType);
       } else {
-        this.player.setMessage();
+        this.player.message.setMessage();
         if (dialog.onCompleted) {
           dialog.onCompleted(this.player);
         }
