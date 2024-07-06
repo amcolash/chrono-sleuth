@@ -2,7 +2,7 @@ import { getDialog, NPCDialog } from '../utils/dialog';
 import { Player } from './Player';
 import { Interactive, InteractResult, NPCType } from './types.';
 
-const meta = {
+const NPCData = {
   [NPCType.Inventor]: {
     x: 550,
     y: 635,
@@ -20,7 +20,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
   interactionTimeout: number = 500;
 
   constructor(scene: Phaser.Scene, npcType: NPCType, player: Player) {
-    const { x, y, img, scale } = meta[npcType];
+    const { x, y, img, scale } = NPCData[npcType];
 
     super(scene, x, y, img);
     this.npcType = npcType;
@@ -29,8 +29,6 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-
-    this.setPushable(false);
   }
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {

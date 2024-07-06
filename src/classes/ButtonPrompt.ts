@@ -9,6 +9,7 @@ export class ButtonPrompt extends GameObjects.Text {
     this.setOrigin(0.5)
       .setBackgroundColor('#' + Colors.Black)
       .setPadding(10, 5)
+      .setAlign('center')
       .setAlpha(0.9)
       .setScrollFactor(0)
       .setDepth(2)

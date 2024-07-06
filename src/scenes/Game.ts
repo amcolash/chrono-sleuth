@@ -21,7 +21,7 @@ export class Game extends Scene {
     this.createBackgrounds();
 
     // game objects
-    this.player = new Player(this, 100, 650);
+    this.player = new Player(this, 400, 650);
 
     const walls = new Walls(this);
     const warpers = this.createWarpers();

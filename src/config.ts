@@ -1,10 +1,14 @@
+let debug = false;
+// debug = true;
+
+let rewindEnabled = false;
+// rewindEnabled = true;
+
 export const Config = {
-  // debug: true,
-  debug: false,
+  debug,
   width: 1024,
   height: 768,
 
   dayMinutes: 2,
-  // rewindEnabled: true,
-  rewindEnabled: false,
+  rewindEnabled,
 };

@@ -2,8 +2,8 @@ import { Player } from './Player';
 import { Interactive, InteractResult, ItemType } from './types.';
 
 export const ItemData = {
-  [ItemType.Book]: { x: 100, y: 650, image: 'book' },
-  [ItemType.Ring]: { x: 150, y: 875, image: 'ring' },
+  [ItemType.Book]: { x: 1500, y: 875, image: 'book' },
+  [ItemType.Ring]: { x: 3200, y: 810, image: 'ring' },
 };
 
 export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
@@ -20,8 +20,6 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-
-    this.setPushable(false);
   }
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
