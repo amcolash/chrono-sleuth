@@ -1,3 +1,6 @@
+let fastMode = false;
+fastMode = true;
+
 let debug = false;
 // debug = true;
 
@@ -11,4 +14,6 @@ export const Config = {
 
   dayMinutes: 2,
   rewindEnabled,
+
+  fastMode,
 };

@@ -10,7 +10,7 @@ import { ButtonPrompt } from './ButtonPrompt';
 import { createAnimation, updateAnimation } from '../utils/animations';
 
 const size = 2.5;
-const speed = 120 * size;
+const speed = (Config.fastMode ? 350 : 120) * size;
 const MAX_HISTORY = 1000;
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
