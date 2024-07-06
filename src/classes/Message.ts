@@ -1,5 +1,5 @@
 import { GameObjects } from 'phaser';
-import { Colors, getColorNumber } from '../utils/colors';
+import { Colors, fontStyle, getColorNumber } from '../utils/colors';
 import { Config } from '../config';
 
 export class Message extends Phaser.GameObjects.Container {
@@ -22,11 +22,7 @@ export class Message extends Phaser.GameObjects.Container {
     const textWidth = width - padding * 4;
     const textHeight = boxHeight - padding * 2;
 
-    this.text = new Phaser.GameObjects.Text(scene, padding, padding, '', {
-      fontFamily: 'sans',
-      fontSize: 24,
-      color: `#${Colors.White}`,
-    });
+    this.text = new Phaser.GameObjects.Text(scene, padding, padding, '', fontStyle);
     this.text.width = textWidth;
     this.text.height = textHeight;
 

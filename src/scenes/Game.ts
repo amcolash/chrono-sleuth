@@ -1,5 +1,5 @@
 import { Player } from '../classes/Player';
-import { Colors, getColorNumber } from '../utils/colors';
+import { Colors, fontStyle, getColorNumber } from '../utils/colors';
 import { Warp } from '../classes/Warp';
 import { ItemType, Rewindable, WarpType } from '../classes/types.';
 import { NPC } from '../classes/NPC';
@@ -43,7 +43,7 @@ export class Game extends Scene {
 
     // game objects
     const walls = new Walls(this);
-    this.player = new Player(this, 1700, 650);
+    this.player = new Player(this, 100, 650);
 
     const warpTop = new Warp(this, WarpType.STAIRS_TOP, this.player);
     const warpBottom = new Warp(this, WarpType.STAIRS_BOTTOM, this.player);
@@ -66,7 +66,7 @@ export class Game extends Scene {
         .setDepth(1)
         .setOrigin(0, 0);
 
-      this.text = this.add.text(10, 20, '', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }).setScrollFactor(0);
+      this.text = this.add.text(10, 20, '', fontStyle).setScrollFactor(0);
       this.bar = this.add.rectangle(0, Config.height - 6, 0, 6, 0xccaa00).setScrollFactor(0);
     }
 
@@ -126,7 +126,7 @@ export class Game extends Scene {
     this.hand.setRotation((this.clock / gameTime) * 2 * Math.PI + Math.PI);
 
     if (this.clock > gameTime && !this.rewinding && !this.player.message.visible) {
-      this.text2 = this.add.text(250, 250, 'Day Over', { fontFamily: 'sans', fontSize: 96 }).setScrollFactor(0);
+      this.text2 = this.add.text(250, 250, 'Day Over', { ...fontStyle, fontSize: 96 }).setScrollFactor(0);
 
       this.rewinding = true;
       this.rewindable.forEach((r) => r.setRewind(true));

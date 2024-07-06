@@ -2,11 +2,10 @@ import { GameObjects } from 'phaser';
 import { Config } from '../config';
 import { rewindInterval, rewindSpeed } from '../scenes/Game';
 import { Message } from './Message';
-import { Interactive, InteractResult, ItemType, NPCType, Quest, QuestType, Rewindable, TalkingPoint } from './types.';
-import { meta } from './Item';
-import { Colors, getColorNumber } from '../utils/colors';
+import { Interactive, InteractResult, NPCType, Quest, QuestType, Rewindable, TalkingPoint } from './types.';
+import { Colors, fontStyle, getColorNumber } from '../utils/colors';
+import { Inventory } from './Inventory';
 
-const texture = 'robot';
 const size = 2.5;
 const speed = 120 * size;
 const MAX_HISTORY = 1000;
@@ -22,8 +21,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
   message: Message = new Message(this.scene);
 
-  inventory: ItemType[] = [];
-  inventoryList: GameObjects.Container;
+  inventory: Inventory;
 
   quests: Quest[] = [];
   questList: GameObjects.Container;
@@ -36,7 +34,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   rewinding = false;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, texture, 6);
+    super(scene, x, y, 'character', 0);
 
     this.keys = scene.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT,ENTER,SPACE') as {
       [key: string]: Phaser.Input.Keyboard.Key;
@@ -63,25 +61,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     this.anims.play('walk');
 
     this.buttonPrompt = scene.add
-      .text(Config.width / 2, Config.height - 50, '', { fontFamily: 'sans', fontSize: 18, color: `#${Colors.White}`, align: 'center' })
+      .text(Config.width / 2, Config.height - 50, '', fontStyle)
       .setScrollFactor(0)
       .setDepth(2)
       .setVisible(false);
+
     this.message = new Message(scene);
-
-    this.inventoryList = scene.add
-      .container(Config.width - 320, 20)
-      .setScrollFactor(0)
-      .setDepth(1)
-      .setVisible(false);
-
-    this.inventoryList.add(
-      scene.add
-        .rectangle(0, 0, 300, 60, getColorNumber(Colors.Teal))
-        .setStrokeStyle(2, getColorNumber(Colors.White))
-        .setAlpha(0.75)
-        .setOrigin(0)
-    );
+    this.inventory = new Inventory(scene);
 
     this.questList = scene.add
       .container(Config.width - 320, 100)
@@ -95,10 +81,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       .setAlpha(0.75)
       .setOrigin(0);
     this.questList.add(this.questRectangle);
-    this.questList.add(scene.add.text(10, 10, 'Quests', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }));
+    this.questList.add(scene.add.text(10, 10, 'Quests', fontStyle));
 
-    if (Config.debug)
-      this.debugText = scene.add.text(10, 30, '', { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` }).setScrollFactor(0);
+    if (Config.debug) this.debugText = scene.add.text(10, 30, '', fontStyle).setScrollFactor(0);
   }
 
   update(_time: number, delta: number) {
@@ -187,41 +172,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     this.message.setMessage(message);
   }
 
-  addItem(item: ItemType) {
-    this.inventory.push(item);
-    const x = 30 + 50 * (this.inventory.length - 1);
-    this.inventoryList.add(this.scene.add.sprite(x, 30, meta[item].image).setScale(0.25));
-    this.updateItems();
-  }
-
-  updateItems() {
-    let index = 0;
-    this.inventoryList.getAll<GameObjects.GameObject>().forEach((item, i) => {
-      if (item instanceof GameObjects.Sprite) {
-        const x = 30 + 50 * index;
-        item.setPosition(x, 30);
-        index++;
-      }
-    });
-    this.inventoryList.setVisible(this.inventory.length > 0);
-  }
-
-  removeItem(item: ItemType) {
-    const index = this.inventory.indexOf(item);
-    if (index > -1) {
-      this.inventory.splice(index, 1);
-      this.inventoryList
-        .getAll<GameObjects.Sprite>()
-        .find((i) => i.texture?.key === meta[item].image)
-        ?.destroy();
-    }
-    this.updateItems();
-  }
-
   addQuest(quest: Quest) {
     this.quests.push(quest);
     const y = 10 + 30 * this.quests.length;
-    this.questList.add(this.scene.add.text(10, y, quest.name, { fontFamily: 'sans', fontSize: 18, color: `#${Colors.White}` }));
+    this.questList.add(this.scene.add.text(10, y, quest.name, { ...fontStyle, fontSize: 18 }));
     this.updateQuests();
   }
 

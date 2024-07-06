@@ -10,3 +10,5 @@ export const Colors = {
 export function getColorNumber(color: string): number {
   return Phaser.Display.Color.HexStringToColor(color).color;
 }
+
+export const fontStyle = { fontFamily: 'sans', fontSize: 24, color: `#${Colors.White}` };

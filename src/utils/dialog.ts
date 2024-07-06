@@ -28,7 +28,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       },
       onCompleted: (player) => {
         player.updateQuest(QuestType.INVENTOR_BOOK, true);
-        player.removeItem(ItemType.Book);
+        player.inventory.removeItem(ItemType.Book);
       },
     },
     {
@@ -68,7 +68,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       },
       onCompleted: (player) => {
         player.updateQuest(QuestType.STRANGER_RING, true);
-        player.removeItem(ItemType.Ring);
+        player.inventory.removeItem(ItemType.Ring);
       },
     },
     {
@@ -113,7 +113,7 @@ export function getDialog(npc: NPCType, player: Player): NPCDialog | undefined {
   for (const dialog of dialogs) {
     const { conditions } = dialog;
 
-    if (conditions?.hasItem !== undefined && !hasItem(player.inventory, conditions.hasItem)) continue;
+    if (conditions?.hasItem !== undefined && !hasItem(player.inventory.inventory, conditions.hasItem)) continue;
     if (conditions?.completedQuest !== undefined && !hasCompletedQuest(player.quests, conditions.completedQuest)) continue;
     if (conditions?.activeQuest !== undefined && !hasActiveQuest(player.quests, conditions.activeQuest)) continue;
     if (conditions?.talkingPoint !== undefined && !hasTalkingPoint(player.talkingPoints, conditions.talkingPoint)) continue;

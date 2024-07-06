@@ -1,7 +1,7 @@
 import { Player } from './Player';
 import { Interactive, InteractResult, ItemType } from './types.';
 
-export const meta = {
+export const ItemData = {
   [ItemType.Book]: { x: 100, y: 650, image: 'book' },
   [ItemType.Ring]: { x: 150, y: 875, image: 'ring' },
 };
@@ -11,7 +11,7 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
   player: Player;
 
   constructor(scene: Phaser.Scene, type: ItemType, player: Player) {
-    const { x, y, image } = meta[type];
+    const { x, y, image } = ItemData[type];
 
     super(scene, x, y, image);
     this.itemType = type;
@@ -26,7 +26,7 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
     if (keys.SPACE.isDown || keys.ENTER.isDown) {
-      this.player.addItem(this.itemType);
+      this.player.inventory.addItem(this.itemType);
       this.destroy();
       return InteractResult.Item;
     }
