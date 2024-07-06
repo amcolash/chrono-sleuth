@@ -2,9 +2,10 @@ import { GameObjects } from 'phaser';
 import { Config } from '../config';
 import { rewindInterval, rewindSpeed } from '../scenes/Game';
 import { Message } from './Message';
-import { Interactive, InteractResult, NPCType, Quest, QuestType, Rewindable, TalkingPoint } from './types.';
-import { Colors, fontStyle, getColorNumber } from '../utils/colors';
+import { Interactive, InteractResult, NPCType, Rewindable, TalkingPoint } from './types.';
+import { Colors, fontStyle } from '../utils/colors';
 import { Inventory } from './Inventory';
+import { Quests } from './Quests';
 
 const size = 2.5;
 const speed = 120 * size;
@@ -20,12 +21,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   interactionTimeout: number = 0;
 
   message: Message = new Message(this.scene);
-
   inventory: Inventory;
-
-  quests: Quest[] = [];
-  questList: GameObjects.Container;
-  questRectangle: GameObjects.Rectangle;
+  quests: Quests;
 
   talkingPoints: TalkingPoint[] = [];
 
@@ -40,13 +37,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       [key: string]: Phaser.Input.Keyboard.Key;
     };
 
-    // createWalkAnimations(texture, scene, this);
-
     scene.add.existing(this);
     scene.physics.add.existing(this);
+
     this.setBodySize(24, 36);
     this.setOffset(0, 0);
-    this.setPushable(false);
     this.depth = 1;
 
     this.scale = size;
@@ -62,26 +57,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
     this.buttonPrompt = scene.add
       .text(Config.width / 2, Config.height - 50, '', fontStyle)
+      .setBackgroundColor('#' + Colors.Black)
+      .setPadding(10, 5)
+      .setAlpha(0.9)
       .setScrollFactor(0)
       .setDepth(2)
       .setVisible(false);
 
     this.message = new Message(scene);
     this.inventory = new Inventory(scene);
-
-    this.questList = scene.add
-      .container(Config.width - 320, 100)
-      .setScrollFactor(0)
-      .setDepth(1)
-      .setVisible(false);
-
-    this.questRectangle = scene.add
-      .rectangle(0, 0, 300, 60, getColorNumber(Colors.Teal))
-      .setStrokeStyle(2, getColorNumber(Colors.White))
-      .setAlpha(0.75)
-      .setOrigin(0);
-    this.questList.add(this.questRectangle);
-    this.questList.add(scene.add.text(10, 10, 'Quests', fontStyle));
+    this.quests = new Quests(scene);
 
     if (Config.debug) this.debugText = scene.add.text(10, 30, '', fontStyle).setScrollFactor(0);
   }
@@ -112,6 +97,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
         }
       }
 
+      this.setVelocity(0);
       if (!ret && !this.message.visible) this.updateVelocity();
     }
 
@@ -158,8 +144,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       shift: this.keys.SHIFT.isDown,
     };
 
-    this.setVelocity(0);
-
     let calcSpeed = speed;
 
     if (keys.left) this.setVelocityX(-calcSpeed);
@@ -170,37 +154,5 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
   setMessage(message?: string, npcType?: NPCType) {
     this.message.setMessage(message);
-  }
-
-  addQuest(quest: Quest) {
-    this.quests.push(quest);
-    const y = 10 + 30 * this.quests.length;
-    this.questList.add(this.scene.add.text(10, y, quest.name, { ...fontStyle, fontSize: 18 }));
-    this.updateQuests();
-  }
-
-  updateQuest(quest: QuestType, completed: boolean) {
-    const q = this.quests.find((q) => q.id === quest);
-    if (q) q.completed = completed;
-    this.updateQuests();
-  }
-
-  updateQuests() {
-    const activeQuests = this.quests.filter((q) => !q.completed);
-
-    let index = 1;
-    this.questList.getAll<GameObjects.Text>().forEach((text) => {
-      if (text instanceof GameObjects.Text) {
-        if (!activeQuests.find((q) => text.text === q.name) && text.text !== 'Quests') text.destroy();
-        else if (text.text !== 'Quests') {
-          const y = 10 + 30 * index;
-          text.setPosition(10, y);
-          index++;
-        }
-      }
-    });
-
-    this.questList.setVisible(activeQuests.length > 0);
-    this.questRectangle.setSize(300, 40 + 30 * activeQuests.length);
   }
 }

@@ -27,7 +27,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
         hasItem: ItemType.Book,
       },
       onCompleted: (player) => {
-        player.updateQuest(QuestType.INVENTOR_BOOK, true);
+        player.quests.updateExistingQuest(QuestType.INVENTOR_BOOK, true);
         player.inventory.removeItem(ItemType.Book);
       },
     },
@@ -43,7 +43,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
         talkingPoint: TalkingPoint.INVENTOR_GREETED,
       },
       onCompleted: (player) => {
-        player.addQuest({ id: QuestType.INVENTOR_BOOK, name: 'Find the inventors book', completed: false });
+        player.quests.addQuest({ id: QuestType.INVENTOR_BOOK, name: 'Find the inventors book', completed: false });
       },
     },
     {
@@ -67,7 +67,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
         hasItem: ItemType.Ring,
       },
       onCompleted: (player) => {
-        player.updateQuest(QuestType.STRANGER_RING, true);
+        player.quests.updateExistingQuest(QuestType.STRANGER_RING, true);
         player.inventory.removeItem(ItemType.Ring);
       },
     },
@@ -83,7 +83,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
         completedQuest: QuestType.INVENTOR_BOOK,
       },
       onCompleted: (player) => {
-        player.addQuest({ id: QuestType.STRANGER_RING, name: 'Find the strangers ring', completed: false });
+        player.quests.addQuest({ id: QuestType.STRANGER_RING, name: 'Find the strangers ring', completed: false });
       },
     },
     {
@@ -114,8 +114,8 @@ export function getDialog(npc: NPCType, player: Player): NPCDialog | undefined {
     const { conditions } = dialog;
 
     if (conditions?.hasItem !== undefined && !hasItem(player.inventory.inventory, conditions.hasItem)) continue;
-    if (conditions?.completedQuest !== undefined && !hasCompletedQuest(player.quests, conditions.completedQuest)) continue;
-    if (conditions?.activeQuest !== undefined && !hasActiveQuest(player.quests, conditions.activeQuest)) continue;
+    if (conditions?.completedQuest !== undefined && !hasCompletedQuest(player.quests.quests, conditions.completedQuest)) continue;
+    if (conditions?.activeQuest !== undefined && !hasActiveQuest(player.quests.quests, conditions.activeQuest)) continue;
     if (conditions?.talkingPoint !== undefined && !hasTalkingPoint(player.talkingPoints, conditions.talkingPoint)) continue;
 
     return dialog;
