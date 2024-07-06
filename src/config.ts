@@ -4,6 +4,7 @@ export const Config = {
   width: 1024,
   height: 768,
 
-  dayTime: 2, // minutes
+  dayMinutes: 2,
+  // rewindEnabled: true,
   rewindEnabled: false,
 };

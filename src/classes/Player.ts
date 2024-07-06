@@ -1,11 +1,11 @@
 import { GameObjects } from 'phaser';
 import { Config } from '../config';
-import { rewindInterval, rewindSpeed } from '../scenes/Game';
 import { Message } from './Message';
 import { Interactive, InteractResult, NPCType, Rewindable, TalkingPoint } from './types.';
 import { Colors, fontStyle } from '../utils/colors';
 import { Inventory } from './Inventory';
 import { Quests } from './Quests';
+import { rewindInterval, rewindSpeed } from './Clock';
 
 const size = 2.5;
 const speed = 120 * size;
