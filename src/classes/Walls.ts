@@ -13,7 +13,7 @@ export class Walls extends Physics.Arcade.StaticGroup {
       { x: 40, y: 600 },
       { x: 1750, y: 600 },
       // Town Ladder Bottom
-      { x: 70, y: 820 },
+      { x: 90, y: 820 },
       { x: 1650, y: 820 },
       // Forest
       { x: 2600, y: 780 },

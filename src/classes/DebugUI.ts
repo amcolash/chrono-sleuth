@@ -1,5 +1,5 @@
-import { Game, GameObjects, Input } from 'phaser';
-import { Colors, fontStyle, getColorNumber } from '../utils/colors';
+import { GameObjects, Input } from 'phaser';
+import { Colors, fontStyle } from '../utils/colors';
 import { Config } from '../config';
 import { Player } from './Player';
 
