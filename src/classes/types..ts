@@ -49,10 +49,7 @@ export interface Quest {
   completed: boolean;
 }
 
-export enum TalkingPoint {
+export enum JournalEntry {
   // Inventor
-  INVENTOR_GREETED,
-
-  // Strange
-  STRANGER_GREETED,
+  InventorBookFound,
 }

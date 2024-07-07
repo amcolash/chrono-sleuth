@@ -1,12 +1,13 @@
 import { GameObjects } from 'phaser';
 import { Config } from '../config';
 import { Message } from './Message';
-import { Interactive, InteractResult, Rewindable, TalkingPoint } from './types.';
+import { Interactive, InteractResult, Rewindable } from './types.';
 import { Inventory } from './Inventory';
 import { Quests } from './Quests';
 import { rewindInterval, rewindSpeed } from './Clock';
 import { ButtonPrompt } from './ButtonPrompt';
 import { createAnimation, updateAnimation } from '../utils/animations';
+import { Journal } from './Journal';
 
 const size = 2.5;
 const speed = (Config.fastMode ? 350 : 120) * size;
@@ -22,8 +23,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   message: Message = new Message(this.scene);
   inventory: Inventory;
   quests: Quests;
-
-  talkingPoints: TalkingPoint[] = [];
+  journal: Journal;
 
   counter: number = 0;
   history: Phaser.Math.Vector3[] = [];
@@ -52,6 +52,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     this.message = new Message(scene);
     this.inventory = new Inventory(scene);
     this.quests = new Quests(scene);
+    this.journal = new Journal(scene);
   }
 
   update(_time: number, delta: number) {

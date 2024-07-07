@@ -1,12 +1,14 @@
 import { Player } from '../classes/Player';
-import { ItemType, NPCType, Quest, QuestType, TalkingPoint } from '../classes/types.';
+import { ItemType, NPCType, Quest, QuestType, JournalEntry } from '../classes/types.';
 
 export interface NPCDialog {
   conditions?: {
     hasItem?: ItemType;
     completedQuest?: QuestType;
     activeQuest?: QuestType;
-    talkingPoint?: TalkingPoint;
+    journalEntry?: JournalEntry;
+    noJournalEntry?: JournalEntry;
+    or?: boolean;
   };
   messages: string[];
   onCompleted?: (player: Player) => void;
@@ -18,6 +20,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       messages: ['I am working on a new invention.'],
       conditions: {
         completedQuest: QuestType.InventorBook,
+        journalEntry: JournalEntry.InventorBookFound,
       },
     },
     {
@@ -29,6 +32,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       onCompleted: (player) => {
         player.quests.updateExistingQuest(QuestType.InventorBook, true);
         player.inventory.removeItem(ItemType.Book);
+        player.journal.addEntry(JournalEntry.InventorBookFound);
       },
     },
     {
@@ -38,19 +42,16 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       },
     },
     {
-      messages: ['I wonder what I did with that book of mine...', 'Could you find it for me?'],
+      messages: ['My name is Johan and I am an inventor.', 'I wonder what I did with that book of mine...', 'Could you find it for me?'],
       conditions: {
-        talkingPoint: TalkingPoint.INVENTOR_GREETED,
+        noJournalEntry: JournalEntry.InventorBookFound,
       },
       onCompleted: (player) => {
         player.quests.addQuest({ id: QuestType.InventorBook, name: 'Find the inventors book', completed: false });
       },
     },
     {
-      messages: ['Are you new around here?', 'My name is Johan and I am an inventor.'],
-      onCompleted: (player) => {
-        player.talkingPoints.push(TalkingPoint.INVENTOR_GREETED);
-      },
+      messages: ['My name is Johan and I am an inventor.'],
     },
   ],
   [NPCType.Stranger]: [
@@ -78,9 +79,9 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       },
     },
     {
-      messages: ['I heard you met the inventor.', 'Can you find my ring for me?'],
+      messages: ['You helped the inventor?', 'Can you find my ring for me?'],
       conditions: {
-        completedQuest: QuestType.InventorBook,
+        journalEntry: JournalEntry.InventorBookFound,
       },
       onCompleted: (player) => {
         player.quests.addQuest({ id: QuestType.StrangerRing, name: 'Find the strangers ring', completed: false });
@@ -104,8 +105,8 @@ function hasCompletedQuest(quests: Quest[], questId: QuestType): boolean {
   return quests.some((quest) => quest.id === questId && quest.completed);
 }
 
-function hasTalkingPoint(talkingPoints: TalkingPoint[], talkingPoint: TalkingPoint): boolean {
-  return talkingPoints.includes(talkingPoint);
+function hasJournalEntry(journal: JournalEntry[], entry: JournalEntry): boolean {
+  return journal.includes(entry);
 }
 
 export function getDialog(npc: NPCType, player: Player): NPCDialog | undefined {
@@ -113,12 +114,17 @@ export function getDialog(npc: NPCType, player: Player): NPCDialog | undefined {
   for (const dialog of dialogs) {
     const { conditions } = dialog;
 
-    if (conditions?.hasItem !== undefined && !hasItem(player.inventory.inventory, conditions.hasItem)) continue;
-    if (conditions?.completedQuest !== undefined && !hasCompletedQuest(player.quests.quests, conditions.completedQuest)) continue;
-    if (conditions?.activeQuest !== undefined && !hasActiveQuest(player.quests.quests, conditions.activeQuest)) continue;
-    if (conditions?.talkingPoint !== undefined && !hasTalkingPoint(player.talkingPoints, conditions.talkingPoint)) continue;
+    const results = [];
 
-    return dialog;
+    if (conditions?.hasItem !== undefined) results.push(hasItem(player.inventory.inventory, conditions.hasItem));
+    if (conditions?.completedQuest !== undefined) results.push(hasCompletedQuest(player.quests.quests, conditions.completedQuest));
+    if (conditions?.activeQuest !== undefined) results.push(hasActiveQuest(player.quests.quests, conditions.activeQuest));
+    if (conditions?.journalEntry !== undefined) results.push(hasJournalEntry(player.journal.journal, conditions.journalEntry));
+    if (conditions?.noJournalEntry !== undefined) results.push(!hasJournalEntry(player.journal.journal, conditions.noJournalEntry));
+
+    if (conditions?.or) {
+      if (results.some((result) => result)) return dialog;
+    } else if (results.every((result) => result)) return dialog;
   }
 
   return undefined;

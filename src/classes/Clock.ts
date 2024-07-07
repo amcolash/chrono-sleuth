@@ -82,7 +82,6 @@ export class Clock extends GameObjects.Container {
 
         // Reset some parts of the timeline
         this.player.quests.reset();
-        this.player.talkingPoints = [];
       }
     } else if (!this.player.message.visible) {
       if (this.counter > rewindInterval) {
