@@ -17,6 +17,8 @@
 
 ## Content
 
+- [ ] Make map in Tiled
+  - [ ] Add collisions, warps, items, etc
 - [ ] Add more dialog
 - [ ] Add more items
 - [ ] Add more npcs
@@ -26,5 +28,21 @@
 - [ ] Add more maps
   - [ ] Abandoned mansion
   - [ ] Town buildings
+
+## Artwork (Placeholder)
+
+- [ ] Items
+  - [ ] Wrench
+  - [ ] Gears
+  - [ ] Lantern
+  - [ ] Map
+  - [ ] Lockpick
+  - [ ] Letter
+  - [ ] Candles
+  - [ ] Dagger
+  - [ ] Tome
+  - [ ] Journal
+- [ ] Npcs
+  - [ ] Mayor
 
 ## Bugs

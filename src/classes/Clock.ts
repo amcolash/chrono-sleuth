@@ -55,13 +55,15 @@ export class Clock extends GameObjects.Container {
     const dayProgress = this.currentTime / Config.dayMinutes;
     this.bar.width = Config.width * dayProgress;
 
-    const hours = Math.floor((this.currentTime / 1000 / 60 / 60) % 24);
-    const minutes = Math.floor((this.currentTime / 1000 / 60) % 60);
-    const seconds = Math.floor((this.currentTime / 1000) % 60);
+    const msHour = 60 * 60 * 1000;
+    const modifiedTime = 7 * msHour + (this.currentTime / dayDuration) * 17 * msHour;
+    const hours = Math.floor((modifiedTime / 1000 / 60 / 60) % 12);
+    const minutes = Math.floor((modifiedTime / 1000 / 60) % 60);
+    const am = modifiedTime / msHour < 12 ? 'AM' : 'PM';
 
-    this.timeText.setText(`${hours}:${minutes}:${seconds}`);
+    this.timeText.setText(`${hours === 0 ? '12' : hours}:${minutes.toString().padStart(2, '0')} ${am}`);
 
-    this.hand.setRotation((this.currentTime / dayDuration) * 2 * Math.PI + Math.PI);
+    this.hand.setAngle((modifiedTime / (msHour * 12)) * 360 + 180);
 
     if (this.currentTime > dayDuration && !this.rewinding && !this.player.message.visible) {
       this.dayOver = this.scene.add.text(250, 250, 'Day Over', { ...fontStyle, fontSize: 96 }).setScrollFactor(0);
@@ -88,7 +90,6 @@ export class Clock extends GameObjects.Container {
       this.currentTime += delta;
     }
 
-    this.timeText.setText(`Time: ${Math.floor(this.currentTime / 1000)}`);
     this.bar.width = (this.currentTime / dayDuration) * Config.width;
   }
 }

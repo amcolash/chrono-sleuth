@@ -5,7 +5,7 @@ let debug = false;
 // debug = true;
 
 let rewindEnabled = false;
-// rewindEnabled = true;
+rewindEnabled = true;
 
 export const Config = {
   debug,
