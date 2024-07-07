@@ -12,7 +12,7 @@ export const Config = {
   width: 1024,
   height: 768,
 
-  dayMinutes: 2,
+  dayMinutes: 0.25,
   rewindEnabled,
 
   fastMode,

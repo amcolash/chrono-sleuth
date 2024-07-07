@@ -39,6 +39,11 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
+
+    if (warpType === WarpType.Underground) {
+      scene.add.sprite(x, y - 60, 'ladder').setScale(0.5);
+      scene.add.sprite(x, y - 105, 'ladder').setScale(0.5);
+    }
   }
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {

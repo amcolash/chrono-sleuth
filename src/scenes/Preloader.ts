@@ -24,23 +24,33 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
 
     // backgrounds
-    this.load.image('town', 'town.jpg');
-    this.load.image('forest', 'forest.jpg');
+    this.load.image('town', 'maps/town.jpg');
+    this.load.image('forest', 'maps/forest.jpg');
 
     // interactive objects
     this.load.image('ladder', 'ladder.png');
     this.load.image('watch', 'watch.png');
-    this.load.image('book', 'book.png');
-    this.load.image('ring', 'ring.png');
+
+    // items
+    this.load.image('book', 'items/book.png');
+    this.load.image('candle', 'items/candle.png');
+    this.load.image('dagger', 'items/dagger.png');
+    this.load.image('gear', 'items/gear.png');
+    this.load.image('journal', 'items/journal.jpeg');
+    this.load.image('lantern', 'items/lantern.png');
+    this.load.image('letter', 'items/letter.png');
+    this.load.image('lockpick', 'items/lockpick.png');
+    this.load.image('map', 'items/map.png');
+    this.load.image('wrench', 'items/wrench.png');
 
     // characters
-    this.load.spritesheet('character', 'player.png', { frameWidth: 24, frameHeight: 36 });
+    this.load.spritesheet('character', 'characters/player.png', { frameWidth: 24, frameHeight: 36 });
 
-    this.load.image('inventor', 'inventor.png');
-    this.load.image('inventor_portrait', 'inventor_portrait.png');
+    this.load.image('inventor', 'characters/inventor.png');
+    this.load.image('inventor_portrait', 'characters/inventor_portrait.png');
 
-    this.load.image('stranger', 'stranger.png');
-    this.load.image('stranger_portrait', 'stranger_portrait.png');
+    this.load.image('stranger', 'characters/stranger.png');
+    this.load.image('stranger_portrait', 'characters/stranger_portrait.png');
   }
 
   create() {

@@ -55,4 +55,9 @@ export class Quests extends GameObjects.Container {
     this.setVisible(activeQuests.length > 0);
     this.questRectangle.setSize(300, 50 + 30 * activeQuests.length);
   }
+
+  reset() {
+    this.quests = [];
+    this.updateQuests();
+  }
 }
