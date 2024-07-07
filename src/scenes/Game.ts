@@ -6,6 +6,7 @@ import { GameObjects, Scene } from 'phaser';
 import { Item } from '../classes/Item';
 import { Walls } from '../classes/Walls';
 import { Clock } from '../classes/Clock';
+import { DebugUI } from '../classes/DebugUI';
 
 export class Game extends Scene {
   player: Player;
@@ -28,6 +29,8 @@ export class Game extends Scene {
     const npcs = this.createNpcs();
     const items = this.createItems();
 
+    const debugUI = new DebugUI(this, this.player);
+
     // rewindable objects
     const rewindable = [this.player];
     this.clock = new Clock(this, rewindable, this.player);
@@ -36,7 +39,7 @@ export class Game extends Scene {
     this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items], { runChildUpdate: true });
 
     // update items added to the group
-    this.add.group([this.player, this.clock], { runChildUpdate: true });
+    this.add.group([this.player, this.clock, debugUI], { runChildUpdate: true });
 
     // collisions
     this.physics.add.collider(this.player, walls);

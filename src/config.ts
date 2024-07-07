@@ -2,7 +2,7 @@ let fastMode = false;
 fastMode = true;
 
 let debug = false;
-// debug = true;
+debug = true;
 
 let rewindEnabled = false;
 rewindEnabled = true;

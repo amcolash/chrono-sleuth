@@ -1,3 +1,4 @@
+import { Config } from '../config';
 import { getDialog, NPCDialog } from '../utils/dialog';
 import { Player } from './Player';
 import { Interactive, InteractResult, NPCType } from './types.';
@@ -31,6 +32,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    if (Config.debug) this.setInteractive({ draggable: true });
   }
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {

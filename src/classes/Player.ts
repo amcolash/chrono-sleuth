@@ -1,8 +1,7 @@
 import { GameObjects } from 'phaser';
 import { Config } from '../config';
 import { Message } from './Message';
-import { Interactive, InteractResult, NPCType, Rewindable, TalkingPoint } from './types.';
-import { fontStyle } from '../utils/colors';
+import { Interactive, InteractResult, Rewindable, TalkingPoint } from './types.';
 import { Inventory } from './Inventory';
 import { Quests } from './Quests';
 import { rewindInterval, rewindSpeed } from './Clock';
@@ -15,8 +14,6 @@ const MAX_HISTORY = 1000;
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   keys: { [key: string]: Phaser.Input.Keyboard.Key };
-
-  debugText: GameObjects.Text;
 
   buttonPrompt: GameObjects.Text;
   interactive?: Interactive;
@@ -41,6 +38,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    if (Config.debug) this.setInteractive();
 
     this.setBodySize(24, 36);
     this.setOffset(0, 0);
@@ -54,16 +52,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     this.message = new Message(scene);
     this.inventory = new Inventory(scene);
     this.quests = new Quests(scene);
-
-    if (Config.debug) this.debugText = scene.add.text(10, 30, '', fontStyle).setScrollFactor(0);
   }
 
   update(_time: number, delta: number) {
     // Update UI
-    if (Config.debug) {
-      this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
-      this.debugText.setText(`x: ${Math.floor(this.x)}, y: ${Math.floor(this.y)}`);
-    }
+    if (Config.debug) this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
     this.buttonPrompt.setVisible((this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false);
 
     let previous = this.quests.shifted;

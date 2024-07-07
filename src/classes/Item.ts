@@ -1,3 +1,4 @@
+import { Config } from '../config';
 import { Player } from './Player';
 import { Interactive, InteractResult, ItemType } from './types.';
 
@@ -20,6 +21,7 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    if (Config.debug) this.setInteractive({ draggable: true });
   }
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
