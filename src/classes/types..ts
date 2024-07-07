@@ -7,7 +7,7 @@ export enum InteractResult {
 
 export interface Interactive {
   interactionTimeout?: number;
-  getButtonPrompt?(): string;
+  getButtonPrompt?(): string | string[];
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined): InteractResult;
 }
@@ -22,10 +22,10 @@ export interface Rewindable {
 }
 
 export enum WarpType {
-  STAIRS_TOP,
-  STAIRS_BOTTOM,
-  TOWN_EAST,
-  FOREST,
+  Underground,
+  Town,
+  TownEast,
+  Forest,
 }
 
 export enum ItemType {
@@ -34,8 +34,8 @@ export enum ItemType {
 }
 
 export enum QuestType {
-  INVENTOR_BOOK,
-  STRANGER_RING,
+  InventorBook,
+  StrangerRing,
 }
 
 export enum NPCType {

@@ -74,10 +74,10 @@ export class Game extends Scene {
   }
 
   createWarpers(): Warp[] {
-    const warpTop = new Warp(this, WarpType.STAIRS_TOP, this.player);
-    const warpBottom = new Warp(this, WarpType.STAIRS_BOTTOM, this.player);
-    const warpEast = new Warp(this, WarpType.TOWN_EAST, this.player);
-    const warpForest = new Warp(this, WarpType.FOREST, this.player);
+    const warpTop = new Warp(this, WarpType.Underground, this.player);
+    const warpBottom = new Warp(this, WarpType.Town, this.player);
+    const warpEast = new Warp(this, WarpType.TownEast, this.player);
+    const warpForest = new Warp(this, WarpType.Forest, this.player);
 
     return [warpTop, warpBottom, warpEast, warpForest];
   }

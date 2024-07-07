@@ -4,26 +4,26 @@ import { Interactive, InteractResult, WarpType } from './types.';
 import { Config } from '../config';
 
 const WarpData = {
-  [WarpType.STAIRS_TOP]: { x: 300, y: 650, key: [Phaser.Input.Keyboard.KeyCodes.DOWN], warpTo: WarpType.STAIRS_BOTTOM, visible: true },
-  [WarpType.STAIRS_BOTTOM]: { x: 300, y: 875, key: [Phaser.Input.Keyboard.KeyCodes.UP], warpTo: WarpType.STAIRS_TOP, visible: true },
-  [WarpType.TOWN_EAST]: {
+  [WarpType.Town]: { x: 300, y: 650, key: [Phaser.Input.Keyboard.KeyCodes.DOWN], warpTo: WarpType.Underground, visible: true },
+  [WarpType.Underground]: { x: 300, y: 875, key: [Phaser.Input.Keyboard.KeyCodes.UP], warpTo: WarpType.Town, visible: true },
+  [WarpType.TownEast]: {
     x: 1720,
     y: 650,
     key: [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D],
-    warpTo: WarpType.FOREST,
+    warpTo: WarpType.Forest,
     visible: false,
   },
-  [WarpType.FOREST]: {
+  [WarpType.Forest]: {
     x: 2650,
     y: 810,
     key: [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A],
-    warpTo: WarpType.TOWN_EAST,
+    warpTo: WarpType.TownEast,
     visible: false,
   },
 };
 
 export class Warp extends Physics.Arcade.Sprite implements Interactive {
-  id: WarpType;
+  warpType: WarpType;
   player: Player;
   interactionTimeout = 500;
 
@@ -31,7 +31,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     const { x, y, visible } = WarpData[warpType];
 
     super(scene, x, y, 'ladder');
-    this.id = warpType;
+    this.warpType = warpType;
     this.player = player;
     this.scale = 0.5;
     this.visible = visible;
@@ -43,7 +43,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
     let shouldWarp = false;
-    const warpKeys = WarpData[this.id].key;
+    const warpKeys = WarpData[this.warpType].key;
     Object.values(keys).forEach((key) => {
       if (key.isDown && warpKeys.includes(key.keyCode)) {
         shouldWarp = true;
@@ -51,12 +51,13 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     });
 
     if (shouldWarp) {
-      const { x, y } = WarpData[WarpData[this.id].warpTo];
+      const { x, y } = WarpData[WarpData[this.warpType].warpTo];
 
       const targetScrollX = x - this.scene.cameras.main.width / 2;
       const targetScrollY = y - this.scene.cameras.main.height / 2;
 
       this.scene.cameras.main.stopFollow();
+      this.player.active = false;
       this.scene.tweens.add({
         targets: this.scene.cameras.main,
         scrollX: targetScrollX,
@@ -65,6 +66,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         ease: 'Power1',
         onComplete: () => {
           this.scene.cameras.main.startFollow(this.player);
+          this.player.active = true;
         },
       });
 
@@ -88,7 +90,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   }
 
   getButtonPrompt() {
-    const buttons = WarpData[this.id].key.map((key) => {
+    const buttons = WarpData[this.warpType].key.map((key) => {
       if (key === Phaser.Input.Keyboard.KeyCodes.ENTER || key === Phaser.Input.Keyboard.KeyCodes.SPACE) return '[CONTINUE]';
       if (key === Phaser.Input.Keyboard.KeyCodes.UP || key === Phaser.Input.Keyboard.KeyCodes.W) return '[UP]';
       if (key === Phaser.Input.Keyboard.KeyCodes.DOWN || key === Phaser.Input.Keyboard.KeyCodes.S) return '[DOWN]';
@@ -100,6 +102,6 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
     const unique = [...new Set(buttons)];
 
-    return 'Press ' + unique.join(' or ');
+    return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + unique.join(' or ')];
   }
 }

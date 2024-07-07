@@ -17,24 +17,24 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
     {
       messages: ['I am working on a new invention.'],
       conditions: {
-        completedQuest: QuestType.INVENTOR_BOOK,
+        completedQuest: QuestType.InventorBook,
       },
     },
     {
       messages: ['You found my book! Thank you!', 'I heard that the stranger has something for you.'],
       conditions: {
-        activeQuest: QuestType.INVENTOR_BOOK,
+        activeQuest: QuestType.InventorBook,
         hasItem: ItemType.Book,
       },
       onCompleted: (player) => {
-        player.quests.updateExistingQuest(QuestType.INVENTOR_BOOK, true);
+        player.quests.updateExistingQuest(QuestType.InventorBook, true);
         player.inventory.removeItem(ItemType.Book);
       },
     },
     {
       messages: ['Did you find my book yet?'],
       conditions: {
-        activeQuest: QuestType.INVENTOR_BOOK,
+        activeQuest: QuestType.InventorBook,
       },
     },
     {
@@ -43,7 +43,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
         talkingPoint: TalkingPoint.INVENTOR_GREETED,
       },
       onCompleted: (player) => {
-        player.quests.addQuest({ id: QuestType.INVENTOR_BOOK, name: 'Find the inventors book', completed: false });
+        player.quests.addQuest({ id: QuestType.InventorBook, name: 'Find the inventors book', completed: false });
       },
     },
     {
@@ -57,33 +57,33 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
     {
       messages: ['I saw her this morning in the forest.'],
       conditions: {
-        completedQuest: QuestType.STRANGER_RING,
+        completedQuest: QuestType.StrangerRing,
       },
     },
     {
       messages: ['You found my ring! Thank you!', 'I heard a rumor about the mayor making shady deals...'],
       conditions: {
-        activeQuest: QuestType.STRANGER_RING,
+        activeQuest: QuestType.StrangerRing,
         hasItem: ItemType.Ring,
       },
       onCompleted: (player) => {
-        player.quests.updateExistingQuest(QuestType.STRANGER_RING, true);
+        player.quests.updateExistingQuest(QuestType.StrangerRing, true);
         player.inventory.removeItem(ItemType.Ring);
       },
     },
     {
       messages: ['Did you find my ring?'],
       conditions: {
-        activeQuest: QuestType.STRANGER_RING,
+        activeQuest: QuestType.StrangerRing,
       },
     },
     {
       messages: ['I heard you met the inventor.', 'Can you find my ring for me?'],
       conditions: {
-        completedQuest: QuestType.INVENTOR_BOOK,
+        completedQuest: QuestType.InventorBook,
       },
       onCompleted: (player) => {
-        player.quests.addQuest({ id: QuestType.STRANGER_RING, name: 'Find the strangers ring', completed: false });
+        player.quests.addQuest({ id: QuestType.StrangerRing, name: 'Find the strangers ring', completed: false });
       },
     },
     {

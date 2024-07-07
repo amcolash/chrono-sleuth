@@ -35,6 +35,6 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
   }
 
   getButtonPrompt() {
-    return 'Press [CONTINUE]';
+    return [`Pick Up ${ItemType[this.itemType]}`, 'Press [CONTINUE]'];
   }
 }
