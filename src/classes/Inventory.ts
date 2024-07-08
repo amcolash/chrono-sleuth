@@ -1,7 +1,7 @@
 import { GameObjects, Scene } from 'phaser';
 import { Config } from '../config';
 import { Colors, fontStyle, getColorNumber } from '../utils/colors';
-import { ItemType } from './types.';
+import { ItemType } from './types';
 import { ItemData } from './Item';
 
 export class Inventory extends GameObjects.Container {

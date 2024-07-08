@@ -1,6 +1,6 @@
 import { Physics } from 'phaser';
 import { Player } from './Player';
-import { Interactive, InteractResult, WarpType } from './types.';
+import { Interactive, InteractResult, WarpType } from './types';
 import { Config } from '../config';
 
 const WarpData = {

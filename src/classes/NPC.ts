@@ -1,7 +1,7 @@
 import { Config } from '../config';
 import { getDialog, NPCDialog } from '../utils/dialog';
 import { Player } from './Player';
-import { Interactive, InteractResult, NPCType } from './types.';
+import { Interactive, InteractResult, NPCType } from './types';
 
 export const NPCData = {
   [NPCType.Inventor]: {

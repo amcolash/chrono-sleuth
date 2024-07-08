@@ -1,6 +1,6 @@
 import { Config } from '../config';
 import { Player } from './Player';
-import { Interactive, InteractResult, ItemType } from './types.';
+import { Interactive, InteractResult, ItemType } from './types';
 
 export const ItemData = {
   [ItemType.Book]: { x: 1500, y: 875, image: 'book' },

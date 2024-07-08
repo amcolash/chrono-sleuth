@@ -1,11 +1,11 @@
 import { GameObjects, Math } from 'phaser';
 import { Config } from '../config';
-import { Message } from './Message';
-import { Interactive, InteractResult, Rewindable } from './types.';
+import { Message } from './UI/Message';
+import { Interactive, InteractResult, Rewindable } from './types';
 import { Inventory } from './Inventory';
 import { Quests } from './Quests';
 import { rewindInterval, rewindSpeed } from './Clock';
-import { ButtonPrompt } from './ButtonPrompt';
+import { ButtonPrompt } from './UI/ButtonPrompt';
 import { createAnimation, updateAnimation } from '../utils/animations';
 import { Journal } from './Journal';
 

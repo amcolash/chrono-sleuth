@@ -1,5 +1,5 @@
 import { GameObjects } from 'phaser';
-import { Quest, QuestType } from './types.';
+import { Quest, QuestType } from './types';
 import { Config } from '../config';
 import { Colors, fontStyle, getColorNumber } from '../utils/colors';
 

@@ -1,12 +1,12 @@
 import { Player } from '../classes/Player';
 import { Warp } from '../classes/Warp';
-import { ItemType, NPCType, WarpType } from '../classes/types.';
+import { ItemType, NPCType, WarpType } from '../classes/types';
 import { NPC } from '../classes/NPC';
 import { GameObjects, Scene } from 'phaser';
 import { Item } from '../classes/Item';
 import { Walls } from '../classes/Walls';
 import { Clock } from '../classes/Clock';
-import { DebugUI } from '../classes/DebugUI';
+import { DebugUI } from '../classes/UI/DebugUI';
 
 export class Game extends Scene {
   player: Player;

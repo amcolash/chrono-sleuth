@@ -1,5 +1,5 @@
 import { Player } from '../classes/Player';
-import { ItemType, NPCType, Quest, QuestType, JournalEntry } from '../classes/types.';
+import { ItemType, NPCType, Quest, QuestType, JournalEntry } from '../classes/types';
 
 export interface NPCDialog {
   conditions?: {

@@ -1,8 +1,8 @@
 import { GameObjects, Scene } from 'phaser';
-import { Colors, fontStyle, getColorNumber } from '../utils/colors';
-import { Config } from '../config';
-import { NPCType } from './types.';
-import { NPCData } from './NPC';
+import { Colors, fontStyle, getColorNumber } from '../../utils/colors';
+import { Config } from '../../config';
+import { NPCType } from '../types';
+import { NPCData } from '../NPC';
 
 export class Message extends GameObjects.Container {
   npcName: GameObjects.Text;
