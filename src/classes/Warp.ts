@@ -6,6 +6,7 @@ import { Config } from '../config';
 const WarpData = {
   [WarpType.Town]: { x: 300, y: 650, key: [Phaser.Input.Keyboard.KeyCodes.DOWN], warpTo: WarpType.Underground, visible: true },
   [WarpType.Underground]: { x: 300, y: 875, key: [Phaser.Input.Keyboard.KeyCodes.UP], warpTo: WarpType.Town, visible: true },
+
   [WarpType.TownEast]: {
     x: 1720,
     y: 650,
@@ -18,6 +19,36 @@ const WarpData = {
     y: 810,
     key: [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A],
     warpTo: WarpType.TownEast,
+    visible: false,
+  },
+
+  [WarpType.TownNorth]: {
+    x: 775,
+    y: 650,
+    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    warpTo: WarpType.ClockSquare,
+    visible: false,
+  },
+  [WarpType.ClockSquare]: {
+    x: 775,
+    y: -330,
+    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    warpTo: WarpType.TownNorth,
+    visible: false,
+  },
+
+  [WarpType.ClockSquareNorth]: {
+    x: 775,
+    y: 50,
+    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    warpTo: WarpType.ClockInside,
+    visible: false,
+  },
+  [WarpType.ClockInside]: {
+    x: 775,
+    y: 200,
+    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    warpTo: WarpType.ClockSquareNorth,
     visible: false,
   },
 };
@@ -66,11 +97,11 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       this.scene.tweens.add({
         targets: this.scene.cameras.main,
         scrollX: targetScrollX,
-        scrollY: targetScrollY,
+        scrollY: targetScrollY - 200,
         duration: 400,
         ease: 'Power1',
         onComplete: () => {
-          this.scene.cameras.main.startFollow(this.player);
+          this.scene.cameras.main.startFollow(this.player, true, 0.1, 0.1, 0, 200);
           this.player.active = true;
         },
       });

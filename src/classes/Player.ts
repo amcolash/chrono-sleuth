@@ -115,6 +115,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     if (keys.left) this.setVelocityX(-calcSpeed);
     if (keys.right) this.setVelocityX(calcSpeed);
 
+    if (Config.debug && !this.interactive) {
+      if (keys.up) this.setVelocityY(-calcSpeed);
+      if (keys.down) this.setVelocityY(calcSpeed);
+    }
+
     if (keys.left && keys.right) this.setVelocityX(0);
   }
 

@@ -25,8 +25,15 @@ export interface Rewindable {
 export enum WarpType {
   Underground,
   Town,
+
   TownEast,
   Forest,
+
+  TownNorth,
+  ClockSquare,
+
+  ClockSquareNorth,
+  ClockInside,
 }
 
 export enum ItemType {

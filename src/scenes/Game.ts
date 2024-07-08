@@ -2,11 +2,12 @@ import { Player } from '../classes/Player';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
 import { NPC } from '../classes/NPC';
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, Input, Physics, Scene } from 'phaser';
 import { Item } from '../classes/Item';
 import { Walls } from '../classes/Walls';
 import { Clock } from '../classes/Clock';
 import { DebugUI } from '../classes/UI/DebugUI';
+import { Config } from '../config';
 
 export class Game extends Scene {
   player: Player;
@@ -45,14 +46,7 @@ export class Game extends Scene {
     this.physics.add.collider(this.player, walls);
 
     // events
-    this.input.keyboard?.on('keydown-ESC', () => {
-      this.scene.pause();
-      this.scene.launch('Paused');
-    });
-
-    this.input.keyboard?.on('keydown-J', () => {
-      this.player.journal.openJournal();
-    });
+    this.createEventListeners();
 
     // setup
     this.cameras.main.startFollow(this.player);
@@ -73,17 +67,28 @@ export class Game extends Scene {
   }
 
   createBackgrounds() {
-    this.add.sprite(0, 0, 'town').setOrigin(0);
-    this.add.sprite(2300, 0, 'forest').setOrigin(0);
+    const town = this.physics.add.sprite(0, 0, 'town').setOrigin(0);
+    const forest = this.physics.add.sprite(2300, 0, 'forest').setOrigin(0);
+    const clock_outside = this.physics.add.sprite(500, -1100, 'clock_outside').setOrigin(0);
+
+    if (Config.debug) {
+      town.setInteractive({ draggable: true });
+      forest.setInteractive({ draggable: true });
+      clock_outside.setInteractive({ draggable: true });
+    }
+
+    return [town, forest, clock_outside];
   }
 
   createWarpers(): Warp[] {
-    const warpTop = new Warp(this, WarpType.Underground, this.player);
-    const warpBottom = new Warp(this, WarpType.Town, this.player);
-    const warpEast = new Warp(this, WarpType.TownEast, this.player);
-    const warpForest = new Warp(this, WarpType.Forest, this.player);
+    const warpers: Warp[] = [];
+    for (const warp in WarpType) {
+      if (isNaN(Number(warp))) {
+        warpers.push(new Warp(this, WarpType[warp as keyof typeof WarpType], this.player));
+      }
+    }
 
-    return [warpTop, warpBottom, warpEast, warpForest];
+    return warpers;
   }
 
   createNpcs(): NPC[] {
@@ -98,5 +103,25 @@ export class Game extends Scene {
     const ring = new Item(this, ItemType.Map, this.player);
 
     return [book, ring];
+  }
+
+  createEventListeners() {
+    this.input.keyboard?.on('keydown-ESC', () => {
+      this.scene.pause();
+      this.scene.launch('Paused');
+    });
+
+    this.input.keyboard?.on('keydown-J', () => {
+      this.player.journal.openJournal();
+    });
+
+    if (Config.debug) {
+      this.input.on(
+        'wheel',
+        (_pointer: Input.Pointer, _currentlyOver: GameObjects.GameObject[], _deltaX: number, deltaY: number, _deltaZ: number) => {
+          this.cameras.main.zoom += deltaY * 0.0005;
+        }
+      );
+    }
   }
 }
