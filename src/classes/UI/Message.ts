@@ -23,7 +23,7 @@ export class Message extends GameObjects.Container {
     this.setDepth(2);
     this.setVisible(false);
 
-    const textWidth = width - 110 - padding * 4;
+    const textWidth = width - 120 - padding * 4;
     const textHeight = boxHeight - padding * 2;
 
     this.npcName = new GameObjects.Text(scene, padding + 150, padding - 5, '', { ...fontStyle, color: '#' + Colors.Tan });

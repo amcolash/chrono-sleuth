@@ -31,12 +31,12 @@ export enum WarpType {
 
 export enum ItemType {
   Book,
-  Ring,
+  Map,
 }
 
 export enum QuestType {
   InventorBook,
-  StrangerRing,
+  StrangerMap,
 }
 
 export enum NPCType {
@@ -53,4 +53,7 @@ export interface Quest {
 export enum JournalEntry {
   // Inventor
   InventorBookFound,
+
+  // Stranger
+  StrangerMapFound,
 }

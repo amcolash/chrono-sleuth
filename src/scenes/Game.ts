@@ -50,6 +50,13 @@ export class Game extends Scene {
       this.scene.launch('Paused');
     });
 
+    this.input.keyboard?.on('keydown-J', () => {
+      if (this.player.journal.journal.length > 0) {
+        this.scene.pause();
+        this.scene.launch('JournalDialog', { player: this.player });
+      }
+    });
+
     // setup
     this.cameras.main.startFollow(this.player);
   }
@@ -91,7 +98,7 @@ export class Game extends Scene {
 
   createItems(): Item[] {
     const book = new Item(this, ItemType.Book, this.player);
-    const ring = new Item(this, ItemType.Ring, this.player);
+    const ring = new Item(this, ItemType.Map, this.player);
 
     return [book, ring];
   }

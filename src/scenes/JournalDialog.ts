@@ -54,6 +54,14 @@ export class JournalDialog extends Scene {
 
     const mask = new Phaser.Display.Masks.BitmapMask(this, maskGraphics);
     text.setMask(mask);
+
+    this.input.keyboard?.on('keydown-J', () => {
+      this.close();
+    });
+
+    this.input.keyboard?.on('keydown-ESC', () => {
+      this.close();
+    });
   }
 
   close() {

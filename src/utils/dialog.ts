@@ -24,7 +24,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       },
     },
     {
-      messages: ['You found my book! Thank you!', 'I heard that the stranger has something for you.'],
+      messages: ['You found my book! Thank you!', 'I heard that the stranger might need some help.'],
       conditions: {
         activeQuest: QuestType.InventorBook,
         hasItem: ItemType.Book,
@@ -58,33 +58,34 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
     {
       messages: ['I saw her this morning in the forest.'],
       conditions: {
-        completedQuest: QuestType.StrangerRing,
+        completedQuest: QuestType.StrangerMap,
       },
     },
     {
-      messages: ['You found my ring! Thank you!', 'I heard a rumor about the mayor making shady deals...'],
+      messages: ['You found my map! Thank you!', 'I heard a rumor about the mayor making shady deals in the forest...'],
       conditions: {
-        activeQuest: QuestType.StrangerRing,
-        hasItem: ItemType.Ring,
+        activeQuest: QuestType.StrangerMap,
+        hasItem: ItemType.Map,
       },
       onCompleted: (player) => {
-        player.quests.updateExistingQuest(QuestType.StrangerRing, true);
-        player.inventory.removeItem(ItemType.Ring);
+        player.quests.updateExistingQuest(QuestType.StrangerMap, true);
+        player.inventory.removeItem(ItemType.Map);
+        player.journal.addEntry(JournalEntry.StrangerMapFound);
       },
     },
     {
-      messages: ['Did you find my ring?'],
+      messages: ['Did you find my map?'],
       conditions: {
-        activeQuest: QuestType.StrangerRing,
+        activeQuest: QuestType.StrangerMap,
       },
     },
     {
-      messages: ['You helped the inventor?', 'Can you find my ring for me?'],
+      messages: ['You helped the inventor?', 'Can you find my map for me?'],
       conditions: {
         journalEntry: JournalEntry.InventorBookFound,
       },
       onCompleted: (player) => {
-        player.quests.addQuest({ id: QuestType.StrangerRing, name: 'Find the strangers ring', completed: false });
+        player.quests.addQuest({ id: QuestType.StrangerMap, name: 'Find the strangers map', completed: false });
       },
     },
     {
