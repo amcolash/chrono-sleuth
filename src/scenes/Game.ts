@@ -51,10 +51,7 @@ export class Game extends Scene {
     });
 
     this.input.keyboard?.on('keydown-J', () => {
-      if (this.player.journal.journal.length > 0) {
-        this.scene.pause();
-        this.scene.launch('JournalDialog', { player: this.player });
-      }
+      this.player.journal.openJournal();
     });
 
     // setup

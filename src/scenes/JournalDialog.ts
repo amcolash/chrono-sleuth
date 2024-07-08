@@ -20,7 +20,7 @@ export class JournalDialog extends Scene {
     const container = this.add.container(Config.width / 2, Config.height / 2);
 
     container.add(
-      this.add.rectangle(0, 0, Config.width * 0.8, Config.height * 0.8, 0x000000, 0.6).setStrokeStyle(4, getColorNumber(Colors.Tan))
+      this.add.rectangle(0, 0, Config.width * 0.8, Config.height * 0.8, 0x000000, 0.75).setStrokeStyle(4, getColorNumber(Colors.Tan))
     );
     container.add(new Button(this, Config.width * 0.3, Config.height * -0.33, 'Close', () => this.close()));
 
