@@ -4,20 +4,38 @@ import { Interactive, InteractResult, WarpType } from './types';
 import { Config } from '../config';
 
 const WarpData = {
-  [WarpType.Town]: { x: 300, y: 650, key: [Phaser.Input.Keyboard.KeyCodes.DOWN], warpTo: WarpType.Underground, visible: true },
-  [WarpType.Underground]: { x: 300, y: 875, key: [Phaser.Input.Keyboard.KeyCodes.UP], warpTo: WarpType.Town, visible: true },
+  [WarpType.Town]: {
+    x: 300,
+    y: 650,
+    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    warpTo: WarpType.Underground,
+    visible: true,
+  },
+  [WarpType.Underground]: {
+    x: 300,
+    y: 875,
+    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    warpTo: WarpType.Town,
+    visible: true,
+  },
 
   [WarpType.TownEast]: {
     x: 1720,
     y: 650,
-    key: [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D],
+    key: [
+      Phaser.Input.Keyboard.KeyCodes.RIGHT,
+      Phaser.Input.Keyboard.KeyCodes.D,
+    ],
     warpTo: WarpType.Forest,
     visible: false,
   },
   [WarpType.Forest]: {
     x: 2650,
     y: 810,
-    key: [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A],
+    key: [
+      Phaser.Input.Keyboard.KeyCodes.LEFT,
+      Phaser.Input.Keyboard.KeyCodes.A,
+    ],
     warpTo: WarpType.TownEast,
     visible: false,
   },
@@ -101,7 +119,8 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         duration: 400,
         ease: 'Power1',
         onComplete: () => {
-          this.scene.cameras.main.startFollow(this.player, true, 0.1, 0.1, 0, 200);
+          this.scene.cameras.main.startFollow(this.player, true);
+          this.scene.cameras.main.setFollowOffset(0, 200);
           this.player.active = true;
         },
       });
@@ -130,17 +149,40 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
   getButtonPrompt() {
     const buttons = WarpData[this.warpType].key.map((key) => {
-      if (key === Phaser.Input.Keyboard.KeyCodes.ENTER || key === Phaser.Input.Keyboard.KeyCodes.SPACE) return '[CONTINUE]';
-      if (key === Phaser.Input.Keyboard.KeyCodes.UP || key === Phaser.Input.Keyboard.KeyCodes.W) return '[UP]';
-      if (key === Phaser.Input.Keyboard.KeyCodes.DOWN || key === Phaser.Input.Keyboard.KeyCodes.S) return '[DOWN]';
-      if (key === Phaser.Input.Keyboard.KeyCodes.LEFT || key === Phaser.Input.Keyboard.KeyCodes.A) return '[LEFT]';
-      if (key === Phaser.Input.Keyboard.KeyCodes.RIGHT || key === Phaser.Input.Keyboard.KeyCodes.D) return '[RIGHT]';
+      if (
+        key === Phaser.Input.Keyboard.KeyCodes.ENTER ||
+        key === Phaser.Input.Keyboard.KeyCodes.SPACE
+      )
+        return '[CONTINUE]';
+      if (
+        key === Phaser.Input.Keyboard.KeyCodes.UP ||
+        key === Phaser.Input.Keyboard.KeyCodes.W
+      )
+        return '[UP]';
+      if (
+        key === Phaser.Input.Keyboard.KeyCodes.DOWN ||
+        key === Phaser.Input.Keyboard.KeyCodes.S
+      )
+        return '[DOWN]';
+      if (
+        key === Phaser.Input.Keyboard.KeyCodes.LEFT ||
+        key === Phaser.Input.Keyboard.KeyCodes.A
+      )
+        return '[LEFT]';
+      if (
+        key === Phaser.Input.Keyboard.KeyCodes.RIGHT ||
+        key === Phaser.Input.Keyboard.KeyCodes.D
+      )
+        return '[RIGHT]';
 
       return '[UNKNOWN]';
     });
 
     const unique = [...new Set(buttons)];
 
-    return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + unique.join(' or ')];
+    return [
+      `Travel to ${WarpType[WarpData[this.warpType].warpTo]}`,
+      'Press ' + unique.join(' or '),
+    ];
   }
 }

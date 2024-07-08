@@ -37,10 +37,14 @@ export class Game extends Scene {
     this.clock = new Clock(this, rewindable, this.player);
 
     // interactive objects
-    this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items], { runChildUpdate: true });
+    this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items], {
+      runChildUpdate: true,
+    });
 
     // update items added to the group
-    this.add.group([this.player, this.clock, debugUI], { runChildUpdate: true });
+    this.add.group([this.player, this.clock, debugUI], {
+      runChildUpdate: true,
+    });
 
     // collisions
     this.physics.add.collider(this.player, walls);
@@ -49,7 +53,8 @@ export class Game extends Scene {
     this.createEventListeners();
 
     // setup
-    this.cameras.main.startFollow(this.player);
+    this.cameras.main.startFollow(this.player, true);
+    this.cameras.main.setFollowOffset(0, 200);
   }
 
   update(): void {
@@ -69,7 +74,9 @@ export class Game extends Scene {
   createBackgrounds() {
     const town = this.physics.add.sprite(0, 0, 'town').setOrigin(0);
     const forest = this.physics.add.sprite(2300, 0, 'forest').setOrigin(0);
-    const clock_outside = this.physics.add.sprite(500, -1100, 'clock_outside').setOrigin(0);
+    const clock_outside = this.physics.add
+      .sprite(500, -1100, 'clock_outside')
+      .setOrigin(0);
 
     if (Config.debug) {
       town.setInteractive({ draggable: true });
@@ -84,7 +91,9 @@ export class Game extends Scene {
     const warpers: Warp[] = [];
     for (const warp in WarpType) {
       if (isNaN(Number(warp))) {
-        warpers.push(new Warp(this, WarpType[warp as keyof typeof WarpType], this.player));
+        warpers.push(
+          new Warp(this, WarpType[warp as keyof typeof WarpType], this.player)
+        );
       }
     }
 
@@ -118,7 +127,13 @@ export class Game extends Scene {
     if (Config.debug) {
       this.input.on(
         'wheel',
-        (_pointer: Input.Pointer, _currentlyOver: GameObjects.GameObject[], _deltaX: number, deltaY: number, _deltaZ: number) => {
+        (
+          _pointer: Input.Pointer,
+          _currentlyOver: GameObjects.GameObject[],
+          _deltaX: number,
+          deltaY: number,
+          _deltaZ: number
+        ) => {
           this.cameras.main.zoom += deltaY * 0.0005;
         }
       );
