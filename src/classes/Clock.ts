@@ -77,11 +77,11 @@ export class Clock extends GameObjects.Container {
         this.currentTime = Math.max(0, this.currentTime - delta * rewindSpeed);
       } else {
         this.rewinding = false;
-        this.rewindable.forEach((r) => r.setRewind(false));
+        this.rewindable.forEach((r) => {
+          r.setRewind(false);
+          if (r.reset) r.reset();
+        });
         this.dayOver?.destroy();
-
-        // Reset some parts of the timeline
-        this.player.quests.reset();
       }
     } else if (!this.player.message.visible) {
       if (this.counter > rewindInterval) {

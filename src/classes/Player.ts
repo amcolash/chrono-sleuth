@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Math } from 'phaser';
 import { Config } from '../config';
 import { Message } from './Message';
 import { Interactive, InteractResult, Rewindable } from './types.';
@@ -12,6 +12,7 @@ import { Journal } from './Journal';
 const size = 2.5;
 const speed = (Config.fastMode ? 350 : 120) * size;
 const MAX_HISTORY = 1000;
+export const playerStart = new Math.Vector2(400, 650);
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   keys: { [key: string]: Phaser.Input.Keyboard.Key };
@@ -30,7 +31,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   rewinding = false;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, 'character', 0);
+    super(scene, playerStart.x, playerStart.y, 'character', 0);
 
     this.keys = scene.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT,ENTER,SPACE') as {
       [key: string]: Phaser.Input.Keyboard.Key;
@@ -52,7 +53,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     this.message = new Message(scene);
     this.inventory = new Inventory(scene);
     this.quests = new Quests(scene);
-    this.journal = new Journal(scene);
+    this.journal = new Journal(scene, this);
   }
 
   update(_time: number, delta: number) {
@@ -119,6 +120,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
   record() {
     if (this.history.length < MAX_HISTORY) this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
+    else console.warn('Max history reached');
   }
 
   rewind() {
@@ -133,6 +135,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   setRewind(rewind: boolean): void {
     this.rewinding = rewind;
     this.counter = 0;
+  }
+
+  reset() {
+    this.quests.reset();
+    this.setPosition(playerStart.x, playerStart.y);
+    this.flipX = false;
+    this.setVelocity(0);
   }
 
   setInteractiveObject(interactive?: any): undefined {

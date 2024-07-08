@@ -19,6 +19,7 @@ export interface Rewindable {
   record(): void;
   rewind(): void;
   setRewind(rewind: boolean): void;
+  reset?(): void;
 }
 
 export enum WarpType {

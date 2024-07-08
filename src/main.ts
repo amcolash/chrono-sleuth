@@ -5,6 +5,7 @@ import { Preloader } from './scenes/Preloader';
 
 import { Config } from './config';
 import { Game, Types } from 'phaser';
+import { JournalDialog } from './scenes/JournalDialog';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -18,7 +19,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainGame, Paused],
+  scene: [Boot, Preloader, MainGame, Paused, JournalDialog],
   physics: {
     default: 'arcade',
     arcade: {

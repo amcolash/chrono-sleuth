@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { Config } from '../config';
 import { fontStyle } from '../utils/colors';
+import { Button } from '../classes/UI/Button';
 
 export class Paused extends Scene {
   constructor() {
@@ -15,15 +16,7 @@ export class Paused extends Scene {
 
     this.add.text(width / 2, 300, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
 
-    const resume = this.add
-      .text(width / 2, 450, 'Resume', { ...fontStyle, fontSize: 48, backgroundColor: '#05a', padding: { x: 15, y: 10 } })
-      .setOrigin(0.5);
-
-    // Button interactions
-    resume.setInteractive();
-    resume.on('pointerdown', () => this.resume());
-    resume.on('pointerover', () => resume.setBackgroundColor('#06e'));
-    resume.on('pointerout', () => resume.setBackgroundColor('#05a'));
+    new Button(this, width / 2, height / 2 + 50, 'Resume', () => this.resume());
 
     // Keyboard interactions
     this.input.keyboard?.on('keydown-ESC', () => this.resume());

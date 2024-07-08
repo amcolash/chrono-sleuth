@@ -86,6 +86,9 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         onYoyo: () => {
           this.player.setPosition(x, y);
         },
+        onComplete: () => {
+          this.player.alpha = 1;
+        },
       });
 
       return InteractResult.Teleported;
