@@ -1,8 +1,9 @@
 import { GameObjects, Scene } from 'phaser';
-import { Colors, fontStyle, getColorNumber } from '../../utils/colors';
+
 import { Config } from '../../config';
-import { NPCType } from '../types';
+import { Colors, fontStyle, getColorNumber } from '../../utils/colors';
 import { NPCData } from '../NPC';
+import { NPCType } from '../types';
 
 export class Message extends GameObjects.Container {
   npcName: GameObjects.Text;
@@ -26,7 +27,10 @@ export class Message extends GameObjects.Container {
     const textWidth = width - 120 - padding * 4;
     const textHeight = boxHeight - padding * 2;
 
-    this.npcName = new GameObjects.Text(scene, padding + 150, padding - 5, '', { ...fontStyle, color: '#' + Colors.Tan });
+    this.npcName = new GameObjects.Text(scene, padding + 150, padding - 5, '', {
+      ...fontStyle,
+      color: '#' + Colors.Tan,
+    });
 
     this.text = new GameObjects.Text(scene, padding + 150, padding + 30, '', fontStyle);
     this.text.width = textWidth;
@@ -36,7 +40,15 @@ export class Message extends GameObjects.Container {
 
     this.image = new GameObjects.Image(scene, padding, padding, '').setOrigin(0).setScale(1.5);
 
-    this.box = new GameObjects.Rectangle(scene, 0, 0, width - padding * 2, boxHeight, getColorNumber(Colors.Black), 0.7);
+    this.box = new GameObjects.Rectangle(
+      scene,
+      0,
+      0,
+      width - padding * 2,
+      boxHeight,
+      getColorNumber(Colors.Black),
+      0.7
+    );
     this.box.setStrokeStyle(2, getColorNumber(Colors.Tan), 1);
     this.box.setOrigin(0, 0);
 

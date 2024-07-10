@@ -1,7 +1,8 @@
 import { Physics } from 'phaser';
-import { Player } from './Player';
-import { Interactive, InteractResult, WarpType } from './types';
+
 import { Config } from '../config';
+import { Player } from './Player';
+import { InteractResult, Interactive, WarpType } from './types';
 
 const WarpData = {
   [WarpType.Town]: {
@@ -104,7 +105,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       const targetScrollY = y - this.scene.cameras.main.height / 2;
 
       this.scene.cameras.main.stopFollow();
-      this.player.active = false;
+      this.player.setActive(false);
       this.scene.tweens.add({
         targets: this.scene.cameras.main,
         scrollX: targetScrollX,
@@ -114,7 +115,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         onComplete: () => {
           this.scene.cameras.main.startFollow(this.player);
           this.scene.cameras.main.setFollowOffset(0, Config.cameraOffset);
-          this.player.active = true;
+          this.player.setActive(true);
         },
       });
 
@@ -142,7 +143,8 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
   getButtonPrompt() {
     const buttons = WarpData[this.warpType].key.map((key) => {
-      if (key === Phaser.Input.Keyboard.KeyCodes.ENTER || key === Phaser.Input.Keyboard.KeyCodes.SPACE) return '[CONTINUE]';
+      if (key === Phaser.Input.Keyboard.KeyCodes.ENTER || key === Phaser.Input.Keyboard.KeyCodes.SPACE)
+        return '[CONTINUE]';
       if (key === Phaser.Input.Keyboard.KeyCodes.UP || key === Phaser.Input.Keyboard.KeyCodes.W) return '[UP]';
       if (key === Phaser.Input.Keyboard.KeyCodes.DOWN || key === Phaser.Input.Keyboard.KeyCodes.S) return '[DOWN]';
       if (key === Phaser.Input.Keyboard.KeyCodes.LEFT || key === Phaser.Input.Keyboard.KeyCodes.A) return '[LEFT]';

@@ -1,8 +1,9 @@
 import { GameObjects, Scene } from 'phaser';
+
 import { Config } from '../config';
 import { Colors, fontStyle, getColorNumber } from '../utils/colors';
-import { ItemType } from './types';
 import { ItemData } from './Item';
+import { ItemType } from './types';
 
 export class Inventory extends GameObjects.Container {
   inventory: ItemType[] = [];
@@ -44,7 +45,7 @@ export class Inventory extends GameObjects.Container {
 
   updateItems() {
     let index = 0;
-    this.getAll<GameObjects.GameObject>().forEach((item, i) => {
+    this.getAll<GameObjects.GameObject>().forEach((item) => {
       if (item instanceof GameObjects.Sprite) {
         const x = 30 + 40 * index;
         item.setPosition(x, 60);

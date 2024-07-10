@@ -1,6 +1,7 @@
 import { GameObjects, Scene } from 'phaser';
-import { Colors, fontStyle } from '../../utils/colors';
+
 import { Config } from '../../config';
+import { Colors, fontStyle } from '../../utils/colors';
 
 export class Notification extends GameObjects.Text {
   constructor(scene: Scene, text: string) {

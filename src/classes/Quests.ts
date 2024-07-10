@@ -1,7 +1,8 @@
 import { GameObjects } from 'phaser';
-import { Quest, QuestType } from './types';
+
 import { Config } from '../config';
 import { Colors, fontStyle, getColorNumber } from '../utils/colors';
+import { Quest, QuestType } from './types';
 
 export class Quests extends GameObjects.Container {
   quests: Quest[] = [];

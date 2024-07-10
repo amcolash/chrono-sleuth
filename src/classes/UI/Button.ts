@@ -1,4 +1,5 @@
 import { GameObjects } from 'phaser';
+
 import { fontStyle } from '../../utils/colors';
 
 export class Button extends GameObjects.Text {

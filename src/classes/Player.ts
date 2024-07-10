@@ -1,13 +1,14 @@
 import { GameObjects, Math } from 'phaser';
+
 import { Config } from '../config';
-import { Message } from './UI/Message';
-import { Interactive, InteractResult, Rewindable } from './types';
-import { Inventory } from './Inventory';
-import { Quests } from './Quests';
-import { rewindInterval, rewindSpeed } from './Clock';
-import { ButtonPrompt } from './UI/ButtonPrompt';
 import { createAnimation, updateAnimation } from '../utils/animations';
+import { rewindInterval, rewindSpeed } from './Clock';
+import { Inventory } from './Inventory';
 import { Journal } from './Journal';
+import { Quests } from './Quests';
+import { ButtonPrompt } from './UI/ButtonPrompt';
+import { Message } from './UI/Message';
+import { InteractResult, Interactive, Rewindable } from './types';
 
 const size = 2.5;
 const speed = (Config.fastMode ? 350 : 120) * size;
@@ -30,7 +31,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   history: Phaser.Math.Vector3[] = [];
   rewinding = false;
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
+  constructor(scene: Phaser.Scene) {
     super(scene, playerStart.x, playerStart.y, 'character', 0);
 
     this.keys = scene.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT,ENTER,SPACE') as {
@@ -59,7 +60,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   update(_time: number, delta: number) {
     // Update UI
     if (Config.debug) this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
-    this.buttonPrompt.setVisible((this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false);
+    this.buttonPrompt.setVisible(
+      (this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false
+    );
 
     let previous = this.quests.shifted;
     this.quests.shifted = this.inventory.visible;
@@ -124,7 +127,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   }
 
   record() {
-    if (this.history.length < MAX_HISTORY) this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
+    if (this.history.length < MAX_HISTORY)
+      this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
     else console.warn('Max history reached');
   }
 

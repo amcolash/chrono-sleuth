@@ -1,5 +1,5 @@
 import { Player } from '../classes/Player';
-import { ItemType, NPCType, Quest, QuestType, JournalEntry } from '../classes/types';
+import { ItemType, JournalEntry, NPCType, Quest, QuestType } from '../classes/types';
 
 export interface NPCDialog {
   conditions?: {
@@ -42,7 +42,11 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       },
     },
     {
-      messages: ['My name is Johan and I am an inventor.', 'I wonder what I did with that book of mine...', 'Could you find it for me?'],
+      messages: [
+        'My name is Johan and I am an inventor.',
+        'I wonder what I did with that book of mine...',
+        'Could you find it for me?',
+      ],
       conditions: {
         noJournalEntry: JournalEntry.InventorBookFound,
       },
@@ -118,10 +122,14 @@ export function getDialog(npc: NPCType, player: Player): NPCDialog | undefined {
     const results = [];
 
     if (conditions?.hasItem !== undefined) results.push(hasItem(player.inventory.inventory, conditions.hasItem));
-    if (conditions?.completedQuest !== undefined) results.push(hasCompletedQuest(player.quests.quests, conditions.completedQuest));
-    if (conditions?.activeQuest !== undefined) results.push(hasActiveQuest(player.quests.quests, conditions.activeQuest));
-    if (conditions?.journalEntry !== undefined) results.push(hasJournalEntry(player.journal.journal, conditions.journalEntry));
-    if (conditions?.noJournalEntry !== undefined) results.push(!hasJournalEntry(player.journal.journal, conditions.noJournalEntry));
+    if (conditions?.completedQuest !== undefined)
+      results.push(hasCompletedQuest(player.quests.quests, conditions.completedQuest));
+    if (conditions?.activeQuest !== undefined)
+      results.push(hasActiveQuest(player.quests.quests, conditions.activeQuest));
+    if (conditions?.journalEntry !== undefined)
+      results.push(hasJournalEntry(player.journal.journal, conditions.journalEntry));
+    if (conditions?.noJournalEntry !== undefined)
+      results.push(!hasJournalEntry(player.journal.journal, conditions.noJournalEntry));
 
     if (conditions?.or) {
       if (results.some((result) => result)) return dialog;

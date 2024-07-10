@@ -1,12 +1,13 @@
+import { GameObjects, Input, Physics, Scene } from 'phaser';
+
+import { Clock } from '../classes/Clock';
+import { Item } from '../classes/Item';
+import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
+import { DebugUI } from '../classes/UI/DebugUI';
+import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
-import { NPC } from '../classes/NPC';
-import { GameObjects, Input, Physics, Scene } from 'phaser';
-import { Item } from '../classes/Item';
-import { Walls } from '../classes/Walls';
-import { Clock } from '../classes/Clock';
-import { DebugUI } from '../classes/UI/DebugUI';
 import { Config } from '../config';
 
 export class Game extends Scene {
@@ -123,7 +124,13 @@ export class Game extends Scene {
     if (Config.debug) {
       this.input.on(
         'wheel',
-        (_pointer: Input.Pointer, _currentlyOver: GameObjects.GameObject[], _deltaX: number, deltaY: number, _deltaZ: number) => {
+        (
+          _pointer: Input.Pointer,
+          _currentlyOver: GameObjects.GameObject[],
+          _deltaX: number,
+          deltaY: number,
+          _deltaZ: number
+        ) => {
           this.cameras.main.zoom += deltaY * 0.0005;
         }
       );

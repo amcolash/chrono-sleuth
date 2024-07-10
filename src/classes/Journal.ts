@@ -1,8 +1,9 @@
 import { GameObjects } from 'phaser';
-import { JournalEntry } from './types';
+
 import { Config } from '../config';
 import { Player } from './Player';
 import { Notification } from './UI/Notification';
+import { JournalEntry } from './types';
 
 export class Journal extends GameObjects.Sprite {
   player: Player;

@@ -9,6 +9,8 @@
     "build": "vite build --config vite/config.prod.mjs"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "prettier": "^3.3.2",
     "terser": "^5.31.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.11"

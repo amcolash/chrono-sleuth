@@ -1,4 +1,5 @@
 import { Physics, Scene } from 'phaser';
+
 import { Config } from '../config';
 
 export class Walls extends Physics.Arcade.StaticGroup {

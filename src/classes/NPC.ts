@@ -1,7 +1,7 @@
 import { Config } from '../config';
-import { getDialog, NPCDialog } from '../utils/dialog';
+import { NPCDialog, getDialog } from '../utils/dialog';
 import { Player } from './Player';
-import { Interactive, InteractResult, NPCType } from './types';
+import { InteractResult, Interactive, NPCType } from './types';
 
 export const NPCData = {
   [NPCType.Inventor]: {
@@ -12,7 +12,14 @@ export const NPCData = {
     portrait: 'inventor_portrait',
     name: 'Johan the Inventor',
   },
-  [NPCType.Stranger]: { x: 750, y: 865, scale: 1.35, img: 'stranger', portrait: 'stranger_portrait', name: 'Mysterious Stranger' },
+  [NPCType.Stranger]: {
+    x: 750,
+    y: 865,
+    scale: 1.35,
+    img: 'stranger',
+    portrait: 'stranger_portrait',
+    name: 'Mysterious Stranger',
+  },
 };
 
 export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {

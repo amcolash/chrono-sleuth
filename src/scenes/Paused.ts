@@ -1,7 +1,8 @@
 import { Scene } from 'phaser';
+
+import { Button } from '../classes/UI/Button';
 import { Config } from '../config';
 import { fontStyle } from '../utils/colors';
-import { Button } from '../classes/UI/Button';
 
 export class Paused extends Scene {
   constructor() {

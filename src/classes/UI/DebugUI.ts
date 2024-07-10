@@ -1,6 +1,7 @@
 import { GameObjects, Input } from 'phaser';
-import { Colors, fontStyle } from '../../utils/colors';
+
 import { Config } from '../../config';
+import { Colors, fontStyle } from '../../utils/colors';
 import { Player } from '../Player';
 
 export class DebugUI extends GameObjects.Container {

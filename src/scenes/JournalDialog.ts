@@ -1,8 +1,9 @@
 import { Input, Math, Scene } from 'phaser';
-import { Config } from '../config';
-import { Button } from '../classes/UI/Button';
-import { Colors, fontStyle, getColorNumber } from '../utils/colors';
+
 import { Player } from '../classes/Player';
+import { Button } from '../classes/UI/Button';
+import { Config } from '../config';
+import { Colors, fontStyle, getColorNumber } from '../utils/colors';
 import { JournalData } from '../utils/journalData';
 
 export class JournalDialog extends Scene {
@@ -20,7 +21,9 @@ export class JournalDialog extends Scene {
     const container = this.add.container(Config.width / 2, Config.height / 2);
 
     container.add(
-      this.add.rectangle(0, 0, Config.width * 0.8, Config.height * 0.8, 0x000000, 0.75).setStrokeStyle(4, getColorNumber(Colors.Tan))
+      this.add
+        .rectangle(0, 0, Config.width * 0.8, Config.height * 0.8, 0x000000, 0.75)
+        .setStrokeStyle(4, getColorNumber(Colors.Tan))
     );
     container.add(new Button(this, Config.width * 0.3, Config.height * -0.33, 'Close', () => this.close()));
 

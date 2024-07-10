@@ -1,4 +1,5 @@
 import { GameObjects } from 'phaser';
+
 import { Config } from '../../config';
 import { Colors, fontStyle } from '../../utils/colors';
 
