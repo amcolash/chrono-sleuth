@@ -61,11 +61,10 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {
     const { x, y, visible } = WarpData[warpType];
 
-    super(scene, x, y, 'ladder');
+    super(scene, x, y, visible ? 'ladder' : 'warp');
     this.warpType = warpType;
     this.player = player;
     this.scale = 0.5;
-    this.visible = visible;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -97,11 +96,12 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       this.scene.tweens.add({
         targets: this.scene.cameras.main,
         scrollX: targetScrollX,
-        scrollY: targetScrollY - 200,
+        scrollY: targetScrollY - 100,
         duration: 400,
         ease: 'Power1',
         onComplete: () => {
-          this.scene.cameras.main.startFollow(this.player, true, 0.1, 0.1, 0, 200);
+          this.scene.cameras.main.startFollow(this.player);
+          this.scene.cameras.main.setFollowOffset(0, 100);
           this.player.active = true;
         },
       });

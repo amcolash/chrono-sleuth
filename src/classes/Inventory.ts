@@ -25,7 +25,7 @@ export class Inventory extends GameObjects.Container {
   addItem(item: ItemType) {
     this.inventory.push(item);
     const x = 30 + 40 * (this.inventory.length - 1);
-    this.add(this.scene.add.sprite(x, 60, ItemData[item].image).setScale(0.25));
+    this.add(this.scene.add.sprite(x, 60, ItemData[item].image).setScale(0.15));
 
     this.updateItems();
   }

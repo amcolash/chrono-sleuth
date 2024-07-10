@@ -31,6 +31,7 @@ export class Preloader extends Scene {
 
     // interactive objects
     this.load.image('ladder', 'ladder.png');
+    this.load.image('warp', 'warp.png');
     this.load.image('watch', 'watch.png');
 
     // items
