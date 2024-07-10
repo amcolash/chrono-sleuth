@@ -54,7 +54,7 @@ export class Game extends Scene {
 
     // setup
     this.cameras.main.startFollow(this.player, true);
-    this.cameras.main.setFollowOffset(0, 200);
+    this.cameras.main.setFollowOffset(0, Config.cameraOffset);
   }
 
   update(): void {

@@ -108,12 +108,12 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       this.scene.tweens.add({
         targets: this.scene.cameras.main,
         scrollX: targetScrollX,
-        scrollY: targetScrollY - 100,
+        scrollY: targetScrollY - Config.cameraOffset,
         duration: 400,
         ease: 'Power1',
         onComplete: () => {
           this.scene.cameras.main.startFollow(this.player);
-          this.scene.cameras.main.setFollowOffset(0, 200);
+          this.scene.cameras.main.setFollowOffset(0, Config.cameraOffset);
           this.player.active = true;
         },
       });

@@ -7,10 +7,14 @@ let debug = false;
 let rewindEnabled = false;
 rewindEnabled = true;
 
+const width = 1024;
+const height = 768;
+
 export const Config = {
   debug,
-  width: 1024,
-  height: 768,
+  width,
+  height,
+  cameraOffset: height / 3,
 
   dayMinutes: 0.25,
   rewindEnabled,
