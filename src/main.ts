@@ -26,6 +26,10 @@ const config: Types.Core.GameConfig = {
       debug: Config.debug,
     },
   },
+  render: {
+    pixelArt: true,
+    antialias: false,
+  },
 };
 
 export default new Game(config);

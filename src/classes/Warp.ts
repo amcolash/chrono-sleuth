@@ -4,8 +4,20 @@ import { Interactive, InteractResult, WarpType } from './types';
 import { Config } from '../config';
 
 const WarpData = {
-  [WarpType.Town]: { x: 300, y: 650, key: [Phaser.Input.Keyboard.KeyCodes.DOWN], warpTo: WarpType.Underground, visible: true },
-  [WarpType.Underground]: { x: 300, y: 875, key: [Phaser.Input.Keyboard.KeyCodes.UP], warpTo: WarpType.Town, visible: true },
+  [WarpType.Town]: {
+    x: 300,
+    y: 650,
+    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    warpTo: WarpType.Underground,
+    visible: true,
+  },
+  [WarpType.Underground]: {
+    x: 300,
+    y: 875,
+    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    warpTo: WarpType.Town,
+    visible: true,
+  },
 
   [WarpType.TownEast]: {
     x: 1720,
@@ -101,7 +113,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         ease: 'Power1',
         onComplete: () => {
           this.scene.cameras.main.startFollow(this.player);
-          this.scene.cameras.main.setFollowOffset(0, 100);
+          this.scene.cameras.main.setFollowOffset(0, 200);
           this.player.active = true;
         },
       });

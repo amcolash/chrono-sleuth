@@ -37,10 +37,14 @@ export class Game extends Scene {
     this.clock = new Clock(this, rewindable, this.player);
 
     // interactive objects
-    this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items], { runChildUpdate: true });
+    this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items], {
+      runChildUpdate: true,
+    });
 
     // update items added to the group
-    this.add.group([this.player, this.clock, debugUI], { runChildUpdate: true });
+    this.add.group([this.player, this.clock, debugUI], {
+      runChildUpdate: true,
+    });
 
     // collisions
     this.physics.add.collider(this.player, walls);
@@ -49,8 +53,8 @@ export class Game extends Scene {
     this.createEventListeners();
 
     // setup
-    this.cameras.main.startFollow(this.player);
-    this.cameras.main.setFollowOffset(0, 100);
+    this.cameras.main.startFollow(this.player, true);
+    this.cameras.main.setFollowOffset(0, 200);
   }
 
   update(): void {
