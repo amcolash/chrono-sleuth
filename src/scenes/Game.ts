@@ -76,14 +76,14 @@ export class Game extends Scene {
     const town = this.physics.add.sprite(0, 0, 'town').setOrigin(0);
     const forest = this.physics.add.sprite(2300, 0, 'forest').setOrigin(0);
     const clock_outside = this.physics.add.sprite(500, -1100, 'clock_outside').setOrigin(0);
+    const clock_inside = this.physics.add.sprite(500, -2400, 'clock_inner').setOrigin(0);
 
+    const backgrounds = [town, forest, clock_outside, clock_inside];
     if (Config.debug) {
-      town.setInteractive({ draggable: true });
-      forest.setInteractive({ draggable: true });
-      clock_outside.setInteractive({ draggable: true });
+      backgrounds.forEach((background) => background.setInteractive({ draggable: true }));
     }
 
-    return [town, forest, clock_outside];
+    return backgrounds;
   }
 
   createWarpers(): Warp[] {

@@ -22,7 +22,7 @@ export class DebugUI extends GameObjects.Container {
 
     this.text = scene.add.text(10, 60, '', {
       ...fontStyle,
-      fontSize: 12,
+      fontSize: 20,
       backgroundColor: `#${Colors.Black}`,
       padding: { x: 5, y: 5 },
     });

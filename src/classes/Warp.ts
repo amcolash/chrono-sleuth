@@ -1,6 +1,7 @@
-import { Physics } from 'phaser';
+import { BlendModes, GameObjects, Physics } from 'phaser';
 
 import { Config } from '../config';
+import { Colors, getColorNumber } from '../utils/colors';
 import { Player } from './Player';
 import { InteractResult, Interactive, WarpType } from './types';
 
@@ -43,7 +44,7 @@ const WarpData = {
     visible: false,
   },
   [WarpType.ClockSquare]: {
-    x: 775,
+    x: 620,
     y: -330,
     key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
     warpTo: WarpType.TownNorth,
@@ -51,15 +52,15 @@ const WarpData = {
   },
 
   [WarpType.ClockSquareNorth]: {
-    x: 775,
-    y: 50,
+    x: 915,
+    y: -330,
     key: [Phaser.Input.Keyboard.KeyCodes.UP],
     warpTo: WarpType.ClockInside,
     visible: false,
   },
   [WarpType.ClockInside]: {
-    x: 775,
-    y: 200,
+    x: 735,
+    y: -1320,
     key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
     warpTo: WarpType.ClockSquareNorth,
     visible: false,
@@ -70,6 +71,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   warpType: WarpType;
   player: Player;
   interactionTimeout = 500;
+  particles: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {
     const { x, y, visible } = WarpData[warpType];
@@ -78,10 +80,42 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     this.warpType = warpType;
     this.player = player;
     this.scale = 0.5;
+    this.setVisible(visible);
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
+
+    if (!visible) {
+      this.particles = scene.add
+        .particles(x, y, 'warp', {
+          x: { min: -3, max: 3 },
+          y: { min: -3, max: 3 },
+          speed: { random: [-40, 40] },
+          scale: { min: 0.35, max: 0.5 },
+          alpha: { start: 0.2, end: 0 },
+          angle: { min: 0, max: 360 },
+          color: [getColorNumber(Colors.Teal), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
+          colorEase: 'Linear',
+          radial: true,
+          blendMode: BlendModes.OVERLAY,
+        })
+        .setScale(1, 1.75);
+
+      this.particles = scene.add.particles(x, y, 'warp', {
+        x: { min: -30, max: 30 },
+        y: { min: -50, max: 50 },
+        speed: { random: [-5, 5] },
+        scale: { min: 0.05, max: 0.15 },
+        alpha: { values: [0, 0.2, 0] },
+        angle: { min: 0, max: 360 },
+        lifespan: { min: 1000, max: 1400 },
+        color: [getColorNumber(Colors.Peach), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
+        colorEase: 'Linear',
+        radial: true,
+        maxAliveParticles: 20,
+      });
+    }
 
     if (warpType === WarpType.Underground) {
       scene.add.sprite(x, y - 60, 'ladder').setScale(0.5);

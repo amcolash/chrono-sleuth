@@ -22,6 +22,14 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
+
+    scene.add.particles(x, y, 'warp', {
+      speed: { min: 2, max: 10 },
+      scale: { start: 0.1, end: 0.9 },
+      alpha: { start: 0.8, end: 0 },
+      lifespan: 500,
+      frequency: 1000,
+    });
   }
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {

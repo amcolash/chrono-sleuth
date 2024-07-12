@@ -5,7 +5,7 @@ let debug = false;
 // debug = true;
 
 let rewindEnabled = false;
-rewindEnabled = true;
+// rewindEnabled = true;
 
 const width = 1024;
 const height = 768;
