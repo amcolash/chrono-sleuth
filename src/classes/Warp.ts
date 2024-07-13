@@ -85,7 +85,6 @@ const WarpData = {
 export class Warp extends Physics.Arcade.Sprite implements Interactive {
   warpType: WarpType;
   player: Player;
-  interactionTimeout = 500;
   particles: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {

@@ -2,7 +2,9 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Colors, fontStyle, getColorNumber } from '../../utils/colors';
+import { NPCDialog } from '../../utils/dialog';
 import { NPCData } from '../NPC';
+import { Player } from '../Player';
 import { NPCType } from '../types';
 
 const padding = 20;
@@ -15,12 +17,17 @@ const textWidth = width - 120 - padding * 4;
 const textHeight = boxHeight - padding * 2;
 
 export class Message extends GameObjects.Container {
+  player: Player;
   npcName: GameObjects.Text;
   text: GameObjects.Text;
   box: GameObjects.Rectangle;
   image: GameObjects.Image;
 
-  constructor(scene: Scene) {
+  dialog?: NPCDialog;
+  messageIndex: number;
+  interactionTimeout: number;
+
+  constructor(scene: Scene, player: Player) {
     super(scene);
     scene.add.existing(this);
 
@@ -28,6 +35,8 @@ export class Message extends GameObjects.Container {
     this.setPosition(padding, height - padding - boxHeight);
     this.setDepth(2);
     this.setVisible(false);
+
+    this.player = player;
 
     this.npcName = new GameObjects.Text(scene, padding + portraitOffset, padding - 5, '', {
       ...fontStyle,
@@ -55,10 +64,27 @@ export class Message extends GameObjects.Container {
     this.box.setOrigin(0, 0);
 
     this.add([this.box, this.npcName, this.text, this.image]);
+
+    this.scene.input.keyboard?.on('keydown-ENTER', () => {
+      this.updateDialog();
+    });
+
+    this.scene.input.keyboard?.on('keydown-SPACE', () => {
+      this.updateDialog();
+    });
   }
 
-  setMessage(message?: string, npc?: NPCType) {
-    if (message) this.text.setText(message);
+  setDialog(dialog?: NPCDialog, npc?: NPCType) {
+    this.setVisible(dialog !== undefined);
+
+    this.messageIndex = 0;
+    this.dialog = dialog;
+    this.interactionTimeout = Date.now();
+
+    if (!dialog) {
+      return;
+    }
+
     if (npc === undefined) {
       this.npcName.setVisible(false);
       this.image.setVisible(false);
@@ -72,8 +98,38 @@ export class Message extends GameObjects.Container {
 
       this.text.setPosition(padding + portraitOffset, padding + nameOffset);
     }
-    this.setVisible(!!message);
 
-    if (this.text.getWrappedText().length > 4) console.error('Message too long!', message);
+    this.showMessage();
+  }
+
+  showMessage() {
+    const messages = this.dialog?.messages;
+    const message = messages && messages[this.messageIndex];
+
+    if (message) {
+      this.text.setText(message);
+      if (this.text.getWrappedText().length > 4) console.error('Message too long!', message);
+    }
+  }
+
+  updateDialog() {
+    if (Date.now() < this.interactionTimeout) return;
+
+    if (!this.dialog) {
+      return;
+    }
+
+    this.messageIndex++;
+    if (this.messageIndex >= this.dialog.messages.length) {
+      if (this.dialog.onCompleted) {
+        this.dialog.onCompleted(this.player);
+      }
+      this.dialog = undefined;
+      this.setVisible(false);
+    } else {
+      this.showMessage();
+    }
+
+    this.interactionTimeout = Date.now() + 500;
   }
 }

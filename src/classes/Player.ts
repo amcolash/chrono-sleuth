@@ -22,7 +22,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   interactive?: Interactive;
   interactionTimeout: number = 0;
 
-  message: Message = new Message(this.scene);
+  message: Message;
   inventory: Inventory;
   quests: Quests;
   journal: Journal;
@@ -34,7 +34,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   constructor(scene: Phaser.Scene) {
     super(scene, playerStart.x, playerStart.y, 'character', 0);
 
-    this.keys = scene.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT,ENTER,SPACE') as {
+    this.keys = scene.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,ENTER,SPACE') as {
       [key: string]: Phaser.Input.Keyboard.Key;
     };
 
@@ -51,7 +51,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
     this.buttonPrompt = new ButtonPrompt(scene);
 
-    this.message = new Message(scene);
+    this.message = new Message(scene, this);
     this.inventory = new Inventory(scene);
     this.quests = new Quests(scene);
     this.journal = new Journal(scene, this);
@@ -95,7 +95,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       ret = this.interactive.onInteract(this.keys);
 
       if (ret !== InteractResult.None) {
-        this.interactionTimeout = Date.now() + (this.interactive.interactionTimeout || 0);
+        this.interactionTimeout = Date.now() + (this.interactive.interactionTimeout || 500);
 
         if (ret === InteractResult.Teleported) this.interactive = undefined;
       }
@@ -110,7 +110,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       right: this.keys.RIGHT.isDown || this.keys.D.isDown,
       up: this.keys.UP.isDown || this.keys.W.isDown,
       down: this.keys.DOWN.isDown || this.keys.S.isDown,
-      shift: this.keys.SHIFT.isDown,
     };
 
     let calcSpeed = speed;

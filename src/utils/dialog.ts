@@ -1,4 +1,3 @@
-import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { ItemType, JournalEntry, NPCType, Quest, QuestType } from '../classes/types';
 
@@ -12,13 +11,13 @@ export interface NPCDialog {
     or?: boolean;
   };
   messages: string[];
-  onCompleted?: (player: Player, npc?: NPC) => void;
+  onCompleted?: (player: Player) => void;
 }
 
 const npcDialogs: Record<NPCType, NPCDialog[]> = {
   [NPCType.Inventor]: [
     {
-      messages: ['My name is Johan and I am an inventor.'],
+      messages: ['My name is Johan and I am an inventor.', 'This is a weird place.'],
     },
   ],
   [NPCType.Stranger]: [
