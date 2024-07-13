@@ -1,7 +1,8 @@
 import { GameObjects, Input } from 'phaser';
 
 import { Config } from '../../config';
-import { Colors, fontStyle } from '../../utils/colors';
+import { Colors } from '../../utils/colors';
+import { fontStyle } from '../../utils/fonts';
 import { Player } from '../Player';
 
 export class DebugUI extends GameObjects.Container {
@@ -22,7 +23,7 @@ export class DebugUI extends GameObjects.Container {
 
     this.text = scene.add.text(10, 60, '', {
       ...fontStyle,
-      fontSize: 20,
+      fontSize: 32,
       backgroundColor: `#${Colors.Black}`,
       padding: { x: 5, y: 5 },
     });

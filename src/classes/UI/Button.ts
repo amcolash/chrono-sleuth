@@ -1,6 +1,6 @@
 import { GameObjects } from 'phaser';
 
-import { fontStyle } from '../../utils/colors';
+import { fontStyle } from '../../utils/fonts';
 
 export class Button extends GameObjects.Text {
   constructor(scene: Phaser.Scene, x: number, y: number, text: string, onClick: () => void) {

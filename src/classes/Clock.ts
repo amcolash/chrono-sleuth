@@ -1,7 +1,8 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../config';
-import { Colors, fontStyle, getColorNumber } from '../utils/colors';
+import { Colors, getColorNumber } from '../utils/colors';
+import { fontStyle } from '../utils/fonts';
 import { Player } from './Player';
 import { Rewindable } from './types';
 

@@ -1,7 +1,8 @@
 import { GameObjects } from 'phaser';
 
 import { Config } from '../../config';
-import { Colors, fontStyle } from '../../utils/colors';
+import { Colors } from '../../utils/colors';
+import { fontStyle } from '../../utils/fonts';
 
 export class ButtonPrompt extends GameObjects.Text {
   constructor(scene: Phaser.Scene) {

@@ -3,7 +3,8 @@ import { Input, Math, Scene } from 'phaser';
 import { Player } from '../classes/Player';
 import { Button } from '../classes/UI/Button';
 import { Config } from '../config';
-import { Colors, fontStyle, getColorNumber } from '../utils/colors';
+import { Colors, getColorNumber } from '../utils/colors';
+import { fontStyle } from '../utils/fonts';
 import { JournalData } from '../utils/journalData';
 
 export class JournalDialog extends Scene {

@@ -1,7 +1,8 @@
 import { GameObjects } from 'phaser';
 
 import { Config } from '../config';
-import { Colors, fontStyle, getColorNumber } from '../utils/colors';
+import { Colors, getColorNumber } from '../utils/colors';
+import { fontStyle } from '../utils/fonts';
 import { Quest, QuestType } from './types';
 
 export class Quests extends GameObjects.Container {
@@ -27,7 +28,7 @@ export class Quests extends GameObjects.Container {
   addQuest(quest: Quest) {
     this.quests.push(quest);
     const y = 10 + 30 * this.quests.length;
-    this.add(this.scene.add.text(10, y, quest.name, { ...fontStyle, fontSize: 18 }));
+    this.add(this.scene.add.text(10, y, quest.name, { ...fontStyle, fontSize: 24 }));
     this.updateQuests();
   }
 

@@ -1,11 +1,12 @@
-import { Boot } from './scenes/Boot';
-import { Game as MainGame } from './scenes/Game';
-import { Paused } from './scenes/Paused';
-import { Preloader } from './scenes/Preloader';
+import { Game, Types } from 'phaser';
 
 import { Config } from './config';
-import { Game, Types } from 'phaser';
+import { Boot } from './scenes/Boot';
+import { Game as MainGame } from './scenes/Game';
 import { JournalDialog } from './scenes/JournalDialog';
+import { Paused } from './scenes/Paused';
+import { Preloader } from './scenes/Preloader';
+import { loadFont } from './utils/fonts';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -32,4 +33,7 @@ const config: Types.Core.GameConfig = {
   },
 };
 
-export default new Game(config);
+// TODO: Should this be in preload?
+loadFont('m5x7', 'assets/m5x7.ttf').then(() => {
+  new Game(config);
+});

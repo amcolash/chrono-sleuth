@@ -14,7 +14,7 @@ const WarpData = {
     visible: true,
   },
   [WarpType.Underground]: {
-    x: 300,
+    x: 301,
     y: 875,
     key: [Phaser.Input.Keyboard.KeyCodes.UP],
     warpTo: WarpType.Town,
@@ -44,7 +44,7 @@ const WarpData = {
     visible: false,
   },
   [WarpType.ClockSquare]: {
-    x: 620,
+    x: 720,
     y: -330,
     key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
     warpTo: WarpType.TownNorth,
@@ -59,7 +59,7 @@ const WarpData = {
     visible: false,
   },
   [WarpType.ClockEntrance]: {
-    x: 735,
+    x: 900,
     y: -1320,
     key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
     warpTo: WarpType.ClockSquareNorth,
@@ -67,7 +67,7 @@ const WarpData = {
   },
 
   [WarpType.ClockStairs]: {
-    x: 900,
+    x: 735,
     y: -1320,
     key: [Phaser.Input.Keyboard.KeyCodes.UP],
     warpTo: WarpType.ClockTop,
@@ -88,17 +88,36 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   particles: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {
-    const { x, y, visible } = WarpData[warpType];
+    const { x, y, visible, warpTo } = WarpData[warpType];
 
     super(scene, x, y, visible ? 'ladder' : 'warp');
     this.warpType = warpType;
     this.player = player;
     this.scale = 0.5;
-    this.setVisible(visible);
+    // this.setVisible(visible);
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    if (Config.debug) this.setInteractive({ draggable: true });
+    if (Config.debug) {
+      this.setInteractive({ draggable: true });
+
+      const target = WarpData[warpTo];
+
+      const graphics = scene.add.graphics();
+      const color = warpType % 2 === 0 ? 0xffff00 : 0x00ffff;
+      graphics.fillStyle(color);
+      graphics.lineStyle(3, color);
+
+      let offsetX = -this.displayWidth / 2;
+      let offsetY = -this.displayHeight / 2;
+
+      if (target.x > x) offsetX *= -1;
+      if (target.y > y) offsetY *= -1;
+
+      const line = new Phaser.Geom.Line(x + offsetX, y + offsetY, target.x + offsetX, target.y + offsetY);
+      graphics.strokeLineShape(line);
+      graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
+    }
 
     if (!visible) {
       this.particles = scene.add

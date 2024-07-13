@@ -1,8 +1,9 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { Colors, fontStyle, getColorNumber } from '../../utils/colors';
+import { Colors, getColorNumber } from '../../utils/colors';
 import { NPCDialog } from '../../utils/dialog';
+import { fontStyle } from '../../utils/fonts';
 import { NPCData } from '../NPC';
 import { Player } from '../Player';
 import { NPCType } from '../types';
