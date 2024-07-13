@@ -3,8 +3,8 @@ import { Player } from './Player';
 import { InteractResult, Interactive, ItemType } from './types';
 
 export const ItemData = {
-  [ItemType.Book]: { x: 1500, y: 875, image: 'book' },
-  [ItemType.Map]: { x: 3500, y: 810, image: 'map' },
+  [ItemType.Wrench]: { x: 0, y: 0, image: 'wrench' },
+  [ItemType.Gear]: { x: 3500, y: 810, image: 'gear' },
 };
 
 export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {

@@ -35,16 +35,16 @@ export class Preloader extends Scene {
     this.load.image('watch', 'watch.png');
 
     // items
-    this.load.image('book', 'items/book.png');
-    this.load.image('candle', 'items/candle.png');
-    this.load.image('dagger', 'items/dagger.png');
     this.load.image('gear', 'items/gear.png');
-    this.load.image('journal', 'items/journal.png');
-    this.load.image('lantern', 'items/lantern.png');
-    this.load.image('letter', 'items/letter.png');
-    this.load.image('lockpick', 'items/lockpick.png');
     this.load.image('map', 'items/map.png');
-    this.load.image('wrench', 'items/wrench.png');
+    // this.load.image('book', 'items/book.png');
+    // this.load.image('candle', 'items/candle.png');
+    // this.load.image('dagger', 'items/dagger.png');
+    // this.load.image('journal', 'items/journal.png');
+    // this.load.image('lantern', 'items/lantern.png');
+    // this.load.image('letter', 'items/letter.png');
+    // this.load.image('lockpick', 'items/lockpick.png');
+    // this.load.image('wrench', 'items/wrench.png');
 
     // characters
     this.load.spritesheet('character', 'characters/player.png', { frameWidth: 24, frameHeight: 36 });

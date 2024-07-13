@@ -24,7 +24,7 @@ export class Game extends Scene {
     this.createBackgrounds();
 
     // game objects
-    this.player = new Player(this, 400, 650);
+    this.player = new Player(this);
 
     const walls = new Walls(this);
     const warpers = this.createWarpers();
@@ -106,10 +106,7 @@ export class Game extends Scene {
   }
 
   createItems(): Item[] {
-    const book = new Item(this, ItemType.Book, this.player);
-    const ring = new Item(this, ItemType.Map, this.player);
-
-    return [book, ring];
+    return [];
   }
 
   createEventListeners() {

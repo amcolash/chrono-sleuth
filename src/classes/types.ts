@@ -40,13 +40,14 @@ export enum WarpType {
 }
 
 export enum ItemType {
-  Book,
-  Map,
+  Wrench,
+  Gear,
 }
 
 export enum QuestType {
-  InventorBook,
-  StrangerMap,
+  ClockGear1,
+  ClockGear2,
+  ClockGear3,
 }
 
 export enum NPCType {

@@ -1,3 +1,4 @@
+import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { ItemType, JournalEntry, NPCType, Quest, QuestType } from '../classes/types';
 
@@ -11,87 +12,16 @@ export interface NPCDialog {
     or?: boolean;
   };
   messages: string[];
-  onCompleted?: (player: Player) => void;
+  onCompleted?: (player: Player, npc?: NPC) => void;
 }
 
 const npcDialogs: Record<NPCType, NPCDialog[]> = {
   [NPCType.Inventor]: [
     {
-      messages: ['I am working on a new invention.'],
-      conditions: {
-        completedQuest: QuestType.InventorBook,
-        journalEntry: JournalEntry.InventorBookFound,
-      },
-    },
-    {
-      messages: ['You found my book! Thank you!', 'I heard that the stranger might need some help.'],
-      conditions: {
-        activeQuest: QuestType.InventorBook,
-        hasItem: ItemType.Book,
-      },
-      onCompleted: (player) => {
-        player.quests.updateExistingQuest(QuestType.InventorBook, true);
-        player.inventory.removeItem(ItemType.Book);
-        player.journal.addEntry(JournalEntry.InventorBookFound);
-      },
-    },
-    {
-      messages: ['Did you find my book yet?'],
-      conditions: {
-        activeQuest: QuestType.InventorBook,
-      },
-    },
-    {
-      messages: [
-        'My name is Johan and I am an inventor.',
-        'I wonder what I did with that book of mine...',
-        'Could you find it for me?',
-      ],
-      conditions: {
-        noJournalEntry: JournalEntry.InventorBookFound,
-      },
-      onCompleted: (player) => {
-        player.quests.addQuest({ id: QuestType.InventorBook, name: 'Find the inventors book', completed: false });
-      },
-    },
-    {
       messages: ['My name is Johan and I am an inventor.'],
     },
   ],
   [NPCType.Stranger]: [
-    {
-      messages: ['I saw her this morning in the forest.'],
-      conditions: {
-        completedQuest: QuestType.StrangerMap,
-      },
-    },
-    {
-      messages: ['You found my map! Thank you!', 'I heard a rumor about the mayor making shady deals in the forest...'],
-      conditions: {
-        activeQuest: QuestType.StrangerMap,
-        hasItem: ItemType.Map,
-      },
-      onCompleted: (player) => {
-        player.quests.updateExistingQuest(QuestType.StrangerMap, true);
-        player.inventory.removeItem(ItemType.Map);
-        player.journal.addEntry(JournalEntry.StrangerMapFound);
-      },
-    },
-    {
-      messages: ['Did you find my map?'],
-      conditions: {
-        activeQuest: QuestType.StrangerMap,
-      },
-    },
-    {
-      messages: ['You helped the inventor?', 'Can you find my map for me?'],
-      conditions: {
-        journalEntry: JournalEntry.InventorBookFound,
-      },
-      onCompleted: (player) => {
-        player.quests.addQuest({ id: QuestType.StrangerMap, name: 'Find the strangers map', completed: false });
-      },
-    },
     {
       messages: ['Who am I?', 'Eventually, you will learn.'],
     },
@@ -99,7 +29,10 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
   // TODO: Should the clock tower be a different type than NPC?
   [NPCType.ClockTower]: [
     {
-      messages: ["This dusty clock tower hasn't worked in many years."],
+      messages: [
+        "This dusty clock tower hasn't told the correct time in many years.",
+        'It appears to be missing some gears.',
+      ],
     },
   ],
 };

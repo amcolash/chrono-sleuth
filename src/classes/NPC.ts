@@ -75,7 +75,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
       } else {
         this.player.message.setMessage();
         if (dialog.onCompleted) {
-          dialog.onCompleted(this.player);
+          dialog.onCompleted(this.player, this);
         }
       }
 
