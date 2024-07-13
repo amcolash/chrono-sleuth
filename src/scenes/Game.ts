@@ -100,8 +100,9 @@ export class Game extends Scene {
   createNpcs(): NPC[] {
     const inventor = new NPC(this, NPCType.Inventor, this.player);
     const stranger = new NPC(this, NPCType.Stranger, this.player);
+    const clockTower = new NPC(this, NPCType.ClockTower, this.player);
 
-    return [inventor, stranger];
+    return [inventor, stranger, clockTower];
   }
 
   createItems(): Item[] {

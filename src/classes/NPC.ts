@@ -20,6 +20,14 @@ export const NPCData = {
     portrait: 'stranger_portrait',
     name: 'Mysterious Stranger',
   },
+  [NPCType.ClockTower]: {
+    x: 880,
+    y: -2090,
+    scale: 0.7,
+    img: 'warp',
+    portrait: '',
+    name: 'Clock Tower',
+  },
 };
 
 export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
@@ -37,6 +45,10 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
     this.player = player;
     this.scale = scale;
 
+    if (npcType === NPCType.ClockTower) {
+      // this.setSize(100, 100);
+    }
+
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
@@ -50,7 +62,6 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
         return InteractResult.None;
       }
 
-      // TODO: Reset dialog index when response changes
       if (this.dialog !== dialog) {
         this.dialog = dialog;
         this.messageIndex = 0;
@@ -59,7 +70,8 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
       const message = dialog.messages[this.messageIndex];
 
       if (message) {
-        this.player.message.setMessage(message, this.npcType);
+        const showPortrait = NPCData[this.npcType].portrait.length > 0;
+        this.player.message.setMessage(message, showPortrait ? this.npcType : undefined);
       } else {
         this.player.message.setMessage();
         if (dialog.onCompleted) {
@@ -76,6 +88,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
   }
 
   getButtonPrompt() {
+    if (this.npcType === NPCType.ClockTower) return ['Inspect Clock Tower', 'Press [CONTINUE]'];
     return [`Talk to ${NPCData[this.npcType].name}`, 'Press [CONTINUE]'];
   }
 }

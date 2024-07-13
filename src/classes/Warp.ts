@@ -55,14 +55,29 @@ const WarpData = {
     x: 915,
     y: -330,
     key: [Phaser.Input.Keyboard.KeyCodes.UP],
-    warpTo: WarpType.ClockInside,
+    warpTo: WarpType.ClockEntrance,
     visible: false,
   },
-  [WarpType.ClockInside]: {
+  [WarpType.ClockEntrance]: {
     x: 735,
     y: -1320,
     key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
     warpTo: WarpType.ClockSquareNorth,
+    visible: false,
+  },
+
+  [WarpType.ClockStairs]: {
+    x: 900,
+    y: -1320,
+    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    warpTo: WarpType.ClockTop,
+    visible: false,
+  },
+  [WarpType.ClockTop]: {
+    x: 790,
+    y: -2005,
+    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    warpTo: WarpType.ClockStairs,
     visible: false,
   },
 };

@@ -5,6 +5,15 @@ import { Colors, fontStyle, getColorNumber } from '../../utils/colors';
 import { NPCData } from '../NPC';
 import { NPCType } from '../types';
 
+const padding = 20;
+const boxHeight = 170;
+const portraitOffset = 150;
+const nameOffset = 30;
+
+const { width, height } = Config;
+const textWidth = width - 120 - padding * 4;
+const textHeight = boxHeight - padding * 2;
+
 export class Message extends GameObjects.Container {
   npcName: GameObjects.Text;
   text: GameObjects.Text;
@@ -15,24 +24,17 @@ export class Message extends GameObjects.Container {
     super(scene);
     scene.add.existing(this);
 
-    const padding = 20;
-    const { width, height } = Config;
-    const boxHeight = 170;
-
     this.setScrollFactor(0);
     this.setPosition(padding, height - padding - boxHeight);
     this.setDepth(2);
     this.setVisible(false);
 
-    const textWidth = width - 120 - padding * 4;
-    const textHeight = boxHeight - padding * 2;
-
-    this.npcName = new GameObjects.Text(scene, padding + 150, padding - 5, '', {
+    this.npcName = new GameObjects.Text(scene, padding + portraitOffset, padding - 5, '', {
       ...fontStyle,
       color: '#' + Colors.Tan,
     });
 
-    this.text = new GameObjects.Text(scene, padding + 150, padding + 30, '', fontStyle);
+    this.text = new GameObjects.Text(scene, padding + portraitOffset, padding + nameOffset, '', fontStyle);
     this.text.width = textWidth;
     this.text.height = textHeight;
 
@@ -57,9 +59,18 @@ export class Message extends GameObjects.Container {
 
   setMessage(message?: string, npc?: NPCType) {
     if (message) this.text.setText(message);
-    if (npc !== undefined) {
+    if (npc === undefined) {
+      this.npcName.setVisible(false);
+      this.image.setVisible(false);
+      this.text.setPosition(padding, padding);
+    } else {
+      this.npcName.setVisible(true);
       this.npcName.setText(NPCData[npc].name);
+
+      this.image.setVisible(true);
       this.image.setTexture(NPCData[npc].portrait);
+
+      this.text.setPosition(padding + portraitOffset, padding + nameOffset);
     }
     this.setVisible(!!message);
 

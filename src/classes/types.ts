@@ -33,7 +33,10 @@ export enum WarpType {
   ClockSquare,
 
   ClockSquareNorth,
-  ClockInside,
+  ClockEntrance,
+
+  ClockStairs,
+  ClockTop,
 }
 
 export enum ItemType {
@@ -49,6 +52,7 @@ export enum QuestType {
 export enum NPCType {
   Inventor,
   Stranger,
+  ClockTower,
 }
 
 export interface Quest {

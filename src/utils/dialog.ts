@@ -96,6 +96,12 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       messages: ['Who am I?', 'Eventually, you will learn.'],
     },
   ],
+  // TODO: Should the clock tower be a different type than NPC?
+  [NPCType.ClockTower]: [
+    {
+      messages: ["This dusty clock tower hasn't worked in many years."],
+    },
+  ],
 };
 
 function hasItem(inventory: ItemType[], item: ItemType): boolean {

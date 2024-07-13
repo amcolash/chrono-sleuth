@@ -1,6 +1,7 @@
 import { GameObjects } from 'phaser';
 
 import { Config } from '../config';
+import { Colors, getColorNumber } from '../utils/colors';
 import { Player } from './Player';
 import { Notification } from './UI/Notification';
 import { JournalEntry } from './types';
@@ -21,6 +22,7 @@ export class Journal extends GameObjects.Sprite {
 
     this.unread = scene.add
       .ellipse(Config.width - 20, Config.height - 85, 20, 20, 0xaa0000)
+      .setStrokeStyle(2, getColorNumber(Colors.Black))
       .setScrollFactor(0)
       .setDepth(2)
       .setVisible(false);

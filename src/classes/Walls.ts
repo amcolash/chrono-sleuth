@@ -19,6 +19,14 @@ export class Walls extends Physics.Arcade.StaticGroup {
       // Forest
       { x: 2600, y: 780 },
       { x: 3650, y: 780 },
+      // Clock Outside
+      { x: 550, y: -400 },
+      { x: 1150, y: -400 },
+      // Clock Inside
+      { x: 640, y: -1380 },
+      { x: 1020, y: -1380 },
+      { x: 750, y: -2075 },
+      { x: 900, y: -2075 },
     ];
 
     rects.forEach((rect) => {
