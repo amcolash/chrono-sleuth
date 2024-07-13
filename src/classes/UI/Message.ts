@@ -16,6 +16,8 @@ const { width, height } = Config;
 const textWidth = width - 120 - padding * 4;
 const textHeight = boxHeight - padding * 2;
 
+const timeout = 350;
+
 export class Message extends GameObjects.Container {
   player: Player;
   npcName: GameObjects.Text;
@@ -79,7 +81,7 @@ export class Message extends GameObjects.Container {
 
     this.messageIndex = 0;
     this.dialog = dialog;
-    this.interactionTimeout = Date.now();
+    this.interactionTimeout = Date.now() + timeout;
 
     if (!dialog) {
       return;
@@ -130,6 +132,6 @@ export class Message extends GameObjects.Container {
       this.showMessage();
     }
 
-    this.interactionTimeout = Date.now() + 500;
+    this.interactionTimeout = Date.now() + timeout;
   }
 }
