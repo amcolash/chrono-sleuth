@@ -29,6 +29,9 @@ export enum WarpType {
   TownEast,
   Forest,
 
+  ForestEast,
+  Lake,
+
   TownNorth,
   ClockSquare,
 

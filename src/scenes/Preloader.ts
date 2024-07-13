@@ -25,9 +25,12 @@ export class Preloader extends Scene {
 
     // backgrounds
     this.load.image('town', 'maps/town.jpg');
-    this.load.image('forest', 'maps/forest.jpg');
+
     this.load.image('clock_outside', 'maps/clock_outside.jpg');
     this.load.image('clock_inner', 'maps/clock_inner.jpg');
+
+    this.load.image('forest', 'maps/forest.jpg');
+    this.load.image('lake', 'maps/lake.jpg');
 
     // interactive objects
     this.load.image('ladder', 'ladder.png');

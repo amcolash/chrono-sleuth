@@ -21,7 +21,7 @@ export const NPCData = {
     name: 'Mysterious Stranger',
   },
   [NPCType.Sphinx]: {
-    x: 3550,
+    x: 3450,
     y: 780,
     scale: 1,
     img: 'sphinx',

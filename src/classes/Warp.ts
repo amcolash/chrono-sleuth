@@ -80,6 +80,21 @@ const WarpData = {
     warpTo: WarpType.ClockStairs,
     visible: false,
   },
+
+  [WarpType.ForestEast]: {
+    x: 3600,
+    y: 810,
+    key: [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D],
+    warpTo: WarpType.Lake,
+    visible: false,
+  },
+  [WarpType.Lake]: {
+    x: 4625,
+    y: 915,
+    key: [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A],
+    warpTo: WarpType.ForestEast,
+    visible: false,
+  },
 };
 
 export class Warp extends Physics.Arcade.Sprite implements Interactive {
