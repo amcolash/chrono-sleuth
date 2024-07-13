@@ -51,8 +51,12 @@ export enum QuestType {
 }
 
 export enum NPCType {
+  // Characters
   Inventor,
   Stranger,
+  Sphinx,
+
+  // Inanimate objects
   ClockTower,
 }
 

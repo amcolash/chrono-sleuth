@@ -20,6 +20,15 @@ export const NPCData = {
     portrait: 'stranger_portrait',
     name: 'Mysterious Stranger',
   },
+  [NPCType.Sphinx]: {
+    x: 3550,
+    y: 780,
+    scale: 1,
+    img: 'sphinx',
+    portrait: 'sphinx_portrait',
+    name: 'Mystical Sphinx',
+  },
+
   [NPCType.ClockTower]: {
     x: 880,
     y: -2090,

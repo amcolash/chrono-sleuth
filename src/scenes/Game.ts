@@ -1,4 +1,4 @@
-import { GameObjects, Input, Physics, Scene } from 'phaser';
+import { GameObjects, Input, Scene } from 'phaser';
 
 import { Clock } from '../classes/Clock';
 import { Item } from '../classes/Item';
@@ -7,7 +7,7 @@ import { Player } from '../classes/Player';
 import { DebugUI } from '../classes/UI/DebugUI';
 import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
-import { ItemType, NPCType, WarpType } from '../classes/types';
+import { NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
 
 export class Game extends Scene {
@@ -100,9 +100,11 @@ export class Game extends Scene {
   createNpcs(): NPC[] {
     const inventor = new NPC(this, NPCType.Inventor, this.player);
     const stranger = new NPC(this, NPCType.Stranger, this.player);
+    const sphinx = new NPC(this, NPCType.Sphinx, this.player);
+
     const clockTower = new NPC(this, NPCType.ClockTower, this.player);
 
-    return [inventor, stranger, clockTower];
+    return [inventor, stranger, sphinx, clockTower];
   }
 
   createItems(): Item[] {

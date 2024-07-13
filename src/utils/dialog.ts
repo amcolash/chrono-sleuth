@@ -25,6 +25,15 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       messages: ['Who am I?', 'Eventually, you will learn.'],
     },
   ],
+  [NPCType.Sphinx]: [
+    {
+      messages: [
+        'I am the sphinx of this forest. Answer my riddle and you may pass.',
+        'What has a head, a tail, is brown, and has no legs?',
+      ],
+    },
+  ],
+
   // TODO: Should the clock tower be a different type than NPC?
   [NPCType.ClockTower]: [
     {

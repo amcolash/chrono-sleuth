@@ -11,7 +11,7 @@ import { NPCType } from '../types';
 const padding = 20;
 const boxHeight = 170;
 const portraitOffset = 150;
-const nameOffset = 30;
+const nameOffset = 40;
 
 const { width, height } = Config;
 const textWidth = width - 120 - padding * 4;
@@ -111,7 +111,7 @@ export class Message extends GameObjects.Container {
 
     if (message) {
       this.text.setText(message);
-      if (this.text.getWrappedText().length > 4) console.error('Message too long!', message);
+      if (this.text.getWrappedText().length > 2) console.error('Message too long!', message);
     }
   }
 
