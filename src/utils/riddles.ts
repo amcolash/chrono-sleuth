@@ -60,7 +60,11 @@ export function getSphinxRiddle(scene: Phaser.Scene): string[] {
 
 export function getSphinxOptions(scene: Phaser.Scene): string[] {
   const index = getRiddleIndex(scene);
-  return riddles[index].options;
+  const options = [...riddles[index].options];
+  const shuffled = options.sort(() => Math.random() - 0.5);
+  shuffled.push('I don’t know');
+
+  return shuffled;
 }
 
 export function getSphinxAnswer(scene: Phaser.Scene): string {

@@ -1,7 +1,7 @@
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { ItemType, JournalEntry, NPCType, Quest, QuestType, WarpType } from '../classes/types';
-import { updateWarpVisibility } from './interactionUtils';
+import { updateSphinx, updateWarpVisibility } from './interactionUtils';
 import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from './riddles';
 
 export interface NPCDialog {
@@ -56,7 +56,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
     {
       messages: [
         'I’ve heard rumors of a gear hidden deep in the Enchanted Forest. Beware of the forest’s',
-        'creatures and traps. I sometimes get lost myself.',
+        'creatures and traps. One time I thought I saw an ancient being, but it ran away.',
       ],
       conditions: {
         hasItem: ItemType.Wrench,
@@ -81,18 +81,30 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       conditions: {
         activeQuest: QuestType.SphinxRiddle,
       },
-      onSelected: (option, player) => {
+      onSelected: (option, player, npc) => {
         const answer = getSphinxAnswer(player.scene);
         if (option === answer) {
-          player.quests.updateExistingQuest(QuestType.SphinxRiddle, true);
-          player.journal.addEntry(JournalEntry.SphinxRiddleSolved);
+          player.message.setDialog(
+            {
+              messages: [`That is correct. Well done, you may pass.`],
+              onCompleted: (player, npc) => {
+                player.quests.updateExistingQuest(QuestType.SphinxRiddle, true);
+                player.journal.addEntry(JournalEntry.SphinxRiddleSolved);
+                if (npc) updateSphinx(npc, true);
+              },
+            },
+            npc
+          );
+        } else if (option === 'I don’t know') {
+          player.message.setDialog({ messages: ['Come back when you have an answer for me.'] }, npc);
+        } else {
+          // TODO: Add back talking points so we can hide dialog in a different system that is reset
+          player.message.setDialog({ messages: ['That is not correct. Do not return.'] }, npc);
         }
       },
     },
     {
-      messages: [
-        'Welcome, brave soul. To pass, you must answer my riddle correctly. You may only answer once. Choose wisely."',
-      ],
+      messages: ['Welcome, brave soul. To pass, you must answer my riddle. You may only answer once. Choose wisely.'],
       onCompleted: (player) => {
         player.quests.addQuest({ name: 'Solve the sphinx riddle', id: QuestType.SphinxRiddle, completed: false });
       },

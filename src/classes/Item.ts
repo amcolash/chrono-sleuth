@@ -4,7 +4,7 @@ import { InteractResult, Interactive, ItemType } from './types';
 
 export const ItemData = {
   [ItemType.Wrench]: { x: 0, y: 0, image: 'wrench' },
-  [ItemType.Gear]: { x: 3500, y: 810, image: 'gear' },
+  [ItemType.Gear]: { x: 5120, y: 915, image: 'gear' },
 };
 
 export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {

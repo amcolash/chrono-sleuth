@@ -1,6 +1,7 @@
 import { GameObjects, Physics, Scene } from 'phaser';
 
 import { NPC, NPCData } from '../classes/NPC';
+import { WallData } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { NPCType, WallType, WarpType } from '../classes/types';
 import { Game } from '../scenes/Game';
@@ -12,7 +13,7 @@ export function updateSphinx(npc: NPC, complete?: boolean) {
   const wall = getWall(scene, WallType.Sphinx);
   if (wall) {
     if (complete) {
-      wall.setX(wall.x);
+      wall.setX(WallData.find((data) => data.id === WallType.Sphinx)?.x || 0);
     } else {
       wall.setX(wall.x - 150);
     }

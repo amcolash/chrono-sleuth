@@ -7,7 +7,7 @@ import { Player } from '../classes/Player';
 import { DebugUI } from '../classes/UI/DebugUI';
 import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
-import { NPCType, WarpType } from '../classes/types';
+import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
 
 export class Game extends Scene {
@@ -118,7 +118,8 @@ export class Game extends Scene {
   }
 
   createItems(): Item[] {
-    return [];
+    const gear = new Item(this, ItemType.Gear, this.player);
+    return [gear];
   }
 
   createEventListeners() {
