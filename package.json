@@ -9,6 +9,7 @@
     "build": "vite build --config vite/config.prod.mjs"
   },
   "dependencies": {
+    "generate-maze": "^1.1.0",
     "phaser": "^3.80.1"
   },
   "devDependencies": {

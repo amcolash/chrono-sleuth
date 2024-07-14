@@ -5,7 +5,7 @@ import { Colors, getColorNumber } from '../utils/colors';
 import { Player } from './Player';
 import { InteractResult, Interactive, WarpType } from './types';
 
-const WarpData = {
+export const WarpData = {
   [WarpType.Town]: {
     x: 300,
     y: 650,
@@ -180,43 +180,14 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       }
     });
 
+    if (shouldWarp && this.warpType === WarpType.TownEast) {
+      this.scene.scene.pause();
+      this.scene.scene.launch('MazeDialog', { player: this.player });
+      return InteractResult.None;
+    }
+
     if (shouldWarp) {
-      const { x, y } = WarpData[WarpData[this.warpType].warpTo];
-
-      const targetScrollX = x - this.scene.cameras.main.width / 2;
-      const targetScrollY = y - this.scene.cameras.main.height / 2;
-
-      this.scene.cameras.main.stopFollow();
-      this.player.setActive(false);
-      this.scene.tweens.add({
-        targets: this.scene.cameras.main,
-        scrollX: targetScrollX,
-        scrollY: targetScrollY - Config.cameraOffset,
-        duration: 400,
-        ease: 'Power1',
-        onComplete: () => {
-          this.scene.cameras.main.startFollow(this.player);
-          this.scene.cameras.main.setFollowOffset(0, Config.cameraOffset);
-          this.player.setActive(true);
-        },
-      });
-
-      // fade player out and then in again
-      this.scene.tweens.add({
-        targets: this.player,
-        alpha: 0,
-        duration: 300,
-        ease: 'Power1',
-        yoyo: true,
-        repeat: 0,
-        onYoyo: () => {
-          this.player.setPosition(x, y);
-        },
-        onComplete: () => {
-          this.player.alpha = 1;
-        },
-      });
-
+      warp(WarpData[this.warpType].warpTo, this.player);
       return InteractResult.Teleported;
     }
 
@@ -239,4 +210,43 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
     return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + unique.join(' or ')];
   }
+}
+
+export function warp(location: WarpType, player: Player) {
+  const { x, y } = WarpData[location];
+  const scene = player.scene;
+
+  const targetScrollX = x - scene.cameras.main.width / 2;
+  const targetScrollY = y - scene.cameras.main.height / 2;
+
+  scene.cameras.main.stopFollow();
+  player.setActive(false);
+  scene.tweens.add({
+    targets: scene.cameras.main,
+    scrollX: targetScrollX,
+    scrollY: targetScrollY - Config.cameraOffset,
+    duration: 400,
+    ease: 'Power1',
+    onComplete: () => {
+      scene.cameras.main.startFollow(player);
+      scene.cameras.main.setFollowOffset(0, Config.cameraOffset);
+      player.setActive(true);
+    },
+  });
+
+  // fade player out and then in again
+  scene.tweens.add({
+    targets: player,
+    alpha: 0,
+    duration: 300,
+    ease: 'Power1',
+    yoyo: true,
+    repeat: 0,
+    onYoyo: () => {
+      player.setPosition(x, y);
+    },
+    onComplete: () => {
+      player.alpha = 1;
+    },
+  });
 }

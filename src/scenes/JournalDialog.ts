@@ -28,7 +28,7 @@ export class JournalDialog extends Scene {
     );
     container.add(new Button(this, Config.width * 0.3, Config.height * -0.33, 'Close', () => this.close()));
 
-    container.add(this.add.text(0, Config.height * -0.33, 'Journal', { ...fontStyle, fontSize: 36 }).setOrigin(0.5));
+    container.add(this.add.text(0, Config.height * -0.33, 'Journal', { ...fontStyle, fontSize: 48 }).setOrigin(0.5));
 
     // TODO: Figure out how to get this to scroll
     const text = this.add
@@ -54,7 +54,7 @@ export class JournalDialog extends Scene {
     // Make a mask and apply it to the text to keep inside of dialog
     const maskGraphics = this.make.graphics();
     maskGraphics.fillStyle(0xffffff);
-    maskGraphics.fillRect(Config.width * 0.15, Config.height * 0.2, Config.width * 0.75, Config.height * 0.7);
+    maskGraphics.fillRect(Config.width * 0.125, Config.height * 0.2, Config.width * 0.75, Config.height * 0.7);
 
     const mask = new Phaser.Display.Masks.BitmapMask(this, maskGraphics);
     text.setMask(mask);
