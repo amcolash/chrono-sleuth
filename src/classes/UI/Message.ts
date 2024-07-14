@@ -107,7 +107,11 @@ export class Message extends GameObjects.Container {
   }
 
   showMessage() {
-    const messages = this.dialog?.messages;
+    let messages = this.dialog?.messages;
+    if (typeof messages === 'function') {
+      messages = messages(this.player);
+    }
+
     const message = messages && messages[this.messageIndex];
 
     if (message) {

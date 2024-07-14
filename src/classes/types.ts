@@ -48,8 +48,8 @@ export enum ItemType {
 }
 
 export enum QuestType {
-  ClockTower,
   ForestGear,
+  SphinxRiddle,
 }
 
 export enum NPCType {
@@ -74,6 +74,7 @@ export interface Quest {
 }
 
 export enum JournalEntry {
-  SphinxRiddle,
+  FixTheClock,
+  SphinxRiddleSolved,
   MeetTheMayor,
 }

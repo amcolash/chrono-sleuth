@@ -2,7 +2,7 @@ import generateMaze, { Cell } from 'generate-maze';
 import { GameObjects, Input, Math, Scene } from 'phaser';
 
 import { Config } from '../config';
-import { Game } from './Game';
+import { getClockRewind } from '../utils/interactionUtils';
 import { MazeDialog } from './MazeDialog';
 
 const cells = 24;
@@ -43,8 +43,7 @@ export class Maze extends Scene {
   }
 
   createMaze() {
-    const gameScene = this.scene.get('Game') as Game;
-    const seed = gameScene?.clock.rewindCount || 12345;
+    const seed = getClockRewind(this);
 
     this.maze = generateMaze(cells, cells, true, seed);
     this.graphics = this.add.graphics();

@@ -3,6 +3,7 @@ import { GameObjects, Physics, Scene } from 'phaser';
 import { NPC, NPCData } from '../classes/NPC';
 import { Warp } from '../classes/Warp';
 import { NPCType, WallType, WarpType } from '../classes/types';
+import { Game } from '../scenes/Game';
 
 export function updateSphinx(npc: NPC, complete?: boolean) {
   const scene = npc.scene;
@@ -52,4 +53,9 @@ export function getWall(scene: Scene, wallType: WallType): GameObjects.Rectangle
     .getAll()
     .find((child) => child instanceof GameObjects.Rectangle && child.getData('WallType') === wallType);
   return wall as GameObjects.Rectangle;
+}
+
+export function getClockRewind(scene: Scene): number {
+  const gameScene = scene.scene.get('Game') as Game;
+  return gameScene?.clock.rewindCount || 0;
 }

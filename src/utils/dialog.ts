@@ -2,6 +2,7 @@ import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { ItemType, JournalEntry, NPCType, Quest, QuestType, WarpType } from '../classes/types';
 import { updateWarpVisibility } from './interactionUtils';
+import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from './riddles';
 
 export interface NPCDialog {
   conditions?: {
@@ -12,23 +13,20 @@ export interface NPCDialog {
     or?: boolean;
     invert?: boolean;
   };
-  messages: string[];
+
+  messages: string[] | ((player: Player) => string[]);
   onCompleted?: (player: Player, npc?: NPC) => void;
+
+  options?: string[] | ((player: Player) => string[]);
+  onSelected?: (option: string, player: Player, npc?: NPC) => void;
 }
 
 const npcDialogs: Record<NPCType, NPCDialog[]> = {
   [NPCType.Inventor]: [
     {
-      messages: [
-        'I can’t make heads or tails of that riddle.',
-        'Try asking the mayor. She usually is in her office or by the old clock.',
-      ],
+      messages: (player) => getSphinxHint(player.scene, NPCType.Inventor),
       conditions: {
-        journalEntry: JournalEntry.SphinxRiddle,
-      },
-      onCompleted: (player) => {
-        player.journal.addEntry(JournalEntry.MeetTheMayor);
-        updateWarpVisibility(player.scene, WarpType.TownNorth, true);
+        activeQuest: QuestType.SphinxRiddle,
       },
     },
     {
@@ -43,16 +41,16 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
         'you’ll need three special gears to fix it. You might find the others by helping the townsfolk.',
       ],
       onCompleted: (player) => {
-        player.quests.addQuest({ name: 'Fix the clock tower', id: QuestType.ClockTower, completed: false });
+        player.journal.addEntry(JournalEntry.FixTheClock);
         player.inventory.addItem(ItemType.Wrench);
       },
     },
   ],
   [NPCType.Stranger]: [
     {
-      messages: ['Heads and tails? I don’t have time for riddles. Try asking the inventor.'],
+      messages: (player) => getSphinxHint(player.scene, NPCType.Stranger),
       conditions: {
-        journalEntry: JournalEntry.SphinxRiddle,
+        activeQuest: QuestType.SphinxRiddle,
       },
     },
     {
@@ -78,13 +76,31 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
   ],
   [NPCType.Sphinx]: [
     {
+      messages: (player) => getSphinxRiddle(player.scene),
+      options: (player) => getSphinxOptions(player.scene),
+      conditions: {
+        activeQuest: QuestType.SphinxRiddle,
+      },
+      onSelected: (option, player) => {
+        const answer = getSphinxAnswer(player.scene);
+        if (option === answer) {
+          player.quests.updateExistingQuest(QuestType.SphinxRiddle, true);
+          player.journal.addEntry(JournalEntry.SphinxRiddleSolved);
+        }
+      },
+    },
+    {
       messages: [
-        'I am the sphinx of this forest. Answer my riddle and you may pass.',
-        'What has a head, a tail, is brown, and has no legs?',
+        'Welcome, brave soul. To pass, you must answer my riddle correctly. You may only answer once. Choose wisely."',
       ],
       onCompleted: (player) => {
-        player.journal.addEntry(JournalEntry.SphinxRiddle);
+        player.quests.addQuest({ name: 'Solve the sphinx riddle', id: QuestType.SphinxRiddle, completed: false });
       },
+    },
+  ],
+  [NPCType.Mayor]: [
+    {
+      messages: ['Hello, traveler. I am the mayor of this town.', 'The clock tower has been broken for years.'],
     },
   ],
 
