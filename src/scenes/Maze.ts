@@ -2,9 +2,10 @@ import generateMaze, { Cell } from 'generate-maze';
 import { GameObjects, Input, Math, Scene } from 'phaser';
 
 import { Config } from '../config';
+import { Game } from './Game';
 import { MazeDialog } from './MazeDialog';
 
-const cells = 32;
+const cells = 24;
 const cellSize = 48;
 const stepTime = 75;
 
@@ -42,13 +43,16 @@ export class Maze extends Scene {
   }
 
   createMaze() {
-    this.maze = generateMaze(cells, cells, true, 12345);
+    const gameScene = this.scene.get('Game') as Game;
+    const seed = gameScene?.clock.rewindCount || 12345;
+
+    this.maze = generateMaze(cells, cells, true, seed);
     this.graphics = this.add.graphics();
 
     this.graphics.fillStyle(0x993322, 0.5);
     this.graphics.fillRect((cells - 1) * cellSize, (cells - 1) * cellSize, cellSize, cellSize);
 
-    this.graphics.lineStyle(2, 0x33aa33);
+    this.graphics.lineStyle(3, 0x33aa33);
 
     this.maze.forEach((row) => {
       row.forEach((col) => {
@@ -111,9 +115,9 @@ export class Maze extends Scene {
 
     const velocity = new Math.Vector2(0, 0);
     if (keys.left) velocity.x = -cellSize;
-    if (keys.right) velocity.x = cellSize;
-    if (keys.up) velocity.y = -cellSize;
-    if (keys.down) velocity.y = cellSize;
+    else if (keys.right) velocity.x = cellSize;
+    else if (keys.up) velocity.y = -cellSize;
+    else if (keys.down) velocity.y = cellSize;
 
     const newPosition = new Math.Vector2(this.mazePlayer.x + velocity.x, this.mazePlayer.y + velocity.y);
 

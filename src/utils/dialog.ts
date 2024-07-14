@@ -33,9 +33,6 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
         'I am the sphinx of this forest. Answer my riddle and you may pass.',
         'What has a head, a tail, is brown, and has no legs?',
       ],
-      onCompleted: (_player, npc) => {
-        if (npc) updateSphinx(npc, true);
-      },
     },
   ],
 

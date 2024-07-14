@@ -12,6 +12,7 @@ export const rewindSpeed = 8;
 
 export class Clock extends GameObjects.Container {
   currentTime: number = 0;
+  rewindCount: number = 0;
   player: Player;
   rewindable: Rewindable[];
   rewinding: boolean = false;
@@ -76,14 +77,17 @@ export class Clock extends GameObjects.Container {
 
     if (this.rewinding) {
       if (this.currentTime > 0) {
+        // Rewind time
         this.currentTime = Math.max(0, this.currentTime - delta * rewindSpeed);
       } else {
+        // When rewinding is complete
         this.rewinding = false;
         this.rewindable.forEach((r) => {
           r.setRewind(false);
           if (r.reset) r.reset();
         });
         this.dayOver?.destroy();
+        this.rewindCount++;
       }
     } else if (!this.player.message.visible) {
       if (this.counter > rewindInterval) {
