@@ -40,6 +40,14 @@ export const NPCData: Record<NPCType, Data> = {
     name: 'Mystical Sphinx',
     onCreate: updateSphinx,
   },
+  [NPCType.Mayor]: {
+    x: 1065,
+    y: -340,
+    scale: 0.9,
+    img: 'mayor',
+    portrait: 'mayor_portrait',
+    name: 'Mayor of Town',
+  },
 
   [NPCType.ClockTower]: {
     x: 880,

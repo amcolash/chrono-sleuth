@@ -57,6 +57,7 @@ export enum NPCType {
   Inventor,
   Stranger,
   Sphinx,
+  Mayor,
 
   // Inanimate objects
   ClockTower,

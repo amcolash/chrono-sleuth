@@ -62,6 +62,9 @@ export class Preloader extends Scene {
 
     this.load.image('sphinx', 'characters/sphinx.png');
     this.load.image('sphinx_portrait', 'characters/sphinx_portrait.png');
+
+    this.load.image('mayor', 'characters/mayor.png');
+    this.load.image('mayor_portrait', 'characters/mayor_portrait.png');
   }
 
   create() {
