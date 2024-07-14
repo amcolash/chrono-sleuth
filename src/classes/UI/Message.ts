@@ -4,9 +4,8 @@ import { Config } from '../../config';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { NPCDialog } from '../../utils/dialog';
 import { fontStyle } from '../../utils/fonts';
-import { NPCData } from '../NPC';
+import { NPC, NPCData } from '../NPC';
 import { Player } from '../Player';
-import { NPCType } from '../types';
 
 const padding = 20;
 const boxHeight = 170;
@@ -21,6 +20,7 @@ const timeout = 350;
 
 export class Message extends GameObjects.Container {
   player: Player;
+  npc?: NPC;
   npcName: GameObjects.Text;
   text: GameObjects.Text;
   box: GameObjects.Rectangle;
@@ -77,9 +77,10 @@ export class Message extends GameObjects.Container {
     });
   }
 
-  setDialog(dialog?: NPCDialog, npc?: NPCType) {
+  setDialog(dialog?: NPCDialog, npc?: NPC) {
     this.setVisible(dialog !== undefined);
 
+    this.npc = npc;
     this.messageIndex = 0;
     this.dialog = dialog;
     this.interactionTimeout = Date.now() + timeout;
@@ -94,10 +95,10 @@ export class Message extends GameObjects.Container {
       this.text.setPosition(padding, padding);
     } else {
       this.npcName.setVisible(true);
-      this.npcName.setText(NPCData[npc].name);
+      this.npcName.setText(NPCData[npc.npcType].name);
 
       this.image.setVisible(true);
-      this.image.setTexture(NPCData[npc].portrait);
+      this.image.setTexture(NPCData[npc.npcType].portrait);
 
       this.text.setPosition(padding + portraitOffset, padding + nameOffset);
     }
@@ -125,7 +126,7 @@ export class Message extends GameObjects.Container {
     this.messageIndex++;
     if (this.messageIndex >= this.dialog.messages.length) {
       if (this.dialog.onCompleted) {
-        this.dialog.onCompleted(this.player);
+        this.dialog.onCompleted(this.player, this.npc);
       }
       this.dialog = undefined;
       this.setVisible(false);

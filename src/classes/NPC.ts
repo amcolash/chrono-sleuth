@@ -1,9 +1,20 @@
 import { Config } from '../config';
 import { getDialog } from '../utils/dialog';
+import { updateSphinx } from '../utils/npcUtils';
 import { Player } from './Player';
 import { InteractResult, Interactive, NPCType } from './types';
 
-export const NPCData = {
+type Data = {
+  x: number;
+  y: number;
+  scale: number;
+  img: string;
+  portrait: string;
+  name: string;
+  onCreate?: (npc: NPC) => void;
+};
+
+export const NPCData: Record<NPCType, Data> = {
   [NPCType.Inventor]: {
     x: 550,
     y: 635,
@@ -21,12 +32,13 @@ export const NPCData = {
     name: 'Mysterious Stranger',
   },
   [NPCType.Sphinx]: {
-    x: 3450,
+    x: 3520,
     y: 780,
     scale: 1,
     img: 'sphinx',
     portrait: 'sphinx_portrait',
     name: 'Mystical Sphinx',
+    onCreate: updateSphinx,
   },
 
   [NPCType.ClockTower]: {
@@ -44,7 +56,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
   player: Player;
 
   constructor(scene: Phaser.Scene, npcType: NPCType, player: Player) {
-    const { x, y, img, scale } = NPCData[npcType];
+    const { x, y, img, scale, onCreate } = NPCData[npcType] as Data;
 
     super(scene, x, y, img);
     this.npcType = npcType;
@@ -54,6 +66,8 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
+
+    if (onCreate) onCreate(this);
   }
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
@@ -66,7 +80,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
       }
 
       const showPortrait = NPCData[this.npcType].portrait.length > 0;
-      this.player.message.setDialog(dialog, showPortrait ? this.npcType : undefined);
+      this.player.message.setDialog(dialog, showPortrait ? this : undefined);
 
       return InteractResult.Talked;
     }

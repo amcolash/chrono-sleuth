@@ -82,7 +82,7 @@ export const WarpData = {
   },
 
   [WarpType.ForestEast]: {
-    x: 3600,
+    x: 3550,
     y: 810,
     key: [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D],
     warpTo: WarpType.Lake,
@@ -100,7 +100,8 @@ export const WarpData = {
 export class Warp extends Physics.Arcade.Sprite implements Interactive {
   warpType: WarpType;
   player: Player;
-  particles: GameObjects.Particles.ParticleEmitter;
+  particles1: GameObjects.Particles.ParticleEmitter;
+  particles2: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {
     const { x, y, visible, warpTo } = WarpData[warpType];
@@ -109,7 +110,6 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     this.warpType = warpType;
     this.player = player;
     this.scale = 0.5;
-    // this.setVisible(visible);
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -135,7 +135,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     }
 
     if (!visible) {
-      this.particles = scene.add
+      this.particles1 = scene.add
         .particles(x, y, 'warp', {
           x: { min: -3, max: 3 },
           y: { min: -3, max: 3 },
@@ -150,7 +150,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         })
         .setScale(1, 1.75);
 
-      this.particles = scene.add.particles(x, y, 'warp', {
+      this.particles2 = scene.add.particles(x, y, 'warp', {
         x: { min: -30, max: 30 },
         y: { min: -50, max: 50 },
         speed: { random: [-5, 5] },
@@ -180,7 +180,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       }
     });
 
-    if (shouldWarp && this.warpType === WarpType.TownEast) {
+    if (shouldWarp && this.warpType === WarpType.TownEast && !Config.debug) {
       this.scene.scene.pause();
       this.scene.scene.launch('MazeDialog', { player: this.player });
       return InteractResult.None;
@@ -209,6 +209,34 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     const unique = [...new Set(buttons)];
 
     return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + unique.join(' or ')];
+  }
+
+  setVisible(value: boolean): this {
+    super.setVisible(value);
+
+    if (this.particles1 && this.particles2) {
+      if (value) {
+        this.particles1.start();
+        this.particles2.start();
+      } else {
+        this.particles1.stop();
+        this.particles1.killAll();
+
+        this.particles2.stop();
+        this.particles2.killAll();
+      }
+    }
+
+    return this;
+  }
+
+  destroy(fromScene?: boolean): void {
+    if (this.particles1 && this.particles2) {
+      this.particles1.destroy();
+      this.particles2.destroy();
+    }
+
+    super.destroy(fromScene);
   }
 }
 

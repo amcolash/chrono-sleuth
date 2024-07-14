@@ -1,5 +1,7 @@
+import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { ItemType, JournalEntry, NPCType, Quest, QuestType } from '../classes/types';
+import { updateSphinx } from './npcUtils';
 
 export interface NPCDialog {
   conditions?: {
@@ -11,7 +13,7 @@ export interface NPCDialog {
     or?: boolean;
   };
   messages: string[];
-  onCompleted?: (player: Player) => void;
+  onCompleted?: (player: Player, npc?: NPC) => void;
 }
 
 const npcDialogs: Record<NPCType, NPCDialog[]> = {
@@ -31,6 +33,9 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
         'I am the sphinx of this forest. Answer my riddle and you may pass.',
         'What has a head, a tail, is brown, and has no legs?',
       ],
+      onCompleted: (_player, npc) => {
+        if (npc) updateSphinx(npc, true);
+      },
     },
   ],
 

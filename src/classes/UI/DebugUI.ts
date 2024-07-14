@@ -1,4 +1,4 @@
-import { GameObjects, Input } from 'phaser';
+import { GameObjects, Input, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Colors } from '../../utils/colors';
@@ -70,6 +70,11 @@ export class DebugUI extends GameObjects.Container {
       this.outline.setPosition(this.activeElement.x, this.activeElement.y);
       this.outline.setSize(this.activeElement.displayWidth, this.activeElement.displayHeight);
       this.outline.setOrigin(this.activeElement.originX, this.activeElement.originY);
+
+      const body = this.activeElement.body;
+      if ((body && body instanceof Physics.Arcade.Body) || body instanceof Physics.Arcade.StaticBody) {
+        (body as Physics.Arcade.Body).updateFromGameObject();
+      }
     } else {
       this.outline.setSize(0, 0);
     }

@@ -63,6 +63,10 @@ export enum NPCType {
   ClockTower,
 }
 
+export enum WallType {
+  Sphinx,
+}
+
 export interface Quest {
   id: QuestType;
   name: string;
