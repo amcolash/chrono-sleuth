@@ -48,9 +48,8 @@ export enum ItemType {
 }
 
 export enum QuestType {
-  ClockGear1,
-  ClockGear2,
-  ClockGear3,
+  ClockTower,
+  ForestGear,
 }
 
 export enum NPCType {
@@ -74,9 +73,6 @@ export interface Quest {
 }
 
 export enum JournalEntry {
-  // Inventor
-  InventorBookFound,
-
-  // Stranger
-  StrangerMapFound,
+  SphinxRiddle,
+  MeetTheMayor,
 }
