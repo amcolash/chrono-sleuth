@@ -16,18 +16,18 @@ export class Inventory extends GameObjects.Container {
 
     this.add(
       scene.add
-        .rectangle(0, 0, 300, 90, getColorNumber(Colors.Teal))
+        .rectangle(0, 0, 300, 100, getColorNumber(Colors.Teal))
         .setStrokeStyle(2, getColorNumber(Colors.White))
         .setAlpha(0.75)
         .setOrigin(0)
     );
-    this.add(scene.add.text(10, 10, 'Inventory', fontStyle));
+    this.add(scene.add.text(10, 0, 'Inventory', fontStyle));
   }
 
   addItem(item: ItemType) {
     this.inventory.push(item);
     const x = 30 + 40 * (this.inventory.length - 1);
-    this.add(this.scene.add.sprite(x, 60, ItemData[item].image).setScale(0.15));
+    this.add(this.scene.add.sprite(0, 0, ItemData[item].image).setScale(0.35));
 
     this.updateItems();
   }
@@ -48,8 +48,8 @@ export class Inventory extends GameObjects.Container {
     let index = 0;
     this.getAll<GameObjects.GameObject>().forEach((item) => {
       if (item instanceof GameObjects.Sprite) {
-        const x = 30 + 40 * index;
-        item.setPosition(x, 60);
+        const x = 30 + 50 * index;
+        item.setPosition(x, 70);
         index++;
       }
     });

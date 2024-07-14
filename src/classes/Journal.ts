@@ -29,6 +29,8 @@ export class Journal extends GameObjects.Sprite {
   }
 
   addEntry(entry: JournalEntry) {
+    if (this.journal.includes(entry)) return;
+
     if (this.journal.length === 0) {
       this.scene.tweens.add({
         targets: this,

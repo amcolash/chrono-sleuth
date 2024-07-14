@@ -61,7 +61,7 @@ export class Message extends GameObjects.Container {
       width - padding * 2,
       boxHeight,
       getColorNumber(Colors.Black),
-      0.7
+      0.8
     );
     this.box.setStrokeStyle(2, getColorNumber(Colors.Tan), 1);
     this.box.setOrigin(0, 0);
