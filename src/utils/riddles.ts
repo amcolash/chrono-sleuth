@@ -7,10 +7,14 @@ export const riddles = [
     answer: 'echo',
     options: ['echo', 'whisper', 'ghost', 'silence', 'shadow'],
     hints: {
-      [NPCType.Inventor]:
-        'The sphinx is known for asking about things we take for granted. Think about how what hear in canyons.',
-      [NPCType.Stranger]:
-        'The sphinx’s riddles are always a bit tricky. I think this one is about something that bounces off walls.',
+      [NPCType.Inventor]: [
+        'The sphinx is known for asking about things we take for granted.',
+        'Think about what we hear in canyons.',
+      ],
+      [NPCType.Stranger]: [
+        'The sphinx’s riddles are always a bit tricky. I think this one is',
+        'about something that bounces off walls.',
+      ],
     },
   },
   {
@@ -18,10 +22,14 @@ export const riddles = [
     answer: 'map',
     options: ['map', 'globe', 'dream', 'photograph', 'landscape'],
     hints: {
-      [NPCType.Inventor]:
-        'Think of something that represents the world, showing cities and mountains but not in a literal way.',
-      [NPCType.Stranger]:
-        'Imagine something that can fit in your hand or hang on a wall, showing vast landscapes and bodies of water, but not in their true form.',
+      [NPCType.Inventor]: [
+        'Think of something that represents the world, showing cities',
+        'and mountains but not in a literal way.',
+      ],
+      [NPCType.Stranger]: [
+        'Imagine something that can fit in your hand or hang on a wall,',
+        'showing vast landscapes and bodies of water, but not in their true form.',
+      ],
     },
   },
   {
@@ -29,10 +37,14 @@ export const riddles = [
     answer: 'cloud',
     options: ['cloud', 'bat', 'wind', 'shadow', 'storm'],
     hints: {
-      [NPCType.Inventor]:
-        'The sphinx’s riddles can be tricky. Think about things that move or change without the usual parts, like wings or eyes.',
-      [NPCType.Stranger]:
-        'Look at your surroundings. Shadows often behave in strange ways, don’t they? They move, disappear, and seem to fly without wings.',
+      [NPCType.Inventor]: [
+        'The sphinx’s riddles can be tricky. Think about things that move',
+        'or change without the usual parts, like wings or eyes.',
+      ],
+      [NPCType.Stranger]: [
+        'Look at your surroundings. Shadows often behave in strange ways,',
+        'don’t they? They move, disappear, and seem to fly without wings.',
+      ],
     },
   },
 ];
@@ -58,8 +70,5 @@ export function getSphinxAnswer(scene: Phaser.Scene): string {
 
 export function getSphinxHint(scene: Phaser.Scene, npcType: NPCType.Inventor | NPCType.Stranger): string[] {
   const index = getRiddleIndex(scene);
-  const riddle = riddles[index];
-  const hint = riddle.hints[npcType];
-
-  return [hint];
+  return riddles[index].hints[npcType];
 }

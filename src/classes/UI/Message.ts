@@ -107,11 +107,7 @@ export class Message extends GameObjects.Container {
   }
 
   showMessage() {
-    let messages = this.dialog?.messages;
-    if (typeof messages === 'function') {
-      messages = messages(this.player);
-    }
-
+    const messages = this.getMessages();
     const message = messages && messages[this.messageIndex];
 
     if (message) {
@@ -123,12 +119,13 @@ export class Message extends GameObjects.Container {
   updateDialog() {
     if (Date.now() < this.interactionTimeout) return;
 
-    if (!this.dialog) {
+    const messages = this.getMessages();
+    if (!this.dialog || !messages) {
       return;
     }
 
     this.messageIndex++;
-    if (this.messageIndex >= this.dialog.messages.length) {
+    if (this.messageIndex >= messages.length) {
       if (this.dialog.onCompleted) {
         this.dialog.onCompleted(this.player, this.npc);
       }
@@ -139,5 +136,13 @@ export class Message extends GameObjects.Container {
     }
 
     this.interactionTimeout = Date.now() + timeout;
+  }
+
+  getMessages(): string[] | undefined {
+    let messages = this.dialog?.messages;
+    if (typeof messages === 'function') {
+      messages = messages(this.player);
+    }
+    return messages;
   }
 }
