@@ -1,6 +1,6 @@
 import { Config } from '../config';
 import { getDialog } from '../utils/dialog';
-import { updateSphinx } from '../utils/npcUtils';
+import { updateSphinx } from '../utils/interactionUtils';
 import { Player } from './Player';
 import { InteractResult, Interactive, NPCType } from './types';
 

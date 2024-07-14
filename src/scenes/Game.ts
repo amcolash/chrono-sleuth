@@ -63,7 +63,13 @@ export class Game extends Scene {
       this.interactiveObjects,
       this.player,
       this.player.setInteractiveObject,
-      undefined,
+      (object, _player) => {
+        if ((object as any).visible !== undefined) {
+          return (object as any).visible;
+        }
+
+        return true;
+      },
       this.player
     );
 

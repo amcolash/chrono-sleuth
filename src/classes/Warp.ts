@@ -5,20 +5,26 @@ import { Colors, getColorNumber } from '../utils/colors';
 import { Player } from './Player';
 import { InteractResult, Interactive, WarpType } from './types';
 
+enum WarpVisual {
+  Ladder,
+  Warp,
+  WarpHidden,
+}
+
 export const WarpData = {
   [WarpType.Town]: {
     x: 300,
     y: 650,
     key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
     warpTo: WarpType.Underground,
-    visible: true,
+    visual: WarpVisual.Ladder,
   },
   [WarpType.Underground]: {
     x: 301,
     y: 875,
     key: [Phaser.Input.Keyboard.KeyCodes.UP],
     warpTo: WarpType.Town,
-    visible: true,
+    visual: WarpVisual.Ladder,
   },
 
   [WarpType.TownEast]: {
@@ -26,14 +32,14 @@ export const WarpData = {
     y: 650,
     key: [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D],
     warpTo: WarpType.Forest,
-    visible: false,
+    visual: WarpVisual.WarpHidden,
   },
   [WarpType.Forest]: {
     x: 2650,
     y: 810,
     key: [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A],
     warpTo: WarpType.TownEast,
-    visible: false,
+    visual: WarpVisual.Warp,
   },
 
   [WarpType.TownNorth]: {
@@ -41,14 +47,14 @@ export const WarpData = {
     y: 650,
     key: [Phaser.Input.Keyboard.KeyCodes.UP],
     warpTo: WarpType.ClockSquare,
-    visible: false,
+    visual: WarpVisual.WarpHidden,
   },
   [WarpType.ClockSquare]: {
     x: 720,
     y: -330,
     key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
     warpTo: WarpType.TownNorth,
-    visible: false,
+    visual: WarpVisual.Warp,
   },
 
   [WarpType.ClockSquareNorth]: {
@@ -56,14 +62,14 @@ export const WarpData = {
     y: -330,
     key: [Phaser.Input.Keyboard.KeyCodes.UP],
     warpTo: WarpType.ClockEntrance,
-    visible: false,
+    visual: WarpVisual.WarpHidden,
   },
   [WarpType.ClockEntrance]: {
     x: 900,
     y: -1320,
     key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
     warpTo: WarpType.ClockSquareNorth,
-    visible: false,
+    visual: WarpVisual.Warp,
   },
 
   [WarpType.ClockStairs]: {
@@ -71,14 +77,14 @@ export const WarpData = {
     y: -1320,
     key: [Phaser.Input.Keyboard.KeyCodes.UP],
     warpTo: WarpType.ClockTop,
-    visible: false,
+    visual: WarpVisual.Warp,
   },
   [WarpType.ClockTop]: {
     x: 790,
     y: -2005,
     key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
     warpTo: WarpType.ClockStairs,
-    visible: false,
+    visual: WarpVisual.Warp,
   },
 
   [WarpType.ForestEast]: {
@@ -86,14 +92,14 @@ export const WarpData = {
     y: 810,
     key: [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D],
     warpTo: WarpType.Lake,
-    visible: false,
+    visual: WarpVisual.WarpHidden,
   },
   [WarpType.Lake]: {
     x: 4625,
     y: 915,
     key: [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A],
     warpTo: WarpType.ForestEast,
-    visible: false,
+    visual: WarpVisual.Warp,
   },
 };
 
@@ -104,9 +110,9 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   particles2: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {
-    const { x, y, visible, warpTo } = WarpData[warpType];
+    const { x, y, visual, warpTo } = WarpData[warpType];
 
-    super(scene, x, y, visible ? 'ladder' : 'warp');
+    super(scene, x, y, visual === WarpVisual.Ladder ? 'ladder' : 'warp');
     this.warpType = warpType;
     this.player = player;
     this.scale = 0.5;
@@ -134,7 +140,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
     }
 
-    if (!visible) {
+    if (visual !== WarpVisual.Ladder) {
       this.particles1 = scene.add
         .particles(x, y, 'warp', {
           x: { min: -3, max: 3 },
@@ -169,6 +175,8 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       scene.add.sprite(x, y - 60, 'ladder').setScale(0.5);
       scene.add.sprite(x, y - 105, 'ladder').setScale(0.5);
     }
+
+    this.setVisible(visual !== WarpVisual.WarpHidden);
   }
 
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
