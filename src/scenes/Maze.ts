@@ -4,9 +4,9 @@ import { GameObjects, Input, Math, Scene } from 'phaser';
 import { Config } from '../config';
 import { MazeDialog } from './MazeDialog';
 
-const cells = 36;
-const cellSize = 32;
-const stepTime = 50;
+const cells = 32;
+const cellSize = 48;
+const stepTime = 75;
 
 export class Maze extends Scene {
   parent: MazeDialog;
@@ -29,7 +29,6 @@ export class Maze extends Scene {
   create() {
     this.createMaze();
 
-    const half = cellSize * 0.5;
     this.mazePlayer = this.add
       .ellipse(0, 0, cellSize * 0.9, cellSize * 0.9, 0x557799)
       .setSmoothness(32)
@@ -116,13 +115,15 @@ export class Maze extends Scene {
     if (keys.up) velocity.y = -cellSize;
     if (keys.down) velocity.y = cellSize;
 
-    const newX = this.mazePlayer.x + velocity.x;
-    const newY = this.mazePlayer.y + velocity.y;
+    const newPosition = new Math.Vector2(this.mazePlayer.x + velocity.x, this.mazePlayer.y + velocity.y);
 
-    if ((this.mazePlayer.x !== newX || this.mazePlayer.y !== newY) && this.canMove(newX, newY)) {
-      this.mazePlayer.setPosition(this.mazePlayer.x + velocity.x, this.mazePlayer.y + velocity.y);
+    if ((this.mazePlayer.x !== newPosition.x || this.mazePlayer.y !== newPosition.y) && this.canMove(newPosition)) {
+      this.mazePlayer.setPosition(newPosition.x, newPosition.y);
 
-      if (this.mazePlayer.x === (cells - 1) * cellSize && this.mazePlayer.y === (cells - 1) * cellSize) {
+      const endPosition = new Math.Vector2((cells - 1) * cellSize, (cells - 1) * cellSize);
+      this.parent.setAngle(Math.Angle.BetweenPoints(newPosition, endPosition));
+
+      if (this.mazePlayer.x === endPosition.x && this.mazePlayer.y === endPosition.y) {
         this.parent.close(true);
       }
     }
@@ -130,7 +131,12 @@ export class Maze extends Scene {
     this.nextUpdate = time + stepTime;
   }
 
-  canMove(newX: number, newY: number): boolean {
+  canMove(newPosition: Math.Vector2): boolean {
+    // return true;
+
+    const newX = newPosition.x;
+    const newY = newPosition.y;
+
     const x = Math.FloorTo(newX / cellSize);
     const y = Math.FloorTo(newY / cellSize);
 

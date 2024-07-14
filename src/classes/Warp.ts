@@ -82,7 +82,7 @@ export const WarpData = {
   },
 
   [WarpType.ForestEast]: {
-    x: 3550,
+    x: 3590,
     y: 810,
     key: [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D],
     warpTo: WarpType.Lake,

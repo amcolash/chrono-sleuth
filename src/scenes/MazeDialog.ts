@@ -12,6 +12,7 @@ import { fontStyle } from '../utils/fonts';
 export class MazeDialog extends Scene {
   player: Player;
   container: GameObjects.Container;
+  arrow: GameObjects.Sprite;
 
   constructor() {
     super('MazeDialog');
@@ -37,11 +38,21 @@ export class MazeDialog extends Scene {
         .setOrigin(0.5)
     );
 
+    this.arrow = this.add
+      .sprite(-Config.width * 0.4, -Config.height * 0.4, 'arrow')
+      .setScale(0.5)
+      .setRotation(Math.PI * 0.75);
+    this.container.add(this.arrow);
+
     this.input.keyboard?.on('keydown-ESC', () => {
       this.close(false);
     });
 
     this.scene.launch('Maze', { parent: this });
+  }
+
+  setAngle(angle: number) {
+    this.arrow.setRotation(angle + Math.PI / 2);
   }
 
   close(success: boolean) {
