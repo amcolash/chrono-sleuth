@@ -1,3 +1,5 @@
+import { GameObjects } from 'phaser';
+
 import { Config } from '../config';
 import { Player } from './Player';
 import { InteractResult, Interactive, ItemType } from './types';
@@ -10,6 +12,7 @@ export const ItemData = {
 export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
   itemType: ItemType;
   player: Player;
+  particles: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Phaser.Scene, type: ItemType, player: Player) {
     const { x, y, image } = ItemData[type];
@@ -23,7 +26,7 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
 
-    scene.add.particles(x, y, 'warp', {
+    this.particles = scene.add.particles(x, y, 'warp', {
       speed: { min: 2, max: 10 },
       scale: { start: 0.1, end: 0.9 },
       alpha: { start: 0.8, end: 0 },
@@ -36,6 +39,8 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
     if (keys.SPACE.isDown || keys.ENTER.isDown) {
       this.player.inventory.addItem(this.itemType);
       this.destroy();
+      this.particles.destroy();
+
       return InteractResult.Item;
     }
 
