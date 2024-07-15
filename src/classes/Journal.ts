@@ -2,6 +2,7 @@ import { GameObjects } from 'phaser';
 
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
+import { updateSphinx } from '../utils/interactionUtils';
 import { Player } from './Player';
 import { Notification } from './UI/Notification';
 import { JournalEntry } from './types';
@@ -28,7 +29,7 @@ export class Journal extends GameObjects.Sprite {
       .setVisible(false);
   }
 
-  addEntry(entry: JournalEntry) {
+  addEntry(entry: JournalEntry, silent?: boolean) {
     if (this.journal.includes(entry)) return;
 
     if (this.journal.length === 0) {
@@ -41,8 +42,13 @@ export class Journal extends GameObjects.Sprite {
     }
 
     this.journal.push(entry);
-    this.unread.setVisible(true);
-    new Notification(this.scene, 'New joural entry added!');
+
+    if (!silent) {
+      this.unread.setVisible(true);
+      new Notification(this.scene, 'New joural entry added!');
+    }
+
+    this.handleSideEffects(entry);
   }
 
   openJournal() {
@@ -51,5 +57,11 @@ export class Journal extends GameObjects.Sprite {
     this.unread.setVisible(false);
     this.scene.scene.pause();
     this.scene.scene.launch('JournalDialog', { player: this.player });
+  }
+
+  handleSideEffects(entry: JournalEntry) {
+    if (entry === JournalEntry.SphinxRiddleSolved) {
+      updateSphinx(this.scene, true);
+    }
   }
 }

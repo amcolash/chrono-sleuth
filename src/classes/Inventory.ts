@@ -3,6 +3,7 @@ import { GameObjects, Scene } from 'phaser';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
+import { getItem } from '../utils/interactionUtils';
 import { ItemData } from './Item';
 import { ItemType } from './types';
 
@@ -26,10 +27,11 @@ export class Inventory extends GameObjects.Container {
 
   addItem(item: ItemType) {
     this.inventory.push(item);
-    const x = 30 + 40 * (this.inventory.length - 1);
     this.add(this.scene.add.sprite(0, 0, ItemData[item].image).setScale(0.35));
-
     this.updateItems();
+
+    const worldItem = getItem(this.scene, item);
+    if (worldItem) worldItem.destroy();
   }
 
   removeItem(item: ItemType) {

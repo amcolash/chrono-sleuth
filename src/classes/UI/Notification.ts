@@ -1,20 +1,16 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { Config } from '../../config';
 import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 
 export class Notification extends GameObjects.Text {
   constructor(scene: Scene, text: string) {
-    super(scene, 0, 30, text, {
+    super(scene, 20, 30, text, {
       ...fontStyle,
       backgroundColor: '#' + Colors.Teal,
       padding: { x: 10, y: 5 },
     });
-    this.setAlpha(0)
-      .setDepth(2)
-      .setScrollFactor(0)
-      .setX(Config.width - this.displayWidth - 20);
+    this.setAlpha(0).setDepth(2).setScrollFactor(0);
 
     scene.add.existing(this);
 

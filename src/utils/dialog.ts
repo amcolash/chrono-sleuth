@@ -1,7 +1,7 @@
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { ItemType, JournalEntry, NPCType, Quest, QuestType, WarpType } from '../classes/types';
-import { updateSphinx, updateWarpVisibility } from './interactionUtils';
+import { updateWarpVisibility } from './interactionUtils';
 import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from './riddles';
 
 export interface NPCDialog {
@@ -23,6 +23,12 @@ export interface NPCDialog {
 
 const npcDialogs: Record<NPCType, NPCDialog[]> = {
   [NPCType.Inventor]: [
+    {
+      messages: ['I see you found the first gear. You should talk to the mayor to learn more about the old clock.'],
+      conditions: {
+        hasItem: ItemType.Gear1,
+      },
+    },
     {
       messages: (player) => getSphinxHint(player.scene, NPCType.Inventor),
       conditions: {
@@ -48,6 +54,12 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
   ],
   [NPCType.Stranger]: [
     {
+      messages: ['Now that you have the first gear, I would talk to the inventor.'],
+      conditions: {
+        hasItem: ItemType.Gear1,
+      },
+    },
+    {
       messages: (player) => getSphinxHint(player.scene, NPCType.Stranger),
       conditions: {
         activeQuest: QuestType.SphinxRiddle,
@@ -63,7 +75,6 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       },
       onCompleted: (player) => {
         player.quests.addQuest({
-          name: 'Find the gear in the forest',
           id: QuestType.ForestGear,
           completed: false,
         });
@@ -87,10 +98,9 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
           player.message.setDialog(
             {
               messages: [`That is correct. Well done, you may pass.`],
-              onCompleted: (player, npc) => {
+              onCompleted: (player) => {
                 player.quests.updateExistingQuest(QuestType.SphinxRiddle, true);
                 player.journal.addEntry(JournalEntry.SphinxRiddleSolved);
-                if (npc) updateSphinx(npc, true);
               },
             },
             npc
@@ -106,7 +116,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
     {
       messages: ['Welcome, brave soul. To pass, you must answer my riddle. You may only answer once. Choose wisely.'],
       onCompleted: (player) => {
-        player.quests.addQuest({ name: 'Solve the sphinx riddle', id: QuestType.SphinxRiddle, completed: false });
+        player.quests.addQuest({ id: QuestType.SphinxRiddle, completed: false });
       },
     },
   ],

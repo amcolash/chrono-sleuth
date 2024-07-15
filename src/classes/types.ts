@@ -44,7 +44,7 @@ export enum WarpType {
 
 export enum ItemType {
   Wrench,
-  Gear,
+  Gear1,
 }
 
 export enum QuestType {
@@ -69,7 +69,6 @@ export enum WallType {
 
 export interface Quest {
   id: QuestType;
-  name: string;
   completed: boolean;
 }
 

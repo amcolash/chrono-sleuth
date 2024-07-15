@@ -38,7 +38,7 @@ export const NPCData: Record<NPCType, Data> = {
     img: 'sphinx',
     portrait: 'sphinx_portrait',
     name: 'Mystical Sphinx',
-    onCreate: updateSphinx,
+    onCreate: (npc) => updateSphinx(npc.scene, false),
   },
   [NPCType.Mayor]: {
     x: 1065,

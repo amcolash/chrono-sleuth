@@ -9,6 +9,7 @@ import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
+import { load, save } from '../utils/save';
 
 export class Game extends Scene {
   player: Player;
@@ -56,6 +57,8 @@ export class Game extends Scene {
     // setup
     this.cameras.main.startFollow(this.player, true);
     this.cameras.main.setFollowOffset(0, Config.cameraOffset);
+
+    load(this);
   }
 
   update(): void {
@@ -118,7 +121,7 @@ export class Game extends Scene {
   }
 
   createItems(): Item[] {
-    const gear = new Item(this, ItemType.Gear, this.player);
+    const gear = new Item(this, ItemType.Gear1, this.player);
     return [gear];
   }
 
@@ -130,6 +133,14 @@ export class Game extends Scene {
 
     this.input.keyboard?.on('keydown-J', () => {
       this.player.journal.openJournal();
+    });
+
+    this.input.keyboard?.on('keydown-K', () => {
+      save(this);
+    });
+
+    this.input.keyboard?.on('keydown-L', () => {
+      this.scene.restart();
     });
 
     if (Config.debug) {

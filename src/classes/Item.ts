@@ -6,7 +6,7 @@ import { InteractResult, Interactive, ItemType } from './types';
 
 export const ItemData = {
   [ItemType.Wrench]: { x: 0, y: 0, image: 'wrench' },
-  [ItemType.Gear]: { x: 5120, y: 915, image: 'gear' },
+  [ItemType.Gear1]: { x: 5120, y: 915, image: 'gear' },
 };
 
 export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
@@ -39,12 +39,16 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
     if (keys.SPACE.isDown || keys.ENTER.isDown) {
       this.player.inventory.addItem(this.itemType);
       this.destroy();
-      this.particles.destroy();
 
       return InteractResult.Item;
     }
 
     return InteractResult.None;
+  }
+
+  destroy(fromScene?: boolean): void {
+    super.destroy(fromScene);
+    this.particles.destroy();
   }
 
   getButtonPrompt() {

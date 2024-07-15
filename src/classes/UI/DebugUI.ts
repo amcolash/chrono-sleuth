@@ -21,7 +21,7 @@ export class DebugUI extends GameObjects.Container {
     this.setScrollFactor(0).setDepth(2);
     this.scene.add.existing(this);
 
-    this.text = scene.add.text(10, 60, '', {
+    this.text = scene.add.text(20, 90, '', {
       ...fontStyle,
       fontSize: 32,
       backgroundColor: `#${Colors.Black}`,

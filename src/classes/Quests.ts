@@ -1,16 +1,21 @@
 import { GameObjects } from 'phaser';
 
 import { Config } from '../config';
+import { Game } from '../scenes/Game';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
 import { Quest, QuestType } from './types';
 
 const size = 330;
 
+export const QuestNames: Record<QuestType, string> = {
+  [QuestType.ForestGear]: 'Find the gear in the forest',
+  [QuestType.SphinxRiddle]: 'Solve the Sphinx riddle',
+};
+
 export class Quests extends GameObjects.Container {
   quests: Quest[] = [];
   questRectangle: GameObjects.Rectangle;
-  shifted: boolean = true;
 
   constructor(scene: Phaser.Scene) {
     super(scene, Config.width - size - 20, 120);
@@ -31,7 +36,7 @@ export class Quests extends GameObjects.Container {
     if (this.quests.find((q) => q.id === quest.id)) return;
 
     this.quests.push(quest);
-    this.add(this.scene.add.text(0, 0, quest.name, { ...fontStyle, fontSize: 32 }));
+    this.add(this.scene.add.text(0, 0, QuestNames[quest.id], { ...fontStyle, fontSize: 32 }));
     this.updateQuests();
   }
 
@@ -48,7 +53,7 @@ export class Quests extends GameObjects.Container {
     let maxLength = 0;
     this.getAll<GameObjects.Text>().forEach((text) => {
       if (text instanceof GameObjects.Text) {
-        if (!activeQuests.find((q) => text.text === q.name) && text.text !== 'Quests') text.destroy();
+        if (!activeQuests.find((q) => text.text === QuestNames[q.id]) && text.text !== 'Quests') text.destroy();
         else if (text.text !== 'Quests') {
           const y = 10 + 30 * index;
           text.setPosition(10, y);
@@ -62,7 +67,7 @@ export class Quests extends GameObjects.Container {
     const newWidth = maxLength + 20;
 
     this.setX(Config.width - 20 - newWidth);
-    this.setY(this.shifted ? 140 : 20);
+    this.setY((this.scene as Game).player.inventory.inventory.length > 0 ? 140 : 20);
     this.setVisible(activeQuests.length > 0);
     this.questRectangle.setSize(newWidth, 50 + 30 * activeQuests.length);
   }
