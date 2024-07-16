@@ -2,13 +2,18 @@ let fastMode = false;
 fastMode = true;
 
 let debug = false;
-debug = true;
+// debug = true;
 
 let rewindEnabled = false;
 // rewindEnabled = true;
 
 const width = 1024;
 const height = 768;
+
+if (import.meta.env.PROD) {
+  fastMode = false;
+  debug = false;
+}
 
 export const Config = {
   debug,

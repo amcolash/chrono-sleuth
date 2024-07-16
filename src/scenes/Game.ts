@@ -9,7 +9,7 @@ import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
-import { load, save } from '../utils/save';
+import { debugSave, defaultSave, load, save } from '../utils/save';
 
 export class Game extends Scene {
   player: Player;
@@ -32,8 +32,6 @@ export class Game extends Scene {
     const npcs = this.createNpcs();
     const items = this.createItems();
 
-    const debugUI = new DebugUI(this, this.player);
-
     // rewindable objects
     const rewindable = [this.player];
     this.clock = new Clock(this, rewindable, this.player);
@@ -44,9 +42,15 @@ export class Game extends Scene {
     });
 
     // update items added to the group
-    this.add.group([this.player, this.clock, debugUI], {
+    const updatables = this.add.group([this.player, this.clock], {
       runChildUpdate: true,
     });
+
+    // debug
+    if (import.meta.env.DEV) {
+      const debugUI = new DebugUI(this, this.player);
+      updatables.add(debugUI);
+    }
 
     // collisions
     this.physics.add.collider(this.player, walls);
@@ -54,10 +58,11 @@ export class Game extends Scene {
     // events
     this.createEventListeners();
 
-    // setup
+    // camera
     this.cameras.main.startFollow(this.player, true);
     this.cameras.main.setFollowOffset(0, Config.cameraOffset);
 
+    // load save, or start new game
     load(this);
   }
 
@@ -128,34 +133,52 @@ export class Game extends Scene {
   createEventListeners() {
     this.input.keyboard?.on('keydown-ESC', () => {
       this.scene.pause();
-      this.scene.launch('Paused');
+      this.scene.launch('Paused', { game: this });
     });
 
     this.input.keyboard?.on('keydown-J', () => {
       this.player.journal.openJournal();
     });
 
-    this.input.keyboard?.on('keydown-K', () => {
-      save(this);
-    });
+    if (import.meta.env.DEV) {
+      if (Config.debug) {
+        this.input.on(
+          'wheel',
+          (
+            _pointer: Input.Pointer,
+            _currentlyOver: GameObjects.GameObject[],
+            _deltaX: number,
+            deltaY: number,
+            _deltaZ: number
+          ) => {
+            this.cameras.main.zoom += deltaY * 0.0005;
+          }
+        );
+      }
 
-    this.input.keyboard?.on('keydown-L', () => {
-      this.scene.restart();
-    });
+      this.input.keyboard?.on('keydown-K', () => {
+        save(this);
+      });
 
-    if (Config.debug) {
-      this.input.on(
-        'wheel',
-        (
-          _pointer: Input.Pointer,
-          _currentlyOver: GameObjects.GameObject[],
-          _deltaX: number,
-          deltaY: number,
-          _deltaZ: number
-        ) => {
-          this.cameras.main.zoom += deltaY * 0.0005;
-        }
-      );
+      this.input.keyboard?.on('keydown-L', () => {
+        this.scene.restart();
+      });
+
+      this.input.keyboard?.on('keydown-M', () => {
+        save(this, debugSave);
+        this.scene.restart(); // Just in case
+      });
+
+      this.input.keyboard?.on('keydown-N', () => {
+        save(this, defaultSave);
+        this.scene.restart(); // Just in case
+      });
+
+      this.input.keyboard?.on('keydown-Z', () => {
+        Config.debug = !Config.debug;
+        save(this);
+        this.scene.restart();
+      });
     }
   }
 }

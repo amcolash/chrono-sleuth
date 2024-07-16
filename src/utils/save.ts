@@ -1,3 +1,5 @@
+import deepEqual from 'deep-equal';
+
 import { playerStart } from '../classes/Player';
 import { Notification } from '../classes/UI/Notification';
 import { Warp } from '../classes/Warp';
@@ -19,9 +21,21 @@ type SaveData = {
   warpers: WarpList;
 };
 
-const defaultSave: SaveData = {
+export const defaultSave: SaveData = {
   player: {
     x: playerStart.x,
+    y: playerStart.y,
+    flip: false,
+  },
+  journal: [],
+  inventory: [],
+  quests: [],
+  warpers: [],
+};
+
+export const debugSave: SaveData = {
+  player: {
+    x: playerStart.x - 200,
     y: playerStart.y,
     flip: false,
   },
@@ -32,8 +46,15 @@ const defaultSave: SaveData = {
 };
 
 export function load(scene: Game): void {
-  const data = localStorage.getItem('save');
-  const save: SaveData = data ? JSON.parse(data) : defaultSave;
+  let data = localStorage.getItem('save');
+  let parsed: SaveData | undefined = undefined;
+  try {
+    if (data) parsed = JSON.parse(data);
+  } catch (err) {
+    console.error(err);
+  }
+
+  const save: SaveData = parsed || defaultSave;
 
   scene.player.setX(save.player.x);
   scene.player.setY(save.player.y);
@@ -46,10 +67,11 @@ export function load(scene: Game): void {
   // TODO: Rethink if this should be more directly tied to journal entries as a side-effect
   setWarperState(scene, save.warpers);
 
-  new Notification(scene, 'Game Loaded');
+  const loadType = deepEqual(parsed, defaultSave) ? '[New]' : deepEqual(parsed, debugSave) ? '[Debug]' : '[Storage]';
+  new Notification(scene, `Game Loaded ${loadType}`);
 }
 
-export function save(scene: Game): void {
+export function save(scene: Game, override?: SaveData): void {
   const save: SaveData = {
     player: {
       x: scene.player.x,
@@ -62,7 +84,7 @@ export function save(scene: Game): void {
     warpers: getWarperState(scene),
   };
 
-  localStorage.setItem('save', JSON.stringify(save));
+  localStorage.setItem('save', JSON.stringify(override || save));
 
   new Notification(scene, 'Game Saved');
 }

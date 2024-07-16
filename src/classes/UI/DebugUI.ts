@@ -14,6 +14,15 @@ export class DebugUI extends GameObjects.Container {
   constructor(scene: Phaser.Scene, player: Player) {
     super(scene, 0, 0);
 
+    scene.physics.world.drawDebug = Config.debug;
+
+    // Update the debug graphics
+    if (Config.debug) {
+      scene.physics.world.createDebugGraphic();
+    } else {
+      scene.physics.world.debugGraphic?.clear();
+    }
+
     if (!Config.debug) return;
 
     this.player = player;

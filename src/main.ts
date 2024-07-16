@@ -25,9 +25,6 @@ const config: Types.Core.GameConfig = {
   scene: [Boot, Preloader, MainGame, Paused, JournalDialog, MazeDialog, Maze],
   physics: {
     default: 'arcade',
-    arcade: {
-      debug: Config.debug,
-    },
   },
   render: {
     pixelArt: true,
