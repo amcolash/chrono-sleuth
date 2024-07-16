@@ -4,7 +4,7 @@ import { Item } from '../classes/Item';
 import { NPC, NPCData } from '../classes/NPC';
 import { WallData } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
-import { ItemType, NPCType, WallType, WarpType } from '../classes/types';
+import { ItemType, JournalEntry, NPCType, Quest, QuestType, WallType, WarpType } from '../classes/types';
 import { Game } from '../scenes/Game';
 
 export function updateSphinx(scene: Scene, complete?: boolean) {
@@ -43,6 +43,22 @@ export function updateSphinx(scene: Scene, complete?: boolean) {
       sphinx.alpha = 1;
     },
   });
+}
+
+export function hasItem(inventory: ItemType[], item: ItemType): boolean {
+  return inventory.includes(item);
+}
+
+export function hasActiveQuest(quests: Quest[], questId: QuestType): boolean {
+  return quests.some((quest) => quest.id === questId && !quest.completed);
+}
+
+export function hasCompletedQuest(quests: Quest[], questId: QuestType): boolean {
+  return quests.some((quest) => quest.id === questId && quest.completed);
+}
+
+export function hasJournalEntry(journal: JournalEntry[], entry: JournalEntry): boolean {
+  return journal.includes(entry);
 }
 
 export function getGameObjects<T extends GameObjects.GameObject>(

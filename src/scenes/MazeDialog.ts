@@ -2,8 +2,8 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Player } from '../classes/Player';
 import { Button } from '../classes/UI/Button';
-import { WarpData, warp } from '../classes/Warp';
-import { WarpType } from '../classes/types';
+import { WarpData, warpTo } from '../classes/Warp';
+import { JournalEntry, WarpType } from '../classes/types';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
@@ -62,7 +62,8 @@ export class MazeDialog extends Scene {
     this.scene.resume('Game');
 
     if (success) {
-      warp(WarpType.Forest, this.player);
+      warpTo(WarpType.Forest, this.player);
+      this.player.journal.addEntry(JournalEntry.ForestMazeSolved);
     } else {
       this.player.setPosition(WarpData[WarpType.TownEast].x - 40, WarpData[WarpType.TownEast].y);
     }

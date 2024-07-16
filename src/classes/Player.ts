@@ -64,10 +64,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       (this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false
     );
 
-    let previous = this.quests.shifted;
-    this.quests.shifted = this.inventory.visible;
-    if (previous !== this.quests.shifted) this.quests.updateQuests();
-
     // Update player
     this.setVelocity(0);
 

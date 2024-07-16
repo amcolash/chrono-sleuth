@@ -54,7 +54,7 @@ export class Message extends GameObjects.Container {
     this.text.width = textWidth;
     this.text.height = textHeight;
 
-    this.text.setOrigin(0).setWordWrapWidth(textWidth, true).setFixedSize(textWidth, textHeight);
+    this.text.setOrigin(0).setWordWrapWidth(textWidth, true).setFixedSize(textWidth, textHeight).setMaxLines(3);
 
     this.image = new GameObjects.Image(scene, padding, padding, '').setOrigin(0).setScale(1.5);
 

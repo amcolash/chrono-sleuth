@@ -74,6 +74,7 @@ export interface Quest {
 
 export enum JournalEntry {
   FixTheClock,
+  ForestMazeSolved,
   SphinxRiddleSolved,
   MeetTheMayor,
 }

@@ -1,7 +1,7 @@
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { ItemType, JournalEntry, NPCType, Quest, QuestType, WarpType } from '../classes/types';
-import { updateWarpVisibility } from './interactionUtils';
+import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry, updateWarpVisibility } from './interactionUtils';
 import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from './riddles';
 
 export interface NPCDialog {
@@ -27,6 +27,9 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       messages: ['I see you found the first gear. You should talk to the mayor to learn more about the old clock.'],
       conditions: {
         hasItem: ItemType.Gear1,
+      },
+      onCompleted: (player) => {
+        updateWarpVisibility(player.scene, WarpType.TownNorth, true);
       },
     },
     {
@@ -136,22 +139,6 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
     },
   ],
 };
-
-function hasItem(inventory: ItemType[], item: ItemType): boolean {
-  return inventory.includes(item);
-}
-
-function hasActiveQuest(quests: Quest[], questId: QuestType): boolean {
-  return quests.some((quest) => quest.id === questId && !quest.completed);
-}
-
-function hasCompletedQuest(quests: Quest[], questId: QuestType): boolean {
-  return quests.some((quest) => quest.id === questId && quest.completed);
-}
-
-function hasJournalEntry(journal: JournalEntry[], entry: JournalEntry): boolean {
-  return journal.includes(entry);
-}
 
 export function getDialog(npc: NPCType, player: Player): NPCDialog | undefined {
   const dialogs = npcDialogs[npc] || [];

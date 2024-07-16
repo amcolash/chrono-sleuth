@@ -2,8 +2,9 @@ import { BlendModes, GameObjects, Physics } from 'phaser';
 
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
+import { hasJournalEntry } from '../utils/interactionUtils';
 import { Player } from './Player';
-import { InteractResult, Interactive, WarpType } from './types';
+import { InteractResult, Interactive, JournalEntry, WarpType } from './types';
 
 enum WarpVisual {
   Ladder,
@@ -11,18 +12,23 @@ enum WarpVisual {
   WarpHidden,
 }
 
+const DOWN = [Phaser.Input.Keyboard.KeyCodes.DOWN, Phaser.Input.Keyboard.KeyCodes.S];
+const UP = [Phaser.Input.Keyboard.KeyCodes.UP, Phaser.Input.Keyboard.KeyCodes.W];
+const LEFT = [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A];
+const RIGHT = [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D];
+
 export const WarpData = {
   [WarpType.Town]: {
     x: 300,
     y: 650,
-    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    key: DOWN,
     warpTo: WarpType.Underground,
     visual: WarpVisual.Ladder,
   },
   [WarpType.Underground]: {
     x: 301,
     y: 875,
-    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    key: UP,
     warpTo: WarpType.Town,
     visual: WarpVisual.Ladder,
   },
@@ -30,14 +36,14 @@ export const WarpData = {
   [WarpType.TownEast]: {
     x: 1720,
     y: 650,
-    key: [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D],
+    key: RIGHT,
     warpTo: WarpType.Forest,
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.Forest]: {
     x: 2650,
     y: 810,
-    key: [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A],
+    key: LEFT,
     warpTo: WarpType.TownEast,
     visual: WarpVisual.Warp,
   },
@@ -45,14 +51,14 @@ export const WarpData = {
   [WarpType.TownNorth]: {
     x: 775,
     y: 650,
-    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    key: UP,
     warpTo: WarpType.ClockSquare,
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.ClockSquare]: {
     x: 720,
     y: -330,
-    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    key: DOWN,
     warpTo: WarpType.TownNorth,
     visual: WarpVisual.Warp,
   },
@@ -60,14 +66,14 @@ export const WarpData = {
   [WarpType.ClockSquareNorth]: {
     x: 915,
     y: -330,
-    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    key: UP,
     warpTo: WarpType.ClockEntrance,
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.ClockEntrance]: {
     x: 900,
     y: -1320,
-    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    key: DOWN,
     warpTo: WarpType.ClockSquareNorth,
     visual: WarpVisual.Warp,
   },
@@ -75,14 +81,14 @@ export const WarpData = {
   [WarpType.ClockStairs]: {
     x: 735,
     y: -1320,
-    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    key: UP,
     warpTo: WarpType.ClockTop,
     visual: WarpVisual.Warp,
   },
   [WarpType.ClockTop]: {
     x: 790,
     y: -2005,
-    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    key: DOWN,
     warpTo: WarpType.ClockStairs,
     visual: WarpVisual.Warp,
   },
@@ -90,14 +96,14 @@ export const WarpData = {
   [WarpType.ForestEast]: {
     x: 3590,
     y: 810,
-    key: [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D],
+    key: RIGHT,
     warpTo: WarpType.Lake,
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.Lake]: {
     x: 4625,
     y: 915,
-    key: [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A],
+    key: LEFT,
     warpTo: WarpType.ForestEast,
     visual: WarpVisual.Warp,
   },
@@ -188,14 +194,19 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       }
     });
 
-    if (shouldWarp && this.warpType === WarpType.TownEast && !Config.debug) {
+    if (
+      shouldWarp &&
+      this.warpType === WarpType.TownEast &&
+      !hasJournalEntry(this.player.journal.journal, JournalEntry.ForestMazeSolved) &&
+      !Config.debug
+    ) {
       this.scene.scene.pause();
       this.scene.scene.launch('MazeDialog', { player: this.player });
       return InteractResult.None;
     }
 
     if (shouldWarp) {
-      warp(WarpData[this.warpType].warpTo, this.player);
+      warpTo(WarpData[this.warpType].warpTo, this.player);
       return InteractResult.Teleported;
     }
 
@@ -248,7 +259,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   }
 }
 
-export function warp(location: WarpType, player: Player) {
+export function warpTo(location: WarpType, player: Player) {
   const { x, y } = WarpData[location];
   const scene = player.scene;
 
