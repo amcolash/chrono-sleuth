@@ -2,10 +2,14 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
+import { getGameObjects } from '../../utils/interactionUtils';
 
 export class Notification extends GameObjects.Text {
   constructor(scene: Scene, text: string) {
-    super(scene, 20, 20, text, {
+    const notifications = getGameObjects(scene, Notification);
+    const y = 20 + notifications.length * 50;
+
+    super(scene, 20, y, text, {
       ...fontStyle,
       backgroundColor: '#' + Colors.Teal,
       padding: { x: 10, y: 5 },
@@ -18,7 +22,7 @@ export class Notification extends GameObjects.Text {
       targets: this,
       alpha: 1,
       scale: 1.05,
-      y: 30,
+      y: y + 10,
       duration: 350,
       hold: 3500,
       yoyo: true,
