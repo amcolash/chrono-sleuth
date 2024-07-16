@@ -24,7 +24,7 @@ export class Inventory extends GameObjects.Container {
       .setOrigin(0);
     this.add(this.rect);
 
-    this.text = scene.add.text(10, 0, 'Inventory', fontStyle);
+    this.text = scene.add.text(10, 4, 'Inventory', { ...fontStyle, fontSize: 32 });
     this.add(this.text);
   }
 
@@ -54,7 +54,7 @@ export class Inventory extends GameObjects.Container {
     this.getAll<GameObjects.GameObject>().forEach((item) => {
       if (item instanceof GameObjects.Sprite) {
         const x = 32 + 50 * index;
-        item.setPosition(x, 72);
+        item.setPosition(x, 68);
         index++;
       }
     });
@@ -62,6 +62,6 @@ export class Inventory extends GameObjects.Container {
 
     const width = Math.max(this.text.displayWidth + 18, 50 * index + 12);
     this.setPosition(Config.width - width - 20, 20);
-    this.rect.setSize(width, 104);
+    this.rect.setSize(width, 102);
   }
 }

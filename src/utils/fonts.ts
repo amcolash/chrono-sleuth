@@ -15,7 +15,7 @@ export function loadFont(name: string, url: string): Promise<void> {
 }
 
 export const fontStyle = {
-  fontFamily: 'm5x7, sans-serif',
-  fontSize: 48,
+  fontFamily: 'm6x11, sans-serif',
+  fontSize: 24,
   color: `#${Colors.White}`,
 };

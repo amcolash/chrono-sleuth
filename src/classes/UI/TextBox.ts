@@ -1,5 +1,7 @@
 import { GameObjects, Scene, Types } from 'phaser';
 
+import { fontStyle } from '../../utils/fonts';
+
 const scrollbarWidth = 4;
 
 export class TextBox extends GameObjects.Container {
@@ -18,7 +20,7 @@ export class TextBox extends GameObjects.Container {
     this.boxHeight = 0;
 
     // Create text object
-    this.textObject = new GameObjects.Text(scene, 0, 0, text, { padding: { x: 10, y: 10 }, ...style });
+    this.textObject = new GameObjects.Text(scene, 0, 0, text, { ...fontStyle, padding: { x: 10, y: 10 }, ...style });
     this.textObject.setOrigin(0).setScrollFactor(0).setInteractive();
     this.add(this.textObject);
 

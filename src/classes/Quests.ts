@@ -29,14 +29,14 @@ export class Quests extends GameObjects.Container {
       .setAlpha(0.75)
       .setOrigin(0);
     this.add(this.questRectangle);
-    this.add(scene.add.text(10, 0, 'Quests', fontStyle));
+    this.add(scene.add.text(10, 4, 'Quests', { ...fontStyle, fontSize: 32 }));
   }
 
   addQuest(quest: Quest) {
     if (this.quests.find((q) => q.id === quest.id)) return;
 
     this.quests.push(quest);
-    this.add(this.scene.add.text(0, 0, QuestNames[quest.id], { ...fontStyle, fontSize: 32 }));
+    this.add(this.scene.add.text(0, 0, QuestNames[quest.id], { ...fontStyle, fontSize: 20 }));
     this.updateQuests();
   }
 
@@ -55,7 +55,7 @@ export class Quests extends GameObjects.Container {
       if (text instanceof GameObjects.Text) {
         if (!activeQuests.find((q) => text.text === QuestNames[q.id]) && text.text !== 'Quests') text.destroy();
         else if (text.text !== 'Quests') {
-          const y = 10 + 30 * index;
+          const y = 14 + 30 * index;
           text.setPosition(10, y);
           index++;
 
