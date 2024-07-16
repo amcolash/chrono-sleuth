@@ -13,7 +13,7 @@ const portraitOffset = 150;
 const nameOffset = 40;
 
 const { width, height } = Config;
-const textWidth = width - 120 - padding * 4;
+const textWidth = width - 130 - padding * 4;
 const textHeight = boxHeight - padding * 2;
 
 const timeout = 350;

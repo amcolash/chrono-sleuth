@@ -79,7 +79,7 @@ export function getWarper(scene: Scene, warp: WarpType): Warp | undefined {
 
 export function getWall(scene: Scene, wallType: WallType): GameObjects.Rectangle | undefined {
   return getGameObjects<GameObjects.Rectangle>(scene, GameObjects.Rectangle).find(
-    (w) => w.getData('wallType') === wallType
+    (w) => w.getData('WallType') === wallType
   );
 }
 

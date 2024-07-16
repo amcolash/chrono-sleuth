@@ -267,7 +267,6 @@ export function warpTo(location: WarpType, player: Player) {
   const targetScrollY = y - scene.cameras.main.height / 2;
 
   scene.cameras.main.stopFollow();
-  player.setActive(false);
   scene.tweens.add({
     targets: scene.cameras.main,
     scrollX: targetScrollX,
@@ -277,11 +276,11 @@ export function warpTo(location: WarpType, player: Player) {
     onComplete: () => {
       scene.cameras.main.startFollow(player);
       scene.cameras.main.setFollowOffset(0, Config.cameraOffset);
-      player.setActive(true);
     },
   });
 
   // fade player out and then in again
+  player.setActive(false);
   scene.tweens.add({
     targets: player,
     alpha: 0,
@@ -294,6 +293,7 @@ export function warpTo(location: WarpType, player: Player) {
     },
     onComplete: () => {
       player.alpha = 1;
+      player.setActive(true);
     },
   });
 }

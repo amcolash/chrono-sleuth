@@ -46,8 +46,8 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
     },
     {
       messages: [
-        'The clock tower is the heart of our town, but it’s been broken for ages. I’ve got a wrench, but',
-        'you’ll need three special gears to fix it. You might find the others by helping the townsfolk.',
+        'The clock tower is the heart of our town, but it’s been broken for ages. I’ve got a wrench, but you’ll need three special gears to fix it.',
+        'You might find the others by helping the townsfolk.',
       ],
       onCompleted: (player) => {
         player.journal.addEntry(JournalEntry.FixTheClock);
@@ -70,8 +70,8 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
     },
     {
       messages: [
-        'I’ve heard rumors of a gear hidden deep in the Enchanted Forest. Beware of the forest’s',
-        'creatures and traps. One time I thought I saw an ancient being, but it ran away.',
+        'I’ve heard rumors of a gear hidden deep in the Enchanted Forest. Beware of the forest’s creatures and traps.',
+        'One time I thought I saw an ancient being, but it ran away.',
       ],
       conditions: {
         hasItem: ItemType.Wrench,
@@ -125,7 +125,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
   ],
   [NPCType.Mayor]: [
     {
-      messages: ['Hello, traveler. I am the mayor of this town.', 'The clock tower has been broken for years.'],
+      messages: ['Hello, traveler. I am the mayor of this town. The clock tower has been broken for years.'],
     },
   ],
 
@@ -133,8 +133,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
   [NPCType.ClockTower]: [
     {
       messages: [
-        "This dusty clock tower hasn't told the correct time in many years.",
-        'It appears to be missing some gears.',
+        "This dusty clock tower hasn't told the correct time in many years. It appears to be missing some gears.",
       ],
     },
   ],
