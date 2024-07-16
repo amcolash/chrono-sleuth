@@ -9,20 +9,23 @@ import { ItemType } from './types';
 
 export class Inventory extends GameObjects.Container {
   inventory: ItemType[] = [];
+  text: GameObjects.Text;
+  rect: GameObjects.Rectangle;
 
   constructor(scene: Scene) {
-    super(scene, Config.width - 320, 20);
+    super(scene, 0, 0);
     this.setScrollFactor(0).setDepth(1).setVisible(false);
     scene.add.existing(this);
 
-    this.add(
-      scene.add
-        .rectangle(0, 0, 300, 100, getColorNumber(Colors.Teal))
-        .setStrokeStyle(2, getColorNumber(Colors.White))
-        .setAlpha(0.75)
-        .setOrigin(0)
-    );
-    this.add(scene.add.text(10, 0, 'Inventory', fontStyle));
+    this.rect = scene.add
+      .rectangle(0, 0, 0, 0, getColorNumber(Colors.Teal))
+      .setStrokeStyle(2, getColorNumber(Colors.White))
+      .setAlpha(0.75)
+      .setOrigin(0);
+    this.add(this.rect);
+
+    this.text = scene.add.text(10, 0, 'Inventory', fontStyle);
+    this.add(this.text);
   }
 
   addItem(item: ItemType) {
@@ -50,11 +53,15 @@ export class Inventory extends GameObjects.Container {
     let index = 0;
     this.getAll<GameObjects.GameObject>().forEach((item) => {
       if (item instanceof GameObjects.Sprite) {
-        const x = 30 + 50 * index;
-        item.setPosition(x, 70);
+        const x = 32 + 50 * index;
+        item.setPosition(x, 72);
         index++;
       }
     });
     this.setVisible(this.inventory.length > 0);
+
+    const width = Math.max(this.text.displayWidth + 18, 50 * index + 12);
+    this.setPosition(Config.width - width - 20, 20);
+    this.rect.setSize(width, 104);
   }
 }

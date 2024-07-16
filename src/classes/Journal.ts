@@ -13,7 +13,7 @@ export class Journal extends GameObjects.Sprite {
   unread: GameObjects.Ellipse;
 
   constructor(scene: Phaser.Scene, player: Player) {
-    super(scene, Config.width - 50, Config.height - 50, 'journal');
+    super(scene, Config.width - 50, Config.height - 55, 'journal');
     this.setScrollFactor(0).setDepth(1).setScale(0.5).setAlpha(0).setInteractive().setActive(false);
     this.on('pointerdown', this.openJournal);
 
@@ -22,7 +22,7 @@ export class Journal extends GameObjects.Sprite {
     this.player = player;
 
     this.unread = scene.add
-      .ellipse(Config.width - 20, Config.height - 85, 20, 20, 0xaa0000)
+      .ellipse(Config.width - 20, Config.height - 90, 20, 20, 0xaa0000)
       .setStrokeStyle(2, getColorNumber(Colors.Black))
       .setScrollFactor(0)
       .setDepth(2)
