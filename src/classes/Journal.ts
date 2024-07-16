@@ -22,7 +22,7 @@ export class Journal extends GameObjects.Sprite {
     this.player = player;
 
     this.unread = scene.add
-      .ellipse(Config.width - 20, Config.height - 90, 20, 20, 0xaa0000)
+      .ellipse(Config.width - 21, Config.height - 89, 20, 20, 0xaa0000)
       .setStrokeStyle(2, getColorNumber(Colors.Black))
       .setScrollFactor(0)
       .setDepth(2)
@@ -45,7 +45,7 @@ export class Journal extends GameObjects.Sprite {
 
     if (!silent) {
       this.unread.setVisible(true);
-      new Notification(this.scene, 'New joural entry added!');
+      new Notification(this.scene, 'New journal entry added!');
     }
 
     this.handleSideEffects(entry);

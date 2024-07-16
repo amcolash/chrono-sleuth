@@ -5,6 +5,7 @@ import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
 import { getItem } from '../utils/interactionUtils';
 import { ItemData } from './Item';
+import { Notification } from './UI/Notification';
 import { ItemType } from './types';
 
 export class Inventory extends GameObjects.Container {
@@ -28,13 +29,15 @@ export class Inventory extends GameObjects.Container {
     this.add(this.text);
   }
 
-  addItem(item: ItemType) {
+  addItem(item: ItemType, silent?: boolean) {
     this.inventory.push(item);
     this.add(this.scene.add.sprite(0, 0, ItemData[item].image).setScale(0.35));
     this.updateItems();
 
     const worldItem = getItem(this.scene, item);
     if (worldItem) worldItem.destroy();
+
+    if (!silent) new Notification(this.scene, 'New item added!');
   }
 
   removeItem(item: ItemType) {

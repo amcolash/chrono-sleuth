@@ -5,7 +5,7 @@ import { fontStyle } from '../../utils/fonts';
 
 export class Notification extends GameObjects.Text {
   constructor(scene: Scene, text: string) {
-    super(scene, 20, 30, text, {
+    super(scene, 20, 20, text, {
       ...fontStyle,
       backgroundColor: '#' + Colors.Teal,
       padding: { x: 10, y: 5 },
@@ -17,6 +17,8 @@ export class Notification extends GameObjects.Text {
     scene.add.tween({
       targets: this,
       alpha: 1,
+      scale: 1.05,
+      y: 30,
       duration: 350,
       hold: 3500,
       yoyo: true,

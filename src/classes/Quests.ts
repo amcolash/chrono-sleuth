@@ -4,6 +4,7 @@ import { Config } from '../config';
 import { Game } from '../scenes/Game';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
+import { Notification } from './UI/Notification';
 import { Quest, QuestType } from './types';
 
 const size = 330;
@@ -32,12 +33,14 @@ export class Quests extends GameObjects.Container {
     this.add(scene.add.text(10, 4, 'Quests', { ...fontStyle, fontSize: 32 }));
   }
 
-  addQuest(quest: Quest) {
+  addQuest(quest: Quest, silent?: boolean) {
     if (this.quests.find((q) => q.id === quest.id)) return;
 
     this.quests.push(quest);
     this.add(this.scene.add.text(0, 0, QuestNames[quest.id], { ...fontStyle, fontSize: 20 }));
     this.updateQuests();
+
+    if (!silent) new Notification(this.scene, 'New quest added!');
   }
 
   updateExistingQuest(quest: QuestType, completed: boolean) {

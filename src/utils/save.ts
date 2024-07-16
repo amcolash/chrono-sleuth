@@ -61,8 +61,8 @@ export function load(scene: Game): void {
   scene.player.setFlipX(save.player.flip);
 
   save.journal.forEach((entry) => scene.player.journal.addEntry(entry, true));
-  save.inventory.forEach((item) => scene.player.inventory.addItem(item));
-  save.quests.forEach((quest) => scene.player.quests.addQuest(quest));
+  save.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
+  save.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
 
   // TODO: Rethink if this should be more directly tied to journal entries as a side-effect
   setWarperState(scene, save.warpers);
