@@ -1,7 +1,8 @@
-import { Input, Math, Scene } from 'phaser';
+import { Scene } from 'phaser';
 
 import { Player } from '../classes/Player';
 import { Button } from '../classes/UI/Button';
+import { TextBox } from '../classes/UI/TextBox';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
@@ -30,34 +31,9 @@ export class JournalDialog extends Scene {
 
     container.add(this.add.text(0, Config.height * -0.33, 'Journal', { ...fontStyle, fontSize: 48 }).setOrigin(0.5));
 
-    // TODO: Figure out how to get this to scroll
-    const text = this.add
-      .text(
-        0,
-        Config.height * -0.2,
-        this.player.journal.journal
-          .map((entry) => {
-            return '- ' + JournalData[entry] + '\n' + '\n';
-          })
-          .reverse(),
-        { ...fontStyle, wordWrap: { width: Config.width * 0.7 }, align: 'left' }
-      )
-      .setOrigin(0.5, 0)
-      .setInteractive({ draggable: true });
-
-    text.on('drag', (_pointer: Input.Pointer, _dragX: number, dragY: number) => {
-      text.y = Math.Clamp(dragY, -text.displayHeight * 0.5, -Config.height * 0.2);
-    });
-
-    container.add(text);
-
-    // Make a mask and apply it to the text to keep inside of dialog
-    const maskGraphics = this.make.graphics();
-    maskGraphics.fillStyle(0xffffff);
-    maskGraphics.fillRect(Config.width * 0.125, Config.height * 0.2, Config.width * 0.75, Config.height * 0.7);
-
-    const mask = new Phaser.Display.Masks.BitmapMask(this, maskGraphics);
-    text.setMask(mask);
+    const text = this.player.journal.journal.map((entry) => `- ${JournalData[entry]}\n\n`).reverse();
+    const textBox = new TextBox(this, Config.width * 0.13, Config.height * 0.25, text);
+    textBox.setBoxSize(Config.width * 0.74, Config.height * 0.62);
 
     this.input.keyboard?.on('keydown-J', () => {
       this.close();

@@ -1,22 +1,23 @@
-let fastMode = false;
-fastMode = true;
-
 let debug = false;
 // debug = true;
 
 let rewindEnabled = false;
 // rewindEnabled = true;
 
+let fastMode = false;
+fastMode = true;
+
 const width = 1024;
 const height = 768;
 
 if (import.meta.env.PROD) {
-  fastMode = false;
   debug = false;
+  fastMode = false;
 }
 
 export const Config = {
   debug,
+
   width,
   height,
   cameraOffset: height / 3,
