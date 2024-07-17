@@ -7,8 +7,8 @@ let rewindEnabled = false;
 let fastMode = false;
 fastMode = true;
 
-const width = 1024;
-const height = 768;
+const width = 1280;
+const height = 720;
 
 if (import.meta.env.PROD) {
   debug = false;
