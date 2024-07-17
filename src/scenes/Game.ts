@@ -34,7 +34,7 @@ export class Game extends Scene {
     const npcs = this.createNpcs();
     const items = this.createItems();
 
-    this.gamepad = new Gamepad(this, this.player);
+    this.gamepad = new Gamepad(this);
 
     // rewindable objects
     const rewindable = [this.player];

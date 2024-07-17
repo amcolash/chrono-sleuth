@@ -1,7 +1,9 @@
 import { GameObjects, Scene } from 'phaser';
 
+import { InputManager } from '../classes/InputManager';
 import { Player } from '../classes/Player';
 import { Button } from '../classes/UI/Button';
+import { Gamepad } from '../classes/UI/Gamepad';
 import { WarpData, warpTo } from '../classes/Warp';
 import { JournalEntry, WarpType } from '../classes/types';
 import { Config } from '../config';
@@ -13,6 +15,7 @@ export class MazeDialog extends Scene {
   player: Player;
   container: GameObjects.Container;
   arrow: GameObjects.Sprite;
+  keys: InputManager;
 
   constructor() {
     super('MazeDialog');
@@ -47,6 +50,9 @@ export class MazeDialog extends Scene {
     this.input.keyboard?.on('keydown-ESC', () => {
       this.close(false);
     });
+
+    new Gamepad(this, true);
+    this.keys = new InputManager(this);
 
     this.scene.launch('Maze', { parent: this });
   }

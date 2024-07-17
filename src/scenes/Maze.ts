@@ -1,19 +1,21 @@
 import generateMaze, { Cell } from 'generate-maze';
-import { GameObjects, Input, Math, Scene } from 'phaser';
+import { GameObjects, Math, Scene } from 'phaser';
 
+import { InputManager, Key } from '../classes/InputManager';
 import { Config } from '../config';
 import { getClockRewind } from '../utils/interactionUtils';
+import { Game } from './Game';
 import { MazeDialog } from './MazeDialog';
 
 const cells = 24;
 const cellSize = 48;
-const stepTime = 75;
+const stepTime = 140;
 
 export class Maze extends Scene {
   parent: MazeDialog;
   graphics: GameObjects.Graphics;
 
-  keys: { [key: string]: Input.Keyboard.Key };
+  keys: InputManager;
   maze: Cell[][];
   mazePlayer: GameObjects.Ellipse;
 
@@ -31,19 +33,16 @@ export class Maze extends Scene {
     this.createMaze();
 
     this.mazePlayer = this.add
-      .ellipse(0, 0, cellSize * 0.9, cellSize * 0.9, 0x557799)
+      .ellipse(0, 0, cellSize * 0.8, cellSize * 0.8, 0x557799)
       .setSmoothness(32)
-      .setOrigin(-0.03);
-
-    this.keys = this.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,P') as {
-      [key: string]: Phaser.Input.Keyboard.Key;
-    };
+      .setOrigin(-0.13);
 
     this.cameras.main.startFollow(this.mazePlayer);
+    this.keys = this.parent.keys;
   }
 
   createMaze() {
-    const seed = getClockRewind(this);
+    const seed = getClockRewind(this.parent.player.scene as Game);
 
     this.maze = generateMaze(cells, cells, true, seed);
     this.graphics = this.add.graphics();
@@ -100,23 +99,17 @@ export class Maze extends Scene {
   update(time: number, delta: number): void {
     if (time < this.nextUpdate) return;
 
+    const keys = this.keys.keys;
     // Skip the maze if in development mode
-    if (this.keys.P.isDown && import.meta.env.MODE !== 'production') {
+    if (keys[Key.Continue] && import.meta.env.MODE !== 'production') {
       this.parent.close(true);
     }
 
-    const keys = {
-      left: this.keys.LEFT.isDown || this.keys.A.isDown,
-      right: this.keys.RIGHT.isDown || this.keys.D.isDown,
-      up: this.keys.UP.isDown || this.keys.W.isDown,
-      down: this.keys.DOWN.isDown || this.keys.S.isDown,
-    };
-
     const velocity = new Math.Vector2(0, 0);
-    if (keys.left) velocity.x = -cellSize;
-    else if (keys.right) velocity.x = cellSize;
-    else if (keys.up) velocity.y = -cellSize;
-    else if (keys.down) velocity.y = cellSize;
+    if (keys[Key.Left]) velocity.x = -cellSize;
+    else if (keys[Key.Right]) velocity.x = cellSize;
+    else if (keys[Key.Up]) velocity.y = -cellSize;
+    else if (keys[Key.Down]) velocity.y = cellSize;
 
     const newPosition = new Math.Vector2(this.mazePlayer.x + velocity.x, this.mazePlayer.y + velocity.y);
 
