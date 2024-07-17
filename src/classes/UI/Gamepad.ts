@@ -7,6 +7,8 @@ const buttonAlpha = 0.8;
 const backgroundAlpha = 0.45;
 
 export class Gamepad extends GameObjects.Container {
+  buttons: GameObjects.Arc[] = [];
+
   constructor(scene: Phaser.Scene) {
     super(scene, 100, Config.height - 100);
     this.setScrollFactor(0).setDepth(5);
@@ -22,10 +24,10 @@ export class Gamepad extends GameObjects.Container {
       .setStrokeStyle(3, getColorNumber(Colors.Black));
     dpadContainer.add(dpad);
 
-    this.button(-50, 0, 'LEFT', dpadContainer);
-    this.button(50, 0, 'RIGHT', dpadContainer);
-    this.button(0, -50, 'UP', dpadContainer);
-    this.button(0, 50, 'DOWN', dpadContainer);
+    this.button(-55, 0, 'LEFT', dpadContainer);
+    this.button(55, 0, 'RIGHT', dpadContainer);
+    this.button(0, -55, 'UP', dpadContainer);
+    this.button(0, 55, 'DOWN', dpadContainer);
 
     // Buttons
     const buttonsContainer = scene.add.container(Config.width - 340, 0);
@@ -33,9 +35,9 @@ export class Gamepad extends GameObjects.Container {
 
     // Buttons background
     const buttons = scene.add
-      .circle(40, 0, 60, getColorNumber(Colors.Teal), backgroundAlpha)
+      .circle(40, 0, 65, getColorNumber(Colors.Teal), backgroundAlpha)
       .setStrokeStyle(3, getColorNumber(Colors.Black))
-      .setScale(1, 0.7)
+      .setScale(1, 0.6)
       .setAngle(-30);
     buttonsContainer.add(buttons);
 
@@ -44,7 +46,7 @@ export class Gamepad extends GameObjects.Container {
   }
 
   button(x: number, y: number, key: string, container: GameObjects.Container) {
-    const size = key === 'ENTER' || key === 'ESCAPE' ? 30 : 25;
+    const size = key === 'ENTER' || key === 'ESCAPE' ? 35 : 30;
 
     const button = this.scene.add
       .circle(x, y, size, getColorNumber(Colors.White), buttonAlpha)
@@ -60,9 +62,17 @@ export class Gamepad extends GameObjects.Container {
       this.scene.input.keyboard?.emit(`keyup-${key}`);
       button.setFillStyle(getColorNumber(Colors.White), buttonAlpha);
     });
+
+    this.buttons.push(button);
   }
 
   offsetButtons(dialog: boolean) {
+    ['LEFT', 'RIGHT', 'UP', 'DOWN', 'ENTER', 'ESCAPE'].forEach((key) =>
+      this.scene.input.keyboard?.emit(`keyup-${key}`)
+    );
+
+    this.buttons.forEach((button) => button.setFillStyle(getColorNumber(Colors.White), buttonAlpha));
+
     if (dialog) {
       this.setPosition(100, Config.height - 300);
     } else {
