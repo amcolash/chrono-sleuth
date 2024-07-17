@@ -72,14 +72,16 @@ export class Gamepad extends GameObjects.Container {
   }
 
   offsetButtons(dialog: boolean) {
-    this.player.keys.resetKeys();
-
-    this.buttons.forEach((button) => button.setFillStyle(getColorNumber(Colors.White), buttonAlpha));
-
     if (dialog) {
       this.setPosition(100, Config.height - 300);
     } else {
       this.setPosition(100, Config.height - 100);
     }
+
+    this.player.keys.resetKeys();
+
+    this.scene.time.delayedCall(100, () => {
+      this.buttons.forEach((button) => button.setFillStyle(getColorNumber(Colors.White), buttonAlpha));
+    });
   }
 }
