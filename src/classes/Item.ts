@@ -60,6 +60,6 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
   handleSideEffects() {
     const dialog = itemDialogs[this.itemType];
-    if (dialog) this.player.message.setDialog(dialog);
+    if (dialog) this.player.message.setDialog(dialog, undefined, 'player_portrait');
   }
 }

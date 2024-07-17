@@ -52,7 +52,9 @@ export class Preloader extends Scene {
     // this.load.image('lockpick', 'items/lockpick.png');
 
     // characters
-    this.load.spritesheet('character', 'characters/player.png', { frameWidth: 24, frameHeight: 36 });
+    // this.load.spritesheet('character', 'characters/player.png', { frameWidth: 24, frameHeight: 36 });
+    this.load.spritesheet('character', 'characters/Walk.png', { frameWidth: 128, frameHeight: 80 });
+    this.load.image('player_portrait', 'characters/player_portrait.png');
 
     this.load.image('inventor', 'characters/inventor.png');
     this.load.image('inventor_portrait', 'characters/inventor_portrait.png');

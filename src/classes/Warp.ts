@@ -117,7 +117,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     super(scene, x, y, visual === WarpVisual.Ladder ? 'ladder' : 'warp');
     this.warpType = warpType;
     this.player = player;
-    this.scale = 0.5;
+    this.scale = 0.6;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);

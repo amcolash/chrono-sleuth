@@ -100,7 +100,7 @@ export class Message extends GameObjects.Container {
     });
   }
 
-  setDialog(dialog?: NPCDialog, npc?: NPC) {
+  setDialog(dialog?: NPCDialog, npc?: NPC, textureKey?: string) {
     this.setVisible(dialog !== undefined);
 
     this.npc = npc;
@@ -114,22 +114,26 @@ export class Message extends GameObjects.Container {
       return;
     }
 
-    if (npc === undefined) {
-      this.npcName.setVisible(false);
+    this.npcName.setVisible(false);
+
+    if (!npc && !textureKey) {
       this.image.setVisible(false);
       this.text
         .setPosition(padding, padding)
         .setWordWrapWidth(padding + portraitOffset + textWidth, true)
         .setFixedSize(padding + portraitOffset + textWidth, textHeight);
     } else {
-      this.npcName.setVisible(true);
-      this.npcName.setText(NPCData[npc.npcType].name);
+      if (npc) {
+        this.npcName.setVisible(true);
+        this.npcName.setText(NPCData[npc.npcType].name);
+      }
 
       this.image.setVisible(true);
-      this.image.setTexture(NPCData[npc.npcType].portrait);
+      if (npc) this.image.setTexture(NPCData[npc.npcType].portrait);
+      else this.image.setTexture(textureKey);
 
       this.text
-        .setPosition(padding + portraitOffset, padding + nameOffset)
+        .setPosition(padding + portraitOffset, padding + (npc ? nameOffset : 0))
         .setWordWrapWidth(textWidth, true)
         .setFixedSize(textWidth, textHeight);
     }
