@@ -1,6 +1,6 @@
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
-import { ItemType, JournalEntry, NPCType, Quest, QuestType, WarpType } from '../classes/types';
+import { ItemType, JournalEntry, NPCType, QuestType, WarpType } from '../classes/types';
 import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry, updateWarpVisibility } from './interactionUtils';
 import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from './riddles';
 
@@ -29,6 +29,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
         hasItem: ItemType.Gear1,
       },
       onCompleted: (player) => {
+        player.quests.updateExistingQuest(QuestType.ForestGear, true);
         updateWarpVisibility(player.scene, WarpType.TownNorth, true);
       },
     },
@@ -137,6 +138,12 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       ],
     },
   ],
+};
+
+export const itemDialogs: { [key in ItemType]?: NPCDialog } = {
+  [ItemType.Gear1]: {
+    messages: ['Hmm, this gear looks like it belongs in the clock tower. I should ask the inventor about it.'],
+  },
 };
 
 export function getDialog(npc: NPCType, player: Player): NPCDialog | undefined {

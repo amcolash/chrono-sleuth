@@ -1,12 +1,13 @@
 import { GameObjects } from 'phaser';
 
 import { Config } from '../config';
+import { itemDialogs } from '../utils/dialog';
 import { Player } from './Player';
 import { InteractResult, Interactive, ItemType } from './types';
 
 export const ItemData = {
-  [ItemType.Wrench]: { x: 0, y: 0, image: 'wrench' },
-  [ItemType.Gear1]: { x: 5120, y: 915, image: 'gear' },
+  [ItemType.Wrench]: { x: 0, y: 0, image: 'wrench', name: 'Wrench' },
+  [ItemType.Gear1]: { x: 5120, y: 915, image: 'gear', name: 'Gear' },
 };
 
 export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
@@ -38,6 +39,7 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
   onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
     if (keys.SPACE.isDown || keys.ENTER.isDown) {
       this.player.inventory.addItem(this.itemType);
+      this.handleSideEffects();
       this.destroy();
 
       return InteractResult.Item;
@@ -53,5 +55,10 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
   getButtonPrompt() {
     return [`Pick Up ${ItemType[this.itemType]}`, 'Press [CONTINUE]'];
+  }
+
+  handleSideEffects() {
+    const dialog = itemDialogs[this.itemType];
+    if (dialog) this.player.message.setDialog(dialog);
   }
 }

@@ -54,7 +54,7 @@ export class Message extends GameObjects.Container {
     this.text.width = textWidth;
     this.text.height = textHeight;
 
-    this.text.setOrigin(0).setWordWrapWidth(textWidth, true).setFixedSize(textWidth, textHeight).setMaxLines(3);
+    this.text.setOrigin(0).setMaxLines(3);
 
     this.image = new GameObjects.Image(scene, padding, padding, '').setOrigin(0).setScale(1.5);
 
@@ -114,7 +114,10 @@ export class Message extends GameObjects.Container {
     if (npc === undefined) {
       this.npcName.setVisible(false);
       this.image.setVisible(false);
-      this.text.setPosition(padding, padding);
+      this.text
+        .setPosition(padding, padding)
+        .setWordWrapWidth(padding + portraitOffset + textWidth, true)
+        .setFixedSize(padding + portraitOffset + textWidth, textHeight);
     } else {
       this.npcName.setVisible(true);
       this.npcName.setText(NPCData[npc.npcType].name);
@@ -122,7 +125,10 @@ export class Message extends GameObjects.Container {
       this.image.setVisible(true);
       this.image.setTexture(NPCData[npc.npcType].portrait);
 
-      this.text.setPosition(padding + portraitOffset, padding + nameOffset);
+      this.text
+        .setPosition(padding + portraitOffset, padding + nameOffset)
+        .setWordWrapWidth(textWidth, true)
+        .setFixedSize(textWidth, textHeight);
     }
 
     this.showMessage();
@@ -134,7 +140,7 @@ export class Message extends GameObjects.Container {
 
     if (message) {
       this.text.setText(message);
-      if (this.text.getWrappedText().length > 2) console.error('Message too long!', message);
+      if (this.text.getWrappedText().length > 3) console.error('Message too long!', message);
     }
 
     this.updateOptions();

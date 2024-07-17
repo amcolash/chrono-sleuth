@@ -40,12 +40,15 @@ export class Quests extends GameObjects.Container {
     this.add(this.scene.add.text(0, 0, QuestNames[quest.id], { ...fontStyle, fontSize: 20 }));
     this.updateQuests();
 
-    if (!silent) new Notification(this.scene, 'New quest added!');
+    if (!silent) new Notification(this.scene, `New quest added: ${QuestNames[quest.id]}`);
   }
 
   updateExistingQuest(quest: QuestType, completed: boolean) {
     const q = this.quests.find((q) => q.id === quest);
-    if (q) q.completed = completed;
+    if (q) {
+      if (!q.completed && completed) new Notification(this.scene, `Quest completed: ${QuestNames[q.id]}`);
+      q.completed = completed;
+    }
     this.updateQuests();
   }
 

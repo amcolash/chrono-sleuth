@@ -37,7 +37,7 @@ export class Inventory extends GameObjects.Container {
     const worldItem = getItem(this.scene, item);
     if (worldItem) worldItem.destroy();
 
-    if (!silent) new Notification(this.scene, 'New item added!');
+    if (!silent) new Notification(this.scene, `New item added: ${ItemData[item].name}`);
   }
 
   removeItem(item: ItemType) {
