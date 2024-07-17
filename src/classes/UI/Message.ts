@@ -130,7 +130,7 @@ export class Message extends GameObjects.Container {
 
       this.image.setVisible(true);
       if (npc) this.image.setTexture(NPCData[npc.npcType].portrait);
-      else this.image.setTexture(textureKey);
+      else if (textureKey) this.image.setTexture(textureKey);
 
       this.text
         .setPosition(padding + portraitOffset, padding + (npc ? nameOffset : 0))
