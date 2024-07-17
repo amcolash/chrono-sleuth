@@ -1,18 +1,23 @@
 import { GameObjects } from 'phaser';
 
 import { Config } from '../../config';
+import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
+import { Player } from '../Player';
 
 const buttonAlpha = 0.8;
 const backgroundAlpha = 0.45;
 
 export class Gamepad extends GameObjects.Container {
   buttons: GameObjects.Arc[] = [];
+  player: Player;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Game, player: Player) {
     super(scene, 100, Config.height - 100);
     this.setScrollFactor(0).setDepth(5);
     scene.add.existing(this);
+
+    this.player = player;
 
     // D-pad
     const dpadContainer = scene.add.container(50, 0).setInteractive().setDepth(5);
@@ -67,9 +72,7 @@ export class Gamepad extends GameObjects.Container {
   }
 
   offsetButtons(dialog: boolean) {
-    ['LEFT', 'RIGHT', 'UP', 'DOWN', 'ENTER', 'ESCAPE'].forEach((key) =>
-      this.scene.input.keyboard?.emit(`keyup-${key}`)
-    );
+    this.player.keys.resetKeys();
 
     this.buttons.forEach((button) => button.setFillStyle(getColorNumber(Colors.White), buttonAlpha));
 

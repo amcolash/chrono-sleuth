@@ -90,6 +90,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
       if (ret !== InteractResult.None) {
         this.interactionTimeout = Date.now() + (this.interactive.interactionTimeout || 500);
+        this.keys.resetKeys();
 
         if (ret === InteractResult.Teleported) this.interactive = undefined;
       }

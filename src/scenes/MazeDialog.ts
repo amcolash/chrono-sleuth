@@ -60,6 +60,7 @@ export class MazeDialog extends Scene {
     this.scene.stop('Maze');
 
     this.scene.resume('Game');
+    this.player.keys.resetKeys();
 
     if (success) {
       warpTo(WarpType.Forest, this.player);

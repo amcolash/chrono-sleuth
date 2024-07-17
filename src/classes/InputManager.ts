@@ -48,4 +48,13 @@ export class InputManager {
     scene.input.keyboard?.on('keyup-ENTER', () => (this.keys[Key.Continue] = false));
     scene.input.keyboard?.on('keyup-ESC', () => (this.keys[Key.Back] = false));
   }
+
+  resetKeys() {
+    this.keys[Key.Up] = false;
+    this.keys[Key.Down] = false;
+    this.keys[Key.Left] = false;
+    this.keys[Key.Right] = false;
+    this.keys[Key.Continue] = false;
+    this.keys[Key.Back] = false;
+  }
 }
