@@ -10,6 +10,7 @@ import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
+import { Colors } from '../utils/colors';
 import { debugSave, defaultSave, load, save } from '../utils/save';
 
 export class Game extends Scene {
@@ -34,6 +35,21 @@ export class Game extends Scene {
     const npcs = this.createNpcs();
     const items = this.createItems();
 
+    // ui
+    this.add
+      .text(20, Config.height - 20, '⚙', {
+        fontSize: '32px',
+        backgroundColor: `#${Colors.Teal}`,
+        padding: { x: 5, y: 5 },
+      })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(5)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', () => {
+        this.scene.pause();
+        this.scene.launch('Paused', { game: this });
+      });
     this.gamepad = new Gamepad(this);
 
     // rewindable objects
