@@ -5,6 +5,7 @@ import { Item } from '../classes/Item';
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { DebugUI } from '../classes/UI/DebugUI';
+import { Gamepad } from '../classes/UI/Gamepad';
 import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
@@ -15,6 +16,7 @@ export class Game extends Scene {
   player: Player;
   interactiveObjects: GameObjects.Group;
   clock: Clock;
+  gamepad: Gamepad;
 
   constructor() {
     super('Game');
@@ -31,6 +33,8 @@ export class Game extends Scene {
     const warpers = this.createWarpers();
     const npcs = this.createNpcs();
     const items = this.createItems();
+
+    this.gamepad = new Gamepad(this);
 
     // rewindable objects
     const rewindable = [this.player];

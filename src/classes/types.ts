@@ -1,3 +1,5 @@
+import { Key } from './InputManager';
+
 export enum InteractResult {
   None,
   Teleported,
@@ -9,7 +11,7 @@ export interface Interactive {
   interactionTimeout?: number;
   getButtonPrompt?(): string | string[];
 
-  onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined): InteractResult;
+  onInteract(keys: Record<Key, boolean>): InteractResult;
 }
 
 export interface Rewindable {

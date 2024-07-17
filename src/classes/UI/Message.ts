@@ -1,6 +1,7 @@
 import { GameObjects, Math, Scene } from 'phaser';
 
 import { Config } from '../../config';
+import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { NPCDialog } from '../../utils/dialog';
 import { fontStyle } from '../../utils/fonts';
@@ -107,6 +108,8 @@ export class Message extends GameObjects.Container {
     this.dialog = dialog;
     this.interactionTimeout = Date.now() + timeout;
 
+    (this.scene as Game).gamepad.offsetButtons(this.dialog !== undefined);
+
     if (!dialog) {
       return;
     }
@@ -208,6 +211,8 @@ export class Message extends GameObjects.Container {
     } else {
       this.showMessage();
     }
+
+    (this.scene as Game).gamepad.offsetButtons(this.dialog !== undefined);
 
     this.interactionTimeout = Date.now() + timeout;
   }

@@ -31,9 +31,14 @@ export class Paused extends Scene {
       this.resume();
       save(this.parent);
     });
+
     new Button(this, width / 2, height / 2 + 180, 'Load', () => {
       this.resume();
       this.parent.scene.restart();
+    });
+
+    new Button(this, width / 2, height / 2 + 270, 'Toggle Gamepad', () => {
+      this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
     });
 
     // Keyboard interactions

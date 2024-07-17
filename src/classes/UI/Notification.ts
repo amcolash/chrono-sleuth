@@ -5,7 +5,7 @@ import { fontStyle } from '../../utils/fonts';
 import { getGameObjects } from '../../utils/interactionUtils';
 
 export class Notification extends GameObjects.Text {
-  constructor(scene: Scene, text: string) {
+  constructor(scene: Scene, text: string, duration: number = 3500) {
     const notifications = getGameObjects(scene, Notification);
     const y = 20 + notifications.length * 50;
 
@@ -24,7 +24,7 @@ export class Notification extends GameObjects.Text {
       scale: 1.05,
       y: y + 10,
       duration: 350,
-      hold: 3500,
+      hold: duration,
       yoyo: true,
       repeat: 0,
       onComplete: () => this.destroy(),

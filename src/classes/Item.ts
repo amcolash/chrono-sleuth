@@ -2,6 +2,7 @@ import { GameObjects } from 'phaser';
 
 import { Config } from '../config';
 import { itemDialogs } from '../utils/dialog';
+import { Key } from './InputManager';
 import { Player } from './Player';
 import { InteractResult, Interactive, ItemType } from './types';
 
@@ -36,8 +37,8 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
     });
   }
 
-  onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
-    if (keys.SPACE.isDown || keys.ENTER.isDown) {
+  onInteract(keys: Record<Key, boolean>): InteractResult {
+    if (keys[Key.Continue]) {
       this.player.inventory.addItem(this.itemType);
       this.handleSideEffects();
       this.destroy();

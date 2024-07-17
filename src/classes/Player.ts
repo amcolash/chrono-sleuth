@@ -3,6 +3,7 @@ import { GameObjects, Math } from 'phaser';
 import { Config } from '../config';
 import { createAnimation, updateAnimation } from '../utils/animations';
 import { rewindInterval, rewindSpeed } from './Clock';
+import { InputManager, Key } from './InputManager';
 import { Inventory } from './Inventory';
 import { Journal } from './Journal';
 import { Quests } from './Quests';
@@ -16,7 +17,7 @@ const MAX_HISTORY = 1000;
 export const playerStart = new Math.Vector2(400, 650);
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
-  keys: { [key: string]: Phaser.Input.Keyboard.Key };
+  keys: InputManager;
 
   buttonPrompt: GameObjects.Text;
   interactive?: Interactive;
@@ -34,10 +35,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   constructor(scene: Phaser.Scene) {
     super(scene, playerStart.x, playerStart.y, 'character', 0);
 
-    this.keys = scene.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,ENTER,SPACE') as {
-      [key: string]: Phaser.Input.Keyboard.Key;
-    };
-
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive();
@@ -49,6 +46,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
     createAnimation(this);
 
+    this.keys = new InputManager(scene);
     this.buttonPrompt = new ButtonPrompt(scene);
 
     this.message = new Message(scene, this);
@@ -88,7 +86,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     let ret = undefined;
 
     if (this.interactive && Date.now() > this.interactionTimeout) {
-      ret = this.interactive.onInteract(this.keys);
+      ret = this.interactive.onInteract(this.keys.keys);
 
       if (ret !== InteractResult.None) {
         this.interactionTimeout = Date.now() + (this.interactive.interactionTimeout || 500);
@@ -101,24 +99,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   }
 
   updateVelocity() {
-    const keys = {
-      left: this.keys.LEFT.isDown || this.keys.A.isDown,
-      right: this.keys.RIGHT.isDown || this.keys.D.isDown,
-      up: this.keys.UP.isDown || this.keys.W.isDown,
-      down: this.keys.DOWN.isDown || this.keys.S.isDown,
-    };
-
     let calcSpeed = speed;
+    const keys = this.keys.keys;
 
-    if (keys.left) this.setVelocityX(-calcSpeed);
-    if (keys.right) this.setVelocityX(calcSpeed);
+    if (keys[Key.Left]) this.setVelocityX(-calcSpeed);
+    if (keys[Key.Right]) this.setVelocityX(calcSpeed);
 
     if (Config.debug && !this.interactive) {
-      if (keys.up) this.setVelocityY(-calcSpeed);
-      if (keys.down) this.setVelocityY(calcSpeed);
+      if (keys[Key.Up]) this.setVelocityY(-calcSpeed);
+      if (keys[Key.Down]) this.setVelocityY(calcSpeed);
     }
 
-    if (keys.left && keys.right) this.setVelocityX(0);
+    if (keys[Key.Left] && keys[Key.Right]) this.setVelocityX(0);
   }
 
   record() {

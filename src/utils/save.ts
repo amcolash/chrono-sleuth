@@ -6,8 +6,14 @@ import { Warp } from '../classes/Warp';
 import { ItemType, JournalEntry, Quest, QuestType, WarpType } from '../classes/types';
 import { Game } from '../scenes/Game';
 import { getGameObjects } from './interactionUtils';
+import { isMobile } from './util';
 
 type WarpList = { warpType: WarpType; state: boolean }[];
+
+// TODO: Add settings
+export type Settings = {
+  gamepad: boolean;
+};
 
 type SaveData = {
   player: {
@@ -19,6 +25,7 @@ type SaveData = {
   inventory: ItemType[];
   quests: Quest[];
   warpers: WarpList;
+  settings: Settings;
 };
 
 export const defaultSave: SaveData = {
@@ -31,6 +38,9 @@ export const defaultSave: SaveData = {
   inventory: [],
   quests: [],
   warpers: [],
+  settings: {
+    gamepad: isMobile(),
+  },
 };
 
 export const debugSave: SaveData = {
@@ -43,6 +53,9 @@ export const debugSave: SaveData = {
   inventory: [ItemType.Wrench, ItemType.Gear1],
   quests: [{ id: QuestType.SphinxRiddle, completed: true }],
   warpers: [{ warpType: WarpType.TownEast, state: true }],
+  settings: {
+    gamepad: false,
+  },
 };
 
 export function load(scene: Game): void {
@@ -52,23 +65,34 @@ export function load(scene: Game): void {
     if (data) parsed = JSON.parse(data);
   } catch (err) {
     console.error(err);
+    new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
   }
 
-  const save: SaveData = parsed || defaultSave;
+  try {
+    const save: SaveData = parsed || defaultSave;
 
-  scene.player.setX(save.player.x);
-  scene.player.setY(save.player.y);
-  scene.player.setFlipX(save.player.flip);
+    scene.player.setX(save.player.x);
+    scene.player.setY(save.player.y);
+    scene.player.setFlipX(save.player.flip);
 
-  save.journal.forEach((entry) => scene.player.journal.addEntry(entry, true));
-  save.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
-  save.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
+    save.journal.forEach((entry) => scene.player.journal.addEntry(entry, true));
+    save.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
+    save.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
 
-  // TODO: Rethink if this should be more directly tied to journal entries as a side-effect
-  setWarperState(scene, save.warpers);
+    // TODO: Rethink if this should be more directly tied to journal entries as a side-effect
+    setWarperState(scene, save.warpers);
 
-  const loadType = deepEqual(parsed, defaultSave) ? '[New]' : deepEqual(parsed, debugSave) ? '[Debug]' : '[Storage]';
-  new Notification(scene, `Game Loaded ${loadType}`);
+    scene.gamepad.setVisible(save.settings.gamepad);
+
+    const loadType = deepEqual(parsed, defaultSave) ? '[New]' : deepEqual(parsed, debugSave) ? '[Debug]' : '[Storage]';
+    new Notification(scene, `Game Loaded ${loadType}`);
+  } catch (err) {
+    console.error(err);
+    new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
+
+    save(scene, defaultSave);
+    load(scene);
+  }
 }
 
 export function save(scene: Game, override?: SaveData): void {
@@ -82,6 +106,9 @@ export function save(scene: Game, override?: SaveData): void {
     inventory: scene.player.inventory.inventory,
     quests: scene.player.quests.quests,
     warpers: getWarperState(scene),
+    settings: {
+      gamepad: scene.gamepad.visible,
+    },
   };
 
   localStorage.setItem('save', JSON.stringify(override || save));

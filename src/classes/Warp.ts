@@ -3,6 +3,7 @@ import { BlendModes, GameObjects, Physics } from 'phaser';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { hasJournalEntry } from '../utils/interactionUtils';
+import { Key } from './InputManager';
 import { Player } from './Player';
 import { InteractResult, Interactive, JournalEntry, WarpType } from './types';
 
@@ -12,23 +13,18 @@ enum WarpVisual {
   WarpHidden,
 }
 
-const DOWN = [Phaser.Input.Keyboard.KeyCodes.DOWN, Phaser.Input.Keyboard.KeyCodes.S];
-const UP = [Phaser.Input.Keyboard.KeyCodes.UP, Phaser.Input.Keyboard.KeyCodes.W];
-const LEFT = [Phaser.Input.Keyboard.KeyCodes.LEFT, Phaser.Input.Keyboard.KeyCodes.A];
-const RIGHT = [Phaser.Input.Keyboard.KeyCodes.RIGHT, Phaser.Input.Keyboard.KeyCodes.D];
-
 export const WarpData = {
   [WarpType.Town]: {
     x: 300,
     y: 650,
-    key: DOWN,
+    key: Key.Down,
     warpTo: WarpType.Underground,
     visual: WarpVisual.Ladder,
   },
   [WarpType.Underground]: {
     x: 301,
     y: 875,
-    key: UP,
+    key: Key.Up,
     warpTo: WarpType.Town,
     visual: WarpVisual.Ladder,
   },
@@ -36,14 +32,14 @@ export const WarpData = {
   [WarpType.TownEast]: {
     x: 1720,
     y: 650,
-    key: RIGHT,
+    key: Key.Right,
     warpTo: WarpType.Forest,
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.Forest]: {
     x: 2650,
     y: 810,
-    key: LEFT,
+    key: Key.Left,
     warpTo: WarpType.TownEast,
     visual: WarpVisual.Warp,
   },
@@ -51,14 +47,14 @@ export const WarpData = {
   [WarpType.TownNorth]: {
     x: 775,
     y: 650,
-    key: UP,
+    key: Key.Up,
     warpTo: WarpType.ClockSquare,
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.ClockSquare]: {
     x: 720,
     y: -330,
-    key: DOWN,
+    key: Key.Down,
     warpTo: WarpType.TownNorth,
     visual: WarpVisual.Warp,
   },
@@ -66,14 +62,14 @@ export const WarpData = {
   [WarpType.ClockSquareNorth]: {
     x: 915,
     y: -330,
-    key: UP,
+    key: Key.Up,
     warpTo: WarpType.ClockEntrance,
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.ClockEntrance]: {
     x: 900,
     y: -1320,
-    key: DOWN,
+    key: Key.Down,
     warpTo: WarpType.ClockSquareNorth,
     visual: WarpVisual.Warp,
   },
@@ -81,14 +77,14 @@ export const WarpData = {
   [WarpType.ClockStairs]: {
     x: 735,
     y: -1320,
-    key: UP,
+    key: Key.Up,
     warpTo: WarpType.ClockTop,
     visual: WarpVisual.Warp,
   },
   [WarpType.ClockTop]: {
     x: 790,
     y: -2005,
-    key: DOWN,
+    key: Key.Down,
     warpTo: WarpType.ClockStairs,
     visual: WarpVisual.Warp,
   },
@@ -96,14 +92,14 @@ export const WarpData = {
   [WarpType.ForestEast]: {
     x: 3590,
     y: 810,
-    key: RIGHT,
+    key: Key.Right,
     warpTo: WarpType.Lake,
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.Lake]: {
     x: 4625,
     y: 915,
-    key: LEFT,
+    key: Key.Left,
     warpTo: WarpType.ForestEast,
     visual: WarpVisual.Warp,
   },
@@ -185,14 +181,9 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     this.setVisible(visual !== WarpVisual.WarpHidden);
   }
 
-  onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
-    let shouldWarp = false;
+  onInteract(keys: Record<Key, boolean>): InteractResult {
     const warpKeys = WarpData[this.warpType].key;
-    Object.values(keys).forEach((key) => {
-      if (key.isDown && warpKeys.includes(key.keyCode)) {
-        shouldWarp = true;
-      }
-    });
+    const shouldWarp = keys[warpKeys];
 
     if (
       shouldWarp &&
@@ -214,20 +205,16 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   }
 
   getButtonPrompt() {
-    const buttons = WarpData[this.warpType].key.map((key) => {
-      if (key === Phaser.Input.Keyboard.KeyCodes.ENTER || key === Phaser.Input.Keyboard.KeyCodes.SPACE)
-        return '[CONTINUE]';
-      if (key === Phaser.Input.Keyboard.KeyCodes.UP || key === Phaser.Input.Keyboard.KeyCodes.W) return '[UP]';
-      if (key === Phaser.Input.Keyboard.KeyCodes.DOWN || key === Phaser.Input.Keyboard.KeyCodes.S) return '[DOWN]';
-      if (key === Phaser.Input.Keyboard.KeyCodes.LEFT || key === Phaser.Input.Keyboard.KeyCodes.A) return '[LEFT]';
-      if (key === Phaser.Input.Keyboard.KeyCodes.RIGHT || key === Phaser.Input.Keyboard.KeyCodes.D) return '[RIGHT]';
+    const key = WarpData[this.warpType].key;
 
-      return '[UNKNOWN]';
-    });
+    let prompt;
+    if (key === Key.Continue) prompt = '[CONTINUE]';
+    if (key === Key.Up) prompt = '[Up]';
+    if (key === Key.Down) prompt = '[Down]';
+    if (key === Key.Left) prompt = '[Left]';
+    if (key === Key.Right) prompt = '[Right]';
 
-    const unique = [...new Set(buttons)];
-
-    return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + unique.join(' or ')];
+    return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + prompt];
   }
 
   setVisible(value: boolean): this {

@@ -1,6 +1,7 @@
 import { Config } from '../config';
 import { getDialog } from '../utils/dialog';
 import { updateSphinx } from '../utils/interactionUtils';
+import { Key } from './InputManager';
 import { Player } from './Player';
 import { InteractResult, Interactive, NPCType } from './types';
 
@@ -78,10 +79,10 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
     if (onCreate) onCreate(this);
   }
 
-  onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
+  onInteract(keys: Record<Key, boolean>): InteractResult {
     if (this.player.message.visible || Date.now() < this.player.message.interactionTimeout) return InteractResult.None;
 
-    if (keys.SPACE.isDown || keys.ENTER.isDown) {
+    if (keys[Key.Continue]) {
       const dialog = getDialog(this.npcType, this.player);
       if (!dialog) {
         return InteractResult.None;

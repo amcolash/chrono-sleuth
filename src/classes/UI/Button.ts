@@ -16,7 +16,7 @@ export class Button extends GameObjects.Text {
     scene.add.existing(this);
 
     // Button interactions
-    this.setInteractive();
+    this.setInteractive({ useHandCursor: true }).setScrollFactor(0);
     this.on('pointerdown', () => onClick());
     this.on('pointerover', () => this.setTint(0xbbbbbb));
     this.on('pointerout', () => this.setTint(0xffffff));
