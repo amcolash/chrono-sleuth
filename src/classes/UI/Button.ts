@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Types } from 'phaser';
 
 import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
@@ -6,12 +6,20 @@ import { fontStyle } from '../../utils/fonts';
 export class Button extends GameObjects.Text {
   onClick: () => void;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, text: string, onClick: () => void) {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    text: string,
+    onClick: () => void,
+    style?: Types.GameObjects.Text.TextStyle
+  ) {
     super(scene, x, y, text, {
       ...fontStyle,
       fontSize: 48,
       backgroundColor: `#${Colors.Teal}`,
       padding: { x: 15, y: 10 },
+      ...style,
     });
     this.setOrigin(0.5);
 

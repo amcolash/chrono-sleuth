@@ -1,4 +1,4 @@
-import { GameObjects, Math, Scene } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Game } from '../../scenes/Game';
@@ -7,6 +7,8 @@ import { NPCDialog } from '../../utils/dialog';
 import { fontStyle } from '../../utils/fonts';
 import { NPC, NPCData } from '../NPC';
 import { Player } from '../Player';
+import { Button } from './Button';
+import { ButtonGroup } from './ButtonGroup';
 
 const padding = 20;
 const boxHeight = 170;
@@ -28,8 +30,7 @@ export class Message extends GameObjects.Container {
   image: GameObjects.Image;
 
   options?: string[];
-  optionsContainer: GameObjects.Container;
-  optionIndex: number;
+  optionsContainer: ButtonGroup;
 
   dialog?: NPCDialog;
   messageIndex: number;
@@ -71,30 +72,18 @@ export class Message extends GameObjects.Container {
     this.box.setStrokeStyle(2, getColorNumber(Colors.Tan), 1);
     this.box.setOrigin(0, 0);
 
-    this.optionsContainer = scene.add.container().setScrollFactor(0);
+    this.optionsContainer = new ButtonGroup(scene);
 
     this.add([this.box, this.npcName, this.text, this.image]);
 
-    this.scene.input.keyboard?.on('keydown-DOWN', () => {
-      this.setOptionIndex(1);
-    });
-
-    this.scene.input.keyboard?.on('keydown-UP', () => {
-      this.setOptionIndex(-1);
-    });
-
     this.scene.input.keyboard?.on('keydown-ENTER', () => {
-      if (this.options) {
-        this.onSelectOption(this.options[this.optionIndex]);
-      } else {
+      if (!this.options) {
         this.updateDialog();
       }
     });
 
     this.scene.input.keyboard?.on('keydown-SPACE', () => {
-      if (this.options) {
-        this.onSelectOption(this.options[this.optionIndex]);
-      } else {
+      if (!this.options) {
         this.updateDialog();
       }
     });
@@ -154,40 +143,29 @@ export class Message extends GameObjects.Container {
   }
 
   updateOptions() {
-    this.optionIndex = 0;
+    this.optionsContainer.clearButtons();
+
     this.options = this.getOptions();
     if (!this.options) return;
 
-    this.optionsContainer.removeAll(true);
-
     this.options.forEach((option, index) => {
-      const text = new GameObjects.Text(this.scene, Config.width / 2, 120 + index * 74, option, {
-        ...fontStyle,
-        backgroundColor: '#' + Colors.Black,
-        padding: { y: 10 },
-        align: 'center',
-        fixedWidth: 350,
-      }).setOrigin(0.5);
+      const text = new Button(
+        this.scene,
+        Config.width / 2,
+        120 + index * 74,
+        option,
+        () => this.onSelectOption(option),
+        {
+          fontSize: 24,
+          backgroundColor: '#' + Colors.Black,
+          padding: { y: 10 },
+          align: 'center',
+          fixedWidth: 350,
+        }
+      ).setOrigin(0.5);
 
-      if (index === 0) text.setTint(getColorNumber(Colors.Tan));
-
-      text.setInteractive().on('pointerdown', () => {
-        this.onSelectOption(option);
-      });
-
-      this.optionsContainer.add(text);
+      this.optionsContainer.addButton(text);
     });
-  }
-
-  setOptionIndex(delta: number) {
-    if (this.options) {
-      this.optionIndex = Math.Clamp(this.optionIndex + delta, 0, this.options.length - 1);
-
-      this.optionsContainer.getAll().forEach((option, index) => {
-        const text = option as GameObjects.Text;
-        text.setTint(index === this.optionIndex ? getColorNumber(Colors.Tan) : 0xffffff);
-      });
-    }
   }
 
   onSelectOption(option: string) {

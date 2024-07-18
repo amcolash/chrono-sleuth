@@ -9,7 +9,7 @@ export class ButtonGroup extends GameObjects.Container {
 
   constructor(scene: Phaser.Scene) {
     super(scene);
-    scene.add.existing(this);
+    scene.add.existing(this).setScrollFactor(0);
 
     scene.input.keyboard?.on('keydown-UP', () => {
       this.setActiveButton(Math.max(0, this.activeIndex - 1));
@@ -20,18 +20,28 @@ export class ButtonGroup extends GameObjects.Container {
     });
 
     scene.input.keyboard?.on('keydown-ENTER', () => {
-      this.buttons[this.activeIndex].onClick();
+      this.buttons[this.activeIndex]?.onClick();
     });
   }
 
   addButton(button: Button) {
     this.add(button);
     this.buttons.push(button);
+
+    if (this.buttons.length === 1) {
+      this.setActiveButton(0);
+    }
   }
 
   setActiveButton(index: number) {
     this.buttons[this.activeIndex]?.setTint(0xffffff);
     this.activeIndex = index;
     this.buttons[this.activeIndex]?.setTint(getColorNumber(Colors.Tan));
+  }
+
+  clearButtons() {
+    this.buttons = [];
+    this.activeIndex = -1;
+    this.removeAll(true);
   }
 }
