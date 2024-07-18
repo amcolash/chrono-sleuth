@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 
 import { Player } from '../classes/Player';
 import { Button } from '../classes/UI/Button';
+import { Gamepad } from '../classes/UI/Gamepad';
 import { TextBox } from '../classes/UI/TextBox';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
@@ -27,19 +28,25 @@ export class JournalDialog extends Scene {
         .rectangle(0, 0, Config.width * 0.8, Config.height * 0.8, 0x000000, 0.75)
         .setStrokeStyle(4, getColorNumber(Colors.Tan))
     );
-    container.add(new Button(this, Config.width * 0.3, Config.height * -0.33, 'Close', () => this.close()));
+    container.add(new Button(this, Config.width * 0.35, Config.height * -0.33, 'X', () => this.close()));
 
     container.add(this.add.text(0, Config.height * -0.33, 'Journal', { ...fontStyle, fontSize: 48 }).setOrigin(0.5));
 
     const text = this.player.journal.journal.map((entry) => `- ${JournalData[entry]}\n\n`).reverse();
-    const textBox = new TextBox(this, Config.width * 0.13, Config.height * 0.25, text);
+    const textBox = new TextBox(this, Config.width * 0.13, Config.height * 0.25, text, { fontSize: 32 });
     textBox.setBoxSize(Config.width * 0.74, Config.height * 0.62);
+
+    new Gamepad(this).setVisible(false);
 
     this.input.keyboard?.on('keydown-J', () => {
       this.close();
     });
 
     this.input.keyboard?.on('keydown-ESC', () => {
+      this.close();
+    });
+
+    this.input.keyboard?.on('keydown-BACKSPACE', () => {
       this.close();
     });
   }

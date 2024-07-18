@@ -28,6 +28,16 @@ export class TextBox extends GameObjects.Container {
     scene.input.on('wheel', this.handleScroll, this);
     this.textObject.on('pointermove', this.handleDrag, this);
 
+    scene.input.keyboard?.on('keydown-UP', () => {
+      this.scrollY -= 30;
+      this.updateTextPosition();
+    });
+
+    scene.input.keyboard?.on('keydown-DOWN', () => {
+      this.scrollY += 30;
+      this.updateTextPosition();
+    });
+
     // Create mask
     this.maskGraphics = scene.add.graphics().setPosition(x, y).setScrollFactor(0).setVisible(false);
     this.add(this.maskGraphics);
