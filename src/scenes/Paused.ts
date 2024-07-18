@@ -1,6 +1,8 @@
 import { Scene } from 'phaser';
 
 import { Button } from '../classes/UI/Button';
+import { ButtonGroup } from '../classes/UI/ButtonGroup';
+import { Gamepad } from '../classes/UI/Gamepad';
 import { Config } from '../config';
 import { fontStyle } from '../utils/fonts';
 import { save } from '../utils/save';
@@ -21,28 +23,41 @@ export class Paused extends Scene {
     const width = Config.width;
     const height = Config.height;
 
-    this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.75);
+    this.add
+      .rectangle(width / 2, height / 2, width, height, 0x000000, 0.75)
+      .setInteractive()
+      .on('pointerdown', () => this.resume());
 
     this.add.text(width / 2, 200, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
 
-    new Button(this, width / 2, height / 2, 'Resume', () => this.resume());
+    const buttonGroup = new ButtonGroup(this);
 
-    new Button(this, width / 2, height / 2 + 90, 'Save', () => {
-      this.resume();
-      save(this.parent);
-    });
+    buttonGroup.addButton(new Button(this, width / 2, height / 2, 'Resume', () => this.resume()));
 
-    new Button(this, width / 2, height / 2 + 180, 'Load', () => {
-      this.resume();
-      this.parent.scene.restart();
-    });
+    buttonGroup.addButton(
+      new Button(this, width / 2, height / 2 + 90, 'Save', () => {
+        this.resume();
+        save(this.parent);
+      })
+    );
 
-    new Button(this, width / 2, height / 2 + 270, 'Toggle Gamepad', () => {
-      this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
-    });
+    buttonGroup.addButton(
+      new Button(this, width / 2, height / 2 + 180, 'Load', () => {
+        this.resume();
+        this.parent.scene.restart();
+      })
+    );
+
+    buttonGroup.addButton(
+      new Button(this, width / 2, height / 2 + 270, 'Toggle Gamepad', () => {
+        this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
+      })
+    );
 
     // Keyboard interactions
     this.input.keyboard?.on('keydown-ESC', () => this.resume());
+
+    new Gamepad(this).setVisible(false);
   }
 
   resume() {

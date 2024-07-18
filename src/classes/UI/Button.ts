@@ -4,6 +4,8 @@ import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 
 export class Button extends GameObjects.Text {
+  onClick: () => void;
+
   constructor(scene: Phaser.Scene, x: number, y: number, text: string, onClick: () => void) {
     super(scene, x, y, text, {
       ...fontStyle,
@@ -14,6 +16,8 @@ export class Button extends GameObjects.Text {
     this.setOrigin(0.5);
 
     scene.add.existing(this);
+
+    this.onClick = onClick;
 
     // Button interactions
     this.setInteractive({ useHandCursor: true }).setScrollFactor(0);

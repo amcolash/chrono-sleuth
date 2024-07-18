@@ -23,6 +23,9 @@ const config: Types.Core.GameConfig = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   scene: [Boot, Preloader, MainGame, Paused, JournalDialog, MazeDialog, Maze],
+  input: {
+    gamepad: true,
+  },
   physics: {
     default: 'arcade',
   },

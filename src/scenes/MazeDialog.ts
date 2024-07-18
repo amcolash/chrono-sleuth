@@ -9,6 +9,7 @@ import { JournalEntry, WarpType } from '../classes/types';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
+import { Game } from './Game';
 
 // TODO: Consider rewinding during the maze if necessary
 export class MazeDialog extends Scene {
@@ -51,7 +52,11 @@ export class MazeDialog extends Scene {
       this.close(false);
     });
 
-    new Gamepad(this, true);
+    this.input.keyboard?.on('keydown-BACKSPACE', () => {
+      this.close(false);
+    });
+
+    new Gamepad(this, true).setVisible((this.player.scene as Game).gamepad.visible);
     this.keys = new InputManager(this);
 
     this.scene.launch('Maze', { parent: this });
