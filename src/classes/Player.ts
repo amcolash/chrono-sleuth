@@ -14,6 +14,7 @@ import { InteractResult, Interactive, Rewindable } from './types';
 const size = 1.35;
 const speed = (Config.fastMode ? 350 : 120) * size;
 const MAX_HISTORY = 1000;
+
 export const playerStart = new Math.Vector2(400, 650);
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
@@ -39,11 +40,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive();
 
-    this.setBodySize(48, 70);
-    this.setOffset(40, 10);
-    this.setOrigin(0.5, 0.65);
-    this.depth = 1;
-    this.scale = size;
+    this.setBodySize(48, 70).setOffset(40, 10).setOrigin(0.5, 0.65).setDepth(1).setScale(size);
 
     createAnimation(this);
 

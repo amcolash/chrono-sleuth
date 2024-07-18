@@ -6,19 +6,50 @@ import { Notification } from './Notification';
 
 const buttonAlpha = 0.8;
 const backgroundAlpha = 0.45;
+const deadzone = 0.1;
 
 export class Gamepad extends GameObjects.Container {
   buttons: GameObjects.Arc[] = [];
+  lastAxisKey?: string;
 
   constructor(scene: Scene, minimal?: boolean) {
     super(scene, 100, Config.height - 100);
     this.setScrollFactor(0).setDepth(5);
+
     scene.add.existing(this);
 
     this.createDPad();
     if (!minimal) this.createButtons();
 
     this.createControllerListeners();
+  }
+
+  update(time: number, delta: number) {
+    const pad = this.scene.input.gamepad?.pad1;
+    if (!pad) return;
+
+    const axis = pad.axes[0].getValue();
+
+    if (Math.abs(axis) <= deadzone && this.lastAxisKey) {
+      this.scene.input.keyboard?.emit('keyup-' + this.lastAxisKey);
+      this.lastAxisKey = undefined;
+      return;
+    }
+
+    if (axis > deadzone) {
+      if (this.lastAxisKey === 'RIGHT') return;
+      else if (this.lastAxisKey === 'LEFT') this.scene.input.keyboard?.emit('keyup-LEFT');
+
+      this.scene.input.keyboard?.emit('keydown-RIGHT');
+      this.lastAxisKey = 'RIGHT';
+    }
+    if (axis < -deadzone) {
+      if (this.lastAxisKey === 'LEFT') return;
+      else if (this.lastAxisKey === 'RIGHT') this.scene.input.keyboard?.emit('keyup-RIGHT');
+
+      this.scene.input.keyboard?.emit('keydown-LEFT');
+      this.lastAxisKey = 'LEFT';
+    }
   }
 
   createDPad() {

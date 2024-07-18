@@ -62,7 +62,7 @@ export class Game extends Scene {
     });
 
     // update items added to the group
-    const updatables = this.add.group([this.player, this.clock], {
+    const updatables = this.add.group([this.player, this.clock, this.gamepad], {
       runChildUpdate: true,
     });
 
