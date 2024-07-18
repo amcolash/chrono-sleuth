@@ -77,15 +77,11 @@ export class Message extends GameObjects.Container {
     this.add([this.box, this.npcName, this.text, this.image]);
 
     this.scene.input.keyboard?.on('keydown-ENTER', () => {
-      if (!this.options) {
-        this.updateDialog();
-      }
+      if (!this.options) this.updateDialog();
     });
 
-    this.scene.input.keyboard?.on('keydown-SPACE', () => {
-      if (!this.options) {
-        this.updateDialog();
-      }
+    this.scene.input.keyboard?.on('keydown-BACKSPACE', () => {
+      if (!this.options) this.updateDialog();
     });
   }
 
