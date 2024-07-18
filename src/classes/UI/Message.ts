@@ -5,6 +5,7 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { NPCDialog } from '../../utils/dialog';
 import { fontStyle } from '../../utils/fonts';
+import { isMobile } from '../../utils/util';
 import { NPC, NPCData } from '../NPC';
 import { Player } from '../Player';
 import { Button } from './Button';
@@ -144,11 +145,13 @@ export class Message extends GameObjects.Container {
     this.options = this.getOptions();
     if (!this.options) return;
 
+    const tall = !isMobile();
+
     this.options.forEach((option, index) => {
       const text = new Button(
         this.scene,
         Config.width / 2,
-        120 + index * 74,
+        Config.height / (tall ? 9 : 14) + index * (30 + Config.height / (tall ? 16 : 22)),
         option,
         () => this.onSelectOption(option),
         {

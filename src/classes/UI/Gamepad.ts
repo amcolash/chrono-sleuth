@@ -71,7 +71,7 @@ export class Gamepad extends GameObjects.Container {
 
   createButtons() {
     // Buttons
-    const buttonsContainer = this.scene.add.container(Config.width - 340, 0);
+    const buttonsContainer = this.scene.add.container(Config.width - 300, 0);
     this.add(buttonsContainer);
 
     // Buttons background

@@ -6,6 +6,7 @@ import { Gamepad } from '../classes/UI/Gamepad';
 import { Config } from '../config';
 import { fontStyle } from '../utils/fonts';
 import { save } from '../utils/save';
+import { isMobile } from '../utils/util';
 import { Game } from './Game';
 
 export class Paused extends Scene {
@@ -28,28 +29,32 @@ export class Paused extends Scene {
       .setInteractive()
       .on('pointerdown', () => this.resume());
 
-    this.add.text(width / 2, 200, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
+    this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
+
+    const tall = !isMobile();
+    const spacing = tall ? 100 : 88;
+    const start = height / 2 - (tall ? 100 : 60);
 
     const buttonGroup = new ButtonGroup(this);
 
-    buttonGroup.addButton(new Button(this, width / 2, height / 2, 'Resume', () => this.resume()));
+    buttonGroup.addButton(new Button(this, width / 2, start, 'Resume', () => this.resume()));
 
     buttonGroup.addButton(
-      new Button(this, width / 2, height / 2 + 90, 'Save', () => {
+      new Button(this, width / 2, start + spacing, 'Save', () => {
         this.resume();
         save(this.parent);
       })
     );
 
     buttonGroup.addButton(
-      new Button(this, width / 2, height / 2 + 180, 'Load', () => {
+      new Button(this, width / 2, start + spacing * 2, 'Load', () => {
         this.resume();
         this.parent.scene.restart();
       })
     );
 
     buttonGroup.addButton(
-      new Button(this, width / 2, height / 2 + 270, 'Toggle Gamepad', () => {
+      new Button(this, width / 2, start + spacing * 3, 'Toggle Gamepad', () => {
         this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
       })
     );

@@ -1,3 +1,5 @@
+import { isMobile } from './utils/util';
+
 let debug = false;
 // debug = true;
 
@@ -7,8 +9,13 @@ let rewindEnabled = false;
 let fastMode = false;
 fastMode = true;
 
-const width = 1280;
-const height = 720;
+let width = 1280;
+let height = 720;
+
+if (isMobile()) {
+  width = 960;
+  height = 540;
+}
 
 if (import.meta.env.PROD) {
   debug = false;

@@ -37,10 +37,11 @@ export class Game extends Scene {
 
     // ui
     this.add
-      .text(20, Config.height - 20, '⚙', {
-        fontSize: '32px',
+      .text(22, Config.height - 20, '⚙', {
+        fontSize: '48px',
         backgroundColor: `#${Colors.Teal}`,
-        padding: { x: 5, y: 5 },
+        padding: { x: 3, y: 7 },
+        align: 'center',
       })
       .setOrigin(0.5)
       .setScrollFactor(0)
@@ -158,6 +159,10 @@ export class Game extends Scene {
 
     this.input.keyboard?.on('keydown-J', () => {
       this.player.journal.openJournal();
+    });
+
+    this.events.on('resume', () => {
+      this.player.keys.resetKeys();
     });
 
     if (import.meta.env.DEV) {
