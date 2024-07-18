@@ -118,7 +118,9 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       },
     },
     {
-      messages: ['Welcome, brave soul. To pass, you must answer my riddle. You may only answer once. Choose wisely.'],
+      messages: [
+        'Welcome, brave soul. To pass, you must answer my riddle. You may only answer once. If you are unsure, you may speak to the townsfolk. Choose wisely.',
+      ],
       onCompleted: (player) => {
         player.quests.addQuest({ id: QuestType.SphinxRiddle, completed: false });
       },
