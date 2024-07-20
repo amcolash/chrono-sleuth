@@ -5,7 +5,6 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { NPCDialog } from '../../utils/dialog';
 import { fontStyle } from '../../utils/fonts';
-import { isMobile } from '../../utils/util';
 import { NPC, NPCData } from '../NPC';
 import { Player } from '../Player';
 import { Button } from './Button';
@@ -145,7 +144,7 @@ export class Message extends GameObjects.Container {
     this.options = this.getOptions();
     if (!this.options) return;
 
-    const tall = !isMobile();
+    const tall = !Config.zoomed;
 
     this.options.forEach((option, index) => {
       const text = new Button(

@@ -12,7 +12,9 @@ fastMode = true;
 let width = 1280;
 let height = 720;
 
-if (isMobile()) {
+let zoomed = false;
+zoomed = true;
+if (isMobile() || zoomed) {
   width = 960;
   height = 540;
 }
@@ -28,6 +30,7 @@ export const Config = {
   width,
   height,
   cameraOffset: height / 3,
+  zoomed,
 
   dayMinutes: 0.25,
   rewindEnabled,

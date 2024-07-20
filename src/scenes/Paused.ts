@@ -6,7 +6,6 @@ import { Gamepad } from '../classes/UI/Gamepad';
 import { Config } from '../config';
 import { fontStyle } from '../utils/fonts';
 import { save } from '../utils/save';
-import { isMobile } from '../utils/util';
 import { Game } from './Game';
 
 export class Paused extends Scene {
@@ -31,9 +30,9 @@ export class Paused extends Scene {
 
     this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
 
-    const tall = !isMobile();
+    const tall = !Config.zoomed;
     const spacing = tall ? 100 : 88;
-    const start = height / 2 - (tall ? 100 : 60);
+    const start = height / 2 - (tall ? 100 : 70);
 
     const buttonGroup = new ButtonGroup(this);
 
