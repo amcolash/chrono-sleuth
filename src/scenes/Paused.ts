@@ -20,8 +20,7 @@ export class Paused extends Scene {
   }
 
   create() {
-    const width = Config.width;
-    const height = Config.height;
+    const { width, height } = Config;
 
     this.add
       .rectangle(width / 2, height / 2, width, height, 0x000000, 0.75)
@@ -29,6 +28,10 @@ export class Paused extends Scene {
       .on('pointerdown', () => this.resume());
 
     this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
+
+    this.add
+      .text(width - 20, 20, `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}`, { ...fontStyle, fontSize: 16 })
+      .setOrigin(1, 0);
 
     const tall = !Config.zoomed;
     const spacing = tall ? 100 : 88;

@@ -37,7 +37,7 @@ export class Game extends Scene {
 
     // ui
     this.add
-      .text(22, Config.height - 20, '⚙', {
+      .text(24, Config.height - 20, '⚙', {
         fontSize: '48px',
         backgroundColor: `#${Colors.Teal}`,
         padding: { x: 3, y: 7 },

@@ -1,5 +1,8 @@
 /// <reference types="vite/client" />
 
+declare const __BUILD_TIME__: string;
+
+// generate-maze types
 declare module 'generate-maze' {
   type Cell = {
     /** Horizontal position, integer */
