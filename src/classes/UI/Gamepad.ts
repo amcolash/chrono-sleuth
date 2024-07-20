@@ -24,7 +24,7 @@ export class Gamepad extends GameObjects.Container {
     this.createControllerListeners();
   }
 
-  update(time: number, delta: number) {
+  update(_time: number, _delta: number) {
     const pad = this.scene.input.gamepad?.pad1;
     if (!pad) return;
 
@@ -87,15 +87,15 @@ export class Gamepad extends GameObjects.Container {
   }
 
   createControllerListeners() {
-    this.scene.input.gamepad?.on('connected', (pad: typeof Input.Gamepad) => {
+    this.scene.input.gamepad?.on('connected', (_pad: typeof Input.Gamepad) => {
       new Notification(this.scene, `Gamepad connected`);
     });
 
-    this.scene.input.gamepad?.on('disconnected', (pad: typeof Input.Gamepad) => {
+    this.scene.input.gamepad?.on('disconnected', (_pad: typeof Input.Gamepad) => {
       new Notification(this.scene, `Gamepad disconnected`);
     });
 
-    this.scene.input.gamepad?.on('down', (pad: typeof Input.Gamepad, button: Input.Gamepad.Button) => {
+    this.scene.input.gamepad?.on('down', (_pad: typeof Input.Gamepad, button: Input.Gamepad.Button) => {
       const key = this.getKeyFromButton(button);
       if (key) this.scene.input.keyboard?.emit(`keydown-${key}`);
 

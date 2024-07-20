@@ -6,7 +6,14 @@ import { Key } from './InputManager';
 import { Player } from './Player';
 import { InteractResult, Interactive, ItemType } from './types';
 
-export const ItemData = {
+type Data = {
+  x: number;
+  y: number;
+  image: string;
+  name: string;
+};
+
+export const ItemData: Record<ItemType, Data> = {
   [ItemType.Wrench]: { x: 0, y: 0, image: 'wrench', name: 'Wrench' },
   [ItemType.Gear1]: { x: 5120, y: 915, image: 'gear', name: 'Gear' },
 };

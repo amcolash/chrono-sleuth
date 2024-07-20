@@ -1,4 +1,5 @@
 import { NPCType } from '../classes/types';
+import { Game } from '../scenes/Game';
 import { getClockRewind } from './interactionUtils';
 
 export const riddles = [
@@ -47,7 +48,9 @@ export const riddles = [
 ];
 
 function getRiddleIndex(scene: Phaser.Scene): number {
-  return getClockRewind(scene) % riddles.length;
+  if (scene instanceof Game) return getClockRewind(scene) % riddles.length;
+
+  return 0;
 }
 
 export function getSphinxRiddle(scene: Phaser.Scene): string[] {

@@ -48,7 +48,6 @@ export class DebugUI extends GameObjects.Container {
       }
     });
 
-    // NOTE: There is a bug with dragging static bodies. If we drag a wall, it will not move the body.
     scene.input.on('drag', (pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
       if (this.activeElement === gameObject) {
         gameObject.setPosition(pointer.worldX, pointer.worldY);

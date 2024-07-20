@@ -96,7 +96,7 @@ export class Maze extends Scene {
     this.cameras.main.setViewport(50, 130, Config.width - 100, Config.height - 170);
   }
 
-  update(time: number, delta: number): void {
+  update(time: number, _delta: number): void {
     if (time < this.nextUpdate) return;
 
     const keys = this.keys.keys;
