@@ -86,7 +86,36 @@ export class DebugUI extends GameObjects.Container {
       this.dayNight = true;
 
       const current = fromRGB(this.scene.lights.ambientColor);
-      const target = current === getColorNumber(Colors.Ambient) ? Colors.Night : Colors.Ambient;
+      const currentlyDay = current === getColorNumber(Colors.White);
+      const target = currentlyDay ? Colors.Night : Colors.White;
+
+      if (currentlyDay) {
+        // On transition to night, turn off lights and slowly fade them on
+        this.scene.lights.lights.forEach((light) => {
+          const originalIntensity = light.intensity;
+          light.setVisible(true);
+          light.setIntensity(0);
+          this.scene.tweens.add({
+            targets: light,
+            duration: 1200,
+            intensity: originalIntensity,
+          });
+        });
+      } else {
+        // On transition to day, slowly fade them off
+        this.scene.lights.lights.forEach((light) => {
+          const originalIntensity = light.intensity;
+          this.scene.tweens.add({
+            targets: light,
+            duration: 1200,
+            intensity: 0,
+            onComplete: () => {
+              light.setVisible(false);
+              light.setIntensity(originalIntensity);
+            },
+          });
+        });
+      }
 
       const startColor = Display.Color.ValueToColor(current);
       const endColor = Display.Color.ValueToColor(target);

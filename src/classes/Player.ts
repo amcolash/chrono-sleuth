@@ -51,9 +51,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       .setPipeline('Light2D');
 
     if (Config.debug) {
-      this.light = new DebugLight(scene, this.x, this.y, 200, 0xffccaa, 1.5);
+      this.light = new DebugLight(scene, this.x, this.y, 250, 0xffddbb, 1);
     } else {
-      this.light = scene.lights.addLight(this.x, this.y, 200, 0xffccaa, 1.5);
+      this.light = scene.lights.addLight(this.x, this.y, 250, 0xffddbb, 1);
     }
 
     createAnimation(this);

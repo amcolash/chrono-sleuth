@@ -117,12 +117,12 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     super(scene, x, y, visual === WarpVisual.Ladder ? 'ladder' : 'warp');
     this.warpType = warpType;
     this.player = player;
-    this.scale = 0.6;
+    this.setScale(0.6).setPipeline('Light2D');
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) {
-      this.setInteractive({ draggable: true }).setPipeline('Light2D');
+      this.setInteractive({ draggable: true });
 
       const target = WarpData[warpTo];
 
@@ -177,8 +177,14 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     }
 
     if (warpType === WarpType.Underground) {
-      scene.add.sprite(x, y - 60, 'ladder').setScale(0.5);
-      scene.add.sprite(x, y - 105, 'ladder').setScale(0.5);
+      scene.add
+        .sprite(x, y - 60, 'ladder')
+        .setScale(0.6)
+        .setPipeline('Light2D');
+      scene.add
+        .sprite(x, y - 105, 'ladder')
+        .setScale(0.6)
+        .setPipeline('Light2D');
     }
 
     this.setVisible(visual !== WarpVisual.WarpHidden);

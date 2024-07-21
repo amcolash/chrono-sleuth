@@ -82,9 +82,9 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
     if (Config.debug) this.setInteractive({ draggable: true });
 
     if (Config.debug) {
-      this.light = new DebugLight(scene, this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1.25);
+      this.light = new DebugLight(scene, this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1);
     } else {
-      this.light = scene.lights.addLight(this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1.25);
+      this.light = scene.lights.addLight(this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1);
     }
 
     this.npcType = npcType;
