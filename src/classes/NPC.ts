@@ -69,7 +69,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
     const { x, y, img, scale, onCreate } = NPCData[npcType] as Data;
 
     super(scene, x, y, img);
-    this.setScale(scale).setDepth(Layer.Npcs);
+    this.setScale(scale).setDepth(Layer.Npcs).setPipeline('Light2D');
 
     scene.add.existing(this);
     scene.physics.add.existing(this);

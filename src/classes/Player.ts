@@ -7,6 +7,7 @@ import { rewindInterval, rewindSpeed } from './Clock';
 import { InputManager, Key } from './InputManager';
 import { Inventory } from './Inventory';
 import { Journal } from './Journal';
+import { DebugLight } from './Light';
 import { Quests } from './Quests';
 import { ButtonPrompt } from './UI/ButtonPrompt';
 import { Message } from './UI/Message';
@@ -20,6 +21,7 @@ export const playerStart = new Math.Vector2(400, 650);
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   keys: InputManager;
+  light: GameObjects.Light | DebugLight;
 
   buttonPrompt: GameObjects.Text;
   interactive?: Interactive;
@@ -41,7 +43,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive();
 
-    this.setBodySize(48, 70).setOffset(40, 10).setOrigin(0.5, 0.65).setDepth(Layer.Player).setScale(size);
+    this.setBodySize(48, 70)
+      .setOffset(40, 10)
+      .setOrigin(0.5, 0.65)
+      .setDepth(Layer.Player)
+      .setScale(size)
+      .setPipeline('Light2D');
+
+    if (Config.debug) {
+      this.light = new DebugLight(scene, this.x, this.y, 200, 0xffccaa, 1);
+    } else {
+      this.light = scene.lights.addLight(this.x, this.y, 200, 0xffccaa, 1);
+    }
 
     createAnimation(this);
 
@@ -76,6 +89,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
       let ret: InteractResult | undefined = this.checkInteraction();
       if (!ret && !this.message.visible) this.updateVelocity();
     }
+
+    this.light.setPosition(this.x, this.y);
 
     // Update animations
     updateAnimation(this);

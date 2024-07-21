@@ -4,6 +4,7 @@ import { playerStart } from '../classes/Player';
 import { Notification } from '../classes/UI/Notification';
 import { Warp } from '../classes/Warp';
 import { ItemType, JournalEntry, Quest, QuestType, WarpType } from '../classes/types';
+import { Config } from '../config';
 import { Game } from '../scenes/Game';
 import { getGameObjects } from './interactionUtils';
 import { isMobile } from './util';
@@ -13,6 +14,7 @@ type WarpList = { warpType: WarpType; state: boolean }[];
 // TODO: Add settings
 export type Settings = {
   gamepad: boolean;
+  debug: boolean;
 };
 
 type SaveData = {
@@ -40,6 +42,7 @@ export const defaultSave: SaveData = {
   warpers: [],
   settings: {
     gamepad: isMobile(),
+    debug: false,
   },
 };
 
@@ -55,6 +58,7 @@ export const debugSave: SaveData = {
   warpers: [{ warpType: WarpType.TownEast, state: true }],
   settings: {
     gamepad: false,
+    debug: true,
   },
 };
 
@@ -70,6 +74,12 @@ export function load(scene: Game): void {
 
   try {
     const save: SaveData = parsed || defaultSave;
+
+    if (save.settings.debug !== Config.debug) {
+      Config.debug = save.settings.debug;
+      scene.scene.restart();
+      return;
+    }
 
     scene.player.setX(save.player.x);
     scene.player.setY(save.player.y);
@@ -108,6 +118,7 @@ export function save(scene: Game, override?: SaveData): void {
     warpers: getWarperState(scene),
     settings: {
       gamepad: scene.gamepad.visible,
+      debug: Config.debug,
     },
   };
 

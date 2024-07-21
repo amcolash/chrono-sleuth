@@ -1,9 +1,12 @@
 import { GameObjects, Input, Physics } from 'phaser';
 
 import { Config } from '../../config';
-import { Colors } from '../../utils/colors';
+import { Game } from '../../scenes/Game';
+import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { Layer } from '../../utils/layers';
+import { debugSave, defaultSave, save } from '../../utils/save';
+import { DebugLight } from '../Light';
 import { Player } from '../Player';
 
 export class DebugUI extends GameObjects.Container {
@@ -11,9 +14,11 @@ export class DebugUI extends GameObjects.Container {
   player: Player;
   activeElement?: GameObjects.GameObject;
   outline: GameObjects.Rectangle;
+  scene: Game;
 
-  constructor(scene: Phaser.Scene, player: Player) {
+  constructor(scene: Game, player: Player) {
     super(scene, 0, 0);
+    this.scene = scene;
 
     scene.physics.world.drawDebug = Config.debug;
 
@@ -23,6 +28,8 @@ export class DebugUI extends GameObjects.Container {
     } else {
       scene.physics.world.debugGraphic?.clear();
     }
+
+    this.createEventListeners();
 
     if (!Config.debug) return;
 
@@ -40,20 +47,75 @@ export class DebugUI extends GameObjects.Container {
     this.add(this.text);
 
     this.outline = scene.add.rectangle(0, 0, 0, 0).setStrokeStyle(2, 0x00ff00).setScale(1.1).setDepth(Layer.Debug);
+  }
 
-    scene.input.on('gameobjectdown', (_pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
-      if (gameObject !== this.activeElement) {
-        this.activeElement = gameObject;
-      } else {
-        this.activeElement = undefined;
-      }
+  createEventListeners() {
+    // Keys
+    this.scene.input.keyboard?.on('keydown-K', () => {
+      save(this.scene);
     });
 
-    scene.input.on('drag', (pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
-      if (this.activeElement === gameObject) {
-        gameObject.setPosition(pointer.worldX, pointer.worldY);
-      }
+    this.scene.input.keyboard?.on('keydown-L', () => {
+      this.scene.scene.restart();
     });
+
+    this.scene.input.keyboard?.on('keydown-M', () => {
+      save(this.scene, debugSave);
+      this.scene.scene.restart(); // Just in case
+    });
+
+    this.scene.input.keyboard?.on('keydown-N', () => {
+      save(this.scene, defaultSave);
+      this.scene.scene.restart(); // Just in case
+    });
+
+    this.scene.input.keyboard?.on('keydown-Z', () => {
+      Config.debug = !Config.debug;
+      save(this.scene);
+      this.scene.scene.restart();
+    });
+
+    this.scene.input.keyboard?.on('keydown-COMMA', () => {
+      const lights = this.scene.lights.lights;
+      console.table(lights, ['x', 'y']);
+    });
+
+    if (Config.debug) {
+      // Keys
+      this.scene.input.keyboard?.on('keydown-PERIOD', () => {
+        const pointer = this.scene.input.activePointer;
+        new DebugLight(this.scene, pointer.worldX, pointer.worldY, 100, getColorNumber(Colors.Lights), 1);
+      });
+
+      // Dragging
+      this.scene.input.on('gameobjectdown', (_pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
+        if (gameObject !== this.activeElement) {
+          this.activeElement = gameObject;
+        } else {
+          this.activeElement = undefined;
+        }
+      });
+
+      this.scene.input.on('drag', (pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
+        if (this.activeElement === gameObject) {
+          gameObject.setPosition(pointer.worldX, pointer.worldY);
+        }
+      });
+
+      // Scrolling
+      this.scene.input.on(
+        'wheel',
+        (
+          _pointer: Input.Pointer,
+          _currentlyOver: GameObjects.GameObject[],
+          _deltaX: number,
+          deltaY: number,
+          _deltaZ: number
+        ) => {
+          this.scene.cameras.main.zoom += deltaY * 0.0005;
+        }
+      );
+    }
   }
 
   update() {

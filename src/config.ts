@@ -13,7 +13,7 @@ let width = 1280;
 let height = 720;
 
 let zoomed = false;
-// zoomed = true;
+zoomed = true;
 if (isMobile() || zoomed) {
   width = 960;
   height = 540;

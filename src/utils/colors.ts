@@ -5,6 +5,8 @@ export const Colors = {
   Brown: '473946',
   Teal: '303646',
   Black: '1c1831',
+
+  Lights: 'ffccaa',
 };
 
 export function getColorNumber(color: string): number {

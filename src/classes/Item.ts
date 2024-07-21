@@ -32,7 +32,7 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
 
-    this.setScale(0.35).setDepth(Layer.Items);
+    this.setScale(0.35).setDepth(Layer.Items).setPipeline('Light2D');
 
     this.itemType = type;
     this.player = player;

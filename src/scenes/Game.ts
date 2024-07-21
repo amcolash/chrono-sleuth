@@ -1,18 +1,19 @@
-import { GameObjects, Input, Scene } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Clock } from '../classes/Clock';
 import { Item } from '../classes/Item';
+import { DebugLight } from '../classes/Light';
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { DebugUI } from '../classes/UI/DebugUI';
 import { Gamepad } from '../classes/UI/Gamepad';
+import { MenuButton } from '../classes/UI/MenuButton';
 import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
-import { Colors } from '../utils/colors';
-import { Layer } from '../utils/layers';
-import { debugSave, defaultSave, load, save } from '../utils/save';
+import { Colors, getColorNumber } from '../utils/colors';
+import { load } from '../utils/save';
 
 export class Game extends Scene {
   player: Player;
@@ -36,22 +37,11 @@ export class Game extends Scene {
     const npcs = this.createNpcs();
     const items = this.createItems();
 
+    // lights
+    this.createLights();
+
     // ui
-    this.add
-      .text(24, Config.height - 20, '⚙', {
-        fontSize: '48px',
-        backgroundColor: `#${Colors.Teal}`,
-        padding: { x: 3, y: 7 },
-        align: 'center',
-      })
-      .setOrigin(0.5)
-      .setScrollFactor(0)
-      .setDepth(Layer.Ui)
-      .setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => {
-        this.scene.pause();
-        this.scene.launch('Paused', { game: this });
-      });
+    new MenuButton(this);
     this.gamepad = new Gamepad(this);
 
     // rewindable objects
@@ -119,9 +109,10 @@ export class Game extends Scene {
     const lake = this.physics.add.sprite(4400, 100, 'lake').setOrigin(0);
 
     const backgrounds = [town, clock_outside, clock_inside, forest, lake];
-    if (Config.debug) {
-      backgrounds.forEach((background) => background.setInteractive({ draggable: true }));
-    }
+    backgrounds.forEach((background) => {
+      background.setPipeline('Light2D');
+      if (Config.debug) background.setInteractive({ draggable: true });
+    });
 
     return backgrounds;
   }
@@ -153,6 +144,45 @@ export class Game extends Scene {
     return [gear];
   }
 
+  createLights(): void {
+    this.lights.enable().setAmbientColor(0xaaaaaa);
+
+    const lights: { x: number; y: number; radius?: number; color?: number; intensity?: number }[] = [
+      // Town square
+      { x: 135, y: 462, radius: 150, color: getColorNumber(Colors.Tan), intensity: 2.5 },
+      { x: 697, y: 441 },
+      { x: 1018, y: 435 },
+      { x: 887, y: 200 },
+      { x: 1561, y: 460 },
+
+      // Underground
+      { x: 162, y: 814, intensity: 2 },
+      { x: 635, y: 772 },
+      { x: 1638, y: 788, intensity: 2 },
+    ];
+
+    lights.forEach((light) => {
+      if (Config.debug) {
+        new DebugLight(
+          this,
+          light.x,
+          light.y,
+          light.radius || 100,
+          light.color || getColorNumber(Colors.Lights),
+          light.intensity || 1
+        );
+      } else {
+        this.lights.addLight(
+          light.x,
+          light.y,
+          light.radius || 100,
+          light.color || getColorNumber(Colors.Lights),
+          light.intensity || 1
+        );
+      }
+    });
+  }
+
   createEventListeners() {
     this.input.keyboard?.on('keydown-ESC', () => {
       this.scene.pause();
@@ -166,46 +196,5 @@ export class Game extends Scene {
     this.events.on('resume', () => {
       this.player.keys.resetKeys();
     });
-
-    if (import.meta.env.DEV) {
-      if (Config.debug) {
-        this.input.on(
-          'wheel',
-          (
-            _pointer: Input.Pointer,
-            _currentlyOver: GameObjects.GameObject[],
-            _deltaX: number,
-            deltaY: number,
-            _deltaZ: number
-          ) => {
-            this.cameras.main.zoom += deltaY * 0.0005;
-          }
-        );
-      }
-
-      this.input.keyboard?.on('keydown-K', () => {
-        save(this);
-      });
-
-      this.input.keyboard?.on('keydown-L', () => {
-        this.scene.restart();
-      });
-
-      this.input.keyboard?.on('keydown-M', () => {
-        save(this, debugSave);
-        this.scene.restart(); // Just in case
-      });
-
-      this.input.keyboard?.on('keydown-N', () => {
-        save(this, defaultSave);
-        this.scene.restart(); // Just in case
-      });
-
-      this.input.keyboard?.on('keydown-Z', () => {
-        Config.debug = !Config.debug;
-        save(this);
-        this.scene.restart();
-      });
-    }
   }
 }

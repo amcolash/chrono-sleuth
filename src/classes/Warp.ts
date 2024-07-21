@@ -122,7 +122,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) {
-      this.setInteractive({ draggable: true });
+      this.setInteractive({ draggable: true }).setPipeline('Light2D');
 
       const target = WarpData[warpTo];
 
@@ -156,21 +156,24 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
           radial: true,
           blendMode: BlendModes.OVERLAY,
         })
-        .setScale(1, 1.75);
+        .setScale(1, 1.75)
+        .setPipeline('Light2D');
 
-      this.particles2 = scene.add.particles(x, y, 'warp', {
-        x: { min: -30, max: 30 },
-        y: { min: -50, max: 50 },
-        speed: { random: [-5, 5] },
-        scale: { min: 0.05, max: 0.15 },
-        alpha: { values: [0, 0.2, 0] },
-        angle: { min: 0, max: 360 },
-        lifespan: { min: 1000, max: 1400 },
-        color: [getColorNumber(Colors.Peach), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
-        colorEase: 'Linear',
-        radial: true,
-        maxAliveParticles: 20,
-      });
+      this.particles2 = scene.add
+        .particles(x, y, 'warp', {
+          x: { min: -30, max: 30 },
+          y: { min: -50, max: 50 },
+          speed: { random: [-5, 5] },
+          scale: { min: 0.05, max: 0.15 },
+          alpha: { values: [0, 0.2, 0] },
+          angle: { min: 0, max: 360 },
+          lifespan: { min: 1000, max: 1400 },
+          color: [getColorNumber(Colors.Peach), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
+          colorEase: 'Linear',
+          radial: true,
+          maxAliveParticles: 20,
+        })
+        .setPipeline('Light2D');
     }
 
     if (warpType === WarpType.Underground) {
@@ -282,5 +285,15 @@ export function warpTo(location: WarpType, player: Player) {
       player.alpha = 1;
       player.setActive(true);
     },
+  });
+
+  // move player to new location
+  const light = player.light instanceof GameObjects.Light ? player.light : player.light.light;
+  scene.tweens.add({
+    targets: light,
+    x,
+    y,
+    duration: 300,
+    ease: 'Power1',
   });
 }
