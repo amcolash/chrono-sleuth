@@ -2,6 +2,7 @@ import { GameObjects, Math } from 'phaser';
 
 import { Config } from '../config';
 import { createAnimation, updateAnimation } from '../utils/animations';
+import { Layer } from '../utils/layers';
 import { rewindInterval, rewindSpeed } from './Clock';
 import { InputManager, Key } from './InputManager';
 import { Inventory } from './Inventory';
@@ -40,7 +41,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive();
 
-    this.setBodySize(48, 70).setOffset(40, 10).setOrigin(0.5, 0.65).setDepth(1).setScale(size);
+    this.setBodySize(48, 70).setOffset(40, 10).setOrigin(0.5, 0.65).setDepth(Layer.Player).setScale(size);
 
     createAnimation(this);
 

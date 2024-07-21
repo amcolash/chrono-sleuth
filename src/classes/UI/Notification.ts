@@ -3,6 +3,7 @@ import { GameObjects, Scene } from 'phaser';
 import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { getGameObjects } from '../../utils/interactionUtils';
+import { Layer } from '../../utils/layers';
 
 export class Notification extends GameObjects.Text {
   constructor(scene: Scene, text: string, duration: number = 3500) {
@@ -14,7 +15,7 @@ export class Notification extends GameObjects.Text {
       backgroundColor: '#' + Colors.Teal,
       padding: { x: 10, y: 5 },
     });
-    this.setAlpha(0).setDepth(2).setScrollFactor(0);
+    this.setAlpha(0).setDepth(Layer.Ui).setScrollFactor(0);
 
     scene.add.existing(this);
 

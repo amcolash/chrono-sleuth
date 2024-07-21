@@ -1,6 +1,7 @@
 import { Config } from '../config';
 import { getDialog } from '../utils/dialog';
 import { updateSphinx } from '../utils/interactionUtils';
+import { Layer } from '../utils/layers';
 import { Key } from './InputManager';
 import { Player } from './Player';
 import { InteractResult, Interactive, NPCType } from './types';
@@ -68,13 +69,14 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
     const { x, y, img, scale, onCreate } = NPCData[npcType] as Data;
 
     super(scene, x, y, img);
-    this.npcType = npcType;
-    this.player = player;
-    this.scale = scale;
+    this.setScale(scale).setDepth(Layer.Npcs);
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
+
+    this.npcType = npcType;
+    this.player = player;
 
     if (onCreate) onCreate(this);
   }

@@ -2,6 +2,7 @@ import { GameObjects, Input, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Colors, getColorNumber } from '../../utils/colors';
+import { Layer } from '../../utils/layers';
 import { Notification } from './Notification';
 
 const buttonAlpha = 0.8;
@@ -14,7 +15,7 @@ export class Gamepad extends GameObjects.Container {
 
   constructor(scene: Scene, minimal?: boolean) {
     super(scene, 100, Config.height - 100);
-    this.setScrollFactor(0).setDepth(5);
+    this.setScrollFactor(0).setDepth(Layer.Overlay);
 
     scene.add.existing(this);
 

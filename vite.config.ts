@@ -5,6 +5,7 @@ const manifest: Partial<ManifestOptions> = {
   theme_color: '#b5c1b9',
   background_color: '#3e424e',
   display: 'fullscreen',
+  orientation: 'landscape',
   start_url: '/chrono-sleuth/',
   id: 'com.amcolash.chrono',
   name: 'Chrono Sleuth',

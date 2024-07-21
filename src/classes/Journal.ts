@@ -3,6 +3,7 @@ import { GameObjects } from 'phaser';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { updateSphinx } from '../utils/interactionUtils';
+import { Layer } from '../utils/layers';
 import { Player } from './Player';
 import { Notification } from './UI/Notification';
 import { JournalEntry } from './types';
@@ -14,7 +15,7 @@ export class Journal extends GameObjects.Sprite {
 
   constructor(scene: Phaser.Scene, player: Player) {
     super(scene, Config.width - 50, Config.height - 55, 'journal');
-    this.setScrollFactor(0).setDepth(1).setScale(0.5).setAlpha(0).setInteractive().setActive(false);
+    this.setScrollFactor(0).setDepth(Layer.Ui).setScale(0.5).setAlpha(0).setInteractive().setActive(false);
     this.on('pointerdown', this.openJournal);
 
     scene.add.existing(this);
@@ -25,7 +26,7 @@ export class Journal extends GameObjects.Sprite {
       .ellipse(Config.width - 21, Config.height - 89, 20, 20, 0xaa0000)
       .setStrokeStyle(2, getColorNumber(Colors.Black))
       .setScrollFactor(0)
-      .setDepth(2)
+      .setDepth(Layer.Ui2)
       .setVisible(false);
   }
 

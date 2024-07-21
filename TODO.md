@@ -13,7 +13,7 @@
   - [ ] Possibly add evidence?
 - [ ] Add a day/night cycle
   - [ ] Only certain npcs / items are available at certain times
-- [ ] Add save/load to the game
+- [x] Add save/load to the game
 
 ## Content
 
@@ -22,7 +22,7 @@
 - [ ] Add more dialog
 - [ ] Add more items
 - [ ] Add more npcs
-  - [ ] Mayor
+  - [x] Mayor
 - [ ] Add more quests
   - [ ] Trading quest between multiple npcs
 - [ ] Add more maps
@@ -31,18 +31,8 @@
 
 ## Artwork (Placeholder)
 
-- [ ] Items
-  - [ ] Wrench
-  - [ ] Gears
-  - [ ] Lantern
-  - [ ] Map
-  - [ ] Lockpick
-  - [ ] Letter
-  - [ ] Candles
-  - [ ] Dagger
-  - [ ] Tome
-  - [ ] Journal
-- [ ] Npcs
-  - [ ] Mayor
+## Perf
+
+- [ ] Custom phaser build
 
 ## Bugs

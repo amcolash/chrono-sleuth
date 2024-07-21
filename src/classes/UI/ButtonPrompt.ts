@@ -3,6 +3,7 @@ import { GameObjects } from 'phaser';
 import { Config } from '../../config';
 import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
+import { Layer } from '../../utils/layers';
 
 export class ButtonPrompt extends GameObjects.Text {
   constructor(scene: Phaser.Scene) {
@@ -14,7 +15,7 @@ export class ButtonPrompt extends GameObjects.Text {
       .setAlign('center')
       .setAlpha(0.9)
       .setScrollFactor(0)
-      .setDepth(2)
+      .setDepth(Layer.Overlay)
       .setVisible(false);
 
     scene.add.existing(this);

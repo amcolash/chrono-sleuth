@@ -11,6 +11,7 @@ import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
 import { Colors } from '../utils/colors';
+import { Layer } from '../utils/layers';
 import { debugSave, defaultSave, load, save } from '../utils/save';
 
 export class Game extends Scene {
@@ -45,7 +46,7 @@ export class Game extends Scene {
       })
       .setOrigin(0.5)
       .setScrollFactor(0)
-      .setDepth(5)
+      .setDepth(Layer.Ui)
       .setInteractive({ useHandCursor: true })
       .on('pointerdown', () => {
         this.scene.pause();
@@ -80,8 +81,9 @@ export class Game extends Scene {
     this.createEventListeners();
 
     // camera
-    this.cameras.main.startFollow(this.player, true);
-    this.cameras.main.setFollowOffset(0, Config.cameraOffset);
+    const camera = this.cameras.main;
+    camera.startFollow(this.player, true);
+    camera.setFollowOffset(0, Config.cameraOffset);
 
     // load save, or start new game
     load(this);

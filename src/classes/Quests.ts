@@ -4,6 +4,7 @@ import { Config } from '../config';
 import { Game } from '../scenes/Game';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
+import { Layer } from '../utils/layers';
 import { Notification } from './UI/Notification';
 import { Quest, QuestType } from './types';
 
@@ -22,7 +23,7 @@ export class Quests extends GameObjects.Container {
     super(scene, Config.width - size - 20, 120);
     scene.add.existing(this);
 
-    this.setScrollFactor(0).setDepth(1).setVisible(false);
+    this.setScrollFactor(0).setDepth(Layer.Ui).setVisible(false);
 
     this.questRectangle = scene.add
       .rectangle(0, 0, size, 60, getColorNumber(Colors.Teal))

@@ -5,6 +5,7 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { NPCDialog } from '../../utils/dialog';
 import { fontStyle } from '../../utils/fonts';
+import { Layer } from '../../utils/layers';
 import { NPC, NPCData } from '../NPC';
 import { Player } from '../Player';
 import { Button } from './Button';
@@ -42,7 +43,7 @@ export class Message extends GameObjects.Container {
 
     this.setScrollFactor(0);
     this.setPosition(padding, height - padding - boxHeight);
-    this.setDepth(3);
+    this.setDepth(Layer.Overlay);
     this.setVisible(false);
 
     this.player = player;

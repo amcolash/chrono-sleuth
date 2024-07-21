@@ -4,6 +4,7 @@ import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
 import { getItem } from '../utils/interactionUtils';
+import { Layer } from '../utils/layers';
 import { ItemData } from './Item';
 import { Notification } from './UI/Notification';
 import { ItemType } from './types';
@@ -15,7 +16,7 @@ export class Inventory extends GameObjects.Container {
 
   constructor(scene: Scene) {
     super(scene, 0, 0);
-    this.setScrollFactor(0).setDepth(1).setVisible(false);
+    this.setScrollFactor(0).setDepth(Layer.Ui).setVisible(false);
     scene.add.existing(this);
 
     this.rect = scene.add

@@ -3,6 +3,7 @@ import { GameObjects, Input, Physics } from 'phaser';
 import { Config } from '../../config';
 import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
+import { Layer } from '../../utils/layers';
 import { Player } from '../Player';
 
 export class DebugUI extends GameObjects.Container {
@@ -27,7 +28,7 @@ export class DebugUI extends GameObjects.Container {
 
     this.player = player;
 
-    this.setScrollFactor(0).setDepth(2);
+    this.setScrollFactor(0).setDepth(Layer.Debug);
     this.scene.add.existing(this);
 
     this.text = scene.add.text(20, 90, '', {
@@ -38,7 +39,7 @@ export class DebugUI extends GameObjects.Container {
     });
     this.add(this.text);
 
-    this.outline = scene.add.rectangle(0, 0, 0, 0).setStrokeStyle(2, 0x00ff00).setScale(1.1).setDepth(3);
+    this.outline = scene.add.rectangle(0, 0, 0, 0).setStrokeStyle(2, 0x00ff00).setScale(1.1).setDepth(Layer.Debug);
 
     scene.input.on('gameobjectdown', (_pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
       if (gameObject !== this.activeElement) {

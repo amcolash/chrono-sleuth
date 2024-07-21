@@ -2,6 +2,7 @@ import { GameObjects } from 'phaser';
 
 import { Config } from '../config';
 import { itemDialogs } from '../utils/dialog';
+import { Layer } from '../utils/layers';
 import { Key } from './InputManager';
 import { Player } from './Player';
 import { InteractResult, Interactive, ItemType } from './types';
@@ -27,13 +28,14 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
     const { x, y, image } = ItemData[type];
 
     super(scene, x, y, image);
-    this.itemType = type;
-    this.player = player;
-    this.scale = 0.35;
-
     scene.add.existing(this);
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
+
+    this.setScale(0.35).setDepth(Layer.Items);
+
+    this.itemType = type;
+    this.player = player;
 
     this.particles = scene.add.particles(x, y, 'warp', {
       speed: { min: 2, max: 10 },
