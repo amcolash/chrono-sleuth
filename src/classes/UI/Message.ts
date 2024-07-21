@@ -73,7 +73,7 @@ export class Message extends GameObjects.Container {
     this.box.setStrokeStyle(2, getColorNumber(Colors.Tan), 1);
     this.box.setOrigin(0, 0);
 
-    this.optionsContainer = new ButtonGroup(scene);
+    this.optionsContainer = new ButtonGroup(scene).setDepth(Layer.Overlay);
 
     this.add([this.box, this.npcName, this.text, this.image]);
 
@@ -163,7 +163,7 @@ export class Message extends GameObjects.Container {
         }
       )
         .setOrigin(0.5)
-        .setDepth(Layer.Ui2);
+        .setDepth(Layer.Overlay);
 
       this.optionsContainer.addButton(text);
     });

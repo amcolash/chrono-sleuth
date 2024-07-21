@@ -29,9 +29,14 @@ export class Paused extends Scene {
 
     this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
 
-    this.add
-      .text(width - 20, 20, `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}`, { ...fontStyle, fontSize: 16 })
-      .setOrigin(1, 0);
+    if (import.meta.env.PROD) {
+      this.add
+        .text(width - 20, 20, `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}`, {
+          ...fontStyle,
+          fontSize: 16,
+        })
+        .setOrigin(1, 0);
+    }
 
     const tall = !Config.zoomed;
     const spacing = tall ? 100 : 88;
