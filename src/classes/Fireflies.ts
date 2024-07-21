@@ -23,7 +23,7 @@ export class Fireflies extends GameObjects.GameObject {
     for (let i = 0; i < this.count; i++) {
       const c = new Display.Color(Math.random() * 40 + 50, Math.random() * 60 + 190, Math.random() * 20 + 10);
 
-      const light = scene.lights.addPointLight(0, 0, c.color, Math.random() * 6 + 2, 0.15);
+      const light = scene.lights.addPointLight(0, 0, c.color, Math.random() * 7 + 3, 0.15, 0.045 + r() * 0.02);
       this.lights.push(light);
       this.centers.push(
         new PhaserMath.Vector2(
@@ -52,7 +52,7 @@ export class Fireflies extends GameObjects.GameObject {
       const b = this.biases[i];
       const cos2 = Math.cos(t * 70 + b[10]);
 
-      light.intensity = Math.min(0.05 + Math.abs(b[4] * cos2 + b[3] * cos + b[4] * cos) / 50, 0.2);
+      light.intensity = Math.min(0.05 + Math.abs(b[4] * cos2 + b[3] * cos + b[4] * cos) / 50, 0.4);
 
       light.x = cos * b[0] + sin * b[1] + cos * b[2] + sin * b[3] + cos * b[4] + this.centers[i].x;
       light.y = sin * b[5] + cos * b[6] + sin * b[7] + cos * b[8] + sin * b[9] + this.centers[i].y;
