@@ -148,7 +148,7 @@ export class Game extends Scene {
   }
 
   createLights(): void {
-    this.lights.enable().setAmbientColor(getColorNumber(Colors.Ambient));
+    this.lights.enable().setAmbientColor(getColorNumber(Colors.Night));
 
     const lights: { x: number; y: number; radius?: number; color?: number; intensity?: number }[] = [
       // Town square
