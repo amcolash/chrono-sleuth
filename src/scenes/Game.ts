@@ -155,10 +155,10 @@ export class Game extends Scene {
       { x: 135, y: 462, radius: 150, color: getColorNumber(Colors.Tan), intensity: 2.5 },
       { x: 697, y: 441 },
       { x: 1018, y: 435 },
-      { x: 887, y: 200 },
+      { x: 887, y: 200, radius: 150 },
       { x: 1561, y: 460 },
-      { x: 791, y: 472, radius: 100, intensity: 0.5 },
-      { x: 962, y: 469, radius: 100, intensity: 0.5 },
+      { x: 791, y: 472, intensity: 0.5 },
+      { x: 962, y: 469, intensity: 0.5 },
 
       // Underground
       { x: 162, y: 814, intensity: 2 },

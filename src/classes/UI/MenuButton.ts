@@ -6,10 +6,10 @@ import { Layer } from '../../utils/layers';
 
 export class MenuButton extends GameObjects.Text {
   constructor(scene: Phaser.Scene) {
-    super(scene, 24, Config.height - 20, '⚙', {
+    super(scene, 24, Config.height - 22, '⚙', {
       fontSize: '48px',
       backgroundColor: `#${Colors.Teal}`,
-      padding: { x: 3, y: 7 },
+      padding: { x: 3, y: 3 },
       align: 'center',
     });
 

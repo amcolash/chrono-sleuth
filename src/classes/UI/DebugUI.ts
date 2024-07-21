@@ -180,8 +180,10 @@ export class DebugUI extends GameObjects.Container {
       `FPS: ${this.scene.game.loop.actualFps.toFixed(1)}`,
       `Frame Time: ${this.scene.game.loop.delta.toFixed(2)}`,
       `Zoom: ${this.scene.cameras.main.zoom.toFixed(2)}`,
+      '',
       `Player x: ${this.player.x.toFixed(1)}`,
       `Player y: ${this.player.y.toFixed(1)}`,
+      '',
       `Mouse x: ${pointer.worldX.toFixed(1)}`,
       `Mouse y: ${pointer.worldY.toFixed(1)}`,
     ];
