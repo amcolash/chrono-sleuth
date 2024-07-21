@@ -2,7 +2,7 @@ import { GameObjects, Input, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Game } from '../../scenes/Game';
-import { Colors, getColorNumber } from '../../utils/colors';
+import { Colors, fromRGB, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { Layer } from '../../utils/layers';
 import { debugSave, defaultSave, save } from '../../utils/save';
@@ -78,6 +78,21 @@ export class DebugUI extends GameObjects.Container {
     this.scene.input.keyboard?.on('keydown-COMMA', () => {
       const lights = this.scene.lights.lights;
       console.table(lights, ['x', 'y']);
+    });
+
+    this.scene.input.keyboard?.on('keydown-FORWARD_SLASH', () => {
+      const current = fromRGB(this.scene.lights.ambientColor);
+      console.log(current, getColorNumber(Colors.Ambient), this.scene.lights.ambientColor, this.scene.lights);
+
+      if (current === getColorNumber(Colors.Ambient)) {
+        // Night
+        console.log('Night');
+        this.scene.lights.setAmbientColor(getColorNumber(Colors.Night));
+      } else {
+        // Day
+        console.log('Day');
+        this.scene.lights.setAmbientColor(getColorNumber(Colors.Ambient));
+      }
     });
 
     if (Config.debug) {
