@@ -1,8 +1,8 @@
-import { GameObjects, Input, Physics } from 'phaser';
+import { Display, GameObjects, Input, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Game } from '../../scenes/Game';
-import { Colors, fromRGB, getColorNumber } from '../../utils/colors';
+import { Colors, colorToNumber, fromRGB, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { Layer } from '../../utils/layers';
 import { debugSave, defaultSave, save } from '../../utils/save';
@@ -15,6 +15,7 @@ export class DebugUI extends GameObjects.Container {
   activeElement?: GameObjects.GameObject;
   outline: GameObjects.Rectangle;
   scene: Game;
+  dayNight: boolean = false;
 
   constructor(scene: Game, player: Player) {
     super(scene, 0, 0);
@@ -81,18 +82,27 @@ export class DebugUI extends GameObjects.Container {
     });
 
     this.scene.input.keyboard?.on('keydown-FORWARD_SLASH', () => {
-      const current = fromRGB(this.scene.lights.ambientColor);
-      console.log(current, getColorNumber(Colors.Ambient), this.scene.lights.ambientColor, this.scene.lights);
+      if (this.dayNight) return;
+      this.dayNight = true;
 
-      if (current === getColorNumber(Colors.Ambient)) {
-        // Night
-        console.log('Night');
-        this.scene.lights.setAmbientColor(getColorNumber(Colors.Night));
-      } else {
-        // Day
-        console.log('Day');
-        this.scene.lights.setAmbientColor(getColorNumber(Colors.Ambient));
-      }
+      const current = fromRGB(this.scene.lights.ambientColor);
+      const target = current === getColorNumber(Colors.Ambient) ? Colors.Night : Colors.Ambient;
+
+      const startColor = Display.Color.ValueToColor(current);
+      const endColor = Display.Color.ValueToColor(target);
+
+      this.scene.tweens.addCounter({
+        from: 0,
+        to: 100,
+        duration: 1200,
+        onUpdate: (tween) => {
+          const value = Display.Color.Interpolate.ColorWithColor(startColor, endColor, 100, tween.getValue());
+          this.scene.lights.setAmbientColor(colorToNumber(value));
+        },
+        onComplete: () => {
+          this.dayNight = false;
+        },
+      });
     });
 
     if (Config.debug) {
