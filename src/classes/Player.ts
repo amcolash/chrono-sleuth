@@ -1,4 +1,4 @@
-import { GameObjects, Math } from 'phaser';
+import { GameObjects, Math as PhaserMath } from 'phaser';
 
 import { Config } from '../config';
 import { createAnimation, updateAnimation } from '../utils/animations';
@@ -17,7 +17,7 @@ const size = 1.35;
 const speed = (Config.fastMode ? 350 : 120) * size;
 const MAX_HISTORY = 1000;
 
-export const playerStart = new Math.Vector2(400, 650);
+export const playerStart = new PhaserMath.Vector2(400, 650);
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   keys: InputManager;

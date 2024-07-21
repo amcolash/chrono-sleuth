@@ -4,6 +4,8 @@ import { Config } from '../config';
 import { Layer } from '../utils/layers';
 
 export class DebugLight extends GameObjects.GameObject {
+  x: number;
+  y: number;
   light: GameObjects.Light;
   debug: GameObjects.Graphics;
 
@@ -15,6 +17,9 @@ export class DebugLight extends GameObjects.GameObject {
     this.debug = scene.add.graphics({ x, y }).setDepth(Layer.Debug);
     this.debug.lineStyle(3, 0x00ff00);
 
+    this.x = x;
+    this.y = y;
+
     if (Config.debug) {
       this.debug.strokeCircle(0, 0, radius);
     }
@@ -23,5 +28,8 @@ export class DebugLight extends GameObjects.GameObject {
   setPosition(x: number, y: number) {
     this.light.setPosition(x, y);
     this.debug.setPosition(x, y);
+
+    this.x = x;
+    this.y = y;
   }
 }

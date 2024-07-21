@@ -1,3 +1,5 @@
+import { GameObjects } from 'phaser';
+
 import { Config } from '../config';
 import { getDialog } from '../utils/dialog';
 import { updateSphinx } from '../utils/interactionUtils';
@@ -43,7 +45,7 @@ export const NPCData: Record<NPCType, Data> = {
     portrait: 'sphinx_portrait',
     name: 'Mystical Sphinx',
     onCreate: (npc) => updateSphinx(npc.scene, false),
-    light: 1.75,
+    light: 1.85,
   },
   [NPCType.Mayor]: {
     x: 1065,
@@ -67,6 +69,7 @@ export const NPCData: Record<NPCType, Data> = {
 export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
   npcType: NPCType;
   player: Player;
+  light: GameObjects.Light | DebugLight;
 
   constructor(scene: Phaser.Scene, npcType: NPCType, player: Player) {
     const { x, y, img, scale, onCreate, light } = NPCData[npcType] as Data;
@@ -79,15 +82,19 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
     if (Config.debug) this.setInteractive({ draggable: true });
 
     if (Config.debug) {
-      new DebugLight(scene, this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1.25);
+      this.light = new DebugLight(scene, this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1.25);
     } else {
-      scene.lights.addLight(this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1.25);
+      this.light = scene.lights.addLight(this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1.25);
     }
 
     this.npcType = npcType;
     this.player = player;
 
     if (onCreate) onCreate(this);
+  }
+
+  update(_time: number, _delta: number): void {
+    this.light.setPosition(this.x, this.y);
   }
 
   onInteract(keys: Record<Key, boolean>): InteractResult {

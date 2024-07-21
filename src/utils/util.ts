@@ -5,3 +5,7 @@ export function isMobile() {
     return navigator.userAgent.match(toMatchItem);
   });
 }
+
+export function expDecay(a: number, b: number, decay: number, delta: number) {
+  return b + (a - b) * Math.exp(-delta * decay);
+}

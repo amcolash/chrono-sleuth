@@ -25,6 +25,9 @@ export function updateSphinx(scene: Scene, complete?: boolean) {
   if (!sphinx) return;
 
   const { x, y } = NPCData[NPCType.Sphinx];
+  const newX = complete ? x + 200 : x;
+  const newY = complete ? y - 90 : y;
+
   scene.tweens.add({
     targets: sphinx,
     alpha: 0,
@@ -33,15 +36,19 @@ export function updateSphinx(scene: Scene, complete?: boolean) {
     yoyo: true,
     repeat: 0,
     onYoyo: () => {
-      if (complete) {
-        sphinx.setPosition(x + 200, y - 90);
-      } else {
-        sphinx.setPosition(x, y);
-      }
+      sphinx.setPosition(newX, newY);
     },
     onComplete: () => {
       sphinx.alpha = 1;
     },
+  });
+
+  scene.tweens.add({
+    targets: sphinx.light,
+    x: newX,
+    y: newY,
+    duration: 450,
+    ease: 'Power1',
   });
 }
 
