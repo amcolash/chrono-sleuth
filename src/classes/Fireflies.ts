@@ -5,23 +5,27 @@ function r() {
 }
 
 const weights = [500, 200, 100, 50, 10];
-const bounds = [1000, 400];
 
 export class Fireflies extends GameObjects.GameObject {
-  center: PhaserMath.Vector2[] = [];
   lights: GameObjects.PointLight[] = [];
+  count: number;
+  centers: PhaserMath.Vector2[] = [];
+  bounds: number[] = [1000, 400];
   biases: number[][] = [];
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
+  constructor(scene: Phaser.Scene, x: number, y: number, count: number = 30, bounds: number[] = [1000, 400]) {
     super(scene, 'fireflies');
     this.scene.add.existing(this);
 
-    for (let i = 0; i < 20; i++) {
-      const c = new Display.Color(Math.random() * 40 + 80, Math.random() * 60 + 190, 0);
+    this.count = count;
+    this.bounds = bounds;
 
-      const light = scene.lights.addPointLight(0, 0, c.color, 7, 0.15);
+    for (let i = 0; i < this.count; i++) {
+      const c = new Display.Color(Math.random() * 40 + 50, Math.random() * 60 + 190, Math.random() * 20 + 10);
+
+      const light = scene.lights.addPointLight(0, 0, c.color, Math.random() * 6 + 2, 0.15);
       this.lights.push(light);
-      this.center.push(
+      this.centers.push(
         new PhaserMath.Vector2(
           x + Math.random() * bounds[0] - bounds[0] / 2,
           y + Math.random() * bounds[1] - bounds[1] / 2
@@ -43,25 +47,16 @@ export class Fireflies extends GameObjects.GameObject {
     const cos = Math.cos(t);
     const sin = Math.sin(t);
 
-    this.lights.forEach((light, i) => {
-      // light.intensity = 0.15 + Math.random() * 0.05;
-      // light.radius = 6 + Math.random() * 2;
-      // light.color = Display.Color.RandomRGB(0.6 + Math.random() * 0.4, 0.6 + Math.random() * 0.4, 0);
+    const cos2 = Math.cos(t * 70);
 
+    this.lights.forEach((light, i) => {
       const b = this.biases[i];
 
-      light.intensity = PhaserMath.Clamp(0.15 + (cos * b[4]) / 5, 0.1, 0.3);
-      light.radius = 6 + (sin * b[4]) / 2;
+      light.intensity = Math.min(0.05 + Math.abs(cos2 * b[4] + b[3] * cos) / 40, 0.3);
+      light.radius = Math.max(3, 3 + sin * b[4] * 2);
 
-      light.x = cos * b[0] + sin * b[1] + cos * b[2] + sin * b[3] + cos * b[4] + this.center[i].x;
-      light.y = sin * b[5] + cos * b[6] + sin * b[7] + cos * b[8] + sin * b[9] + this.center[i].y;
-
-      // light.x += Math.random() - 0.5;
-      // light.y += Math.random() - 0.5;
-
-      // // clamp to +/- 50px from initial x/y
-      // light.x = PhaserMath.Clamp(light.x, this.center.x - 100, this.center.x + 100);
-      // light.y = PhaserMath.Clamp(light.y, this.center.y - 100, this.center.y + 100);
+      light.x = cos * b[0] + sin * b[1] + cos * b[2] + sin * b[3] + cos * b[4] + this.centers[i].x;
+      light.y = sin * b[5] + cos * b[6] + sin * b[7] + cos * b[8] + sin * b[9] + this.centers[i].y;
     });
   }
 }
