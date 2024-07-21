@@ -7,7 +7,7 @@ import { Warp } from '../classes/Warp';
 import { ItemType, JournalEntry, NPCType, Quest, QuestType, WallType, WarpType } from '../classes/types';
 import { Game } from '../scenes/Game';
 
-export function updateSphinx(scene: Scene, complete?: boolean) {
+export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {
   const sphinx = getNPC(scene, NPCType.Sphinx);
 
   updateWarpVisibility(scene, WarpType.ForestEast, complete === true);
@@ -31,7 +31,7 @@ export function updateSphinx(scene: Scene, complete?: boolean) {
   scene.tweens.add({
     targets: sphinx,
     alpha: 0,
-    duration: 300,
+    duration: !complete || instant ? 0 : 300,
     ease: 'Power1',
     yoyo: true,
     repeat: 0,
@@ -47,7 +47,7 @@ export function updateSphinx(scene: Scene, complete?: boolean) {
     targets: sphinx.light,
     x: newX,
     y: newY,
-    duration: 450,
+    duration: !complete || instant ? 0 : 450,
     ease: 'Power1',
   });
 }

@@ -49,7 +49,7 @@ export class Journal extends GameObjects.Sprite {
       new Notification(this.scene, 'New journal entry added!');
     }
 
-    this.handleSideEffects(entry);
+    this.handleSideEffects(entry, silent || false);
   }
 
   openJournal() {
@@ -60,9 +60,9 @@ export class Journal extends GameObjects.Sprite {
     this.scene.scene.launch('JournalDialog', { player: this.player });
   }
 
-  handleSideEffects(entry: JournalEntry) {
+  handleSideEffects(entry: JournalEntry, silent: boolean) {
     if (entry === JournalEntry.SphinxRiddleSolved) {
-      updateSphinx(this.scene, true);
+      updateSphinx(this.scene, true, silent);
     }
   }
 }
