@@ -2,8 +2,8 @@ import { Config } from '../config';
 import { getDialog } from '../utils/dialog';
 import { updateSphinx } from '../utils/interactionUtils';
 import { Layer } from '../utils/layers';
+import { DebugLight } from './DebugLight';
 import { Key } from './InputManager';
-import { DebugLight } from './Light';
 import { Player } from './Player';
 import { InteractResult, Interactive, NPCType } from './types';
 

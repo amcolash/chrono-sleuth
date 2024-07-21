@@ -1,8 +1,8 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Clock } from '../classes/Clock';
+import { DebugLight } from '../classes/DebugLight';
 import { Item } from '../classes/Item';
-import { DebugLight } from '../classes/Light';
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
 import { DebugUI } from '../classes/UI/DebugUI';

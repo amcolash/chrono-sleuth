@@ -6,7 +6,7 @@ import { Colors, colorToNumber, fromRGB, getColorNumber } from '../../utils/colo
 import { fontStyle } from '../../utils/fonts';
 import { Layer } from '../../utils/layers';
 import { debugSave, defaultSave, save } from '../../utils/save';
-import { DebugLight } from '../Light';
+import { DebugLight } from '../DebugLight';
 import { Player } from '../Player';
 
 export class DebugUI extends GameObjects.Container {
