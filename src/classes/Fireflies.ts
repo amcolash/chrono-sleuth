@@ -36,6 +36,7 @@ export class Fireflies extends GameObjects.GameObject {
       for (let i = 0; i < weights.length * 2; i++) {
         biases.push(r() * weights[i % weights.length]);
       }
+      biases.push(r() * 10);
 
       this.biases.push(biases);
     }
@@ -47,13 +48,11 @@ export class Fireflies extends GameObjects.GameObject {
     const cos = Math.cos(t);
     const sin = Math.sin(t);
 
-    const cos2 = Math.cos(t * 70);
-
     this.lights.forEach((light, i) => {
       const b = this.biases[i];
+      const cos2 = Math.cos(t * 70 + b[10]);
 
-      light.intensity = Math.min(0.05 + Math.abs(b[4] * cos2 + b[3] * cos + b[4] * cos) / 50, 0.3);
-      light.radius = Math.max(3, 3 + sin * b[4] * 2);
+      light.intensity = Math.min(0.05 + Math.abs(b[4] * cos2 + b[3] * cos + b[4] * cos) / 50, 0.2);
 
       light.x = cos * b[0] + sin * b[1] + cos * b[2] + sin * b[3] + cos * b[4] + this.centers[i].x;
       light.y = sin * b[5] + cos * b[6] + sin * b[7] + cos * b[8] + sin * b[9] + this.centers[i].y;

@@ -67,7 +67,7 @@ export const WarpData = {
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.ClockEntrance]: {
-    x: 900,
+    x: 970,
     y: -1320,
     key: Key.Down,
     warpTo: WarpType.ClockSquareNorth,
@@ -75,7 +75,7 @@ export const WarpData = {
   },
 
   [WarpType.ClockStairs]: {
-    x: 735,
+    x: 750,
     y: -1320,
     key: Key.Up,
     warpTo: WarpType.ClockTop,

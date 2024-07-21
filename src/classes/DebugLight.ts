@@ -32,4 +32,10 @@ export class DebugLight extends GameObjects.GameObject {
     this.x = x;
     this.y = y;
   }
+
+  destroy(fromScene?: boolean): void {
+    super.destroy(fromScene);
+    this.debug.destroy();
+    this.scene?.lights?.removeLight(this.light);
+  }
 }
