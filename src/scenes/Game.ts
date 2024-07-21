@@ -2,6 +2,7 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Clock } from '../classes/Clock';
 import { DebugLight } from '../classes/DebugLight';
+import { Fireflies } from '../classes/Fireflies';
 import { Item } from '../classes/Item';
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
@@ -37,6 +38,8 @@ export class Game extends Scene {
     const npcs = this.createNpcs();
     const items = this.createItems();
 
+    const fireflies = new Fireflies(this, 3100, 600);
+
     // lights
     this.createLights();
 
@@ -54,7 +57,7 @@ export class Game extends Scene {
     });
 
     // update items added to the group
-    const updatables = this.add.group([this.player, this.clock, this.gamepad], {
+    const updatables = this.add.group([this.player, this.clock, this.gamepad, fireflies], {
       runChildUpdate: true,
     });
 

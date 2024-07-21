@@ -161,7 +161,9 @@ export class Message extends GameObjects.Container {
           align: 'center',
           fixedWidth: 350,
         }
-      ).setOrigin(0.5);
+      )
+        .setOrigin(0.5)
+        .setDepth(Layer.Ui2);
 
       this.optionsContainer.addButton(text);
     });
