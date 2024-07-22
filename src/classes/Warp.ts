@@ -10,7 +10,8 @@ import { InteractResult, Interactive, JournalEntry, WarpType } from './types';
 enum WarpVisual {
   Ladder,
   Warp,
-  WarpHidden,
+  WarpHidden, // Default to invisible
+  Invisible, // Not visually shown, but still functioning
 }
 
 export const WarpData = {
@@ -52,9 +53,9 @@ export const WarpData = {
     visual: WarpVisual.WarpHidden,
   },
   [WarpType.ClockSquare]: {
-    x: 720,
+    x: 610,
     y: -330,
-    key: Key.Down,
+    key: Key.Left,
     warpTo: WarpType.TownNorth,
     visual: WarpVisual.Warp,
   },
@@ -69,7 +70,7 @@ export const WarpData = {
   [WarpType.ClockEntrance]: {
     x: 690,
     y: -1320,
-    key: Key.Down,
+    key: Key.Left,
     warpTo: WarpType.ClockSquareNorth,
     visual: WarpVisual.Warp,
   },
@@ -77,16 +78,16 @@ export const WarpData = {
   [WarpType.ClockStairs]: {
     x: 890,
     y: -1400,
-    key: Key.Up,
+    key: Key.Right,
     warpTo: WarpType.ClockTop,
-    visual: WarpVisual.Warp,
+    visual: WarpVisual.Invisible,
   },
   [WarpType.ClockTop]: {
     x: 780,
     y: -1970,
-    key: Key.Down,
+    key: Key.Left,
     warpTo: WarpType.ClockStairs,
-    visual: WarpVisual.Warp,
+    visual: WarpVisual.Invisible,
   },
 
   [WarpType.ForestEast]: {
@@ -114,7 +115,9 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {
     const { x, y, visual, warpTo } = WarpData[warpType];
 
-    super(scene, x, y, visual === WarpVisual.Ladder ? 'ladder' : 'warp');
+    const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
+
+    super(scene, x, y, texture);
     this.warpType = warpType;
     this.player = player;
     this.setScale(0.6).setPipeline('Light2D');
@@ -142,7 +145,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
       graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
     }
 
-    if (visual !== WarpVisual.Ladder) {
+    if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
       this.particles1 = scene.add
         .particles(x, y, 'warp', {
           x: { min: -3, max: 3 },
@@ -187,6 +190,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         .setPipeline('Light2D');
     }
 
+    if (visual === WarpVisual.Invisible) this.setAlpha(0);
     this.setVisible(visual !== WarpVisual.WarpHidden);
   }
 

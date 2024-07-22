@@ -40,11 +40,11 @@ export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
     this.player = player;
 
     this.particles = scene.add.particles(x, y, 'warp', {
-      speed: { min: 2, max: 10 },
-      scale: { start: 0.1, end: 0.9 },
+      scale: { start: 0, end: 0.9 },
       alpha: { start: 0.8, end: 0 },
-      lifespan: 500,
-      frequency: 1000,
+      delay: 500,
+      lifespan: 1500,
+      maxAliveParticles: 1,
     });
 
     if (Config.debug) {

@@ -79,4 +79,5 @@ export enum JournalEntry {
   ForestMazeSolved,
   SphinxRiddleSolved,
   MetTheMayor,
+  ClockFirstGear,
 }

@@ -115,7 +115,7 @@ export class Game extends Scene {
 
     const backgrounds = [town, clock_outside, clock_inside, forest, lake];
     backgrounds.forEach((background) => {
-      background.setPipeline('Light2D');
+      if (background.texture.key !== 'clock_inner') background.setPipeline('Light2D');
       if (Config.debug) background.setInteractive({ draggable: true });
     });
 

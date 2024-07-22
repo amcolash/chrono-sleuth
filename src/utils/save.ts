@@ -52,10 +52,13 @@ export const debugSave: SaveData = {
     y: playerStart.y,
     flip: false,
   },
-  journal: [JournalEntry.FixTheClock, JournalEntry.SphinxRiddleSolved],
+  journal: [JournalEntry.FixTheClock, JournalEntry.SphinxRiddleSolved, JournalEntry.MetTheMayor],
   inventory: [ItemType.Wrench, ItemType.Gear1],
   quests: [{ id: QuestType.SphinxRiddle, completed: true }],
-  warpers: [{ warpType: WarpType.TownEast, state: true }],
+  warpers: [
+    { warpType: WarpType.TownEast, state: true },
+    { warpType: WarpType.ClockSquareNorth, state: true },
+  ],
   settings: {
     gamepad: false,
     debug: true,

@@ -140,6 +140,7 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
       ],
       onCompleted: (player) => {
         player.journal.addEntry(JournalEntry.MetTheMayor);
+        updateWarpVisibility(player.scene, WarpType.ClockSquareNorth, true);
       },
     },
   ],
@@ -147,9 +148,25 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
   // TODO: Should the clock tower be a different type than NPC?
   [NPCType.ClockTower]: [
     {
+      messages: ['The clock is partially moving again, but it is still missing two gears.'],
+      conditions: {
+        journalEntry: JournalEntry.ClockFirstGear,
+      },
+    },
+    {
       messages: [
         "This dusty clock tower hasn't told the correct time in many years. It appears to be missing some gears.",
+        'Let’s see what happens when we add the first gear.',
+        '[CREAKING NOISE]',
+        'The clock tower is starting to partially move again. It looks like it’s missing two more gears.',
       ],
+      conditions: {
+        hasItem: ItemType.Gear1,
+      },
+      onCompleted: (player) => {
+        player.inventory.removeItem(ItemType.Gear1);
+        player.journal.addEntry(JournalEntry.ClockFirstGear);
+      },
     },
   ],
 };

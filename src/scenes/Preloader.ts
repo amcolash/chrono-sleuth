@@ -71,6 +71,8 @@ export class Preloader extends Scene {
 
     this.load.image('mayor', 'characters/mayor.png');
     this.load.image('mayor_portrait', 'characters/mayor_portrait.png');
+
+    this.load.image('clock_portrait', 'characters/clock_portrait.png');
   }
 
   create() {

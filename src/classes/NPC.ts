@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Types } from 'phaser';
 
 import { Config } from '../config';
 import { getDialog } from '../utils/dialog';
@@ -18,6 +18,7 @@ type Data = {
   name: string;
   onCreate?: (npc: NPC) => void;
   light?: number;
+  particles?: Types.GameObjects.Particles.ParticleEmitterConfig;
 };
 
 export const NPCData: Record<NPCType, Data> = {
@@ -59,10 +60,19 @@ export const NPCData: Record<NPCType, Data> = {
   [NPCType.ClockTower]: {
     x: 880,
     y: -2090,
-    scale: 0.7,
+    scale: 0.5,
     img: 'warp',
-    portrait: '',
+    portrait: 'clock_portrait',
     name: 'Clock Tower',
+    particles: {
+      texture: 'warp',
+      scale: { start: 0, end: 1.1 },
+      alpha: { start: 1, end: 0 },
+      lifespan: 2000,
+      delay: 1000,
+      maxAliveParticles: 1,
+      tint: [0xc76350],
+    },
   },
 };
 
@@ -70,12 +80,15 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
   npcType: NPCType;
   player: Player;
   light: GameObjects.Light | DebugLight;
+  particles: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Phaser.Scene, npcType: NPCType, player: Player) {
-    const { x, y, img, scale, onCreate, light } = NPCData[npcType] as Data;
+    const { x, y, img, scale, onCreate, light, particles } = NPCData[npcType] as Data;
 
     super(scene, x, y, img);
     this.setScale(scale).setDepth(Layer.Npcs).setPipeline('Light2D');
+
+    if (img === 'warp') this.setAlpha(0);
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -89,6 +102,10 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
 
     this.npcType = npcType;
     this.player = player;
+
+    if (particles) {
+      this.particles = scene.add.particles(x, y, '', particles);
+    }
 
     if (onCreate) onCreate(this);
   }
