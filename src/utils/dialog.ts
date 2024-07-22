@@ -128,6 +128,16 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
   ],
   [NPCType.Mayor]: [
     {
+      messages: [
+        'The minute hand on the clock is spinning again.',
+        'It looks like it’s missing two more gears.',
+        'The abandoned mansion west of the town might be a good place to look.',
+      ],
+      conditions: {
+        journalEntry: JournalEntry.ClockFirstGear,
+      },
+    },
+    {
       messages: ['Did you go into the clock tower yet?'],
       conditions: {
         journalEntry: JournalEntry.MetTheMayor,
