@@ -27,6 +27,11 @@ export class Preloader extends Scene {
     //  Load the assets for the game - Replace with your own assets
     this.load.setPath('assets');
 
+    // icons
+    this.load.svg('sun', 'icons/sun.svg', { width: 32, height: 32 });
+    this.load.svg('moon', 'icons/moon.svg', { width: 32, height: 32 });
+    this.load.svg('settings', 'icons/settings.svg', { width: 32, height: 32 });
+
     // backgrounds
     this.load.image('town', 'maps/town.jpg');
 

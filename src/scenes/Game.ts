@@ -10,6 +10,7 @@ import { Slope } from '../classes/Slope';
 import { DebugUI } from '../classes/UI/DebugUI';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { MenuButton } from '../classes/UI/MenuButton';
+import { TimeButton } from '../classes/UI/TimeButton';
 import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
@@ -48,6 +49,7 @@ export class Game extends Scene {
 
     // ui
     new MenuButton(this);
+    new TimeButton(this);
     this.gamepad = new Gamepad(this);
 
     // rewindable objects

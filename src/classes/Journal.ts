@@ -15,7 +15,12 @@ export class Journal extends GameObjects.Sprite {
 
   constructor(scene: Phaser.Scene, player: Player) {
     super(scene, Config.width - 50, Config.height - 55, 'journal');
-    this.setScrollFactor(0).setDepth(Layer.Ui).setScale(0.5).setAlpha(0).setInteractive().setActive(false);
+    this.setScrollFactor(0)
+      .setDepth(Layer.Ui)
+      .setScale(0.5)
+      .setAlpha(0)
+      .setInteractive({ useHandCursor: true })
+      .setActive(false);
     this.on('pointerdown', this.openJournal);
 
     scene.add.existing(this);

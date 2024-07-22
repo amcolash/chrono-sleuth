@@ -5,9 +5,18 @@ import { Colors, colorToNumber, fromRGB, getColorNumber } from './colors';
 const duration = 1200;
 let currentlyChanging = false;
 
-export function toggleLighting(scene: Phaser.Scene) {
+export function isDaytime(scene: Phaser.Scene) {
   const current = fromRGB(scene.lights.ambientColor);
-  if (current === getColorNumber(Colors.White)) {
+  return current === getColorNumber(Colors.White);
+}
+
+export function isNighttime(scene: Phaser.Scene) {
+  const current = fromRGB(scene.lights.ambientColor);
+  return current === getColorNumber(Colors.Night);
+}
+
+export function toggleLighting(scene: Phaser.Scene) {
+  if (isDaytime(scene)) {
     setNighttime(scene);
   } else {
     setDaytime(scene);

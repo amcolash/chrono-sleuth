@@ -42,7 +42,7 @@ export class DebugUI extends GameObjects.Container {
 
     this.text = scene.add.text(20, 90, '', {
       ...fontStyle,
-      fontSize: 32,
+      fontSize: Config.zoomed ? 24 : 32,
       backgroundColor: `#${Colors.Black}`,
       padding: { x: 5, y: 5 },
     });

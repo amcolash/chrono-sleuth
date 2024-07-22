@@ -57,6 +57,7 @@ export const debugSave: SaveData = {
   quests: [{ id: QuestType.SphinxRiddle, completed: true }],
   warpers: [
     { warpType: WarpType.TownEast, state: true },
+    { warpType: WarpType.TownNorth, state: true },
     { warpType: WarpType.ClockSquareNorth, state: true },
   ],
   settings: {
