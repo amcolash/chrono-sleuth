@@ -82,8 +82,8 @@ export const WarpData = {
     visual: WarpVisual.Warp,
   },
   [WarpType.ClockTop]: {
-    x: 790,
-    y: -2005,
+    x: 780,
+    y: -1970,
     key: Key.Down,
     warpTo: WarpType.ClockStairs,
     visual: WarpVisual.Warp,

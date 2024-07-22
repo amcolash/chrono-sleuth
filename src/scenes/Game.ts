@@ -6,6 +6,7 @@ import { Fireflies } from '../classes/Fireflies';
 import { Item } from '../classes/Item';
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
+import { Slope } from '../classes/Slope';
 import { DebugUI } from '../classes/UI/DebugUI';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { MenuButton } from '../classes/UI/MenuButton';
@@ -40,6 +41,9 @@ export class Game extends Scene {
 
     const fireflies = new Fireflies(this, 3100, 600);
 
+    const slope = new Slope(this, 850, -1990);
+    // const slope = new Slope(this, 1160, 650, 100, 50);
+
     // lights
     this.createLights();
 
@@ -57,7 +61,7 @@ export class Game extends Scene {
     });
 
     // update items added to the group
-    const updatables = this.add.group([this.player, this.clock, this.gamepad, fireflies], {
+    const updatables = this.add.group([this.player, this.clock, this.gamepad, fireflies, slope], {
       runChildUpdate: true,
     });
 

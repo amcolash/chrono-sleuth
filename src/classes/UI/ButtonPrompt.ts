@@ -20,12 +20,4 @@ export class ButtonPrompt extends GameObjects.Text {
 
     scene.add.existing(this);
   }
-
-  show(text: string) {
-    this.setText(text).setVisible(true);
-  }
-
-  hide() {
-    this.setVisible(false);
-  }
 }
