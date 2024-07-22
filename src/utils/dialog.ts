@@ -128,7 +128,19 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
   ],
   [NPCType.Mayor]: [
     {
-      messages: ['Hello, traveler. I am the mayor of this town. The clock tower has been broken for years.'],
+      messages: ['Did you go into the clock tower yet?'],
+      conditions: {
+        journalEntry: JournalEntry.MetTheMayor,
+      },
+    },
+    {
+      messages: [
+        'Hello, traveler. I am the mayor of this town. The clock tower has been broken for years.',
+        'Ah, I see you have found an old gear. Maybe it could be used to help fix the clock tower.',
+      ],
+      onCompleted: (player) => {
+        player.journal.addEntry(JournalEntry.MetTheMayor);
+      },
     },
   ],
 

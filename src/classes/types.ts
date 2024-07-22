@@ -78,5 +78,5 @@ export enum JournalEntry {
   FixTheClock,
   ForestMazeSolved,
   SphinxRiddleSolved,
-  MeetTheMayor,
+  MetTheMayor,
 }

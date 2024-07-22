@@ -38,11 +38,9 @@ export class Game extends Scene {
     const warpers = this.createWarpers();
     const npcs = this.createNpcs();
     const items = this.createItems();
+    const slopes = this.createSlopes();
 
     const fireflies = new Fireflies(this, 3100, 600);
-
-    const slope = new Slope(this, 850, -1990);
-    // const slope = new Slope(this, 1160, 650, 100, 50);
 
     // lights
     this.createLights();
@@ -61,7 +59,7 @@ export class Game extends Scene {
     });
 
     // update items added to the group
-    const updatables = this.add.group([this.player, this.clock, this.gamepad, fireflies, slope], {
+    const updatables = this.add.group([this.player, this.clock, this.gamepad, fireflies, ...slopes], {
       runChildUpdate: true,
     });
 
@@ -149,6 +147,13 @@ export class Game extends Scene {
   createItems(): Item[] {
     const gear = new Item(this, ItemType.Gear1, this.player);
     return [gear];
+  }
+
+  createSlopes(): Slope[] {
+    const slope1 = new Slope(this, 740, -1370, 170, 95);
+    const slope2 = new Slope(this, 815, -2010, 90, 70);
+
+    return [slope1, slope2];
   }
 
   createLights(): void {
