@@ -1,10 +1,11 @@
-import { Display, GameObjects, Input, Physics } from 'phaser';
+import { GameObjects, Input, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Game } from '../../scenes/Game';
-import { Colors, colorToNumber, fromRGB, getColorNumber } from '../../utils/colors';
+import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { Layer } from '../../utils/layers';
+import { toggleLighting } from '../../utils/lighting';
 import { debugSave, defaultSave, save } from '../../utils/save';
 import { DebugLight } from '../DebugLight';
 import { Player } from '../Player';
@@ -82,56 +83,7 @@ export class DebugUI extends GameObjects.Container {
     });
 
     this.scene.input.keyboard?.on('keydown-FORWARD_SLASH', () => {
-      if (this.dayNight) return;
-      this.dayNight = true;
-
-      const current = fromRGB(this.scene.lights.ambientColor);
-      const currentlyDay = current === getColorNumber(Colors.White);
-      const target = currentlyDay ? Colors.Night : Colors.White;
-
-      if (currentlyDay) {
-        // On transition to night, turn off lights and slowly fade them on
-        this.scene.lights.lights.forEach((light) => {
-          const originalIntensity = light.intensity;
-          light.setVisible(true);
-          light.setIntensity(0);
-          this.scene.tweens.add({
-            targets: light,
-            duration: 1200,
-            intensity: originalIntensity,
-          });
-        });
-      } else {
-        // On transition to day, slowly fade them off
-        this.scene.lights.lights.forEach((light) => {
-          const originalIntensity = light.intensity;
-          this.scene.tweens.add({
-            targets: light,
-            duration: 1200,
-            intensity: 0,
-            onComplete: () => {
-              light.setVisible(false);
-              light.setIntensity(originalIntensity);
-            },
-          });
-        });
-      }
-
-      const startColor = Display.Color.ValueToColor(current);
-      const endColor = Display.Color.ValueToColor(target);
-
-      this.scene.tweens.addCounter({
-        from: 0,
-        to: 100,
-        duration: 1200,
-        onUpdate: (tween) => {
-          const value = Display.Color.Interpolate.ColorWithColor(startColor, endColor, 100, tween.getValue());
-          this.scene.lights.setAmbientColor(colorToNumber(value));
-        },
-        onComplete: () => {
-          this.dayNight = false;
-        },
-      });
+      toggleLighting(this.scene);
     });
 
     if (Config.debug) {

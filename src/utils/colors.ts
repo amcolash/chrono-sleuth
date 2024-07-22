@@ -9,7 +9,6 @@ export const Colors = {
   Black: '1c1831',
 
   Lights: 'ffccaa',
-  Ambient: 'aaaaaa',
   Night: '335588',
 };
 

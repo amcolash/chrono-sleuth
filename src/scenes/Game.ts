@@ -15,6 +15,7 @@ import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
+import { setDaytime } from '../utils/lighting';
 import { load } from '../utils/save';
 
 export class Game extends Scene {
@@ -157,7 +158,7 @@ export class Game extends Scene {
   }
 
   createLights(): void {
-    this.lights.enable().setAmbientColor(getColorNumber(Colors.Night));
+    this.lights.enable().setAmbientColor(getColorNumber(Colors.White));
 
     const lights: { x: number; y: number; radius?: number; color?: number; intensity?: number }[] = [
       // Town square
@@ -195,6 +196,8 @@ export class Game extends Scene {
         );
       }
     });
+
+    setDaytime(this, false);
   }
 
   createEventListeners() {
