@@ -9,6 +9,7 @@ const manifest: Partial<ManifestOptions> = {
   start_url: '/chrono-sleuth/',
   id: 'com.amcolash.chrono',
   name: 'Chrono Sleuth',
+  short_name: 'Chrono Sleuth',
   description: 'Chrono Sleuth is a detective game set in a mysterious town.',
 
   icons: [

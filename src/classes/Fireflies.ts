@@ -13,7 +13,7 @@ export class Fireflies extends GameObjects.GameObject {
   bounds: number[] = [1000, 400];
   biases: number[][] = [];
 
-  constructor(scene: Phaser.Scene, x: number, y: number, count: number = 30, bounds: number[] = [1000, 400]) {
+  constructor(scene: Phaser.Scene, x: number, y: number, count: number = 40, bounds: number[] = [1000, 400]) {
     super(scene, 'fireflies');
     this.scene.add.existing(this);
 
