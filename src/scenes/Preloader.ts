@@ -28,9 +28,9 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
 
     // icons
-    this.load.svg('sun', 'icons/sun.svg', { width: 32, height: 32 });
-    this.load.svg('moon', 'icons/moon.svg', { width: 32, height: 32 });
-    this.load.svg('settings', 'icons/settings.svg', { width: 32, height: 32 });
+    this.load.svg('sun', 'icons/sun.svg', { width: 64, height: 64 });
+    this.load.svg('moon', 'icons/moon.svg', { width: 64, height: 64 });
+    this.load.svg('settings', 'icons/settings.svg', { width: 64, height: 64 });
 
     // backgrounds
     this.load.image('town', 'maps/town.jpg');

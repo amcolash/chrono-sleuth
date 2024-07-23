@@ -58,8 +58,8 @@ export class TextBox extends GameObjects.Container {
     this.textObject.setMask(mask);
 
     // Adjust the text size
-    this.textObject.setWordWrapWidth(width - scrollbarWidth);
-    this.textObject.setFixedSize(width - scrollbarWidth, 0); // Set fixed width, height will auto-adjust
+    this.textObject.setWordWrapWidth(width - scrollbarWidth * 2);
+    this.textObject.setFixedSize(width - scrollbarWidth * 2, 0); // Set fixed width, height will auto-adjust
 
     // Ensure initial cropping
     this.updateTextPosition();
@@ -92,6 +92,9 @@ export class TextBox extends GameObjects.Container {
     const percent = this.scrollY / maxScrollY;
     const visiblePercent = this.boxHeight / this.textObject.height;
     this.scrollbar.height = visiblePercent * this.boxHeight;
-    this.scrollbar.setPosition(this.textObject.width - 4, percent * (this.boxHeight - visiblePercent * this.boxHeight));
+    this.scrollbar.setPosition(
+      this.textObject.width + scrollbarWidth,
+      percent * (this.boxHeight - visiblePercent * this.boxHeight)
+    );
   }
 }

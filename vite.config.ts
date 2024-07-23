@@ -50,6 +50,15 @@ export default defineConfig({
     VitePWA({
       workbox: {
         maximumFileSizeToCacheInBytes: 10 * 1000 * 1000, // 10mb
+        // runtimeCaching: [
+        //   {
+        //     urlPattern: /.*/,
+        //     handler: 'NetworkFirst',
+        //     options: {
+        //       cacheableResponse: { statuses: [0, 200] },
+        //     },
+        //   },
+        // ],
       },
       // cache static assets in the public folder
       includeAssets: ['**/*'],

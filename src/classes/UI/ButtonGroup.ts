@@ -31,6 +31,10 @@ export class ButtonGroup extends GameObjects.Container {
     if (this.buttons.length === 1) {
       this.setActiveButton(0);
     }
+
+    button.on('pointerover', () => {
+      this.setActiveButton(-1);
+    });
   }
 
   setActiveButton(index: number) {

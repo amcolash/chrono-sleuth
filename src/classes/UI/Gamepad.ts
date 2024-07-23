@@ -55,7 +55,7 @@ export class Gamepad extends GameObjects.Container {
 
   createDPad() {
     // D-pad
-    const dpadContainer = this.scene.add.container(30, -10);
+    const dpadContainer = this.scene.add.container(50, -10);
     this.add(dpadContainer);
 
     // D-pad background

@@ -32,7 +32,7 @@ export class JournalDialog extends Scene {
 
     container.add(this.add.text(0, Config.height * -0.33, 'Journal', { ...fontStyle, fontSize: 48 }).setOrigin(0.5));
 
-    const text = this.player.journal.journal.map((entry) => `- ${JournalData[entry]}\n\n`).reverse();
+    const text = this.player.journal.journal.map((entry) => `- ${JournalData[entry]}\n`).reverse();
     const textBox = new TextBox(this, Config.width * 0.13, Config.height * 0.25, text, { fontSize: 32 });
     textBox.setBoxSize(Config.width * 0.74, Config.height * 0.62);
 
