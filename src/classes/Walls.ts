@@ -27,8 +27,8 @@ export const WallData = [
   { x: 3630, y: 760, id: WallType.Sphinx },
 
   // Lake
-  { x: 4575, y: 870 },
-  { x: 5150, y: 870 },
+  { x: 4575, y: 850 },
+  { x: 6160, y: 690 },
 ];
 
 export class Walls extends Physics.Arcade.StaticGroup {

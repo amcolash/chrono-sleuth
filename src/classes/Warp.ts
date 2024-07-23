@@ -104,6 +104,13 @@ export const WarpData = {
     warpTo: WarpType.ForestEast,
     visual: WarpVisual.Warp,
   },
+  [WarpType.LakeEast]: {
+    x: 6121,
+    y: 760,
+    key: Key.Right,
+    warpTo: WarpType.Lake,
+    visual: WarpVisual.Warp,
+  },
 };
 
 export class Warp extends Physics.Arcade.Sprite implements Interactive {

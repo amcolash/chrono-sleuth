@@ -145,10 +145,15 @@ export class Game extends Scene {
   }
 
   createSlopes(): Slope[] {
+    // Clock
     const slope1 = new Slope(this, 740, -1370, 170, 95);
     const slope2 = new Slope(this, 815, -2010, 90, 70);
 
-    return [slope1, slope2];
+    // Lake
+    const slope3 = new Slope(this, 5150, 953, 100, 60, true);
+    const slope4 = new Slope(this, 5820, 795, 220, 220);
+
+    return [slope1, slope2, slope3, slope4];
   }
 
   createUI() {
