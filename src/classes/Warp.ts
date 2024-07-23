@@ -39,7 +39,7 @@ export const WarpData = {
   },
   [WarpType.Forest]: {
     x: 2650,
-    y: 810,
+    y: 815,
     key: Key.Left,
     warpTo: WarpType.TownEast,
     visual: WarpVisual.Warp,
@@ -92,7 +92,7 @@ export const WarpData = {
 
   [WarpType.ForestEast]: {
     x: 3590,
-    y: 810,
+    y: 815,
     key: Key.Right,
     warpTo: WarpType.Lake,
     visual: WarpVisual.WarpHidden,
@@ -114,7 +114,6 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
   constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {
     const { x, y, visual, warpTo } = WarpData[warpType];
-
     const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
 
     super(scene, x, y, texture);
@@ -124,30 +123,15 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    if (Config.debug) {
-      this.setInteractive({ draggable: true });
-
-      const target = WarpData[warpTo];
-
-      const graphics = scene.add.graphics();
-      const color = warpType % 2 === 0 ? 0xffff00 : 0x00ffff;
-      graphics.fillStyle(color);
-      graphics.lineStyle(3, color);
-
-      let offsetX = -this.displayWidth / 2;
-      let offsetY = -this.displayHeight / 2;
-
-      if (target.x > x) offsetX *= -1;
-      if (target.y > y) offsetY *= -1;
-
-      const line = new Phaser.Geom.Line(x + offsetX, y + offsetY, target.x + offsetX, target.y + offsetY);
-      graphics.strokeLineShape(line);
-      graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
-    }
 
     if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
+      this.setScale(0.6, 1);
+
+      const warpOffset = 12;
+      this.setPosition(x, y - warpOffset);
+
       this.particles1 = scene.add
-        .particles(x, y, 'warp', {
+        .particles(x, y - warpOffset, 'warp', {
           x: { min: -3, max: 3 },
           y: { min: -3, max: 3 },
           speed: { random: [-40, 40] },
@@ -159,11 +143,11 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
           radial: true,
           blendMode: BlendModes.OVERLAY,
         })
-        .setScale(1, 1.75)
+        .setScale(1, 2)
         .setPipeline('Light2D');
 
       this.particles2 = scene.add
-        .particles(x, y, 'warp', {
+        .particles(x, y - warpOffset, 'warp', {
           x: { min: -30, max: 30 },
           y: { min: -50, max: 50 },
           speed: { random: [-5, 5] },
@@ -192,6 +176,27 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
     if (visual === WarpVisual.Invisible) this.setAlpha(0);
     this.setVisible(visual !== WarpVisual.WarpHidden);
+
+    if (Config.debug) {
+      this.setInteractive({ draggable: true });
+
+      const target = WarpData[warpTo];
+
+      const graphics = scene.add.graphics();
+      const color = warpType % 2 === 0 ? 0xffff00 : 0x00ffff;
+      graphics.fillStyle(color);
+      graphics.lineStyle(3, color);
+
+      let offsetX = -this.displayWidth / 2;
+      let offsetY = -this.displayHeight / 2;
+
+      if (target.x > x) offsetX *= -1;
+      if (target.y > y) offsetY *= -1;
+
+      const line = new Phaser.Geom.Line(x + offsetX, y + offsetY, target.x + offsetX, target.y + offsetY);
+      graphics.strokeLineShape(line);
+      graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
+    }
   }
 
   onInteract(keys: Record<Key, boolean>): InteractResult {

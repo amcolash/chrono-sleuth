@@ -26,7 +26,7 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
 
   const { x, y } = NPCData[NPCType.Sphinx];
   const newX = complete ? x + 200 : x;
-  const newY = complete ? y - 90 : y;
+  const newY = complete ? y - 80 : y;
 
   scene.tweens.add({
     targets: sphinx,

@@ -26,6 +26,8 @@ export class DebugLight extends GameObjects.GameObject {
   }
 
   setPosition(x: number, y: number) {
+    this.debug.setVisible(this.light.visible);
+
     this.light.setPosition(x, y);
     this.debug.setPosition(x, y);
 
