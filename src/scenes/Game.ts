@@ -2,7 +2,7 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Clock } from '../classes/Clock';
 import { DebugLight } from '../classes/DebugLight';
-import { Fireflies } from '../classes/Fireflies';
+import { Fireflies, FireflyPositions } from '../classes/Fireflies';
 import { Item } from '../classes/Item';
 import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
@@ -41,7 +41,8 @@ export class Game extends Scene {
     const items = this.createItems();
     const slopes = this.createSlopes();
 
-    const fireflies = new Fireflies(this, 3100, 600);
+    const forestFireflies = new Fireflies(this, FireflyPositions.Forest[0], FireflyPositions.Forest[1]);
+    const lakeFireflies = new Fireflies(this, FireflyPositions.Lake[0], FireflyPositions.Lake[1]);
 
     // lights
     this.createLights();
@@ -59,9 +60,12 @@ export class Game extends Scene {
     });
 
     // update items added to the group
-    const updatables = this.add.group([this.player, this.clock, this.gamepad, fireflies, ...slopes], {
-      runChildUpdate: true,
-    });
+    const updatables = this.add.group(
+      [this.player, this.clock, this.gamepad, forestFireflies, lakeFireflies, ...slopes],
+      {
+        runChildUpdate: true,
+      }
+    );
     if (debugUI) updatables.add(debugUI);
 
     // collisions
@@ -201,6 +205,10 @@ export class Game extends Scene {
       { x: 162, y: 814, intensity: 2 },
       { x: 635, y: 772 },
       { x: 1638, y: 788, intensity: 2 },
+
+      // Lake
+      { x: 5300, y: 530, intensity: 2 },
+      { x: 5315, y: 730, intensity: 0.75, radius: 75 },
     ];
 
     lights.forEach((light) => {

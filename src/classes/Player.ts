@@ -1,6 +1,7 @@
 import { GameObjects, Math as PhaserMath } from 'phaser';
 
 import { Config } from '../config';
+import { Game } from '../scenes/Game';
 import { createAnimation, updateAnimation } from '../utils/animations';
 import { Layer } from '../utils/layers';
 import { rewindInterval, rewindSpeed } from './Clock';
@@ -20,6 +21,8 @@ const MAX_HISTORY = 1000;
 export const playerStart = new PhaserMath.Vector2(400, 650);
 
 export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
+  scene: Game;
+
   keys: InputManager;
   light: GameObjects.Light | DebugLight;
 
@@ -36,8 +39,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   history: Phaser.Math.Vector3[] = [];
   rewinding = false;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Game) {
     super(scene, playerStart.x, playerStart.y, 'character', 0);
+
+    this.scene = scene;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);

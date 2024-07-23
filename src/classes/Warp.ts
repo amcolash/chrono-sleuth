@@ -1,4 +1,4 @@
-import { BlendModes, GameObjects, Physics } from 'phaser';
+import { BlendModes, GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
@@ -14,7 +14,17 @@ enum WarpVisual {
   Invisible, // Not visually shown, but still functioning
 }
 
-export const WarpData = {
+// Ugh, naming is hard
+type WarpInformation = {
+  x: number;
+  y: number;
+  key: Key;
+  warpTo: WarpType;
+  visual: WarpVisual;
+  onWarp?: (player: Player) => void;
+};
+
+export const WarpData: Record<WarpType, WarpInformation> = {
   [WarpType.Town]: {
     x: 300,
     y: 650,
@@ -119,7 +129,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   particles1: GameObjects.Particles.ParticleEmitter;
   particles2: GameObjects.Particles.ParticleEmitter;
 
-  constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {
+  constructor(scene: Scene, warpType: WarpType, player: Player) {
     const { x, y, visual, warpTo } = WarpData[warpType];
     const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
 
@@ -272,11 +282,13 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 }
 
 export function warpTo(location: WarpType, player: Player) {
-  const { x, y } = WarpData[location];
+  const { x, y, onWarp } = WarpData[location];
   const scene = player.scene;
 
   const targetScrollX = x - scene.cameras.main.width / 2;
   const targetScrollY = y - scene.cameras.main.height / 2;
+
+  if (onWarp) onWarp(player);
 
   scene.cameras.main.stopFollow();
   scene.tweens.add({
