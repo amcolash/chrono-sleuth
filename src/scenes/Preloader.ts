@@ -31,6 +31,8 @@ export class Preloader extends Scene {
     this.load.svg('sun', 'icons/sun.svg', { width: 64, height: 64 });
     this.load.svg('moon', 'icons/moon.svg', { width: 64, height: 64 });
     this.load.svg('settings', 'icons/settings.svg', { width: 64, height: 64 });
+    this.load.svg('zoom-in', 'icons/zoom-in.svg', { width: 64, height: 64 });
+    this.load.svg('zoom-out', 'icons/zoom-out.svg', { width: 64, height: 64 });
 
     // backgrounds
     this.load.image('town', 'maps/town.jpg');

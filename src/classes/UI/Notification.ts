@@ -8,7 +8,7 @@ import { Layer } from '../../utils/layers';
 export class Notification extends GameObjects.Text {
   constructor(scene: Scene, text: string, duration: number = 3500) {
     const notifications = getGameObjects(scene, Notification);
-    const y = 20 + notifications.length * 50;
+    const y = 50 + notifications.length * 50;
 
     super(scene, 20, y, text, {
       ...fontStyle,

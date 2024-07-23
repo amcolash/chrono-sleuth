@@ -6,7 +6,7 @@ import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { Layer } from '../../utils/layers';
 import { toggleLighting } from '../../utils/lighting';
-import { debugSave, defaultSave, save } from '../../utils/save';
+import { debugSave, defaultSave, getCurrentSaveState, save } from '../../utils/save';
 import { DebugLight } from '../DebugLight';
 import { Player } from '../Player';
 
@@ -63,17 +63,24 @@ export class DebugUI extends GameObjects.Container {
 
     this.scene.input.keyboard?.on('keydown-M', () => {
       save(this.scene, debugSave);
-      this.scene.scene.restart(); // Just in case
+      this.scene.scene.restart();
     });
 
     this.scene.input.keyboard?.on('keydown-N', () => {
       save(this.scene, defaultSave);
-      this.scene.scene.restart(); // Just in case
+      this.scene.scene.restart();
     });
 
     this.scene.input.keyboard?.on('keydown-Z', () => {
       Config.debug = !Config.debug;
       save(this.scene);
+      this.scene.scene.restart();
+    });
+
+    this.scene.input.keyboard?.on('keydown-X', () => {
+      const savedata = getCurrentSaveState(this.scene);
+      save(this.scene, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
+
       this.scene.scene.restart();
     });
 

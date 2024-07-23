@@ -1,4 +1,4 @@
-import { GameObjects, Types } from 'phaser';
+import { GameObjects, Math, Types } from 'phaser';
 
 import { Config } from '../config';
 import { getDialog } from '../utils/dialog';
@@ -40,7 +40,7 @@ export const NPCData: Record<NPCType, Data> = {
   },
   [NPCType.Sphinx]: {
     x: 3520,
-    y: 780,
+    y: 790,
     scale: 1,
     img: 'sphinx',
     portrait: 'sphinx_portrait',
@@ -81,6 +81,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
   player: Player;
   light: GameObjects.Light | DebugLight;
   particles: GameObjects.Particles.ParticleEmitter;
+  lastPos: Math.Vector2 = new Math.Vector2();
 
   constructor(scene: Phaser.Scene, npcType: NPCType, player: Player) {
     const { x, y, img, scale, onCreate, light, particles } = NPCData[npcType] as Data;
@@ -111,7 +112,11 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
   }
 
   update(_time: number, _delta: number): void {
-    this.light.setPosition(this.x, this.y);
+    if (this.x !== this.lastPos.x || this.y !== this.lastPos.y) {
+      this.light.setPosition(this.x, this.y);
+    }
+
+    this.lastPos.set(this.x, this.y);
   }
 
   onInteract(keys: Record<Key, boolean>): InteractResult {

@@ -16,13 +16,12 @@ const boxHeight = 170;
 const portraitOffset = 150;
 const nameOffset = 40;
 
-const { width, height } = Config;
-const textWidth = width - 130 - padding * 4;
-const textHeight = boxHeight - padding * 2;
-
 const timeout = 350;
 
 export class Message extends GameObjects.Container {
+  textWidth: number;
+  textHeight: number;
+
   player: Player;
   npc?: NPC;
   npcName: GameObjects.Text;
@@ -41,6 +40,11 @@ export class Message extends GameObjects.Container {
     super(scene);
     scene.add.existing(this);
 
+    // Pull these values into constructor, so they are always up to date
+    const { width, height } = Config;
+    this.textWidth = width - 130 - padding * 4;
+    this.textHeight = boxHeight - padding * 2;
+
     this.setScrollFactor(0);
     this.setPosition(padding, height - padding - boxHeight);
     this.setDepth(Layer.Overlay);
@@ -54,8 +58,8 @@ export class Message extends GameObjects.Container {
     });
 
     this.text = new GameObjects.Text(scene, padding + portraitOffset, padding + nameOffset, '', fontStyle);
-    this.text.width = textWidth;
-    this.text.height = textHeight;
+    this.text.width = this.textWidth;
+    this.text.height = this.textHeight;
 
     this.text.setOrigin(0).setMaxLines(3);
 
@@ -106,8 +110,8 @@ export class Message extends GameObjects.Container {
       this.image.setVisible(false);
       this.text
         .setPosition(padding, padding)
-        .setWordWrapWidth(padding + portraitOffset + textWidth, true)
-        .setFixedSize(padding + portraitOffset + textWidth, textHeight);
+        .setWordWrapWidth(padding + portraitOffset + this.textWidth, true)
+        .setFixedSize(padding + portraitOffset + this.textWidth, this.textHeight);
     } else {
       if (npc) {
         this.npcName.setVisible(true);
@@ -120,8 +124,8 @@ export class Message extends GameObjects.Container {
 
       this.text
         .setPosition(padding + portraitOffset, padding + (npc ? nameOffset : 0))
-        .setWordWrapWidth(textWidth, true)
-        .setFixedSize(textWidth, textHeight);
+        .setWordWrapWidth(this.textWidth, true)
+        .setFixedSize(this.textWidth, this.textHeight);
     }
 
     this.showMessage();

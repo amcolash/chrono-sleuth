@@ -7,14 +7,17 @@ import { ItemType, JournalEntry, Quest, QuestType, WarpType } from '../classes/t
 import { Config } from '../config';
 import { Game } from '../scenes/Game';
 import { getGameObjects } from './interactionUtils';
-import { isMobile } from './util';
+import { isMobile, setZoomed } from './util';
 
 type WarpList = { warpType: WarpType; state: boolean }[];
+
+export const saveKey = 'chrono-sleuth-save';
 
 // TODO: Add settings
 export type Settings = {
   gamepad: boolean;
   debug: boolean;
+  zoomed: boolean;
 };
 
 type SaveData = {
@@ -43,6 +46,7 @@ export const defaultSave: SaveData = {
   settings: {
     gamepad: isMobile(),
     debug: false,
+    zoomed: isMobile(),
   },
 };
 
@@ -62,54 +66,13 @@ export const debugSave: SaveData = {
   ],
   settings: {
     gamepad: false,
-    debug: true,
+    debug: false,
+    zoomed: true,
   },
 };
 
-export function load(scene: Game): void {
-  let data = localStorage.getItem('save');
-  let parsed: SaveData | undefined = undefined;
-  try {
-    if (data) parsed = JSON.parse(data);
-  } catch (err) {
-    console.error(err);
-    new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
-  }
-
-  try {
-    const save: SaveData = parsed || defaultSave;
-
-    if (save.settings.debug !== Config.debug) {
-      Config.debug = save.settings.debug;
-      scene.scene.restart();
-      return;
-    }
-
-    scene.player.setX(save.player.x);
-    scene.player.setY(save.player.y);
-    scene.player.setFlipX(save.player.flip);
-
-    save.journal.forEach((entry) => scene.player.journal.addEntry(entry, true));
-    save.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
-    save.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
-
-    // TODO: Rethink if this should be more directly tied to journal entries as a side-effect
-    setWarperState(scene, save.warpers);
-
-    scene.gamepad.setVisible(save.settings.gamepad);
-
-    const loadType = deepEqual(parsed, defaultSave) ? '[New]' : deepEqual(parsed, debugSave) ? '[Debug]' : '[Storage]';
-    new Notification(scene, `Game Loaded ${loadType}`);
-  } catch (err) {
-    console.error(err);
-    new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
-
-    save(scene, defaultSave);
-    load(scene);
-  }
-}
-
-export function save(scene: Game, override?: SaveData): void {
+// Get the current state of the game before saving
+export function getCurrentSaveState(scene: Game): SaveData {
   const save: SaveData = {
     player: {
       x: scene.player.x,
@@ -123,10 +86,85 @@ export function save(scene: Game, override?: SaveData): void {
     settings: {
       gamepad: scene.gamepad.visible,
       debug: Config.debug,
+      zoomed: Config.zoomed,
     },
   };
 
-  localStorage.setItem('save', JSON.stringify(override || save));
+  return save;
+}
+
+// Get the saved data from local storage, default back to defaultSave if none exists or error parsing
+function getSavedData(): { save: SaveData; error: unknown } {
+  const data = localStorage.getItem(saveKey);
+  let parsed: SaveData | undefined = undefined;
+  let error;
+  try {
+    if (data) parsed = JSON.parse(data);
+  } catch (err) {
+    console.error(err);
+    error = err;
+  }
+
+  return { save: parsed || defaultSave, error };
+}
+
+export function load(scene: Game): void {
+  const { save: savedata, error } = getSavedData();
+  if (error) {
+    new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
+  }
+
+  try {
+    // Load all new config values, then check each and optionally restart to apply
+    const originalConfig = { ...Config };
+    Config.debug = savedata.settings.debug;
+    Config.zoomed = savedata.settings.zoomed;
+
+    if (Config.zoomed !== originalConfig.zoomed) {
+      setZoomed(scene, Config.zoomed);
+      return;
+    }
+
+    if (Config.debug !== originalConfig.debug) {
+      scene.scene.restart();
+    }
+
+    scene.player.setX(savedata.player.x);
+    scene.player.setY(savedata.player.y);
+    scene.player.setFlipX(savedata.player.flip);
+
+    savedata.journal.forEach((entry) => scene.player.journal.addEntry(entry, true));
+    savedata.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
+    savedata.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
+
+    // TODO: Rethink if this should be more directly tied to journal entries as a side-effect
+    setWarperState(scene, savedata.warpers);
+
+    scene.gamepad.setVisible(savedata.settings.gamepad);
+
+    const loadType = deepEqual(savedata, defaultSave)
+      ? '[New]'
+      : deepEqual(savedata, debugSave)
+        ? '[Debug]'
+        : '[Storage]';
+    new Notification(scene, `Game Loaded ${loadType}`);
+
+    // If new game, save now
+    if (deepEqual(savedata, defaultSave)) {
+      save(scene);
+    }
+  } catch (err) {
+    console.error(err);
+    new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
+
+    save(scene, defaultSave);
+    load(scene);
+  }
+}
+
+export function save(scene: Game, override?: SaveData): void {
+  const save = getCurrentSaveState(scene);
+  localStorage.setItem(saveKey, JSON.stringify(override || save));
 
   new Notification(scene, 'Game Saved');
 }

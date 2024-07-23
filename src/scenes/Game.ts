@@ -16,7 +16,7 @@ import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
-import { load } from '../utils/save';
+import { getCurrentSaveState, load, save } from '../utils/save';
 
 export class Game extends Scene {
   player: Player;
@@ -152,14 +152,20 @@ export class Game extends Scene {
   }
 
   createUI() {
-    new IconButton(this, 31, Config.height - 31, 'settings', () => {
+    new IconButton(this, 31, 30, 'settings', () => {
       this.scene.pause();
       this.scene.launch('Paused', { game: this });
     });
-    new IconButton(this, 81, Config.height - 31, isDaytime(this) ? 'moon' : 'sun', (button) => {
+    new IconButton(this, 81, 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
       const prev = isDaytime(this);
       toggleLighting(this);
       button.img.setTexture(prev ? 'sun' : 'moon');
+    });
+    new IconButton(this, 131, 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
+      const savedata = getCurrentSaveState(this);
+      save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
+
+      this.scene.restart();
     });
 
     this.gamepad = new Gamepad(this);

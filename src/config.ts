@@ -1,4 +1,12 @@
-import { isMobile } from './utils/util';
+export const fullSize = {
+  width: 1280,
+  height: 720,
+};
+
+export const zoomedSize = {
+  width: 960,
+  height: 540,
+};
 
 let debug = false;
 // debug = true;
@@ -9,15 +17,8 @@ let rewindEnabled = false;
 let fastMode = false;
 fastMode = true;
 
-let width = 1280;
-let height = 720;
-
-let zoomed = false;
-zoomed = true;
-if (isMobile() || zoomed) {
-  width = 960;
-  height = 540;
-}
+// TODO: Remove width/height overrides since they are always loaded
+const { width, height } = fullSize;
 
 if (import.meta.env.PROD) {
   debug = false;
@@ -30,7 +31,7 @@ export const Config = {
   width,
   height,
   cameraOffset: height / 3,
-  zoomed,
+  zoomed: false,
 
   dayMinutes: 0.25,
   rewindEnabled,
