@@ -9,14 +9,13 @@ import { Player } from '../classes/Player';
 import { Slope } from '../classes/Slope';
 import { DebugUI } from '../classes/UI/DebugUI';
 import { Gamepad } from '../classes/UI/Gamepad';
-import { MenuButton } from '../classes/UI/MenuButton';
-import { TimeButton } from '../classes/UI/TimeButton';
+import { IconButton } from '../classes/UI/IconButton';
 import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
-import { setDaytime } from '../utils/lighting';
+import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
 import { load } from '../utils/save';
 
 export class Game extends Scene {
@@ -48,9 +47,7 @@ export class Game extends Scene {
     this.createLights();
 
     // ui
-    new MenuButton(this);
-    new TimeButton(this);
-    this.gamepad = new Gamepad(this);
+    const { debugUI } = this.createUI();
 
     // rewindable objects
     const rewindable = [this.player];
@@ -65,12 +62,7 @@ export class Game extends Scene {
     const updatables = this.add.group([this.player, this.clock, this.gamepad, fireflies, ...slopes], {
       runChildUpdate: true,
     });
-
-    // debug
-    if (import.meta.env.DEV) {
-      const debugUI = new DebugUI(this, this.player);
-      updatables.add(debugUI);
-    }
+    if (debugUI) updatables.add(debugUI);
 
     // collisions
     this.physics.add.collider(this.player, walls);
@@ -157,6 +149,28 @@ export class Game extends Scene {
     const slope2 = new Slope(this, 815, -2010, 90, 70);
 
     return [slope1, slope2];
+  }
+
+  createUI() {
+    new IconButton(this, 31, Config.height - 31, 'settings', () => {
+      this.scene.pause();
+      this.scene.launch('Paused', { game: this });
+    });
+    new IconButton(this, 81, Config.height - 31, isDaytime(this) ? 'moon' : 'sun', (button) => {
+      const prev = isDaytime(this);
+      toggleLighting(this);
+      button.img.setTexture(prev ? 'sun' : 'moon');
+    });
+
+    this.gamepad = new Gamepad(this);
+
+    // debug
+    let debugUI;
+    if (import.meta.env.DEV) {
+      debugUI = new DebugUI(this, this.player);
+    }
+
+    return { debugUI };
   }
 
   createLights(): void {
