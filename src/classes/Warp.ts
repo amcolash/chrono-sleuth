@@ -123,6 +123,8 @@ export const WarpData: Record<WarpType, WarpInformation> = {
   },
 };
 
+const extendedRange = 30;
+
 export class Warp extends Physics.Arcade.Sprite implements Interactive {
   warpType: WarpType;
   player: Player;
@@ -130,7 +132,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   particles2: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Scene, warpType: WarpType, player: Player) {
-    const { x, y, visual, warpTo } = WarpData[warpType];
+    const { x, y, visual, warpTo, key } = WarpData[warpType];
     const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
 
     super(scene, x, y, texture);
@@ -191,34 +193,60 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         .setPipeline('Light2D');
     }
 
+    if (this.hasExtendedBounds()) {
+      this.setBodySize(this.body.width * 4, this.body.height);
+    }
+
     if (visual === WarpVisual.Invisible) this.setAlpha(0);
     this.setVisible(visual !== WarpVisual.WarpHidden);
 
     if (Config.debug) {
       this.setInteractive({ draggable: true });
-
-      const target = WarpData[warpTo];
-
       const graphics = scene.add.graphics();
-      const color = warpType % 2 === 0 ? 0xffff00 : 0x00ffff;
-      graphics.fillStyle(color);
-      graphics.lineStyle(3, color);
 
-      let offsetX = -this.displayWidth / 2;
-      let offsetY = -this.displayHeight / 2;
+      // const target = WarpData[warpTo];
 
-      if (target.x > x) offsetX *= -1;
-      if (target.y > y) offsetY *= -1;
+      // const color = warpType % 2 === 0 ? 0xffff00 : 0x00ffff;
+      // graphics.fillStyle(color);
+      // graphics.lineStyle(3, color);
 
-      const line = new Phaser.Geom.Line(x + offsetX, y + offsetY, target.x + offsetX, target.y + offsetY);
-      graphics.strokeLineShape(line);
-      graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
+      // let offsetX = -this.displayWidth / 2;
+      // let offsetY = -this.displayHeight / 2;
+
+      // if (target.x > x) offsetX *= -1;
+      // if (target.y > y) offsetY *= -1;
+
+      // const line = new Phaser.Geom.Line(x + offsetX, y + offsetY, target.x + offsetX, target.y + offsetY);
+      // graphics.strokeLineShape(line);
+      // graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
+      // graphics.fillRect(x - this.body?.width / 2 - 7, y - this.body?.height / 2 - 7, 14, 14);
+
+      // if (warpType === WarpType.Forest) console.log(this.body?.left, this.body.top);
+
+      if (this.hasExtendedBounds()) {
+        graphics.lineStyle(2, 0xff00ff);
+
+        const body = this.body as Physics.Arcade.Body;
+        graphics.lineBetween(x - extendedRange, y - body.halfHeight, x - extendedRange, y + body.halfHeight);
+        graphics.lineBetween(x + extendedRange, y - body.halfHeight, x + extendedRange, y + body.halfHeight);
+        graphics.strokeCircle(x, y, 5);
+      }
     }
   }
 
+  hasExtendedBounds() {
+    const { visual, key } = WarpData[this.warpType];
+    return (
+      (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden || visual === WarpVisual.Invisible) &&
+      (key === Key.Left || key === Key.Right)
+    );
+  }
+
   onInteract(keys: Record<Key, boolean>): InteractResult {
+    const withinRange = !this.hasExtendedBounds() || Math.abs(this.player.x - this.x) < extendedRange;
+
     const warpKeys = WarpData[this.warpType].key;
-    const shouldWarp = keys[warpKeys];
+    const shouldWarp = keys[warpKeys] && withinRange;
 
     if (
       shouldWarp &&
