@@ -101,7 +101,9 @@ export class DebugUI extends GameObjects.Container {
       });
 
       // Dragging
-      this.scene.input.on('gameobjectdown', (_pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
+      this.scene.input.on('gameobjectdown', (pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
+        if (pointer.buttons !== 1) return;
+
         if (gameObject !== this.activeElement) {
           this.activeElement = gameObject;
         } else {
@@ -125,9 +127,15 @@ export class DebugUI extends GameObjects.Container {
           deltaY: number,
           _deltaZ: number
         ) => {
-          this.scene.cameras.main.zoom += deltaY * 0.0005;
+          this.scene.cameras.main.zoom = Math.max(0.01, this.scene.cameras.main.zoom + deltaY * 0.0005);
         }
       );
+
+      this.scene.input.on('pointerup', (pointer: Input.Pointer) => {
+        if (pointer.button === 1) {
+          this.scene.cameras.main.zoom = 1;
+        }
+      });
     }
   }
 

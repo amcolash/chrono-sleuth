@@ -124,6 +124,7 @@ export const WarpData: Record<WarpType, WarpInformation> = {
 };
 
 const extendedRange = 30;
+const warpYOffset = 12;
 
 export class Warp extends Physics.Arcade.Sprite implements Interactive {
   warpType: WarpType;
@@ -145,12 +146,10 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
     if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
       this.setScale(0.6, 1);
-
-      const warpOffset = 12;
-      this.setPosition(x, y - warpOffset);
+      this.setPosition(x, y - warpYOffset);
 
       this.particles1 = scene.add
-        .particles(x, y - warpOffset, 'warp', {
+        .particles(x, y - warpYOffset, 'warp', {
           x: { min: -3, max: 3 },
           y: { min: -3, max: 3 },
           speed: { random: [-40, 40] },
@@ -164,9 +163,10 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         })
         .setScale(1, 2)
         .setPipeline('Light2D');
+      this.particles1.viewBounds = this.particles1.getBounds(30, 500);
 
       this.particles2 = scene.add
-        .particles(x, y - warpOffset, 'warp', {
+        .particles(x, y - warpYOffset, 'warp', {
           x: { min: -30, max: 30 },
           y: { min: -50, max: 50 },
           speed: { random: [-5, 5] },
@@ -180,6 +180,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
           maxAliveParticles: 20,
         })
         .setPipeline('Light2D');
+      this.particles2.viewBounds = this.particles2.getBounds(30, 500);
     }
 
     if (warpType === WarpType.Underground) {
@@ -278,6 +279,17 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     if (key === Key.Right) prompt = '[Right]';
 
     return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + prompt];
+  }
+
+  setPosition(x?: number, y?: number, z?: number, w?: number): this {
+    super.setPosition(x, y, z, w);
+
+    if (this.particles1 && this.particles2) {
+      this.particles1.setPosition(x, (y || 0) - warpYOffset);
+      this.particles2.setPosition(x, (y || 0) - warpYOffset);
+    }
+
+    return this;
   }
 
   setVisible(value: boolean): this {

@@ -4,6 +4,7 @@ import { Config } from '../config';
 import { getDialog } from '../utils/dialog';
 import { updateSphinx } from '../utils/interactionUtils';
 import { Layer } from '../utils/layers';
+import { ClockHands } from './ClockHands';
 import { DebugLight } from './DebugLight';
 import { Key } from './InputManager';
 import { Player } from './Player';
@@ -82,6 +83,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
   light: GameObjects.Light | DebugLight;
   particles: GameObjects.Particles.ParticleEmitter;
   lastPos: Math.Vector2 = new Math.Vector2();
+  clock?: ClockHands;
 
   constructor(scene: Phaser.Scene, npcType: NPCType, player: Player) {
     const { x, y, img, scale, onCreate, light, particles } = NPCData[npcType] as Data;
@@ -108,15 +110,20 @@ export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
       this.particles = scene.add.particles(x, y, '', particles);
     }
 
+    if (npcType === NPCType.ClockTower) {
+      this.clock = new ClockHands(scene);
+    }
+
     if (onCreate) onCreate(this);
   }
 
-  update(_time: number, _delta: number): void {
+  update(time: number, _delta: number): void {
     if (this.x !== this.lastPos.x || this.y !== this.lastPos.y) {
       this.light.setPosition(this.x, this.y);
     }
 
     this.lastPos.set(this.x, this.y);
+    if (this.clock) this.clock.update(time);
   }
 
   onInteract(keys: Record<Key, boolean>): InteractResult {
