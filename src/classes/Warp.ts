@@ -123,6 +123,8 @@ export const WarpData: Record<WarpType, WarpInformation> = {
   },
 };
 
+const warpOffset = 12;
+
 export class Warp extends Physics.Arcade.Sprite implements Interactive {
   warpType: WarpType;
   player: Player;
@@ -143,8 +145,6 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
     if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
       this.setScale(0.6, 1);
-
-      const warpOffset = 12;
       this.setPosition(x, y - warpOffset);
 
       this.particles1 = scene.add
@@ -162,6 +162,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         })
         .setScale(1, 2)
         .setPipeline('Light2D');
+      this.particles1.viewBounds = this.particles1.getBounds(30, 500);
 
       this.particles2 = scene.add
         .particles(x, y - warpOffset, 'warp', {
@@ -178,6 +179,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
           maxAliveParticles: 20,
         })
         .setPipeline('Light2D');
+      this.particles2.viewBounds = this.particles2.getBounds(30, 500);
     }
 
     if (warpType === WarpType.Underground) {
@@ -250,6 +252,17 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     if (key === Key.Right) prompt = '[Right]';
 
     return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + prompt];
+  }
+
+  setPosition(x?: number, y?: number, z?: number, w?: number): this {
+    super.setPosition(x, y, z, w);
+
+    if (this.particles1 && this.particles2) {
+      this.particles1.setPosition(x, (y || 0) - warpOffset);
+      this.particles2.setPosition(x, (y || 0) - warpOffset);
+    }
+
+    return this;
   }
 
   setVisible(value: boolean): this {
