@@ -1,4 +1,4 @@
-import { BlendModes, GameObjects, Physics, Scene } from 'phaser';
+import { BlendModes, Cameras, GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
@@ -193,7 +193,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         .setPipeline('Light2D');
     }
 
-    if (this.hasExtendedBounds()) {
+    if (this.hasExtendedBounds() && this.body) {
       this.setBodySize(this.body.width * 4, this.body.height);
     }
 
@@ -318,12 +318,16 @@ export function warpTo(location: WarpType, player: Player) {
 
   if (onWarp) onWarp(player);
 
+  scene.cameras.main.fadeOut(100, 0, 0, 0, (_camera: Cameras.Scene2D.Camera, progress: number) => {
+    if (progress >= 1) scene.cameras.main.fadeIn(1000, 0, 0, 0);
+  });
+
   scene.cameras.main.stopFollow();
   scene.tweens.add({
     targets: scene.cameras.main,
     scrollX: targetScrollX,
     scrollY: targetScrollY - Config.cameraOffset,
-    duration: 400,
+    duration: 600,
     ease: 'Power1',
     onComplete: () => {
       scene.cameras.main.startFollow(player);
@@ -336,7 +340,7 @@ export function warpTo(location: WarpType, player: Player) {
   scene.tweens.add({
     targets: player,
     alpha: 0,
-    duration: 300,
+    duration: 500,
     ease: 'Power1',
     yoyo: true,
     repeat: 0,
@@ -355,7 +359,7 @@ export function warpTo(location: WarpType, player: Player) {
     targets: light,
     x,
     y,
-    duration: 300,
+    duration: 400,
     ease: 'Power1',
   });
 }
