@@ -26,3 +26,8 @@ export function setZoomed(scene: Game, zoomed: boolean) {
   scene.scale.setGameSize(size.width, size.height);
   scene.scene.restart();
 }
+
+export function getRandomElement<T>(array: T[]): T {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}

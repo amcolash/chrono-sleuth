@@ -6,10 +6,17 @@ export enum PipeType {
   Empty,
 }
 
+export enum Rotation {
+  Up = 0,
+  Right = 90,
+  Down = 180,
+  Left = 270,
+}
+
 export type Pipe = {
   x: number;
   y: number;
-  rotation: 0 | 90 | 180 | 270;
+  rotation: Rotation;
   type: PipeType;
 };
 
@@ -41,113 +48,16 @@ export const PipeShapes: Record<PipeType, number[][]> = {
   ],
 };
 
-function generateMainPath(grid: (Pipe | undefined)[][], width: number, height: number): boolean {
-  let x = 0,
-    y = 0;
-  const initialPipe: Pipe = { x, y, type: PipeType.Straight, rotation: 90 }; // Start with a vertical pipe
-  grid[y][x] = initialPipe;
-  const stack: [number, number][] = [[x, y]]; // Stack for backtracking
-
-  while (stack.length > 0) {
-    [x, y] = stack.pop()!;
-    const currentPipe = grid[y][x];
-
-    // Determine next positions
-    const directions: [number, number][] = [
-      [1, 0], // right
-      [0, 1], // down
-      [-1, 0], // left
-      [0, -1], // up
-    ];
-
-    // Shuffle directions to add randomness
-    directions.sort(() => Math.random() - 0.5);
-
-    let placedPipe = false;
-
-    for (const [dx, dy] of directions) {
-      const nextX = x + dx;
-      const nextY = y + dy;
-
-      // Ensure next position is within bounds
-      if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height) {
-        // Randomly choose a pipe type
-        const pipeTypes = Object.values(PipeType).filter((type) => type !== PipeType.Empty && Number.isNaN(type));
-        const nextType = Math.floor(Math.random() * 4);
-        const nextRotation: 0 | 90 | 180 | 270 = [0, 90, 180, 270][Math.floor(Math.random() * 4)];
-        const nextPipe: Pipe = { x: nextX, y: nextY, type: nextType, rotation: nextRotation };
-
-        // Check if next pipe connects with the current pipe
-        if (currentPipe && areConnected(currentPipe, nextPipe)) {
-          // Place the next pipe
-          if (!grid[nextY][nextX]) {
-            grid[nextY][nextX] = nextPipe;
-            stack.push([nextX, nextY]); // Continue from the new position
-            placedPipe = true;
-            break; // Exit loop to process next pipe placement
-          }
-        }
-      }
-    }
-
-    // If no valid pipe was placed, backtrack
-    if (!placedPipe) {
-      grid[y][x] = undefined; // Remove invalid pipe
-      if (stack.length === 0) {
-        console.log('Path generation failed. Trying a new start.');
-        // Optionally, restart path generation or handle failure here
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-
-function determineRotation(nextPipe: Pipe, currentPipe: Pipe): number {
-  // Determine appropriate rotation based on pipe types and direction
-  // Simple logic here, add more cases as needed for different pipe types
-  if (nextPipe.type === PipeType.Corner) {
-    if (nextPipe.x !== currentPipe.x) {
-      // Horizontal movement
-      return nextPipe.y > currentPipe.y ? 90 : 270;
-    } else {
-      // Vertical movement
-      return nextPipe.x > currentPipe.x ? 0 : 180;
-    }
-  }
-  return currentPipe.rotation; // Default to keep current rotation if not corner
-}
-
-// Fill the grid with empty spaces and random pipes
-function fillGrid(grid: Pipe[][], width: number, height: number): void {
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      if (!grid[y][x]) {
-        if (Math.random() < -0.2) {
-          const randomPipeType = Math.floor(Math.random() * 4) + 1;
-          grid[y][x] = {
-            x,
-            y,
-            type: randomPipeType,
-            rotation: [0, 90, 180, 270][Math.floor(Math.random() * 4)],
-          };
-        } else {
-          grid[y][x] = { x, y, type: PipeType.Empty, rotation: 0 };
-        }
-      }
-    }
-  }
-}
-
-export function createLevel(width: number, height: number): Pipe[][] {
-  let grid: Pipe[][] = Array.from({ length: height }, () => Array(width).fill(null));
-
-  generateMainPath(grid, width, height);
-  fillGrid(grid, width, height);
-
-  return grid;
-}
+export const level = [
+  ['C', 'C', 'C', 'C', 'T', 'C', 'C', 'C'],
+  ['T', 'X', 'T', 'S', 'T', 'X', 'T', 'T'],
+  ['C', 'C', 'S', 'S', 'S', 'C', 'C', 'C'],
+  ['C', 'X', 'T', 'S', 'T', 'X', 'T', 'C'],
+  ['T', 'S', 'S', 'S', 'S', 'T', 'S', 'T'],
+  ['C', 'X', 'C', 'C', 'C', 'X', 'T', 'C'],
+  ['T', 'S', 'T', 'S', 'T', 'S', 'T', 'S'],
+  ['C', 'X', 'C', 'X', 'C', 'X', 'C', 'C'],
+];
 
 export function getConnectedPipes(grid: Pipe[][], startX: number, startY: number): Pipe[] {
   const connectedPipes: Pipe[] = [];
@@ -243,4 +153,18 @@ function rotatePipe(pipe: Pipe): number[][] {
 function rotateMatrix(matrix: number[][]): number[][] {
   // Rotate the matrix 90 degrees clockwise
   return matrix[0].map((val, index) => matrix.map((row) => row[index]).reverse());
+}
+
+export function getPipeType(letter: string): PipeType {
+  switch (letter) {
+    case 'S':
+      return PipeType.Straight;
+    case 'C':
+      return PipeType.Corner;
+    case 'T':
+      return PipeType.T;
+    case 'X':
+    default:
+      return PipeType.Cross;
+  }
 }
