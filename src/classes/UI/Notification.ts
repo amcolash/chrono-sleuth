@@ -7,15 +7,17 @@ import { Layer } from '../../utils/layers';
 
 export class Notification extends GameObjects.Text {
   constructor(scene: Scene, text: string, duration: number = 3500) {
-    const notifications = getGameObjects(scene, Notification);
-    const y = 50 + notifications.length * 50;
+    const y =
+      getGameObjects(scene, Notification).reduce((acc, obj) => {
+        return Math.max(acc, obj.y - 20);
+      }, 0) + 65;
 
     super(scene, 20, y, text, {
       ...fontStyle,
       backgroundColor: '#' + Colors.Teal,
       padding: { x: 10, y: 5 },
     });
-    this.setAlpha(0).setDepth(Layer.Ui).setScrollFactor(0);
+    this.setAlpha(0).setDepth(Layer.Ui2).setScrollFactor(0);
 
     scene.add.existing(this);
 

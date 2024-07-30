@@ -37,7 +37,7 @@ export class DebugUI extends GameObjects.Container {
 
     this.player = player;
 
-    this.setScrollFactor(0).setDepth(Layer.Debug);
+    this.setScrollFactor(0).setDepth(Layer.Debug).setAlpha(0.8);
     this.scene.add.existing(this);
 
     this.text = scene.add.text(20, 90, '', {
