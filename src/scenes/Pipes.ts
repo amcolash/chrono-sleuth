@@ -2,55 +2,8 @@ import { GameObjects, Math, Scene } from 'phaser';
 
 import { InputManager, Key } from '../classes/InputManager';
 import { Config } from '../config';
+import { Pipe, pipeShape as PipeShapes, getConnectedPipes, getPipeType, level } from '../utils/pipes';
 import { MazeDialog } from './MazeDialog';
-
-enum PipeType {
-  Straight,
-  Corner,
-  T,
-  Cross,
-}
-
-type Pipe = {
-  x: number;
-  y: number;
-  rotation: 0 | 90 | 180 | 270;
-  type: PipeType;
-};
-
-const pipeShape = {
-  [PipeType.Straight]: [
-    [0, 0, 0],
-    [1, 1, 1],
-    [0, 0, 0],
-  ],
-  [PipeType.Corner]: [
-    [0, 0, 0],
-    [1, 1, 0],
-    [0, 1, 0],
-  ],
-  [PipeType.T]: [
-    [0, 0, 0],
-    [1, 1, 1],
-    [0, 1, 0],
-  ],
-  [PipeType.Cross]: [
-    [0, 1, 0],
-    [1, 1, 1],
-    [0, 1, 0],
-  ],
-};
-
-const level = [
-  ['C', 'C', 'C', 'C', 'T', 'C', 'C', 'C'],
-  ['T', 'X', 'T', 'S', 'T', 'X', 'T', 'T'],
-  ['C', 'C', 'S', 'S', 'S', 'C', 'C', 'C'],
-  ['C', 'X', 'T', 'S', 'T', 'X', 'T', 'C'],
-  ['T', 'S', 'S', 'S', 'S', 'T', 'S', 'T'],
-  ['C', 'X', 'C', 'C', 'C', 'X', 'T', 'C'],
-  ['T', 'S', 'T', 'S', 'T', 'S', 'T', 'S'],
-  ['C', 'X', 'C', 'X', 'C', 'X', 'C', 'C'],
-];
 
 const stepTime = 140;
 
@@ -78,10 +31,10 @@ export class Pipes extends Scene {
 
   prerenderPipes() {
     const size = 16; // Size of each block in the pipe
-    const pipeTypes = Object.keys(pipeShape); // Assume pipeShape is defined globally
+    const pipeTypes = Object.keys(PipeShapes); // Assume pipeShape is defined globally
 
     pipeTypes.forEach((type) => {
-      const shape = pipeShape[type];
+      const shape = PipeShapes[type];
       const key = `pipe_${type}`;
       const canvas = this.textures.createCanvas(key, size * 3, size * 3);
 
@@ -109,20 +62,6 @@ export class Pipes extends Scene {
     this.updatePipes();
   }
 
-  getPipeType(letter: string): PipeType {
-    switch (letter) {
-      case 'S':
-        return PipeType.Straight;
-      case 'C':
-        return PipeType.Corner;
-      case 'T':
-        return PipeType.T;
-      case 'X':
-      default:
-        return PipeType.Cross;
-    }
-  }
-
   createPipes() {
     this.pipes = [];
     const width = level[0].length; // Assuming level is properly defined and accessible
@@ -133,7 +72,7 @@ export class Pipes extends Scene {
       this.pipes[y] = []; // Allocate row for pipes
 
       for (let x = 0; x < width; x++) {
-        const type = this.getPipeType(level[y][x]); // Access using y for rows and x for columns
+        const type = getPipeType(level[y][x]); // Access using y for rows and x for columns
 
         this.pipes[y][x] = {
           x,
@@ -143,19 +82,15 @@ export class Pipes extends Scene {
         };
 
         const startEnd = (x === 0 && y === 0) || (x === width - 1 && y === height - 1);
+        if (startEnd) this.pipes[y][x].rotation = 0;
 
         const key = `pipe_${type}`;
-        const sprite = this.add
-          .sprite(x * 60, y * 60, key)
-          .setInteractive()
-          .on('pointerdown', () => {
-            this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
-            this.updatePipes();
-          });
+        const sprite = this.add.sprite(x * 60, y * 60, key).on('pointerdown', () => {
+          this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
+          this.updatePipes();
+        });
 
-        if (startEnd) {
-          sprite.setTint(0x00ff00);
-        } else {
+        if (!startEnd) {
           sprite.setInteractive();
         }
 
@@ -165,22 +100,24 @@ export class Pipes extends Scene {
   }
 
   updatePipes() {
-    // Update pipe rotation
+    const connected = getConnectedPipes(this.pipes, 0, 0);
+
+    // Update pipe rotation, tint and check if puzzle solved
     this.pipes.forEach((row) => {
       row.forEach((pipe) => {
         const sprite = this.sprites.getAt(pipe.x + pipe.y * level[0].length) as GameObjects.Sprite;
         sprite.setAngle(pipe.rotation);
+
+        if (connected.includes(pipe)) {
+          sprite.setTint(0x335599);
+
+          if (pipe.x === level[0].length - 1 && pipe.y === level.length - 1) {
+            this.parent.close(true);
+          }
+        } else {
+          sprite.setTint(0xffffff);
+        }
       });
     });
   }
-
-  // update(time: number, _delta: number): void {
-  //   if (time < this.nextUpdate) return;
-
-  //   const keys = this.keys.keys;
-
-  //   this.nextUpdate = time + stepTime;
-  // }
-
-  // isConnected(pipe1: Pipe, pipe2: Pipe): boolean {}
 }
