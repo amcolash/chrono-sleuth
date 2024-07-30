@@ -2,11 +2,11 @@ import { GameObjects } from 'phaser';
 
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
-import { updateSphinx } from '../utils/interactionUtils';
+import { getNPC, updateSphinx } from '../utils/interactionUtils';
 import { Layer } from '../utils/layers';
 import { Player } from './Player';
 import { Notification } from './UI/Notification';
-import { JournalEntry } from './types';
+import { JournalEntry, NPCType } from './types';
 
 export class Journal extends GameObjects.Sprite {
   player: Player;
@@ -68,6 +68,11 @@ export class Journal extends GameObjects.Sprite {
   handleSideEffects(entry: JournalEntry, silent: boolean) {
     if (entry === JournalEntry.SphinxRiddleSolved) {
       updateSphinx(this.scene, true, silent);
+    }
+
+    if (entry === JournalEntry.ClockFirstGear) {
+      const clock = getNPC(this.scene, NPCType.ClockTower);
+      if (clock?.clock) clock.clock.update1 = true;
     }
   }
 }

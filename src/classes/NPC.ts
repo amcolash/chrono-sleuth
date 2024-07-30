@@ -74,6 +74,9 @@ export const NPCData: Record<NPCType, Data> = {
       maxAliveParticles: 1,
       tint: [0xc76350],
     },
+    onCreate: (npc) => {
+      npc.setOffset(150, -40);
+    },
   },
 };
 

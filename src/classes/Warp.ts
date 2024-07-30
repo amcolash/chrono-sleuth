@@ -18,6 +18,7 @@ enum WarpVisual {
 type WarpInformation = {
   x: number;
   y: number;
+  range?: number;
   key: Key;
   warpTo: WarpType;
   visual: WarpVisual;
@@ -80,14 +81,16 @@ export const WarpData: Record<WarpType, WarpInformation> = {
   [WarpType.ClockEntrance]: {
     x: 690,
     y: -1320,
+    range: 15,
     key: Key.Left,
     warpTo: WarpType.ClockSquareNorth,
     visual: WarpVisual.Warp,
   },
 
   [WarpType.ClockStairs]: {
-    x: 890,
+    x: 910,
     y: -1400,
+    range: 20,
     key: Key.Right,
     warpTo: WarpType.ClockTop,
     visual: WarpVisual.Invisible,
@@ -95,6 +98,7 @@ export const WarpData: Record<WarpType, WarpInformation> = {
   [WarpType.ClockTop]: {
     x: 780,
     y: -1970,
+    range: 10,
     key: Key.Left,
     warpTo: WarpType.ClockStairs,
     visual: WarpVisual.Invisible,
@@ -123,7 +127,7 @@ export const WarpData: Record<WarpType, WarpInformation> = {
   },
 };
 
-const extendedRange = 30;
+const defaultRange = 30;
 const warpYOffset = 12;
 
 export class Warp extends Physics.Arcade.Sprite implements Interactive {
@@ -131,15 +135,17 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   player: Player;
   particles1: GameObjects.Particles.ParticleEmitter;
   particles2: GameObjects.Particles.ParticleEmitter;
+  range: number;
 
   constructor(scene: Scene, warpType: WarpType, player: Player) {
-    const { x, y, visual, warpTo, key } = WarpData[warpType];
+    const { x, y, visual, range } = WarpData[warpType];
     const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
 
     super(scene, x, y, texture);
     this.warpType = warpType;
     this.player = player;
     this.setScale(0.6).setPipeline('Light2D');
+    this.range = range || defaultRange;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -195,7 +201,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
     }
 
     if (this.hasExtendedBounds() && this.body) {
-      this.setBodySize(this.body.width * 4, this.body.height);
+      this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
     }
 
     if (visual === WarpVisual.Invisible) this.setAlpha(0);
@@ -228,8 +234,8 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
         graphics.lineStyle(2, 0xff00ff);
 
         const body = this.body as Physics.Arcade.Body;
-        graphics.lineBetween(x - extendedRange, y - body.halfHeight, x - extendedRange, y + body.halfHeight);
-        graphics.lineBetween(x + extendedRange, y - body.halfHeight, x + extendedRange, y + body.halfHeight);
+        graphics.lineBetween(x - this.range, y - body.halfHeight, x - this.range, y + body.halfHeight);
+        graphics.lineBetween(x + this.range, y - body.halfHeight, x + this.range, y + body.halfHeight);
         graphics.strokeCircle(x, y, 5);
       }
     }
@@ -244,7 +250,7 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   }
 
   onInteract(keys: Record<Key, boolean>): InteractResult {
-    const withinRange = !this.hasExtendedBounds() || Math.abs(this.player.x - this.x) < extendedRange;
+    const withinRange = !this.hasExtendedBounds() || Math.abs(this.player.x - this.x) < this.range;
 
     const warpKeys = WarpData[this.warpType].key;
     const shouldWarp = keys[warpKeys] && withinRange;
@@ -330,7 +336,7 @@ export function warpTo(location: WarpType, player: Player) {
 
   if (onWarp) onWarp(player);
 
-  scene.cameras.main.fadeOut(100, 0, 0, 0, (_camera: Cameras.Scene2D.Camera, progress: number) => {
+  scene.cameras.main.fadeOut(200, 0, 0, 0, (_camera: Cameras.Scene2D.Camera, progress: number) => {
     if (progress >= 1) scene.cameras.main.fadeIn(1000, 0, 0, 0);
   });
 
@@ -340,6 +346,7 @@ export function warpTo(location: WarpType, player: Player) {
     scrollX: targetScrollX,
     scrollY: targetScrollY - Config.cameraOffset,
     duration: 600,
+    delay: 100,
     ease: 'Power1',
     onComplete: () => {
       scene.cameras.main.startFollow(player);
