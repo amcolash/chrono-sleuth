@@ -7,6 +7,8 @@ import { JournalDialog } from './scenes/JournalDialog';
 import { Maze } from './scenes/Maze';
 import { MazeDialog } from './scenes/MazeDialog';
 import { Paused } from './scenes/Paused';
+import { Pipes } from './scenes/Pipes';
+import { PipesDialog } from './scenes/PipesDialog';
 import { Preloader } from './scenes/Preloader';
 import { loadFont } from './utils/fonts';
 
@@ -22,7 +24,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainGame, Paused, JournalDialog, MazeDialog, Maze],
+  scene: [Boot, Preloader, MainGame, Paused, JournalDialog, MazeDialog, Maze, PipesDialog, Pipes],
   input: {
     gamepad: true,
   },
