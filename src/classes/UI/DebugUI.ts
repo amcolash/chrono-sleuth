@@ -21,6 +21,7 @@ export class DebugUI extends GameObjects.Container {
   constructor(scene: Game, player: Player) {
     super(scene, 0, 0);
     this.scene = scene;
+    this.player = player;
 
     scene.physics.world.drawDebug = Config.debug;
 
@@ -34,8 +35,6 @@ export class DebugUI extends GameObjects.Container {
     this.createEventListeners();
 
     if (!Config.debug) return;
-
-    this.player = player;
 
     this.setScrollFactor(0).setDepth(Layer.Debug).setAlpha(0.8);
     this.scene.add.existing(this);
@@ -91,6 +90,12 @@ export class DebugUI extends GameObjects.Container {
 
     this.scene.input.keyboard?.on('keydown-FORWARD_SLASH', () => {
       toggleLighting(this.scene);
+    });
+
+    this.scene.input.keyboard?.on('keydown-P', () => {
+      this.scene.gamepad.setVisible(false);
+      this.scene.scene.pause();
+      this.scene.scene.launch('PipesDialog', { player: this.player, level: 0 });
     });
 
     if (Config.debug) {

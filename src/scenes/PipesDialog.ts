@@ -4,8 +4,7 @@ import { InputManager } from '../classes/InputManager';
 import { Player } from '../classes/Player';
 import { Button } from '../classes/UI/Button';
 import { Gamepad } from '../classes/UI/Gamepad';
-import { WarpData, warpTo } from '../classes/Warp';
-import { JournalEntry, WarpType } from '../classes/types';
+import { JournalEntry } from '../classes/types';
 import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
@@ -16,13 +15,15 @@ export class PipesDialog extends Scene {
   container: GameObjects.Container;
   arrow: GameObjects.Sprite;
   keys: InputManager;
+  level: number;
 
   constructor() {
     super('PipesDialog');
   }
 
-  init(data: { player: Player }) {
+  init(data: { player: Player; level: number }) {
     this.player = data.player;
+    this.level = data.level;
   }
 
   create() {
@@ -62,10 +63,9 @@ export class PipesDialog extends Scene {
     this.scene.resume('Game');
 
     if (success) {
-      warpTo(WarpType.Forest, this.player);
-      this.player.journal.addEntry(JournalEntry.ForestMazeSolved);
-    } else {
-      this.player.setPosition(WarpData[WarpType.TownEast].x - 40, WarpData[WarpType.TownEast].y);
+      if (this.level === 0) {
+        this.player.journal.addEntry(JournalEntry.ForestMazeSolved);
+      }
     }
   }
 }

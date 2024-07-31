@@ -21,6 +21,12 @@ export class Preloader extends Scene {
       //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
       bar.width = Config.width * 0.75 * progress - 5;
     });
+
+    const div = document.createElement('div');
+    div.id = 'loading';
+    div.innerText = '⌛';
+
+    this.add.dom(0, 0, div);
   }
 
   preload() {
@@ -86,6 +92,6 @@ export class Preloader extends Scene {
     //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
     //  For example, you can define global animations here, so we can use them in other scenes.
     //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-    this.scene.start('Game');
+    // this.scene.start('Game');
   }
 }

@@ -35,6 +35,9 @@ const config: Types.Core.GameConfig = {
     pixelArt: true,
     antialias: false,
   },
+  dom: {
+    createContainer: true,
+  },
 };
 
 // TODO: Should this be in preload?
