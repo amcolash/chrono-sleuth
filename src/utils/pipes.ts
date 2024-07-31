@@ -1,9 +1,9 @@
 export enum PipeType {
-  Straight,
-  Corner,
-  T,
-  Cross,
-  Empty,
+  Straight = 'S',
+  Corner = 'C',
+  T = 'T',
+  Cross = 'X',
+  Empty = ' ',
 }
 
 export enum Rotation {
@@ -18,6 +18,7 @@ export type Pipe = {
   y: number;
   rotation: Rotation;
   type: PipeType;
+  interactive: boolean;
 };
 
 export const PipeShapes: Record<PipeType, number[][]> = {
@@ -48,16 +49,20 @@ export const PipeShapes: Record<PipeType, number[][]> = {
   ],
 };
 
-export const level = [
-  ['C', 'C', 'C', 'C', 'T', 'C', 'C', 'C'],
-  ['T', 'X', 'T', 'S', 'T', 'X', 'T', 'T'],
-  ['C', 'C', 'S', 'S', 'S', 'C', 'C', 'C'],
-  ['C', 'X', 'T', 'S', 'T', 'X', 'T', 'C'],
-  ['T', 'S', 'S', 'S', 'S', 'T', 'S', 'T'],
-  ['C', 'X', 'C', 'C', 'C', 'X', 'T', 'C'],
-  ['T', 'S', 'T', 'S', 'T', 'S', 'T', 'S'],
-  ['C', 'X', 'C', 'X', 'C', 'X', 'C', 'C'],
-];
+export const level: PipeType[][] = [
+  ['C', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+  ['T', 'C', ' ', ' ', ' ', 'C', 'C', ' ', 'C', 'S', 'T', 'X', ' ', ' ', ' ', ' '],
+  [' ', 'S', ' ', ' ', ' ', 'T', 'S', ' ', 'X', ' ', ' ', 'S', ' ', ' ', ' ', ' '],
+  [' ', 'X', 'S', 'T', ' ', 'S', 'S', ' ', 'X', ' ', ' ', 'X', 'X', 'T', ' ', ' '],
+  [' ', ' ', ' ', 'C', 'X', 'T', 'T', 'X', 'S', ' ', ' ', 'T', 'C', 'S', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X', 'T', ' ', ' ', ' ', ' ', 'S', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'S', 'T', ' ', ' ', ' ', ' ', 'T', 'S', 'C'],
+  [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'C', 'C', ' ', ' ', ' ', ' ', ' ', ' ', 'C'],
+].map((row) => row.map((cell) => cell as PipeType));
+
+export function isPipeType(key: string): key is PipeType {
+  return Object.values(PipeType).includes(key as PipeType);
+}
 
 export function getConnectedPipes(grid: Pipe[][], startX: number, startY: number): Pipe[] {
   const connectedPipes: Pipe[] = [];
@@ -152,19 +157,5 @@ function rotatePipe(pipe: Pipe): number[][] {
 
 function rotateMatrix(matrix: number[][]): number[][] {
   // Rotate the matrix 90 degrees clockwise
-  return matrix[0].map((val, index) => matrix.map((row) => row[index]).reverse());
-}
-
-export function getPipeType(letter: string): PipeType {
-  switch (letter) {
-    case 'S':
-      return PipeType.Straight;
-    case 'C':
-      return PipeType.Corner;
-    case 'T':
-      return PipeType.T;
-    case 'X':
-    default:
-      return PipeType.Cross;
-  }
+  return matrix[0].map((_val, index) => matrix.map((row) => row[index]).reverse());
 }
