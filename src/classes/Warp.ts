@@ -1,146 +1,267 @@
-import { Physics } from 'phaser';
-import { Player } from './Player';
-import { Interactive, InteractResult, WarpType } from './types';
-import { Config } from '../config';
+import { BlendModes, Cameras, GameObjects, Physics, Scene } from 'phaser';
 
-const WarpData = {
+import { Config } from '../config';
+import { Colors, getColorNumber } from '../utils/colors';
+import { hasJournalEntry } from '../utils/interactionUtils';
+import { Key } from './InputManager';
+import { Player } from './Player';
+import { InteractResult, Interactive, JournalEntry, WarpType } from './types';
+
+enum WarpVisual {
+  Ladder,
+  Warp,
+  WarpHidden, // Default to invisible
+  Invisible, // Not visually shown, but still functioning
+}
+
+// Ugh, naming is hard
+type WarpInformation = {
+  x: number;
+  y: number;
+  key: Key;
+  warpTo: WarpType;
+  visual: WarpVisual;
+  onWarp?: (player: Player) => void;
+};
+
+export const WarpData: Record<WarpType, WarpInformation> = {
   [WarpType.Town]: {
     x: 300,
     y: 650,
-    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    key: Key.Down,
     warpTo: WarpType.Underground,
-    visible: true,
+    visual: WarpVisual.Ladder,
   },
   [WarpType.Underground]: {
-    x: 300,
+    x: 301,
     y: 875,
-    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    key: Key.Up,
     warpTo: WarpType.Town,
-    visible: true,
+    visual: WarpVisual.Ladder,
   },
 
   [WarpType.TownEast]: {
     x: 1720,
     y: 650,
-    key: [
-      Phaser.Input.Keyboard.KeyCodes.RIGHT,
-      Phaser.Input.Keyboard.KeyCodes.D,
-    ],
+    key: Key.Right,
     warpTo: WarpType.Forest,
-    visible: false,
+    visual: WarpVisual.WarpHidden,
   },
   [WarpType.Forest]: {
     x: 2650,
-    y: 810,
-    key: [
-      Phaser.Input.Keyboard.KeyCodes.LEFT,
-      Phaser.Input.Keyboard.KeyCodes.A,
-    ],
+    y: 815,
+    key: Key.Left,
     warpTo: WarpType.TownEast,
-    visible: false,
+    visual: WarpVisual.Warp,
   },
 
   [WarpType.TownNorth]: {
     x: 775,
     y: 650,
-    key: [Phaser.Input.Keyboard.KeyCodes.UP],
+    key: Key.Up,
     warpTo: WarpType.ClockSquare,
-    visible: false,
+    visual: WarpVisual.WarpHidden,
   },
   [WarpType.ClockSquare]: {
-    x: 775,
+    x: 610,
     y: -330,
-    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    key: Key.Left,
     warpTo: WarpType.TownNorth,
-    visible: false,
+    visual: WarpVisual.Warp,
   },
 
   [WarpType.ClockSquareNorth]: {
-    x: 775,
-    y: 50,
-    key: [Phaser.Input.Keyboard.KeyCodes.UP],
-    warpTo: WarpType.ClockInside,
-    visible: false,
+    x: 915,
+    y: -330,
+    key: Key.Up,
+    warpTo: WarpType.ClockEntrance,
+    visual: WarpVisual.WarpHidden,
   },
-  [WarpType.ClockInside]: {
-    x: 775,
-    y: 200,
-    key: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+  [WarpType.ClockEntrance]: {
+    x: 690,
+    y: -1320,
+    key: Key.Left,
     warpTo: WarpType.ClockSquareNorth,
-    visible: false,
+    visual: WarpVisual.Warp,
+  },
+
+  [WarpType.ClockStairs]: {
+    x: 890,
+    y: -1400,
+    key: Key.Right,
+    warpTo: WarpType.ClockTop,
+    visual: WarpVisual.Invisible,
+  },
+  [WarpType.ClockTop]: {
+    x: 780,
+    y: -1970,
+    key: Key.Left,
+    warpTo: WarpType.ClockStairs,
+    visual: WarpVisual.Invisible,
+  },
+
+  [WarpType.ForestEast]: {
+    x: 3590,
+    y: 815,
+    key: Key.Right,
+    warpTo: WarpType.Lake,
+    visual: WarpVisual.WarpHidden,
+  },
+  [WarpType.Lake]: {
+    x: 4625,
+    y: 915,
+    key: Key.Left,
+    warpTo: WarpType.ForestEast,
+    visual: WarpVisual.Warp,
+  },
+  [WarpType.LakeEast]: {
+    x: 6121,
+    y: 760,
+    key: Key.Right,
+    warpTo: WarpType.Lake,
+    visual: WarpVisual.Warp,
   },
 };
+
+const extendedRange = 30;
+const warpYOffset = 12;
 
 export class Warp extends Physics.Arcade.Sprite implements Interactive {
   warpType: WarpType;
   player: Player;
-  interactionTimeout = 500;
+  particles1: GameObjects.Particles.ParticleEmitter;
+  particles2: GameObjects.Particles.ParticleEmitter;
 
-  constructor(scene: Phaser.Scene, warpType: WarpType, player: Player) {
-    const { x, y, visible } = WarpData[warpType];
+  constructor(scene: Scene, warpType: WarpType, player: Player) {
+    const { x, y, visual, warpTo, key } = WarpData[warpType];
+    const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
 
-    super(scene, x, y, 'ladder');
+    super(scene, x, y, texture);
     this.warpType = warpType;
     this.player = player;
-    this.scale = 0.5;
-    this.visible = visible;
+    this.setScale(0.6).setPipeline('Light2D');
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    if (Config.debug) this.setInteractive({ draggable: true });
+
+    if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
+      this.setScale(0.6, 1);
+      this.setPosition(x, y - warpYOffset);
+
+      this.particles1 = scene.add
+        .particles(x, y - warpYOffset, 'warp', {
+          x: { min: -3, max: 3 },
+          y: { min: -3, max: 3 },
+          speed: { random: [-40, 40] },
+          scale: { min: 0.35, max: 0.5 },
+          alpha: { start: 0.2, end: 0 },
+          angle: { min: 0, max: 360 },
+          color: [getColorNumber(Colors.Teal), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
+          colorEase: 'Linear',
+          radial: true,
+          blendMode: BlendModes.OVERLAY,
+        })
+        .setScale(1, 2)
+        .setPipeline('Light2D');
+      this.particles1.viewBounds = this.particles1.getBounds(30, 500);
+
+      this.particles2 = scene.add
+        .particles(x, y - warpYOffset, 'warp', {
+          x: { min: -30, max: 30 },
+          y: { min: -50, max: 50 },
+          speed: { random: [-5, 5] },
+          scale: { min: 0.05, max: 0.15 },
+          alpha: { values: [0, 0.2, 0] },
+          angle: { min: 0, max: 360 },
+          lifespan: { min: 1000, max: 1400 },
+          color: [getColorNumber(Colors.Peach), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
+          colorEase: 'Linear',
+          radial: true,
+          maxAliveParticles: 20,
+        })
+        .setPipeline('Light2D');
+      this.particles2.viewBounds = this.particles2.getBounds(30, 500);
+    }
 
     if (warpType === WarpType.Underground) {
-      scene.add.sprite(x, y - 60, 'ladder').setScale(0.5);
-      scene.add.sprite(x, y - 105, 'ladder').setScale(0.5);
+      scene.add
+        .sprite(x, y - 60, 'ladder')
+        .setScale(0.6)
+        .setPipeline('Light2D');
+      scene.add
+        .sprite(x, y - 105, 'ladder')
+        .setScale(0.6)
+        .setPipeline('Light2D');
+    }
+
+    if (this.hasExtendedBounds() && this.body) {
+      this.setBodySize(this.body.width * 4, this.body.height);
+    }
+
+    if (visual === WarpVisual.Invisible) this.setAlpha(0);
+    this.setVisible(visual !== WarpVisual.WarpHidden);
+
+    if (Config.debug) {
+      this.setInteractive({ draggable: true });
+      const graphics = scene.add.graphics();
+
+      // const target = WarpData[warpTo];
+
+      // const color = warpType % 2 === 0 ? 0xffff00 : 0x00ffff;
+      // graphics.fillStyle(color);
+      // graphics.lineStyle(3, color);
+
+      // let offsetX = -this.displayWidth / 2;
+      // let offsetY = -this.displayHeight / 2;
+
+      // if (target.x > x) offsetX *= -1;
+      // if (target.y > y) offsetY *= -1;
+
+      // const line = new Phaser.Geom.Line(x + offsetX, y + offsetY, target.x + offsetX, target.y + offsetY);
+      // graphics.strokeLineShape(line);
+      // graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
+      // graphics.fillRect(x - this.body?.width / 2 - 7, y - this.body?.height / 2 - 7, 14, 14);
+
+      // if (warpType === WarpType.Forest) console.log(this.body?.left, this.body.top);
+
+      if (this.hasExtendedBounds()) {
+        graphics.lineStyle(2, 0xff00ff);
+
+        const body = this.body as Physics.Arcade.Body;
+        graphics.lineBetween(x - extendedRange, y - body.halfHeight, x - extendedRange, y + body.halfHeight);
+        graphics.lineBetween(x + extendedRange, y - body.halfHeight, x + extendedRange, y + body.halfHeight);
+        graphics.strokeCircle(x, y, 5);
+      }
     }
   }
 
-  onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key }) {
-    let shouldWarp = false;
+  hasExtendedBounds() {
+    const { visual, key } = WarpData[this.warpType];
+    return (
+      (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden || visual === WarpVisual.Invisible) &&
+      (key === Key.Left || key === Key.Right)
+    );
+  }
+
+  onInteract(keys: Record<Key, boolean>): InteractResult {
+    const withinRange = !this.hasExtendedBounds() || Math.abs(this.player.x - this.x) < extendedRange;
+
     const warpKeys = WarpData[this.warpType].key;
-    Object.values(keys).forEach((key) => {
-      if (key.isDown && warpKeys.includes(key.keyCode)) {
-        shouldWarp = true;
-      }
-    });
+    const shouldWarp = keys[warpKeys] && withinRange;
+
+    if (
+      shouldWarp &&
+      this.warpType === WarpType.TownEast &&
+      !hasJournalEntry(this.player.journal.journal, JournalEntry.ForestMazeSolved) &&
+      !Config.debug
+    ) {
+      this.scene.scene.pause();
+      this.scene.scene.launch('MazeDialog', { player: this.player });
+      return InteractResult.None;
+    }
 
     if (shouldWarp) {
-      const { x, y } = WarpData[WarpData[this.warpType].warpTo];
-
-      const targetScrollX = x - this.scene.cameras.main.width / 2;
-      const targetScrollY = y - this.scene.cameras.main.height / 2;
-
-      this.scene.cameras.main.stopFollow();
-      this.player.active = false;
-      this.scene.tweens.add({
-        targets: this.scene.cameras.main,
-        scrollX: targetScrollX,
-        scrollY: targetScrollY - 200,
-        duration: 400,
-        ease: 'Power1',
-        onComplete: () => {
-          this.scene.cameras.main.startFollow(this.player, true);
-          this.scene.cameras.main.setFollowOffset(0, 200);
-          this.player.active = true;
-        },
-      });
-
-      // fade player out and then in again
-      this.scene.tweens.add({
-        targets: this.player,
-        alpha: 0,
-        duration: 300,
-        ease: 'Power1',
-        yoyo: true,
-        repeat: 0,
-        onYoyo: () => {
-          this.player.setPosition(x, y);
-        },
-        onComplete: () => {
-          this.player.alpha = 1;
-        },
-      });
-
+      warpTo(WarpData[this.warpType].warpTo, this.player);
       return InteractResult.Teleported;
     }
 
@@ -148,41 +269,109 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
   }
 
   getButtonPrompt() {
-    const buttons = WarpData[this.warpType].key.map((key) => {
-      if (
-        key === Phaser.Input.Keyboard.KeyCodes.ENTER ||
-        key === Phaser.Input.Keyboard.KeyCodes.SPACE
-      )
-        return '[CONTINUE]';
-      if (
-        key === Phaser.Input.Keyboard.KeyCodes.UP ||
-        key === Phaser.Input.Keyboard.KeyCodes.W
-      )
-        return '[UP]';
-      if (
-        key === Phaser.Input.Keyboard.KeyCodes.DOWN ||
-        key === Phaser.Input.Keyboard.KeyCodes.S
-      )
-        return '[DOWN]';
-      if (
-        key === Phaser.Input.Keyboard.KeyCodes.LEFT ||
-        key === Phaser.Input.Keyboard.KeyCodes.A
-      )
-        return '[LEFT]';
-      if (
-        key === Phaser.Input.Keyboard.KeyCodes.RIGHT ||
-        key === Phaser.Input.Keyboard.KeyCodes.D
-      )
-        return '[RIGHT]';
+    const key = WarpData[this.warpType].key;
 
-      return '[UNKNOWN]';
-    });
+    let prompt;
+    if (key === Key.Continue) prompt = '[CONTINUE]';
+    if (key === Key.Up) prompt = '[Up]';
+    if (key === Key.Down) prompt = '[Down]';
+    if (key === Key.Left) prompt = '[Left]';
+    if (key === Key.Right) prompt = '[Right]';
 
-    const unique = [...new Set(buttons)];
-
-    return [
-      `Travel to ${WarpType[WarpData[this.warpType].warpTo]}`,
-      'Press ' + unique.join(' or '),
-    ];
+    return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + prompt];
   }
+
+  setPosition(x?: number, y?: number, z?: number, w?: number): this {
+    super.setPosition(x, y, z, w);
+
+    if (this.particles1 && this.particles2) {
+      this.particles1.setPosition(x, (y || 0) - warpYOffset);
+      this.particles2.setPosition(x, (y || 0) - warpYOffset);
+    }
+
+    return this;
+  }
+
+  setVisible(value: boolean): this {
+    super.setVisible(value);
+
+    if (this.particles1 && this.particles2) {
+      if (value) {
+        this.particles1.start();
+        this.particles2.start();
+      } else {
+        this.particles1.stop();
+        this.particles1.killAll();
+
+        this.particles2.stop();
+        this.particles2.killAll();
+      }
+    }
+
+    return this;
+  }
+
+  destroy(fromScene?: boolean): void {
+    if (this.particles1 && this.particles2) {
+      this.particles1.destroy();
+      this.particles2.destroy();
+    }
+
+    super.destroy(fromScene);
+  }
+}
+
+export function warpTo(location: WarpType, player: Player) {
+  const { x, y, onWarp } = WarpData[location];
+  const scene = player.scene;
+
+  const targetScrollX = x - scene.cameras.main.width / 2;
+  const targetScrollY = y - scene.cameras.main.height / 2;
+
+  if (onWarp) onWarp(player);
+
+  scene.cameras.main.fadeOut(100, 0, 0, 0, (_camera: Cameras.Scene2D.Camera, progress: number) => {
+    if (progress >= 1) scene.cameras.main.fadeIn(1000, 0, 0, 0);
+  });
+
+  scene.cameras.main.stopFollow();
+  scene.tweens.add({
+    targets: scene.cameras.main,
+    scrollX: targetScrollX,
+    scrollY: targetScrollY - Config.cameraOffset,
+    duration: 600,
+    ease: 'Power1',
+    onComplete: () => {
+      scene.cameras.main.startFollow(player);
+      scene.cameras.main.setFollowOffset(0, Config.cameraOffset);
+    },
+  });
+
+  // fade player out and then in again
+  player.setActive(false);
+  scene.tweens.add({
+    targets: player,
+    alpha: 0,
+    duration: 500,
+    ease: 'Power1',
+    yoyo: true,
+    repeat: 0,
+    onYoyo: () => {
+      player.setPosition(x, y);
+    },
+    onComplete: () => {
+      player.alpha = 1;
+      player.setActive(true);
+    },
+  });
+
+  // move player to new location
+  const light = player.light instanceof GameObjects.Light ? player.light : player.light.light;
+  scene.tweens.add({
+    targets: light,
+    x,
+    y,
+    duration: 400,
+    ease: 'Power1',
+  });
 }

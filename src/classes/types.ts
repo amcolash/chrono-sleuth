@@ -1,3 +1,5 @@
+import { Key } from './InputManager';
+
 export enum InteractResult {
   None,
   Teleported,
@@ -9,7 +11,7 @@ export interface Interactive {
   interactionTimeout?: number;
   getButtonPrompt?(): string | string[];
 
-  onInteract(keys: { [key: string]: Phaser.Input.Keyboard.Key } | undefined): InteractResult;
+  onInteract(keys: Record<Key, boolean>): InteractResult;
 }
 
 export interface Rewindable {
@@ -29,38 +31,55 @@ export enum WarpType {
   TownEast,
   Forest,
 
+  ForestEast,
+  Lake,
+
+  LakeEast,
+
   TownNorth,
   ClockSquare,
 
   ClockSquareNorth,
-  ClockInside,
+  ClockEntrance,
+
+  ClockStairs,
+  ClockTop,
 }
 
 export enum ItemType {
-  Book,
-  Map,
+  Wrench,
+  Gear1,
 }
 
 export enum QuestType {
-  InventorBook,
-  StrangerMap,
+  ForestGear,
+  SphinxRiddle,
 }
 
 export enum NPCType {
+  // Characters
   Inventor,
   Stranger,
+  Sphinx,
+  Mayor,
+
+  // Inanimate objects
+  ClockTower,
+}
+
+export enum WallType {
+  Sphinx,
 }
 
 export interface Quest {
   id: QuestType;
-  name: string;
   completed: boolean;
 }
 
 export enum JournalEntry {
-  // Inventor
-  InventorBookFound,
-
-  // Stranger
-  StrangerMapFound,
+  FixTheClock,
+  ForestMazeSolved,
+  SphinxRiddleSolved,
+  MetTheMayor,
+  ClockFirstGear,
 }

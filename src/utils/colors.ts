@@ -1,3 +1,5 @@
+import { Display, Types } from 'phaser';
+
 export const Colors = {
   White: 'fcfee9',
   Tan: 'e6c99d',
@@ -5,14 +7,24 @@ export const Colors = {
   Brown: '473946',
   Teal: '303646',
   Black: '1c1831',
+
+  Lights: 'ffccaa',
+  Night: '335588',
 };
 
 export function getColorNumber(color: string): number {
-  return Phaser.Display.Color.HexStringToColor(color).color;
+  return Display.Color.HexStringToColor(color).color;
 }
 
-export const fontStyle = {
-  fontFamily: 'sans-serif',
-  fontSize: 24,
-  color: `#${Colors.White}`,
-};
+export function fromRGB(color: Display.RGB): number {
+  return getColorNumber(Display.Color.RGBToString(color.r * 255, color.g * 255, color.b * 255));
+}
+
+export function colorToNumber(color: Types.Display.ColorObject): number {
+  return getColorNumber(Display.Color.RGBToString(color.r, color.g, color.b));
+}
+
+export function getColorObject(color: number): Display.Color {
+  const rgba = Display.Color.ColorToRGBA(color);
+  return new Display.Color(rgba.r, rgba.g, rgba.b, rgba.a);
+}

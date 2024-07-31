@@ -1,17 +1,36 @@
-import { GameObjects } from 'phaser';
-import { fontStyle } from '../../utils/colors';
+import { GameObjects, Types } from 'phaser';
+
+import { Colors } from '../../utils/colors';
+import { fontStyle } from '../../utils/fonts';
 
 export class Button extends GameObjects.Text {
-  constructor(scene: Phaser.Scene, x: number, y: number, text: string, onClick: () => void) {
-    super(scene, x, y, text, { ...fontStyle, fontSize: 48, backgroundColor: '#05a', padding: { x: 15, y: 10 } });
+  onClick: () => void;
+
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    text: string,
+    onClick: () => void,
+    style?: Types.GameObjects.Text.TextStyle
+  ) {
+    super(scene, x, y, text, {
+      ...fontStyle,
+      fontSize: 48,
+      backgroundColor: `#${Colors.Teal}`,
+      padding: { x: 15, y: 10 },
+      ...style,
+    });
     this.setOrigin(0.5);
 
     scene.add.existing(this);
 
+    this.onClick = onClick;
+
     // Button interactions
-    this.setInteractive();
+    this.setInteractive({ useHandCursor: true }).setScrollFactor(0);
     this.on('pointerdown', () => onClick());
-    this.on('pointerover', () => this.setBackgroundColor('#06e'));
-    this.on('pointerout', () => this.setBackgroundColor('#05a'));
+    this.on('pointerover', () => this.setTint(0xbbbbbb));
+    this.on('pointerout', () => this.setTint(0xffffff));
   }
 }

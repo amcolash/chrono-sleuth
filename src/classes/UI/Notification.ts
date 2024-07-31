@@ -1,26 +1,31 @@
 import { GameObjects, Scene } from 'phaser';
-import { Colors, fontStyle } from '../../utils/colors';
-import { Config } from '../../config';
+
+import { Colors } from '../../utils/colors';
+import { fontStyle } from '../../utils/fonts';
+import { getGameObjects } from '../../utils/interactionUtils';
+import { Layer } from '../../utils/layers';
 
 export class Notification extends GameObjects.Text {
-  constructor(scene: Scene, text: string) {
-    super(scene, 0, 30, text, {
+  constructor(scene: Scene, text: string, duration: number = 3500) {
+    const notifications = getGameObjects(scene, Notification);
+    const y = 50 + notifications.length * 50;
+
+    super(scene, 20, y, text, {
       ...fontStyle,
       backgroundColor: '#' + Colors.Teal,
       padding: { x: 10, y: 5 },
     });
-    this.setAlpha(0)
-      .setDepth(2)
-      .setScrollFactor(0)
-      .setX(Config.width - this.displayWidth - 20);
+    this.setAlpha(0).setDepth(Layer.Ui).setScrollFactor(0);
 
     scene.add.existing(this);
 
     scene.add.tween({
       targets: this,
       alpha: 1,
+      scale: 1.05,
+      y: y + 10,
       duration: 350,
-      hold: 3500,
+      hold: duration,
       yoyo: true,
       repeat: 0,
       onComplete: () => this.destroy(),

@@ -1,8 +1,12 @@
 import { GameObjects } from 'phaser';
-import { JournalEntry } from './types';
+
 import { Config } from '../config';
+import { Colors, getColorNumber } from '../utils/colors';
+import { updateSphinx } from '../utils/interactionUtils';
+import { Layer } from '../utils/layers';
 import { Player } from './Player';
 import { Notification } from './UI/Notification';
+import { JournalEntry } from './types';
 
 export class Journal extends GameObjects.Sprite {
   player: Player;
@@ -10,8 +14,13 @@ export class Journal extends GameObjects.Sprite {
   unread: GameObjects.Ellipse;
 
   constructor(scene: Phaser.Scene, player: Player) {
-    super(scene, Config.width - 50, Config.height - 50, 'journal');
-    this.setScrollFactor(0).setDepth(1).setScale(0.5).setAlpha(0).setInteractive().setActive(false);
+    super(scene, Config.width - 50, Config.height - 55, 'journal');
+    this.setScrollFactor(0)
+      .setDepth(Layer.Ui)
+      .setScale(0.5)
+      .setAlpha(0)
+      .setInteractive({ useHandCursor: true })
+      .setActive(false);
     this.on('pointerdown', this.openJournal);
 
     scene.add.existing(this);
@@ -19,13 +28,16 @@ export class Journal extends GameObjects.Sprite {
     this.player = player;
 
     this.unread = scene.add
-      .ellipse(Config.width - 20, Config.height - 85, 20, 20, 0xaa0000)
+      .ellipse(Config.width - 21, Config.height - 89, 20, 20, 0xaa0000)
+      .setStrokeStyle(2, getColorNumber(Colors.Black))
       .setScrollFactor(0)
-      .setDepth(2)
+      .setDepth(Layer.Ui2)
       .setVisible(false);
   }
 
-  addEntry(entry: JournalEntry) {
+  addEntry(entry: JournalEntry, silent?: boolean) {
+    if (this.journal.includes(entry)) return;
+
     if (this.journal.length === 0) {
       this.scene.tweens.add({
         targets: this,
@@ -36,8 +48,13 @@ export class Journal extends GameObjects.Sprite {
     }
 
     this.journal.push(entry);
-    this.unread.setVisible(true);
-    new Notification(this.scene, 'New joural entry added!');
+
+    if (!silent) {
+      this.unread.setVisible(true);
+      new Notification(this.scene, 'New journal entry added!');
+    }
+
+    this.handleSideEffects(entry, silent || false);
   }
 
   openJournal() {
@@ -46,5 +63,11 @@ export class Journal extends GameObjects.Sprite {
     this.unread.setVisible(false);
     this.scene.scene.pause();
     this.scene.scene.launch('JournalDialog', { player: this.player });
+  }
+
+  handleSideEffects(entry: JournalEntry, silent: boolean) {
+    if (entry === JournalEntry.SphinxRiddleSolved) {
+      updateSphinx(this.scene, true, silent);
+    }
   }
 }

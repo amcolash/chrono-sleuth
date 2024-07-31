@@ -1,33 +1,44 @@
 import { GameObjects, Scene } from 'phaser';
+
 import { Config } from '../config';
-import { Colors, fontStyle, getColorNumber } from '../utils/colors';
-import { ItemType } from './types';
+import { Colors, getColorNumber } from '../utils/colors';
+import { fontStyle } from '../utils/fonts';
+import { getItem } from '../utils/interactionUtils';
+import { Layer } from '../utils/layers';
 import { ItemData } from './Item';
+import { Notification } from './UI/Notification';
+import { ItemType } from './types';
 
 export class Inventory extends GameObjects.Container {
   inventory: ItemType[] = [];
+  text: GameObjects.Text;
+  rect: GameObjects.Rectangle;
 
   constructor(scene: Scene) {
-    super(scene, Config.width - 320, 20);
-    this.setScrollFactor(0).setDepth(1).setVisible(false);
+    super(scene, 0, 0);
+    this.setScrollFactor(0).setDepth(Layer.Ui).setVisible(false);
     scene.add.existing(this);
 
-    this.add(
-      scene.add
-        .rectangle(0, 0, 300, 90, getColorNumber(Colors.Teal))
-        .setStrokeStyle(2, getColorNumber(Colors.White))
-        .setAlpha(0.75)
-        .setOrigin(0)
-    );
-    this.add(scene.add.text(10, 10, 'Inventory', fontStyle));
+    this.rect = scene.add
+      .rectangle(0, 0, 0, 0, getColorNumber(Colors.Teal))
+      .setStrokeStyle(2, getColorNumber(Colors.White))
+      .setAlpha(0.75)
+      .setOrigin(0);
+    this.add(this.rect);
+
+    this.text = scene.add.text(10, 4, 'Inventory', { ...fontStyle, fontSize: 32 });
+    this.add(this.text);
   }
 
-  addItem(item: ItemType) {
+  addItem(item: ItemType, silent?: boolean) {
     this.inventory.push(item);
-    const x = 30 + 40 * (this.inventory.length - 1);
-    this.add(this.scene.add.sprite(x, 60, ItemData[item].image).setScale(0.25));
-
+    this.add(this.scene.add.sprite(0, 0, ItemData[item].image).setScale(0.35));
     this.updateItems();
+
+    const worldItem = getItem(this.scene, item);
+    if (worldItem) worldItem.destroy();
+
+    if (!silent) new Notification(this.scene, `New item added: ${ItemData[item].name}`);
   }
 
   removeItem(item: ItemType) {
@@ -44,13 +55,17 @@ export class Inventory extends GameObjects.Container {
 
   updateItems() {
     let index = 0;
-    this.getAll<GameObjects.GameObject>().forEach((item, i) => {
+    this.getAll<GameObjects.GameObject>().forEach((item) => {
       if (item instanceof GameObjects.Sprite) {
-        const x = 30 + 40 * index;
-        item.setPosition(x, 60);
+        const x = 32 + 50 * index;
+        item.setPosition(x, 68);
         index++;
       }
     });
     this.setVisible(this.inventory.length > 0);
+
+    const width = Math.max(this.text.displayWidth + 18, 50 * index + 12);
+    this.setPosition(Config.width - width - 20, 20);
+    this.rect.setSize(width, 102);
   }
 }

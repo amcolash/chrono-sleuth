@@ -1,29 +1,79 @@
 import { Scene } from 'phaser';
-import { Config } from '../config';
-import { fontStyle } from '../utils/colors';
+
 import { Button } from '../classes/UI/Button';
+import { ButtonGroup } from '../classes/UI/ButtonGroup';
+import { Gamepad } from '../classes/UI/Gamepad';
+import { Config } from '../config';
+import { fontStyle } from '../utils/fonts';
+import { save } from '../utils/save';
+import { Game } from './Game';
 
 export class Paused extends Scene {
+  parent: Game;
+
   constructor() {
     super('Paused');
   }
 
+  init(data: { game: Game }) {
+    this.parent = data.game;
+  }
+
   create() {
-    const width = Config.width;
-    const height = Config.height;
+    const { width, height } = Config;
 
-    this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.75);
+    this.add
+      .rectangle(width / 2, height / 2, width, height, 0x000000, 0.75)
+      .setInteractive()
+      .on('pointerdown', () => this.resume());
 
-    this.add.text(width / 2, 300, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
+    this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
 
-    new Button(this, width / 2, height / 2 + 50, 'Resume', () => this.resume());
+    if (import.meta.env.PROD) {
+      this.add
+        .text(width - 20, 20, `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}`, {
+          ...fontStyle,
+          fontSize: 16,
+        })
+        .setOrigin(1, 0);
+    }
+
+    const tall = !Config.zoomed;
+    const spacing = tall ? 100 : 88;
+    const start = height / 2 - (tall ? 100 : 70);
+
+    const buttonGroup = new ButtonGroup(this);
+
+    buttonGroup.addButton(new Button(this, width / 2, start, 'Resume', () => this.resume()));
+
+    buttonGroup.addButton(
+      new Button(this, width / 2, start + spacing, 'Save', () => {
+        this.resume();
+        save(this.parent);
+      })
+    );
+
+    buttonGroup.addButton(
+      new Button(this, width / 2, start + spacing * 2, 'Load', () => {
+        this.resume();
+        this.parent.scene.restart();
+      })
+    );
+
+    buttonGroup.addButton(
+      new Button(this, width / 2, start + spacing * 3, 'Toggle Gamepad', () => {
+        this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
+      })
+    );
 
     // Keyboard interactions
     this.input.keyboard?.on('keydown-ESC', () => this.resume());
+
+    new Gamepad(this).setVisible(false);
   }
 
   resume() {
-    this.scene.resume('Game');
     this.scene.stop();
+    this.scene.resume('Game');
   }
 }

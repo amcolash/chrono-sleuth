@@ -1,18 +1,28 @@
+import { GameObjects, Scene } from 'phaser';
+
+import { Clock } from '../classes/Clock';
+import { DebugLight } from '../classes/DebugLight';
+import { Fireflies, FireflyPositions } from '../classes/Fireflies';
+import { Item } from '../classes/Item';
+import { NPC } from '../classes/NPC';
 import { Player } from '../classes/Player';
+import { Slope } from '../classes/Slope';
+import { DebugUI } from '../classes/UI/DebugUI';
+import { Gamepad } from '../classes/UI/Gamepad';
+import { IconButton } from '../classes/UI/IconButton';
+import { Walls } from '../classes/Walls';
 import { Warp } from '../classes/Warp';
 import { ItemType, NPCType, WarpType } from '../classes/types';
-import { NPC } from '../classes/NPC';
-import { GameObjects, Input, Physics, Scene } from 'phaser';
-import { Item } from '../classes/Item';
-import { Walls } from '../classes/Walls';
-import { Clock } from '../classes/Clock';
-import { DebugUI } from '../classes/UI/DebugUI';
 import { Config } from '../config';
+import { Colors, getColorNumber } from '../utils/colors';
+import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
+import { getCurrentSaveState, load, save } from '../utils/save';
 
 export class Game extends Scene {
   player: Player;
   interactiveObjects: GameObjects.Group;
   clock: Clock;
+  gamepad: Gamepad;
 
   constructor() {
     super('Game');
@@ -23,14 +33,22 @@ export class Game extends Scene {
     this.createBackgrounds();
 
     // game objects
-    this.player = new Player(this, 400, 650);
+    this.player = new Player(this);
 
     const walls = new Walls(this);
     const warpers = this.createWarpers();
     const npcs = this.createNpcs();
     const items = this.createItems();
+    const slopes = this.createSlopes();
 
-    const debugUI = new DebugUI(this, this.player);
+    const forestFireflies = new Fireflies(this, FireflyPositions.Forest[0], FireflyPositions.Forest[1]);
+    const lakeFireflies = new Fireflies(this, FireflyPositions.Lake[0], FireflyPositions.Lake[1]);
+
+    // lights
+    this.createLights();
+
+    // ui
+    const { debugUI } = this.createUI();
 
     // rewindable objects
     const rewindable = [this.player];
@@ -42,9 +60,13 @@ export class Game extends Scene {
     });
 
     // update items added to the group
-    this.add.group([this.player, this.clock, debugUI], {
-      runChildUpdate: true,
-    });
+    const updatables = this.add.group(
+      [this.player, this.clock, this.gamepad, forestFireflies, lakeFireflies, ...slopes],
+      {
+        runChildUpdate: true,
+      }
+    );
+    if (debugUI) updatables.add(debugUI);
 
     // collisions
     this.physics.add.collider(this.player, walls);
@@ -52,9 +74,13 @@ export class Game extends Scene {
     // events
     this.createEventListeners();
 
-    // setup
-    this.cameras.main.startFollow(this.player, true);
-    this.cameras.main.setFollowOffset(0, 200);
+    // camera
+    const camera = this.cameras.main;
+    camera.startFollow(this.player, true);
+    camera.setFollowOffset(0, Config.cameraOffset);
+
+    // load save, or start new game
+    load(this);
   }
 
   update(): void {
@@ -62,7 +88,13 @@ export class Game extends Scene {
       this.interactiveObjects,
       this.player,
       this.player.setInteractiveObject,
-      undefined,
+      (object, _player) => {
+        if ((object as any).visible !== undefined) {
+          return (object as any).visible;
+        }
+
+        return true;
+      },
       this.player
     );
 
@@ -73,27 +105,27 @@ export class Game extends Scene {
 
   createBackgrounds() {
     const town = this.physics.add.sprite(0, 0, 'town').setOrigin(0);
+
+    const clock_outside = this.physics.add.sprite(500, -1100, 'clock_outside').setOrigin(0);
+    const clock_inside = this.physics.add.sprite(500, -2400, 'clock_inner').setOrigin(0);
+
     const forest = this.physics.add.sprite(2300, 0, 'forest').setOrigin(0);
-    const clock_outside = this.physics.add
-      .sprite(500, -1100, 'clock_outside')
-      .setOrigin(0);
+    const lake = this.physics.add.sprite(4400, 100, 'lake').setOrigin(0);
 
-    if (Config.debug) {
-      town.setInteractive({ draggable: true });
-      forest.setInteractive({ draggable: true });
-      clock_outside.setInteractive({ draggable: true });
-    }
+    const backgrounds = [town, clock_outside, clock_inside, forest, lake];
+    backgrounds.forEach((background) => {
+      if (background.texture.key !== 'clock_inner') background.setPipeline('Light2D');
+      if (Config.debug) background.setInteractive({ draggable: true });
+    });
 
-    return [town, forest, clock_outside];
+    return backgrounds;
   }
 
   createWarpers(): Warp[] {
     const warpers: Warp[] = [];
     for (const warp in WarpType) {
       if (isNaN(Number(warp))) {
-        warpers.push(
-          new Warp(this, WarpType[warp as keyof typeof WarpType], this.player)
-        );
+        warpers.push(new Warp(this, WarpType[warp as keyof typeof WarpType], this.player));
       }
     }
 
@@ -103,40 +135,118 @@ export class Game extends Scene {
   createNpcs(): NPC[] {
     const inventor = new NPC(this, NPCType.Inventor, this.player);
     const stranger = new NPC(this, NPCType.Stranger, this.player);
+    const sphinx = new NPC(this, NPCType.Sphinx, this.player);
+    const mayor = new NPC(this, NPCType.Mayor, this.player);
 
-    return [inventor, stranger];
+    const clockTower = new NPC(this, NPCType.ClockTower, this.player);
+
+    return [inventor, stranger, sphinx, mayor, clockTower];
   }
 
   createItems(): Item[] {
-    const book = new Item(this, ItemType.Book, this.player);
-    const ring = new Item(this, ItemType.Map, this.player);
+    const gear = new Item(this, ItemType.Gear1, this.player);
+    return [gear];
+  }
 
-    return [book, ring];
+  createSlopes(): Slope[] {
+    // Clock
+    const slope1 = new Slope(this, 740, -1370, 170, 95);
+    const slope2 = new Slope(this, 815, -2010, 90, 70);
+
+    // Lake
+    const slope3 = new Slope(this, 5150, 953, 100, 60, true);
+    const slope4 = new Slope(this, 5820, 795, 220, 220);
+
+    return [slope1, slope2, slope3, slope4];
+  }
+
+  createUI() {
+    new IconButton(this, 31, 30, 'settings', () => {
+      this.scene.pause();
+      this.scene.launch('Paused', { game: this });
+    });
+    new IconButton(this, 81, 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
+      const prev = isDaytime(this);
+      toggleLighting(this);
+      button.img.setTexture(prev ? 'sun' : 'moon');
+    });
+    new IconButton(this, 131, 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
+      const savedata = getCurrentSaveState(this);
+      save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
+
+      this.scene.restart();
+    });
+
+    this.gamepad = new Gamepad(this);
+
+    // debug
+    let debugUI;
+    if (import.meta.env.DEV) {
+      debugUI = new DebugUI(this, this.player);
+    }
+
+    return { debugUI };
+  }
+
+  createLights(): void {
+    this.lights.enable().setAmbientColor(getColorNumber(Colors.White));
+
+    const lights: { x: number; y: number; radius?: number; color?: number; intensity?: number }[] = [
+      // Town square
+      { x: 135, y: 462, radius: 150, color: getColorNumber(Colors.Tan), intensity: 2.5 },
+      { x: 697, y: 441 },
+      { x: 1018, y: 435 },
+      { x: 887, y: 200, radius: 150 },
+      { x: 1561, y: 460 },
+      { x: 791, y: 472, intensity: 0.5 },
+      { x: 962, y: 469, intensity: 0.5 },
+
+      // Underground
+      { x: 162, y: 814, intensity: 2 },
+      { x: 635, y: 772 },
+      { x: 1638, y: 788, intensity: 2 },
+
+      // Lake
+      { x: 5300, y: 530, intensity: 2 },
+      { x: 5315, y: 730, intensity: 0.75, radius: 75 },
+    ];
+
+    lights.forEach((light) => {
+      if (Config.debug) {
+        new DebugLight(
+          this,
+          light.x,
+          light.y,
+          light.radius || 100,
+          light.color || getColorNumber(Colors.Lights),
+          light.intensity || 1
+        );
+      } else {
+        this.lights.addLight(
+          light.x,
+          light.y,
+          light.radius || 100,
+          light.color || getColorNumber(Colors.Lights),
+          light.intensity || 1
+        );
+      }
+    });
+
+    setDaytime(this, false);
   }
 
   createEventListeners() {
     this.input.keyboard?.on('keydown-ESC', () => {
       this.scene.pause();
-      this.scene.launch('Paused');
+      this.scene.launch('Paused', { game: this });
     });
 
     this.input.keyboard?.on('keydown-J', () => {
       this.player.journal.openJournal();
     });
 
-    if (Config.debug) {
-      this.input.on(
-        'wheel',
-        (
-          _pointer: Input.Pointer,
-          _currentlyOver: GameObjects.GameObject[],
-          _deltaX: number,
-          deltaY: number,
-          _deltaZ: number
-        ) => {
-          this.cameras.main.zoom += deltaY * 0.0005;
-        }
-      );
-    }
+    this.events.on('resume', () => {
+      this.player.keys.resetKeys();
+    });
   }
 }

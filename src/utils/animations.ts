@@ -11,6 +11,7 @@ export function createAnimation(player: Player) {
   player.anims.play('walk');
 }
 
+const rotationCorrection = 5;
 export function updateAnimation(player: Player) {
   const v = player.body?.velocity.x || 0;
   const flipped = v < 0;
@@ -18,4 +19,6 @@ export function updateAnimation(player: Player) {
     player.anims.resume();
     player.flipX = player.rewinding ? !flipped : flipped;
   } else player.anims.pause();
+
+  player.setAngle(player.flipX ? -rotationCorrection : rotationCorrection);
 }

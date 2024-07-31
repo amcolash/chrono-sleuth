@@ -1,8 +1,11 @@
 import { GameObjects, Scene } from 'phaser';
+
 import { Config } from '../config';
-import { Rewindable } from './types';
-import { Colors, fontStyle, getColorNumber } from '../utils/colors';
+import { Colors, getColorNumber } from '../utils/colors';
+import { fontStyle } from '../utils/fonts';
+import { Layer } from '../utils/layers';
 import { Player } from './Player';
+import { Rewindable } from './types';
 
 export const dayDuration = 1000 * 60 * Config.dayMinutes;
 export const rewindInterval = 250;
@@ -10,6 +13,7 @@ export const rewindSpeed = 8;
 
 export class Clock extends GameObjects.Container {
   currentTime: number = 0;
+  rewindCount: number = 0;
   player: Player;
   rewindable: Rewindable[];
   rewinding: boolean = false;
@@ -22,7 +26,7 @@ export class Clock extends GameObjects.Container {
 
   constructor(scene: Scene, rewindable: Rewindable[], player: Player) {
     super(scene, 40, Config.height - 60);
-    this.setVisible(Config.rewindEnabled).setDepth(1).setScrollFactor(0);
+    this.setVisible(Config.rewindEnabled).setDepth(Layer.Ui).setScrollFactor(0);
     this.scene.add.existing(this);
 
     this.rewindable = rewindable;
@@ -74,14 +78,17 @@ export class Clock extends GameObjects.Container {
 
     if (this.rewinding) {
       if (this.currentTime > 0) {
+        // Rewind time
         this.currentTime = Math.max(0, this.currentTime - delta * rewindSpeed);
       } else {
+        // When rewinding is complete
         this.rewinding = false;
         this.rewindable.forEach((r) => {
           r.setRewind(false);
           if (r.reset) r.reset();
         });
         this.dayOver?.destroy();
+        this.rewindCount++;
       }
     } else if (!this.player.message.visible) {
       if (this.counter > rewindInterval) {
