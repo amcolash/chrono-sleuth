@@ -80,7 +80,11 @@ export class Game extends Scene {
     camera.setFollowOffset(0, Config.cameraOffset);
 
     // load save, or start new game
-    load(this);
+    // load(this);
+
+    this.gamepad.setVisible(false);
+    this.scene.pause();
+    this.scene.launch('PipesDialog', { player: this.player });
   }
 
   update(): void {
