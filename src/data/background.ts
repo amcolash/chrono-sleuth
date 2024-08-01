@@ -11,4 +11,7 @@ export const backgroundData: Data[] = [
   { x: 500, y: -2400, image: 'clock_inner', skipLighting: true },
   { x: 2300, y: 0, image: 'forest' },
   { x: 4400, y: 100, image: 'lake' },
+  { x: -2200, y: -170, image: 'mansion_outside' },
+  { x: -2000, y: -1320, image: 'mansion_inside', skipLighting: true },
+  { x: -1300, y: 1500, image: 'alchemy_lab', skipLighting: true },
 ];

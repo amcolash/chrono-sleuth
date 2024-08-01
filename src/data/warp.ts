@@ -121,4 +121,49 @@ export const WarpData: Record<WarpType, Data> = {
     warpTo: WarpType.Lake,
     visual: WarpVisual.Warp,
   },
+
+  [WarpType.TownWest]: {
+    x: 90,
+    y: 650,
+    key: Key.Left,
+    warpTo: WarpType.MansionOutside,
+    visual: WarpVisual.Warp,
+  },
+  [WarpType.MansionOutside]: {
+    x: -620,
+    y: 640,
+    key: Key.Right,
+    warpTo: WarpType.TownWest,
+    visual: WarpVisual.Warp,
+  },
+
+  [WarpType.MansionEntrance]: {
+    x: -1290,
+    y: 640,
+    key: Key.Up,
+    warpTo: WarpType.MansionExit,
+    visual: WarpVisual.Warp,
+  },
+  [WarpType.MansionExit]: {
+    x: -1770,
+    y: -450,
+    key: Key.Left,
+    warpTo: WarpType.MansionEntrance,
+    visual: WarpVisual.Warp,
+  },
+
+  [WarpType.LabEntrance]: {
+    x: -1920,
+    y: 640,
+    key: Key.Left,
+    warpTo: WarpType.LabExit,
+    visual: WarpVisual.WarpHidden,
+  },
+  [WarpType.LabExit]: {
+    x: -990,
+    y: 1230,
+    key: Key.Right,
+    warpTo: WarpType.LabEntrance,
+    visual: WarpVisual.Invisible,
+  },
 };

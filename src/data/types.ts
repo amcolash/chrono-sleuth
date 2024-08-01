@@ -44,6 +44,15 @@ export enum WarpType {
 
   ClockStairs,
   ClockTop,
+
+  TownWest,
+  MansionOutside,
+
+  MansionEntrance,
+  MansionExit,
+
+  LabEntrance,
+  LabExit,
 }
 
 export enum ItemType {
