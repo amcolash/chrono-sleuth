@@ -18,7 +18,7 @@ import { slopeData } from '../data/slope';
 import { ItemType, NPCType, WarpType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
-import { getCurrentSaveState, load, save } from '../utils/save';
+import { getCurrentSaveState, load, loadConfig, save } from '../utils/save';
 import { fadeIn } from '../utils/util';
 
 export class Game extends Scene {
@@ -27,11 +27,25 @@ export class Game extends Scene {
   clock: Clock;
   gamepad: Gamepad;
 
+  shouldInit: boolean = true;
+
   constructor() {
     super('Game');
   }
 
+  init() {
+    // Check if config loaded needs to restart scene. If so, this makes the scene do nothing until it restarts
+    const reloaded = loadConfig(this);
+    this.shouldInit = !reloaded;
+  }
+
   create() {
+    // skip creation if already restarting the scene (due to config changes)
+    if (!this.shouldInit) return;
+
+    // fade in on start
+    fadeIn(this, 500);
+
     // background
     this.createBackgrounds();
 
@@ -84,9 +98,6 @@ export class Game extends Scene {
 
     // load save, or start new game
     load(this);
-
-    // fade in
-    fadeIn(this, 1000);
   }
 
   update(): void {

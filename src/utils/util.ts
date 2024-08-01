@@ -43,7 +43,7 @@ export function fadeIn(scene: Scene, duration: number, callback?: () => void) {
     black.red,
     black.green,
     black.blue,
-    (_camera: Cameras.Scene2D.Camera, progress: number) => {
+    (_camera: Cameras.Scene2D.CameraManager, progress: number) => {
       if (progress >= 1) {
         if (callback) callback();
       }
@@ -57,7 +57,7 @@ export function fadeOut(scene: Scene, duration: number, callback?: () => void) {
     black.red,
     black.green,
     black.blue,
-    (_camera: Cameras.Scene2D.Camera, progress: number) => {
+    (_camera: Cameras.Scene2D.CameraManager, progress: number) => {
       if (progress >= 1) {
         if (callback) callback();
       }

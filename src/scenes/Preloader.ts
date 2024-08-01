@@ -1,33 +1,46 @@
-import { Scene } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../config';
 import { fadeIn, fadeOut } from '../utils/util';
 
 export class Preloader extends Scene {
+  container: GameObjects.Container;
+
   constructor() {
     super('Preloader');
   }
 
   init() {
+    this.add.image(0, 0, 'splash').setOrigin(0).setDisplaySize(Config.width, Config.height);
+    this.add
+      .image(30, Config.height - 15, 'logo')
+      .setOrigin(0, 1)
+      .setScale(0.25);
+
+    const width = Config.width * 0.68;
+    const height = 26;
+    const margin = 3;
+    const container = this.add.container(Config.width * 0.23, Config.height * 0.91);
+    this.container = container;
+
     //  A simple progress bar. This is the outline of the bar.
-    const outline = this.add
-      .rectangle(Config.width / 2, Config.height / 2, Config.width * 0.75, 32)
-      .setStrokeStyle(1, 0xffffff);
+    const outline = this.add.rectangle(0, 0, width, height).setStrokeStyle(1, 0xffffff, 0.85).setOrigin(0);
+    container.add(outline);
 
     //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-    const bar = this.add.rectangle(4 + outline.x - outline.width / 2, Config.height / 2, 4, 27, 0xffffff);
+    const bar = this.add.rectangle(margin, margin, 0, height - margin * 2, 0xffffff, 0.85).setOrigin(0);
+    container.add(bar);
 
     //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
     this.load.on('progress', (progress: number) => {
-      //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-      bar.width = Config.width * 0.75 * progress - 5;
+      bar.width = (width - margin * 2) * progress;
     });
 
-    const img = document.createElement('img');
-    img.src = 'assets/icons/settings.svg';
-    img.id = 'loading';
+    const gear = document.createElement('img');
+    gear.src = 'assets/icons/settings.svg';
+    gear.id = 'loading';
 
-    this.add.dom(0, 0, img);
+    this.add.dom(0, 0, gear);
 
     fadeIn(this, 300);
   }
@@ -96,8 +109,11 @@ export class Preloader extends Scene {
     //  For example, you can define global animations here, so we can use them in other scenes.
     //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
 
-    this.time.delayedCall(500, () => {
-      fadeOut(this, 300, () => {
+    // return;
+
+    this.time.delayedCall(import.meta.env.PROD ? 1500 : 0, () => {
+      fadeOut(this, import.meta.env.PROD ? 300 : 0, () => {
+        this.scene.stop(this);
         this.scene.start('Game');
       });
     });

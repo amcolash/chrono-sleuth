@@ -108,26 +108,46 @@ function getSavedData(): { save: SaveData; error: unknown } {
   return { save: parsed || defaultSave, error };
 }
 
-export function load(scene: Game): void {
+function checkConfig(savedata: SaveData, scene: Game): boolean {
+  // Load all new config values, then check each and optionally restart to apply
+  const originalConfig = { ...Config };
+  Config.debug = savedata.settings.debug;
+  Config.zoomed = savedata.settings.zoomed;
+
+  if (Config.zoomed !== originalConfig.zoomed) {
+    setZoomed(scene, Config.zoomed);
+    return true;
+  }
+
+  if (Config.debug !== originalConfig.debug) {
+    scene.scene.restart();
+    return true;
+  }
+
+  return false;
+}
+
+// Only load the config to check if the scene needs to be restarted
+export function loadConfig(scene: Game): boolean {
+  const { save: savedata } = getSavedData();
+
+  try {
+    return checkConfig(savedata, scene);
+  } catch (err) {
+    console.error(err);
+  }
+
+  return false;
+}
+
+export function load(scene: Game) {
   const { save: savedata, error } = getSavedData();
   if (error) {
     new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
   }
 
   try {
-    // Load all new config values, then check each and optionally restart to apply
-    const originalConfig = { ...Config };
-    Config.debug = savedata.settings.debug;
-    Config.zoomed = savedata.settings.zoomed;
-
-    if (Config.zoomed !== originalConfig.zoomed) {
-      setZoomed(scene, Config.zoomed);
-      return;
-    }
-
-    if (Config.debug !== originalConfig.debug) {
-      scene.scene.restart();
-    }
+    checkConfig(savedata, scene);
 
     scene.player.setX(savedata.player.x);
     scene.player.setY(savedata.player.y);
