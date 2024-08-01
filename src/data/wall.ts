@@ -1,11 +1,11 @@
 import { WallType } from './types';
 
 export const WallData = [
-  // Town Ladder Top
+  // Town Surface
   { x: 40, y: 600 },
   { x: 1750, y: 600 },
 
-  // Town Ladder Bottom
+  // Town Underground
   { x: 90, y: 820 },
   { x: 1650, y: 820 },
 
@@ -26,4 +26,8 @@ export const WallData = [
   // Lake
   { x: 4575, y: 850 },
   { x: 6160, y: 690 },
+
+  // Mansion Outside
+  { x: -565, y: 575 },
+  { x: -2075, y: 575 },
 ];
