@@ -121,13 +121,13 @@ export class Game extends Scene {
   }
 
   createBackgrounds() {
-    const town = this.physics.add.sprite(0, 0, 'town').setOrigin(0);
+    const town = this.physics.add.image(0, 0, 'town').setOrigin(0);
 
-    const clock_outside = this.physics.add.sprite(500, -1100, 'clock_outside').setOrigin(0);
-    const clock_inside = this.physics.add.sprite(500, -2400, 'clock_inner').setOrigin(0);
+    const clock_outside = this.physics.add.image(500, -1100, 'clock_outside').setOrigin(0);
+    const clock_inside = this.physics.add.image(500, -2400, 'clock_inner').setOrigin(0);
 
-    const forest = this.physics.add.sprite(2300, 0, 'forest').setOrigin(0);
-    const lake = this.physics.add.sprite(4400, 100, 'lake').setOrigin(0);
+    const forest = this.physics.add.image(2300, 0, 'forest').setOrigin(0);
+    const lake = this.physics.add.image(4400, 100, 'lake').setOrigin(0);
 
     const backgrounds = [town, clock_outside, clock_inside, forest, lake];
     backgrounds.forEach((background) => {

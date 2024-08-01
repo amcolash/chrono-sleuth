@@ -16,7 +16,7 @@ import { Game } from './Game';
 export class MazeDialog extends Scene {
   player: Player;
   container: GameObjects.Container;
-  arrow: GameObjects.Sprite;
+  arrow: GameObjects.Image;
   keys: InputManager;
 
   constructor() {
@@ -44,7 +44,7 @@ export class MazeDialog extends Scene {
     );
 
     this.arrow = this.add
-      .sprite(-Config.width * 0.4, -Config.height * 0.4, 'arrow')
+      .image(-Config.width * 0.4, -Config.height * 0.4, 'arrow')
       .setScale(0.5)
       .setRotation(Math.PI * 0.75);
     this.container.add(this.arrow);

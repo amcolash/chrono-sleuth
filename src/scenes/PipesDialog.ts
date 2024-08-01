@@ -13,7 +13,6 @@ import { Game } from './Game';
 export class PipesDialog extends Scene {
   player: Player;
   container: GameObjects.Container;
-  arrow: GameObjects.Sprite;
   keys: InputManager;
   level: number;
 

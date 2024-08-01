@@ -8,7 +8,7 @@ import { getNPC, updateSphinx } from '../../utils/interactionUtils';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
 
-export class Journal extends GameObjects.Sprite {
+export class Journal extends GameObjects.Image {
   player: Player;
   journal: JournalEntry[] = [];
   unread: GameObjects.Ellipse;

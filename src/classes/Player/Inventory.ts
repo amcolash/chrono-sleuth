@@ -32,7 +32,7 @@ export class Inventory extends GameObjects.Container {
 
   addItem(item: ItemType, silent?: boolean) {
     this.inventory.push(item);
-    this.add(this.scene.add.sprite(0, 0, ItemData[item].image).setScale(0.35));
+    this.add(this.scene.add.image(0, 0, ItemData[item].image).setScale(0.35));
     this.updateItems();
 
     const worldItem = getItem(this.scene, item);
@@ -45,7 +45,7 @@ export class Inventory extends GameObjects.Container {
     const index = this.inventory.indexOf(item);
     if (index > -1) {
       this.inventory.splice(index, 1);
-      this.getAll<GameObjects.Sprite>()
+      this.getAll<GameObjects.Image>()
         .find((i) => i.texture?.key === ItemData[item].image)
         ?.destroy();
     }
@@ -56,7 +56,7 @@ export class Inventory extends GameObjects.Container {
   updateItems() {
     let index = 0;
     this.getAll<GameObjects.GameObject>().forEach((item) => {
-      if (item instanceof GameObjects.Sprite) {
+      if (item instanceof GameObjects.Image) {
         const x = 32 + 50 * index;
         item.setPosition(x, 68);
         index++;

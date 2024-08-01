@@ -9,7 +9,7 @@ import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
-export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
+export class Item extends Phaser.Physics.Arcade.Image implements Interactive {
   itemType: ItemType;
   player: Player;
   particles: GameObjects.Particles.ParticleEmitter;

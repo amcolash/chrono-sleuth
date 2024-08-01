@@ -11,7 +11,7 @@ import { Key } from '../UI/InputManager';
 const defaultRange = 30;
 const warpYOffset = 12;
 
-export class Warp extends Physics.Arcade.Sprite implements Interactive {
+export class Warp extends Physics.Arcade.Image implements Interactive {
   warpType: WarpType;
   player: Player;
   particles1: GameObjects.Particles.ParticleEmitter;
@@ -72,11 +72,11 @@ export class Warp extends Physics.Arcade.Sprite implements Interactive {
 
     if (warpType === WarpType.Underground) {
       scene.add
-        .sprite(x, y - 60, 'ladder')
+        .image(x, y - 60, 'ladder')
         .setScale(0.6)
         .setPipeline('Light2D');
       scene.add
-        .sprite(x, y - 105, 'ladder')
+        .image(x, y - 105, 'ladder')
         .setScale(0.6)
         .setPipeline('Light2D');
     }

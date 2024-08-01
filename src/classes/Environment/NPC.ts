@@ -10,7 +10,7 @@ import { ClockHands } from '../Environment/ClockHands';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
-export class NPC extends Phaser.Physics.Arcade.Sprite implements Interactive {
+export class NPC extends Phaser.Physics.Arcade.Image implements Interactive {
   npcType: NPCType;
   player: Player;
   light: GameObjects.Light | DebugLight;
