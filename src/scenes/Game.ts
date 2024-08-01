@@ -17,6 +17,7 @@ import { Config } from '../config';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
 import { getCurrentSaveState, load, save } from '../utils/save';
+import { fadeIn } from '../utils/util';
 
 export class Game extends Scene {
   player: Player;
@@ -81,6 +82,9 @@ export class Game extends Scene {
 
     // load save, or start new game
     load(this);
+
+    // fade in
+    fadeIn(this, 1000);
   }
 
   update(): void {

@@ -10,6 +10,8 @@ export const Colors = {
 
   Lights: 'ffccaa',
   Night: '335588',
+
+  Background: '111111',
 };
 
 export function getColorNumber(color: string): number {
