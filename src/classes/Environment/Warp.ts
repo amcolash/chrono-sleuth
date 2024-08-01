@@ -19,13 +19,13 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
   range: number;
 
   constructor(scene: Scene, warpType: WarpType, player: Player) {
-    const { x, y, visual, range } = WarpData[warpType];
+    const { x, y, visual, range, skipLighting } = WarpData[warpType];
     const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
 
     super(scene, x, y, texture);
     this.warpType = warpType;
     this.player = player;
-    this.setScale(0.6).setPipeline('Light2D');
+    this.setScale(0.6);
     this.range = range || defaultRange;
 
     scene.add.existing(this);
@@ -48,27 +48,37 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
           radial: true,
           blendMode: BlendModes.OVERLAY,
         })
-        .setScale(1, 2)
-        .setPipeline('Light2D');
+        .setScale(1, 2);
       this.particles1.viewBounds = this.particles1.getBounds(30, 500);
 
-      this.particles2 = scene.add
-        .particles(x, y - warpYOffset, 'warp', {
-          x: { min: -30, max: 30 },
-          y: { min: -50, max: 50 },
-          speed: { random: [-5, 5] },
-          scale: { min: 0.05, max: 0.15 },
-          alpha: { values: [0, 0.2, 0] },
-          angle: { min: 0, max: 360 },
-          lifespan: { min: 1000, max: 1400 },
-          color: [getColorNumber(Colors.Peach), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
-          colorEase: 'Linear',
-          radial: true,
-          maxAliveParticles: 20,
-        })
-        .setPipeline('Light2D');
+      this.particles2 = scene.add.particles(x, y - warpYOffset, 'warp', {
+        x: { min: -30, max: 30 },
+        y: { min: -50, max: 50 },
+        speed: { random: [-5, 5] },
+        scale: { min: 0.05, max: 0.15 },
+        alpha: { values: [0, 0.2, 0] },
+        angle: { min: 0, max: 360 },
+        lifespan: { min: 1000, max: 1400 },
+        color: [getColorNumber(Colors.Peach), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
+        colorEase: 'Linear',
+        radial: true,
+        maxAliveParticles: 20,
+      });
       this.particles2.viewBounds = this.particles2.getBounds(30, 500);
     }
+
+    if (!skipLighting) {
+      this.setPipeline('Light2D');
+      this.particles1?.setPipeline('Light2D');
+      this.particles2?.setPipeline('Light2D');
+    }
+
+    if (this.hasExtendedBounds() && this.body) {
+      this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
+    }
+
+    if (visual === WarpVisual.Invisible) this.setAlpha(0);
+    this.setVisible(visual !== WarpVisual.WarpHidden);
 
     if (warpType === WarpType.Underground) {
       scene.add
@@ -80,13 +90,6 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
         .setScale(0.6)
         .setPipeline('Light2D');
     }
-
-    if (this.hasExtendedBounds() && this.body) {
-      this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
-    }
-
-    if (visual === WarpVisual.Invisible) this.setAlpha(0);
-    this.setVisible(visual !== WarpVisual.WarpHidden);
 
     if (Config.debug) {
       this.setInteractive({ draggable: true });

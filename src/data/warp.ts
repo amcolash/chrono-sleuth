@@ -17,6 +17,7 @@ type Data = {
   warpTo: WarpType;
   visual: WarpVisual;
   onWarp?: (player: Player) => void;
+  skipLighting?: boolean;
 };
 
 export const WarpData: Record<WarpType, Data> = {
@@ -79,6 +80,7 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Left,
     warpTo: WarpType.ClockSquareNorth,
     visual: WarpVisual.Warp,
+    skipLighting: true,
   },
 
   [WarpType.ClockStairs]: {

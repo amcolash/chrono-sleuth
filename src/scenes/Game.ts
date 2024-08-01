@@ -13,6 +13,7 @@ import { Player } from '../classes/Player/Player';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
 import { Config } from '../config';
+import { backgroundData } from '../data/background';
 import { lightData } from '../data/lights';
 import { slopeData } from '../data/slope';
 import { ItemType, NPCType, WarpType } from '../data/types';
@@ -121,21 +122,13 @@ export class Game extends Scene {
   }
 
   createBackgrounds() {
-    const town = this.physics.add.image(0, 0, 'town').setOrigin(0);
-
-    const clock_outside = this.physics.add.image(500, -1100, 'clock_outside').setOrigin(0);
-    const clock_inside = this.physics.add.image(500, -2400, 'clock_inner').setOrigin(0);
-
-    const forest = this.physics.add.image(2300, 0, 'forest').setOrigin(0);
-    const lake = this.physics.add.image(4400, 100, 'lake').setOrigin(0);
-
-    const backgrounds = [town, clock_outside, clock_inside, forest, lake];
-    backgrounds.forEach((background) => {
-      if (background.texture.key !== 'clock_inner') background.setPipeline('Light2D');
+    return backgroundData.map((b) => {
+      const background = this.physics.add.image(b.x, b.y, b.image).setOrigin(0);
+      if (!b.skipLighting) background.setPipeline('Light2D');
       if (Config.debug) background.setInteractive({ draggable: true });
-    });
 
-    return backgrounds;
+      return background;
+    });
   }
 
   createWarpers(): Warp[] {
