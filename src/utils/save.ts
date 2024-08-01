@@ -1,10 +1,10 @@
 import deepEqual from 'deep-equal';
 
-import { playerStart } from '../classes/Player';
+import { Warp } from '../classes/Environment/Warp';
+import { playerStart } from '../classes/Player/Player';
 import { Notification } from '../classes/UI/Notification';
-import { Warp } from '../classes/Warp';
-import { ItemType, JournalEntry, Quest, QuestType, WarpType } from '../classes/types';
 import { Config } from '../config';
+import { ItemType, JournalEntry, Quest, QuestType, WarpType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { getGameObjects } from './interactionUtils';
 import { isMobile, setZoomed } from './util';

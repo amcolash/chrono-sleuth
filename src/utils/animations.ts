@@ -1,4 +1,4 @@
-import { Player } from '../classes/Player';
+import { Player } from '../classes/Player/Player';
 
 export function createAnimation(player: Player) {
   player.anims.create({

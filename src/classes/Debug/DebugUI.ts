@@ -1,14 +1,14 @@
 import { GameObjects, Input, Physics } from 'phaser';
 
 import { Config } from '../../config';
+import { Layer } from '../../data/layers';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
-import { Layer } from '../../utils/layers';
 import { toggleLighting } from '../../utils/lighting';
 import { debugSave, defaultSave, getCurrentSaveState, save } from '../../utils/save';
-import { DebugLight } from '../DebugLight';
-import { Player } from '../Player';
+import { DebugLight } from '../Debug/DebugLight';
+import { Player } from '../Player/Player';
 
 export class DebugUI extends GameObjects.Container {
   text: GameObjects.Text;
@@ -118,6 +118,7 @@ export class DebugUI extends GameObjects.Container {
 
       this.scene.input.on('drag', (pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
         if (this.activeElement === gameObject) {
+          // @ts-ignore
           gameObject.setPosition(pointer.worldX, pointer.worldY);
         }
       });
@@ -162,15 +163,20 @@ export class DebugUI extends GameObjects.Container {
 
     if (this.activeElement) {
       lines.push('');
+      // @ts-ignore
       lines.push(`Active x: ${this.activeElement.x.toFixed(1)}`);
+      // @ts-ignore
       lines.push(`Active y: ${this.activeElement.y.toFixed(1)}`);
     }
 
     this.text.setText(lines);
 
     if (this.activeElement) {
+      // @ts-ignore
       this.outline.setPosition(this.activeElement.x, this.activeElement.y);
+      // @ts-ignore
       this.outline.setSize(this.activeElement.displayWidth, this.activeElement.displayHeight);
+      // @ts-ignore
       this.outline.setOrigin(this.activeElement.originX, this.activeElement.originY);
 
       const body = this.activeElement.body;

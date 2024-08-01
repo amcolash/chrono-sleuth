@@ -1,19 +1,21 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { Clock } from '../classes/Clock';
-import { DebugLight } from '../classes/DebugLight';
-import { Fireflies, FireflyPositions } from '../classes/Fireflies';
-import { Item } from '../classes/Item';
-import { NPC } from '../classes/NPC';
-import { Player } from '../classes/Player';
-import { Slope } from '../classes/Slope';
-import { DebugUI } from '../classes/UI/DebugUI';
+import { DebugLight } from '../classes/Debug/DebugLight';
+import { DebugUI } from '../classes/Debug/DebugUI';
+import { Clock } from '../classes/Environment/Clock';
+import { Fireflies, FireflyPositions } from '../classes/Environment/Fireflies';
+import { Item } from '../classes/Environment/Item';
+import { NPC } from '../classes/Environment/NPC';
+import { Slope } from '../classes/Environment/Slope';
+import { Walls } from '../classes/Environment/Walls';
+import { Warp } from '../classes/Environment/Warp';
+import { Player } from '../classes/Player/Player';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
-import { Walls } from '../classes/Walls';
-import { Warp } from '../classes/Warp';
-import { ItemType, NPCType, WarpType } from '../classes/types';
 import { Config } from '../config';
+import { lightData } from '../data/lights';
+import { slopeData } from '../data/slope';
+import { ItemType, NPCType, WarpType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
 import { getCurrentSaveState, load, save } from '../utils/save';
@@ -137,14 +139,9 @@ export class Game extends Scene {
   }
 
   createNpcs(): NPC[] {
-    const inventor = new NPC(this, NPCType.Inventor, this.player);
-    const stranger = new NPC(this, NPCType.Stranger, this.player);
-    const sphinx = new NPC(this, NPCType.Sphinx, this.player);
-    const mayor = new NPC(this, NPCType.Mayor, this.player);
-
-    const clockTower = new NPC(this, NPCType.ClockTower, this.player);
-
-    return [inventor, stranger, sphinx, mayor, clockTower];
+    return Object.values(NPCType)
+      .filter((value) => typeof value === 'number')
+      .map((npc) => new NPC(this, npc as NPCType, this.player));
   }
 
   createItems(): Item[] {
@@ -153,15 +150,7 @@ export class Game extends Scene {
   }
 
   createSlopes(): Slope[] {
-    // Clock
-    const slope1 = new Slope(this, 740, -1370, 170, 95);
-    const slope2 = new Slope(this, 815, -2010, 90, 70);
-
-    // Lake
-    const slope3 = new Slope(this, 5150, 953, 100, 60, true);
-    const slope4 = new Slope(this, 5820, 795, 220, 220);
-
-    return [slope1, slope2, slope3, slope4];
+    return slopeData.map((s) => new Slope(this, s.x, s.y, s.width, s.height, s.flip));
   }
 
   createUI() {
@@ -195,27 +184,7 @@ export class Game extends Scene {
   createLights(): void {
     this.lights.enable().setAmbientColor(getColorNumber(Colors.White));
 
-    const lights: { x: number; y: number; radius?: number; color?: number; intensity?: number }[] = [
-      // Town square
-      { x: 135, y: 462, radius: 150, color: getColorNumber(Colors.Tan), intensity: 2.5 },
-      { x: 697, y: 441 },
-      { x: 1018, y: 435 },
-      { x: 887, y: 200, radius: 150 },
-      { x: 1561, y: 460 },
-      { x: 791, y: 472, intensity: 0.5 },
-      { x: 962, y: 469, intensity: 0.5 },
-
-      // Underground
-      { x: 162, y: 814, intensity: 2 },
-      { x: 635, y: 772 },
-      { x: 1638, y: 788, intensity: 2 },
-
-      // Lake
-      { x: 5300, y: 530, intensity: 2 },
-      { x: 5315, y: 730, intensity: 0.75, radius: 75 },
-    ];
-
-    lights.forEach((light) => {
+    lightData.forEach((light) => {
       if (Config.debug) {
         new DebugLight(
           this,

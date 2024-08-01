@@ -1,12 +1,12 @@
 import { GameObjects } from 'phaser';
 
-import { Config } from '../config';
-import { Colors, getColorNumber } from '../utils/colors';
-import { getNPC, updateSphinx } from '../utils/interactionUtils';
-import { Layer } from '../utils/layers';
+import { Config } from '../../config';
+import { Layer } from '../../data/layers';
+import { JournalEntry, NPCType } from '../../data/types';
+import { Colors, getColorNumber } from '../../utils/colors';
+import { getNPC, updateSphinx } from '../../utils/interactionUtils';
+import { Notification } from '../UI/Notification';
 import { Player } from './Player';
-import { Notification } from './UI/Notification';
-import { JournalEntry, NPCType } from './types';
 
 export class Journal extends GameObjects.Sprite {
   player: Player;

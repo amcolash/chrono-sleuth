@@ -1,9 +1,9 @@
 import { GameObjects, Scene } from 'phaser';
 
+import { Layer } from '../../data/layers';
 import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { getGameObjects } from '../../utils/interactionUtils';
-import { Layer } from '../../utils/layers';
 
 export class Notification extends GameObjects.Text {
   constructor(scene: Scene, text: string, duration: number = 3500) {

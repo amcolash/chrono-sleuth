@@ -1,10 +1,11 @@
 import { GameObjects, Physics, Scene } from 'phaser';
 
-import { Item } from '../classes/Item';
-import { NPC, NPCData } from '../classes/NPC';
-import { WallData } from '../classes/Walls';
-import { Warp } from '../classes/Warp';
-import { ItemType, JournalEntry, NPCType, Quest, QuestType, WallType, WarpType } from '../classes/types';
+import { Item } from '../classes/Environment/Item';
+import { NPC } from '../classes/Environment/NPC';
+import { Warp } from '../classes/Environment/Warp';
+import { NPCData } from '../data/npc';
+import { ItemType, JournalEntry, NPCType, Quest, QuestType, WallType, WarpType } from '../data/types';
+import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
 
 export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {

@@ -1,24 +1,13 @@
 import { GameObjects } from 'phaser';
 
-import { Config } from '../config';
-import { itemDialogs } from '../utils/dialog';
-import { Layer } from '../utils/layers';
-import { DebugLight } from './DebugLight';
-import { Key } from './InputManager';
-import { Player } from './Player';
-import { InteractResult, Interactive, ItemType } from './types';
-
-type Data = {
-  x: number;
-  y: number;
-  image: string;
-  name: string;
-};
-
-export const ItemData: Record<ItemType, Data> = {
-  [ItemType.Wrench]: { x: 150, y: 650, image: 'wrench', name: 'Wrench' },
-  [ItemType.Gear1]: { x: 5120, y: 915, image: 'gear', name: 'Gear' },
-};
+import { Config } from '../../config';
+import { itemDialogs } from '../../data/dialog';
+import { ItemData } from '../../data/item';
+import { Layer } from '../../data/layers';
+import { InteractResult, Interactive, ItemType } from '../../data/types';
+import { DebugLight } from '../Debug/DebugLight';
+import { Player } from '../Player/Player';
+import { Key } from '../UI/InputManager';
 
 export class Item extends Phaser.Physics.Arcade.Sprite implements Interactive {
   itemType: ItemType;

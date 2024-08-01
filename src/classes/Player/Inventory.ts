@@ -1,13 +1,13 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { Config } from '../config';
-import { Colors, getColorNumber } from '../utils/colors';
-import { fontStyle } from '../utils/fonts';
-import { getItem } from '../utils/interactionUtils';
-import { Layer } from '../utils/layers';
-import { ItemData } from './Item';
-import { Notification } from './UI/Notification';
-import { ItemType } from './types';
+import { Config } from '../../config';
+import { ItemData } from '../../data/item';
+import { Layer } from '../../data/layers';
+import { ItemType } from '../../data/types';
+import { Colors, getColorNumber } from '../../utils/colors';
+import { fontStyle } from '../../utils/fonts';
+import { getItem } from '../../utils/interactionUtils';
+import { Notification } from '../UI/Notification';
 
 export class Inventory extends GameObjects.Container {
   inventory: ItemType[] = [];

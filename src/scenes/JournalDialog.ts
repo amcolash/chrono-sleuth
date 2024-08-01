@@ -1,13 +1,13 @@
 import { Scene } from 'phaser';
 
-import { Player } from '../classes/Player';
+import { Player } from '../classes/Player/Player';
 import { Button } from '../classes/UI/Button';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { TextBox } from '../classes/UI/TextBox';
 import { Config } from '../config';
+import { JournalData } from '../data/journal';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
-import { JournalData } from '../utils/journalData';
 
 export class JournalDialog extends Scene {
   player: Player;

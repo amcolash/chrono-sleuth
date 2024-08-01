@@ -1,11 +1,11 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { Config } from '../config';
-import { Colors, getColorNumber } from '../utils/colors';
-import { fontStyle } from '../utils/fonts';
-import { Layer } from '../utils/layers';
-import { Player } from './Player';
-import { Rewindable } from './types';
+import { Config } from '../../config';
+import { Layer } from '../../data/layers';
+import { Rewindable } from '../../data/types';
+import { Colors, getColorNumber } from '../../utils/colors';
+import { fontStyle } from '../../utils/fonts';
+import { Player } from '../Player/Player';
 
 export const dayDuration = 1000 * 60 * Config.dayMinutes;
 export const rewindInterval = 250;

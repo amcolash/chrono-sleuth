@@ -1,7 +1,7 @@
 import { GameObjects } from 'phaser';
 
-import { Colors, getColorNumber } from '../utils/colors';
-import { Layer } from '../utils/layers';
+import { Layer } from '../../data/layers';
+import { Colors, getColorNumber } from '../../utils/colors';
 
 const radius1 = 50;
 const radius2 = 40;

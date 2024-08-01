@@ -1,7 +1,7 @@
 import generateMaze, { Cell } from 'generate-maze';
 import { GameObjects, Math, Scene } from 'phaser';
 
-import { InputManager, Key } from '../classes/InputManager';
+import { InputManager, Key } from '../classes/UI/InputManager';
 import { Config } from '../config';
 import { getClockRewind } from '../utils/interactionUtils';
 import { Game } from './Game';

@@ -1,13 +1,14 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
+import { NPCDialog } from '../../data/dialog';
+import { Layer } from '../../data/layers';
+import { NPCData } from '../../data/npc';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { NPCDialog } from '../../utils/dialog';
 import { fontStyle } from '../../utils/fonts';
-import { Layer } from '../../utils/layers';
-import { NPC, NPCData } from '../NPC';
-import { Player } from '../Player';
+import { NPC } from '../Environment/NPC';
+import { Player } from '../Player/Player';
 import { Button } from './Button';
 import { ButtonGroup } from './ButtonGroup';
 

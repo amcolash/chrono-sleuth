@@ -1,7 +1,8 @@
 import { GameObjects, Math as PhaserMath, Scene } from 'phaser';
 
-import { InputManager, Key } from '../classes/InputManager';
+import { InputManager, Key } from '../classes/UI/InputManager';
 import { Config } from '../config';
+import { Colors, getColorNumber } from '../utils/colors';
 import { Pipe, PipeShapes, PipeType, Rotation, getConnectedPipes, level } from '../utils/pipes';
 import { getRandomElement } from '../utils/util';
 import { MazeDialog } from './MazeDialog';
@@ -75,7 +76,7 @@ export class Pipes extends Scene {
 
     this.cursor = this.add
       .rectangle(100, 100, this.pipeSize, this.pipeSize, 0, 0)
-      .setStrokeStyle(2, 0xffffff, 0.5)
+      .setStrokeStyle(2, getColorNumber(Colors.Tan), 0.75)
       .setVisible(false);
     this.position = new PhaserMath.Vector2(0, 0);
 

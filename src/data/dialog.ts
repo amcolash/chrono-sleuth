@@ -1,8 +1,14 @@
-import { NPC } from '../classes/NPC';
-import { Player } from '../classes/Player';
-import { ItemType, JournalEntry, NPCType, QuestType, WarpType } from '../classes/types';
-import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry, updateWarpVisibility } from './interactionUtils';
-import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from './riddles';
+import { NPC } from '../classes/Environment/NPC';
+import { Player } from '../classes/Player/Player';
+import {
+  hasActiveQuest,
+  hasCompletedQuest,
+  hasItem,
+  hasJournalEntry,
+  updateWarpVisibility,
+} from '../utils/interactionUtils';
+import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from '../utils/riddles';
+import { ItemType, JournalEntry, NPCType, QuestType, WarpType } from './types';
 
 export interface NPCDialog {
   conditions?: {

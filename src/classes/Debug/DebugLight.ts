@@ -1,7 +1,7 @@
 import { GameObjects } from 'phaser';
 
-import { Config } from '../config';
-import { Layer } from '../utils/layers';
+import { Config } from '../../config';
+import { Layer } from '../../data/layers';
 
 export class DebugLight extends GameObjects.GameObject {
   x: number;

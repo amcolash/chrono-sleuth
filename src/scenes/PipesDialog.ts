@@ -1,11 +1,11 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { InputManager } from '../classes/InputManager';
-import { Player } from '../classes/Player';
+import { Player } from '../classes/Player/Player';
 import { Button } from '../classes/UI/Button';
 import { Gamepad } from '../classes/UI/Gamepad';
-import { JournalEntry } from '../classes/types';
+import { InputManager } from '../classes/UI/InputManager';
 import { Config } from '../config';
+import { JournalEntry } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
 import { Game } from './Game';

@@ -1,4 +1,4 @@
-import { JournalEntry } from '../classes/types';
+import { JournalEntry } from './types';
 
 export const JournalData: Record<JournalEntry, string> = {
   [JournalEntry.FixTheClock]:

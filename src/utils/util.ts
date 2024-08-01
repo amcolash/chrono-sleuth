@@ -1,5 +1,8 @@
+import { Cameras, Scene } from 'phaser';
+
 import { Config, fullSize, zoomedSize } from '../config';
 import { Game } from '../scenes/Game';
+import { Colors, getColorNumber, getColorObject } from './colors';
 
 export function isMobile() {
   const toMatch = [/Android/i, /webOS/i, /iPhone/i, /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
@@ -30,4 +33,34 @@ export function setZoomed(scene: Game, zoomed: boolean) {
 export function getRandomElement<T>(array: T[]): T {
   const randomIndex = Math.floor(Math.random() * array.length);
   return array[randomIndex];
+}
+
+const black = getColorObject(getColorNumber(Colors.Background));
+
+export function fadeIn(scene: Scene, duration: number, callback?: () => void) {
+  scene.cameras.main.fadeIn(
+    duration,
+    black.red,
+    black.green,
+    black.blue,
+    (_camera: Cameras.Scene2D.Camera, progress: number) => {
+      if (progress >= 1) {
+        if (callback) callback();
+      }
+    }
+  );
+}
+
+export function fadeOut(scene: Scene, duration: number, callback?: () => void) {
+  scene.cameras.main.fadeOut(
+    duration,
+    black.red,
+    black.green,
+    black.blue,
+    (_camera: Cameras.Scene2D.Camera, progress: number) => {
+      if (progress >= 1) {
+        if (callback) callback();
+      }
+    }
+  );
 }

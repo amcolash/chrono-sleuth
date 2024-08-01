@@ -1,4 +1,4 @@
-import { NPCType } from '../classes/types';
+import { NPCType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { getClockRewind } from './interactionUtils';
 

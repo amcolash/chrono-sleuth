@@ -1,12 +1,13 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { InputManager } from '../classes/InputManager';
-import { Player } from '../classes/Player';
+import { warpTo } from '../classes/Environment/Warp';
+import { Player } from '../classes/Player/Player';
 import { Button } from '../classes/UI/Button';
 import { Gamepad } from '../classes/UI/Gamepad';
-import { WarpData, warpTo } from '../classes/Warp';
-import { JournalEntry, WarpType } from '../classes/types';
+import { InputManager } from '../classes/UI/InputManager';
 import { Config } from '../config';
+import { JournalEntry, WarpType } from '../data/types';
+import { WarpData } from '../data/warp';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
 import { Game } from './Game';

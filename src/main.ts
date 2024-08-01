@@ -10,6 +10,7 @@ import { Paused } from './scenes/Paused';
 import { Pipes } from './scenes/Pipes';
 import { PipesDialog } from './scenes/PipesDialog';
 import { Preloader } from './scenes/Preloader';
+import { Colors, getColorNumber } from './utils/colors';
 import { loadFont } from './utils/fonts';
 
 //  Find out more information about the Game Config at:
@@ -19,7 +20,7 @@ const config: Types.Core.GameConfig = {
   width: Config.width,
   height: Config.height,
   parent: 'game-container',
-  backgroundColor: 0x111111,
+  backgroundColor: getColorNumber(Colors.Background),
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

@@ -1,7 +1,7 @@
 import { GameObjects } from 'phaser';
 
+import { Layer } from '../../data/layers';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { Layer } from '../../utils/layers';
 
 export class IconButton extends GameObjects.Container {
   img: GameObjects.Image;

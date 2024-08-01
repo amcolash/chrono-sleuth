@@ -1,7 +1,7 @@
 import { GameObjects, Math, Physics, Scene } from 'phaser';
 
-import { Config } from '../config';
-import { Game } from '../scenes/Game';
+import { Config } from '../../config';
+import { Game } from '../../scenes/Game';
 
 export class Slope extends Physics.Arcade.Image {
   width: number;
@@ -44,10 +44,13 @@ export class Slope extends Physics.Arcade.Image {
     }
   }
 
-  update(time: number, delta: number) {
+  update(_time: number, _delta: number) {
     const player = (this.scene as Game).player;
 
-    if (this.body && this.scene.physics.world.intersects(this.body, player.body)) {
+    if (
+      this.body &&
+      this.scene.physics.world.intersects(this.body as Physics.Arcade.Body, player.body as Physics.Arcade.Body)
+    ) {
       let horizontalPercent = Math.Clamp(1 - (this.x + this.width - player.x) / this.width, 0, 1);
       if (this.flipped) horizontalPercent = 1 - horizontalPercent;
 

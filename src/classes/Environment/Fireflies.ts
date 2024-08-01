@@ -1,7 +1,7 @@
 import { Display, GameObjects, Math as PhaserMath } from 'phaser';
 
-import { Config } from '../config';
-import { Game } from '../scenes/Game';
+import { Config } from '../../config';
+import { Game } from '../../scenes/Game';
 
 function r() {
   return Math.random() - 0.5;

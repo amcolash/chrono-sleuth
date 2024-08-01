@@ -1,19 +1,15 @@
 import { GameObjects } from 'phaser';
 
-import { Config } from '../config';
-import { Game } from '../scenes/Game';
-import { Colors, getColorNumber } from '../utils/colors';
-import { fontStyle } from '../utils/fonts';
-import { Layer } from '../utils/layers';
-import { Notification } from './UI/Notification';
-import { Quest, QuestType } from './types';
+import { Config } from '../../config';
+import { Layer } from '../../data/layers';
+import { QuestNames } from '../../data/quest';
+import { Quest, QuestType } from '../../data/types';
+import { Game } from '../../scenes/Game';
+import { Colors, getColorNumber } from '../../utils/colors';
+import { fontStyle } from '../../utils/fonts';
+import { Notification } from '../UI/Notification';
 
 const size = 330;
-
-export const QuestNames: Record<QuestType, string> = {
-  [QuestType.ForestGear]: 'Find the gear in the forest',
-  [QuestType.SphinxRiddle]: 'Solve the Sphinx riddle',
-};
 
 export class Quests extends GameObjects.Container {
   quests: Quest[] = [];

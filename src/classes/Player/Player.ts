@@ -1,18 +1,18 @@
 import { GameObjects, Math as PhaserMath } from 'phaser';
 
-import { Config } from '../config';
-import { Game } from '../scenes/Game';
-import { createAnimation, updateAnimation } from '../utils/animations';
-import { Layer } from '../utils/layers';
-import { rewindInterval, rewindSpeed } from './Clock';
-import { DebugLight } from './DebugLight';
-import { InputManager, Key } from './InputManager';
+import { Config } from '../../config';
+import { Layer } from '../../data/layers';
+import { InteractResult, Interactive, Rewindable } from '../../data/types';
+import { Game } from '../../scenes/Game';
+import { createAnimation, updateAnimation } from '../../utils/animations';
+import { DebugLight } from '../Debug/DebugLight';
+import { rewindInterval, rewindSpeed } from '../Environment/Clock';
+import { ButtonPrompt } from '../UI/ButtonPrompt';
+import { InputManager, Key } from '../UI/InputManager';
+import { Message } from '../UI/Message';
 import { Inventory } from './Inventory';
 import { Journal } from './Journal';
 import { Quests } from './Quests';
-import { ButtonPrompt } from './UI/ButtonPrompt';
-import { Message } from './UI/Message';
-import { InteractResult, Interactive, Rewindable } from './types';
 
 const size = 1.35;
 const speed = (Config.fastMode ? 350 : 120) * size;

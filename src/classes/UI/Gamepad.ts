@@ -1,8 +1,8 @@
 import { GameObjects, Input, Scene } from 'phaser';
 
 import { Config } from '../../config';
+import { Layer } from '../../data/layers';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { Layer } from '../../utils/layers';
 import { Notification } from './Notification';
 
 const buttonAlpha = 0.8;

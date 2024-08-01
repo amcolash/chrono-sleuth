@@ -1,4 +1,4 @@
-import { Key } from './InputManager';
+import { Key } from '../classes/UI/InputManager';
 
 export enum InteractResult {
   None,
