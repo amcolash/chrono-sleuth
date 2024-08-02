@@ -15,7 +15,7 @@ import { Journal } from './Journal';
 import { Quests } from './Quests';
 
 const size = 1.35;
-const speed = (Config.fastMode ? 350 : 120) * size;
+export const speed = (Config.fastMode ? 350 : 120) * size;
 const MAX_HISTORY = 1000;
 
 export const playerStart = new PhaserMath.Vector2(400, 650);
@@ -25,6 +25,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
   keys: InputManager;
   light: GameObjects.Light | DebugLight;
+  debug: GameObjects.Arc;
 
   buttonPrompt: GameObjects.Text;
   interactive?: Interactive;
@@ -57,6 +58,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
     if (Config.debug) {
       this.light = new DebugLight(scene, this.x, this.y, 200, 0xffddbb, 1.2);
+      this.debug = scene.add.circle(this.x, this.y, 3, 0xff00ff).setDepth(Layer.Debug);
     } else {
       this.light = scene.lights.addLight(this.x, this.y, 200, 0xffddbb, 1.2);
     }
@@ -73,8 +75,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   }
 
   update(_time: number, delta: number) {
+    if (Config.debug) {
+      this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
+      this.debug.setPosition(this.x, this.y);
+    }
+
     // Update UI
-    if (Config.debug) this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
     this.buttonPrompt.setVisible(
       (this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false
     );
