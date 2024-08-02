@@ -7,6 +7,6 @@ export enum Layer {
   Shader,
   Ui,
   Ui2,
-  Overlay,
   Debug,
+  Overlay,
 }

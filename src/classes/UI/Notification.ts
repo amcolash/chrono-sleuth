@@ -17,7 +17,7 @@ export class Notification extends GameObjects.Text {
       backgroundColor: '#' + Colors.Teal,
       padding: { x: 10, y: 5 },
     });
-    this.setAlpha(0).setDepth(Layer.Ui2).setScrollFactor(0);
+    this.setAlpha(0).setDepth(Layer.Overlay).setScrollFactor(0);
 
     scene.add.existing(this);
 
