@@ -4,6 +4,7 @@ interface Data {
   width: number;
   height: number;
   flip?: boolean;
+  upwards?: boolean;
 }
 
 export const slopeData: Data[] = [
@@ -14,4 +15,7 @@ export const slopeData: Data[] = [
   // Lake
   { x: 5150, y: 953, width: 100, height: 60, flip: true },
   { x: 5820, y: 795, width: 220, height: 220 },
+
+  // Alchemy Lab
+  { x: -710, y: 1577, width: 280, height: 190, upwards: true },
 ];

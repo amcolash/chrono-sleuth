@@ -161,11 +161,12 @@ export const WarpData: Record<WarpType, Data> = {
     visual: WarpVisual.Invisible,
   },
   [WarpType.LabExit]: {
-    x: -1005,
-    y: 1465,
+    x: -380,
+    y: 1545,
     key: Key.Right,
     warpTo: WarpType.LabEntrance,
     visual: WarpVisual.Invisible,
+    range: 15,
     skipLighting: true,
   },
 };

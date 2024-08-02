@@ -125,6 +125,7 @@ export class Game extends Scene {
     return backgroundData.map((b) => {
       const background = this.physics.add.image(b.x, b.y, b.image).setOrigin(0);
       if (!b.skipLighting) background.setPipeline('Light2D');
+      if (b.scale) background.setScale(b.scale);
       if (Config.debug) background.setInteractive({ draggable: true });
 
       return background;
@@ -154,7 +155,7 @@ export class Game extends Scene {
   }
 
   createSlopes(): Slope[] {
-    return slopeData.map((s) => new Slope(this, s.x, s.y, s.width, s.height, s.flip));
+    return slopeData.map((s) => new Slope(this, s.x, s.y, s.width, s.height, s.flip, s.upwards));
   }
 
   createUI() {

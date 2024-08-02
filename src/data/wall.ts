@@ -30,4 +30,9 @@ export const WallData = [
   // Mansion Outside
   { x: -565, y: 575 },
   { x: -2075, y: 575 },
+
+  // Mansion Inside
+
+  // Alchemy Lab
+  { x: -350, y: 1510 },
 ];

@@ -2,6 +2,7 @@ interface Data {
   x: number;
   y: number;
   image: string;
+  scale?: number;
   skipLighting?: boolean;
 }
 
@@ -13,5 +14,5 @@ export const backgroundData: Data[] = [
   { x: 4400, y: 100, image: 'lake' },
   { x: -2200, y: -170, image: 'mansion_outside' },
   { x: -2000, y: -1320, image: 'mansion_inside', skipLighting: true },
-  { x: -2200, y: 1200, image: 'alchemy_lab', skipLighting: true },
+  { x: -2200, y: 1300, image: 'alchemy_lab', scale: 0.9, skipLighting: true },
 ];
