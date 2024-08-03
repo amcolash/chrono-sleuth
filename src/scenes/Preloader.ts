@@ -119,8 +119,6 @@ export class Preloader extends Scene {
     //  For example, you can define global animations here, so we can use them in other scenes.
     //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
 
-    // return;
-
     this.time.delayedCall(import.meta.env.PROD ? 3000 : 0, () => {
       fadeOut(this, import.meta.env.PROD ? 300 : 0, () => {
         this.scene.stop(this);
