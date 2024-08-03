@@ -69,11 +69,13 @@ export class Game extends Scene {
     this.createLights();
 
     // ui
-    const { debugUI } = this.createUI();
+    this.createUI();
 
     // rewindable objects
     const rewindable = [this.player];
-    this.clock = new Clock(this, rewindable, this.player);
+    if (Config.rewindEnabled) {
+      this.clock = new Clock(this, rewindable, this.player);
+    }
 
     // interactive objects
     this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items, ...props], {
@@ -81,13 +83,10 @@ export class Game extends Scene {
     });
 
     // update items added to the group
-    const updatables = this.add.group(
-      [this.player, this.clock, this.gamepad, forestFireflies, lakeFireflies, ...slopes],
-      {
-        runChildUpdate: true,
-      }
-    );
-    if (debugUI) updatables.add(debugUI);
+    const updateables = this.add.group([this.player, this.gamepad, forestFireflies, lakeFireflies, ...slopes], {
+      runChildUpdate: true,
+    });
+    if (this.clock) updateables.add(this.clock);
 
     // collisions
     this.physics.add.collider(this.player, walls);
@@ -168,20 +167,32 @@ export class Game extends Scene {
   }
 
   createUI() {
-    new IconButton(this, 31, 30, 'settings', () => {
-      this.scene.pause();
-      this.scene.launch('Paused', { game: this });
-    });
-    new IconButton(this, 81, 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
-      const prev = isDaytime(this);
-      toggleLighting(this);
-      button.img.setTexture(prev ? 'sun' : 'moon');
-    });
-    new IconButton(this, 131, 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
-      const savedata = getCurrentSaveState(this);
-      save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
+    this.time.delayedCall(300, () => {
+      [
+        new IconButton(this, 31, 30, 'settings', () => {
+          this.scene.pause();
+          this.scene.launch('Paused', { game: this });
+        }),
+        new IconButton(this, 81, 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
+          const prev = isDaytime(this);
+          toggleLighting(this);
+          button.img.setTexture(prev ? 'sun' : 'moon');
+        }),
+        new IconButton(this, 131, 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
+          const savedata = getCurrentSaveState(this);
+          save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
 
-      this.scene.restart();
+          this.scene.restart();
+        }),
+      ].forEach((button) => {
+        button.setAlpha(0);
+        this.tweens.add({
+          targets: button,
+
+          alpha: 1,
+          duration: 250,
+        });
+      });
     });
 
     this.gamepad = new Gamepad(this);
@@ -189,7 +200,10 @@ export class Game extends Scene {
     // debug
     let debugUI;
     if (import.meta.env.DEV) {
-      debugUI = new DebugUI(this, this.player);
+      this.time.delayedCall(1000, () => {
+        debugUI = new DebugUI(this, this.player);
+        this.add.group(debugUI, { runChildUpdate: true });
+      });
     }
 
     return { debugUI };

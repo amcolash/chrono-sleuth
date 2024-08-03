@@ -35,10 +35,21 @@ export class Fireflies extends GameObjects.GameObject {
     this.bounds = bounds;
     this.center = new PhaserMath.Vector2(x, y);
 
+    if (Config.debug) {
+      this.debug = scene.add.graphics().fillStyle(0xff0000, 0.5).lineStyle(2, 0xff0000, 1);
+
+      this.debug.fillCircle(bounds[0] / 2, bounds[1] / 2, 10);
+      this.debug.strokeRect(0, 0, bounds[0], bounds[1]);
+    }
+
+    this.setPosition(x, y);
+  }
+
+  createLights() {
     for (let i = 0; i < this.count; i++) {
       const c = new Display.Color(Math.random() * 40 + 50, Math.random() * 60 + 190, Math.random() * 20 + 10);
 
-      const light = scene.lights.addPointLight(0, 0, c.color, Math.random() * 7 + 3, 0.15, 0.045 + r() * 0.02);
+      const light = this.scene.lights.addPointLight(0, 0, c.color, Math.random() * 7 + 3, 0.15, 0.045 + r() * 0.02);
       this.lights.push(light);
 
       const biases = [];
@@ -49,15 +60,6 @@ export class Fireflies extends GameObjects.GameObject {
 
       this.biases.push(biases);
     }
-
-    if (Config.debug) {
-      this.debug = scene.add.graphics().fillStyle(0xff0000, 0.5).lineStyle(2, 0xff0000, 1);
-
-      this.debug.fillCircle(bounds[0] / 2, bounds[1] / 2, 10);
-      this.debug.strokeRect(0, 0, bounds[0], bounds[1]);
-    }
-
-    this.setPosition(x, y);
   }
 
   setPosition(x: number, y: number) {
@@ -78,6 +80,13 @@ export class Fireflies extends GameObjects.GameObject {
   }
 
   update(time: number, _delta: number) {
+    if (
+      this.lights.length === 0 &&
+      PhaserMath.Distance.BetweenPointsSquared(this.center, this.scene.player) < 1000 ** 2
+    ) {
+      this.createLights();
+    }
+
     const near = Math.abs(this.scene.player.x - this.center.x) <= this.bounds[0];
     if (!near) return;
 

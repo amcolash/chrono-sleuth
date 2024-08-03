@@ -12,6 +12,7 @@ export class Slope extends Physics.Arcade.Image {
   flipped: boolean;
   upwards: boolean;
   graphics: GameObjects.Graphics;
+  initialized: boolean = false;
 
   constructor(
     scene: Game,
@@ -19,37 +20,39 @@ export class Slope extends Physics.Arcade.Image {
     y: number,
     width: number = 100,
     height: number = 100,
-    flip: boolean = false,
+    flipped: boolean = false,
     upwards: boolean = false
   ) {
     super(scene, x, y, '');
     this.scene = scene;
 
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
-
     this.width = width;
     this.height = height;
-    this.flipped = flip;
+    this.flipped = flipped;
     this.upwards = upwards;
+  }
+
+  setup() {
+    this.scene.add.existing(this);
+    this.scene.physics.add.existing(this);
 
     this.setOrigin(0);
 
     if (!Config.debug) this.setVisible(false);
-    this.setSize(width, height * 1.5);
+    this.setSize(this.width, this.height * 1.5);
 
     if (Config.debug) {
       this.setInteractive({ draggable: true });
 
-      const graphics = scene.add.graphics();
+      const graphics = this.scene.add.graphics();
       this.graphics = graphics;
 
       graphics.lineStyle(2, 0x00ff00, 1);
 
-      const halfWidth = width / 2;
+      const halfWidth = this.width / 2;
 
-      const left = new PhaserMath.Vector2(0, flip ? 0 : 0 + height);
-      const right = new PhaserMath.Vector2(0 + width, flip ? 0 + height : 0);
+      const left = new PhaserMath.Vector2(0, this.flipped ? 0 : 0 + this.height);
+      const right = new PhaserMath.Vector2(0 + this.width, this.flipped ? 0 + this.height : 0);
 
       graphics.lineBetween(left.x, left.y, right.x, right.y);
       graphics.lineBetween(left.x - halfWidth, left.y, left.x, left.y);
@@ -61,6 +64,17 @@ export class Slope extends Physics.Arcade.Image {
   }
 
   update(_time: number, _delta: number) {
+    if (
+      !this.initialized &&
+      this.visible &&
+      PhaserMath.Distance.BetweenPointsSquared(this, this.scene.player) < 1000 ** 2
+    ) {
+      this.initialized = true;
+      this.setup();
+    }
+
+    if (!this.initialized) return;
+
     if (Config.debug && this.graphics) {
       this.graphics.setPosition(this.x, this.y);
     }

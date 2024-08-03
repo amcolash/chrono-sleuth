@@ -12,17 +12,28 @@ const deadzone = 0.1;
 export class Gamepad extends GameObjects.Container {
   buttons: GameObjects.Arc[] = [];
   lastAxisKey?: string;
+  minimal?: boolean;
 
   constructor(scene: Scene, minimal?: boolean) {
     super(scene, 100, Config.height - 100);
-    this.setScrollFactor(0).setDepth(Layer.Overlay);
-
     scene.add.existing(this);
 
+    this.minimal = minimal;
+
+    this.setScrollFactor(0).setDepth(Layer.Overlay);
+  }
+
+  createUI() {
     this.createDPad();
-    if (!minimal) this.createButtons();
+    if (!this.minimal) this.createButtons();
 
     this.createControllerListeners();
+  }
+
+  setVisible(value: boolean): this {
+    super.setVisible(value);
+    if (value && this.buttons.length === 0) this.createUI();
+    return this;
   }
 
   update(_time: number, _delta: number) {

@@ -27,7 +27,8 @@ export class Quests extends GameObjects.Container {
       .setAlpha(0.75)
       .setOrigin(0);
     this.add(this.questRectangle);
-    this.add(scene.add.text(10, 4, 'Quests', { ...fontStyle, fontSize: 32 }));
+
+    scene.time.delayedCall(100, () => this.add(scene.add.text(10, 4, 'Quests', { ...fontStyle, fontSize: 32 })));
   }
 
   addQuest(quest: Quest, silent?: boolean) {

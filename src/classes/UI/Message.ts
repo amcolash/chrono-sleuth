@@ -53,35 +53,6 @@ export class Message extends GameObjects.Container {
 
     this.player = player;
 
-    this.npcName = new GameObjects.Text(scene, padding + portraitOffset, padding - 5, '', {
-      ...fontStyle,
-      color: '#' + Colors.Tan,
-    });
-
-    this.text = new GameObjects.Text(scene, padding + portraitOffset, padding + nameOffset, '', fontStyle);
-    this.text.width = this.textWidth;
-    this.text.height = this.textHeight;
-
-    this.text.setOrigin(0).setMaxLines(3);
-
-    this.portrait = new GameObjects.Image(scene, padding, padding, '').setOrigin(0).setScale(1.5);
-
-    this.box = new GameObjects.Rectangle(
-      scene,
-      0,
-      0,
-      width - padding * 2,
-      boxHeight,
-      getColorNumber(Colors.Black),
-      0.8
-    );
-    this.box.setStrokeStyle(2, getColorNumber(Colors.Tan), 1);
-    this.box.setOrigin(0, 0);
-
-    this.optionsContainer = new ButtonGroup(scene).setDepth(Layer.Overlay);
-
-    this.add([this.box, this.npcName, this.text, this.portrait]);
-
     this.scene.input.keyboard?.on('keydown-ENTER', () => {
       if (!this.options) this.updateDialog();
     });
@@ -91,7 +62,40 @@ export class Message extends GameObjects.Container {
     });
   }
 
+  createUI() {
+    this.npcName = new GameObjects.Text(this.scene, padding + portraitOffset, padding - 5, '', {
+      ...fontStyle,
+      color: '#' + Colors.Tan,
+    });
+
+    this.text = new GameObjects.Text(this.scene, padding + portraitOffset, padding + nameOffset, '', fontStyle);
+    this.text.width = this.textWidth;
+    this.text.height = this.textHeight;
+
+    this.text.setOrigin(0).setMaxLines(3);
+
+    this.portrait = new GameObjects.Image(this.scene, padding, padding, '').setOrigin(0).setScale(1.5);
+
+    this.box = new GameObjects.Rectangle(
+      this.scene,
+      0,
+      0,
+      Config.width - padding * 2,
+      boxHeight,
+      getColorNumber(Colors.Black),
+      0.8
+    );
+    this.box.setStrokeStyle(2, getColorNumber(Colors.Tan), 1);
+    this.box.setOrigin(0, 0);
+
+    this.optionsContainer = new ButtonGroup(this.scene).setDepth(Layer.Overlay);
+
+    this.add([this.box, this.npcName, this.text, this.portrait]);
+  }
+
   setDialog(dialog?: Dialog, npc?: NPC, portrait?: string) {
+    if (!this.npcName) this.createUI();
+
     this.setVisible(dialog !== undefined);
 
     this.npc = npc;

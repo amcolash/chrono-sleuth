@@ -26,8 +26,12 @@ export class Inventory extends GameObjects.Container {
       .setOrigin(0);
     this.add(this.rect);
 
-    this.text = scene.add.text(10, 4, 'Inventory', { ...fontStyle, fontSize: 32 });
-    this.add(this.text);
+    scene.time.delayedCall(100, () => {
+      this.text = scene.add.text(10, 4, 'Inventory', { ...fontStyle, fontSize: 32 });
+      this.add(this.text);
+
+      this.updateItems();
+    });
   }
 
   addItem(item: ItemType, silent?: boolean) {
@@ -64,7 +68,7 @@ export class Inventory extends GameObjects.Container {
     });
     this.setVisible(this.inventory.length > 0);
 
-    const width = Math.max(this.text.displayWidth + 18, 50 * index + 12);
+    const width = Math.max(this.text?.displayWidth + 18, 50 * index + 12);
     this.setPosition(Config.width - width - 20, 20);
     this.rect.setSize(width, 102);
   }

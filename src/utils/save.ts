@@ -167,7 +167,8 @@ export function load(scene: Game) {
       : deepEqual(savedata, debugSave)
         ? '[Debug]'
         : '[Storage]';
-    new Notification(scene, `Game Loaded ${loadType}`);
+
+    scene.time.delayedCall(150, () => new Notification(scene, `Game Loaded ${loadType}`));
 
     // If new game, save now
     if (deepEqual(savedata, defaultSave)) {

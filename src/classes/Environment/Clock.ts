@@ -40,22 +40,18 @@ export class Clock extends GameObjects.Container {
     this.timeText = scene.add.text(15, 10, '', fontStyle).setScrollFactor(0);
     this.bar = scene.add.rectangle(0, Config.height - 6, 0, 6, 0xccaa00).setScrollFactor(0);
 
-    if (Config.rewindEnabled) {
-      this.scene.input.keyboard?.on('keydown-SHIFT', () => {
-        this.rewinding = true;
-        this.rewindable.forEach((r) => r.setRewind(true));
-      });
+    this.scene.input.keyboard?.on('keydown-SHIFT', () => {
+      this.rewinding = true;
+      this.rewindable.forEach((r) => r.setRewind(true));
+    });
 
-      this.scene.input.keyboard?.on('keyup-SHIFT', () => {
-        this.rewinding = false;
-        this.rewindable.forEach((r) => r.setRewind(false));
-      });
-    }
+    this.scene.input.keyboard?.on('keyup-SHIFT', () => {
+      this.rewinding = false;
+      this.rewindable.forEach((r) => r.setRewind(false));
+    });
   }
 
   update(_time: number, delta: number) {
-    if (!Config.rewindEnabled) return;
-
     const dayProgress = this.currentTime / Config.dayMinutes;
     this.bar.width = Config.width * dayProgress;
 
