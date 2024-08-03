@@ -14,8 +14,11 @@ const warpYOffset = 12;
 export class Warp extends Physics.Arcade.Image implements Interactive {
   warpType: WarpType;
   player: Player;
+
   particles1: GameObjects.Particles.ParticleEmitter;
   particles2: GameObjects.Particles.ParticleEmitter;
+  graphics: GameObjects.Graphics;
+
   range: number;
 
   constructor(scene: Scene, warpType: WarpType, player: Player) {
@@ -77,8 +80,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
       this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
     }
 
-    if (visual === WarpVisual.Invisible) this.setAlpha(0);
-    this.setVisible(visual !== WarpVisual.WarpHidden);
+    if (!Config.debug) this.setVisible(visual !== WarpVisual.WarpHidden && visual !== WarpVisual.Invisible);
 
     if (warpType === WarpType.Underground) {
       scene.add
@@ -93,7 +95,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
 
     if (Config.debug) {
       this.setInteractive({ draggable: true });
-      const graphics = scene.add.graphics();
+      this.graphics = scene.add.graphics();
 
       // const target = WarpData[warpTo];
 
@@ -115,12 +117,12 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
       // if (warpType === WarpType.Forest) console.log(this.body?.left, this.body.top);
 
       if (this.hasExtendedBounds()) {
-        graphics.lineStyle(2, 0xff00ff);
+        this.graphics.lineStyle(2, 0xff00ff).setPosition(x, y);
 
         const body = this.body as Physics.Arcade.Body;
-        graphics.lineBetween(x - this.range, y - body.halfHeight, x - this.range, y + body.halfHeight);
-        graphics.lineBetween(x + this.range, y - body.halfHeight, x + this.range, y + body.halfHeight);
-        graphics.strokeCircle(x, y, 5);
+        this.graphics.lineBetween(-this.range, -body.halfHeight, -this.range, body.halfHeight);
+        this.graphics.lineBetween(this.range, -body.halfHeight, this.range, body.halfHeight);
+        this.graphics.strokeCircle(0, 0, 5);
       }
     }
   }
@@ -177,6 +179,10 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
     if (this.particles1 && this.particles2) {
       this.particles1.setPosition(x, (y || 0) - warpYOffset);
       this.particles2.setPosition(x, (y || 0) - warpYOffset);
+    }
+
+    if (this.graphics) {
+      this.graphics.setPosition(x, y);
     }
 
     return this;

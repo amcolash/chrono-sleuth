@@ -28,7 +28,7 @@ export class Message extends GameObjects.Container {
   npcName: GameObjects.Text;
   text: GameObjects.Text;
   box: GameObjects.Rectangle;
-  image: GameObjects.Image;
+  portrait: GameObjects.Image;
 
   options?: string[];
   optionsContainer: ButtonGroup;
@@ -64,7 +64,7 @@ export class Message extends GameObjects.Container {
 
     this.text.setOrigin(0).setMaxLines(3);
 
-    this.image = new GameObjects.Image(scene, padding, padding, '').setOrigin(0).setScale(1.5);
+    this.portrait = new GameObjects.Image(scene, padding, padding, '').setOrigin(0).setScale(1.5);
 
     this.box = new GameObjects.Rectangle(
       scene,
@@ -80,7 +80,7 @@ export class Message extends GameObjects.Container {
 
     this.optionsContainer = new ButtonGroup(scene).setDepth(Layer.Overlay);
 
-    this.add([this.box, this.npcName, this.text, this.image]);
+    this.add([this.box, this.npcName, this.text, this.portrait]);
 
     this.scene.input.keyboard?.on('keydown-ENTER', () => {
       if (!this.options) this.updateDialog();
@@ -108,7 +108,7 @@ export class Message extends GameObjects.Container {
     this.npcName.setVisible(false);
 
     if (!npc && !portrait) {
-      this.image.setVisible(false);
+      this.portrait.setVisible(false);
       this.text
         .setPosition(padding, padding)
         .setWordWrapWidth(padding + portraitOffset + this.textWidth, true)
@@ -119,9 +119,9 @@ export class Message extends GameObjects.Container {
         this.npcName.setText(NPCData[npc.npcType].name);
       }
 
-      this.image.setVisible(true);
-      if (npc) this.image.setTexture(NPCData[npc.npcType].portrait);
-      else if (portrait) this.image.setTexture(portrait);
+      this.portrait.setVisible(true);
+      if (npc) this.portrait.setTexture(NPCData[npc.npcType].portrait);
+      else if (portrait) this.portrait.setTexture(portrait);
 
       this.text
         .setPosition(padding + portraitOffset, padding + (npc ? nameOffset : 0))

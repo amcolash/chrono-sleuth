@@ -202,9 +202,8 @@ export const propDialogs: { [key in ItemType]?: Dialog[] } = {
         'It does say that there might have been a problem with one of the ingredients.',
         'Maybe I can find more information in the lab.',
       ],
-      conditions: {
-        journalEntry: JournalEntry.ForestMazeSolved,
-        invert: true,
+      onCompleted: (player) => {
+        player.quests.addQuest({ id: QuestType.ExploreLab, completed: false });
       },
     },
   ],

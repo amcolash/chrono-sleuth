@@ -66,6 +66,7 @@ export enum ItemType {
 export enum QuestType {
   ForestGear,
   SphinxRiddle,
+  ExploreLab,
 }
 
 export enum NPCType {
