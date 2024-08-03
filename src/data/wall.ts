@@ -34,5 +34,7 @@ export const WallData = [
   // Mansion Inside
 
   // Alchemy Lab
+  { x: -2075, y: 1630 },
   { x: -350, y: 1510 },
+  { x: 270, y: 1560 },
 ];
