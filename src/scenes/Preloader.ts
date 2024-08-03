@@ -33,8 +33,20 @@ export class Preloader extends Scene {
 
     //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
     this.load.on('progress', (progress: number) => {
-      bar.width = (width - margin * 2) * progress;
+      const p = import.meta.env.PROD ? progress * 0.5 : progress;
+      bar.width = (width - margin * 2) * p;
     });
+
+    // Fake progress on prod
+    if (import.meta.env.PROD) {
+      this.load.on('complete', () => {
+        this.tweens.add({
+          targets: bar,
+          width: width - margin * 2,
+          duration: 2800,
+        });
+      });
+    }
 
     const gear = document.createElement('img');
     gear.src = 'assets/icons/settings.svg';
@@ -109,7 +121,7 @@ export class Preloader extends Scene {
 
     // return;
 
-    this.time.delayedCall(import.meta.env.PROD ? 1500 : 0, () => {
+    this.time.delayedCall(import.meta.env.PROD ? 3000 : 0, () => {
       fadeOut(this, import.meta.env.PROD ? 300 : 0, () => {
         this.scene.stop(this);
         this.scene.start('Game');

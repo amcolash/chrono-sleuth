@@ -1,4 +1,5 @@
 import { Game, Types } from 'phaser';
+import { registerSW } from 'virtual:pwa-register';
 
 import { Config } from './config';
 import { Boot } from './scenes/Boot';
@@ -12,6 +13,9 @@ import { PipesDialog } from './scenes/PipesDialog';
 import { Preloader } from './scenes/Preloader';
 import { Colors, getColorNumber } from './utils/colors';
 import { loadFont } from './utils/fonts';
+
+// Reload the page when the service worker updates
+registerSW({ immediate: true });
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
