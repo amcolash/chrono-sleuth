@@ -1,7 +1,7 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { NPCDialog } from '../../data/dialog';
+import { Dialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { NPCData } from '../../data/npc';
 import { Game } from '../../scenes/Game';
@@ -33,7 +33,7 @@ export class Message extends GameObjects.Container {
   options?: string[];
   optionsContainer: ButtonGroup;
 
-  dialog?: NPCDialog;
+  dialog?: Dialog;
   messageIndex: number;
   interactionTimeout: number;
 
@@ -91,7 +91,7 @@ export class Message extends GameObjects.Container {
     });
   }
 
-  setDialog(dialog?: NPCDialog, npc?: NPC, textureKey?: string) {
+  setDialog(dialog?: Dialog, npc?: NPC, portrait?: string) {
     this.setVisible(dialog !== undefined);
 
     this.npc = npc;
@@ -107,7 +107,7 @@ export class Message extends GameObjects.Container {
 
     this.npcName.setVisible(false);
 
-    if (!npc && !textureKey) {
+    if (!npc && !portrait) {
       this.image.setVisible(false);
       this.text
         .setPosition(padding, padding)
@@ -121,7 +121,7 @@ export class Message extends GameObjects.Container {
 
       this.image.setVisible(true);
       if (npc) this.image.setTexture(NPCData[npc.npcType].portrait);
-      else if (textureKey) this.image.setTexture(textureKey);
+      else if (portrait) this.image.setTexture(portrait);
 
       this.text
         .setPosition(padding + portraitOffset, padding + (npc ? nameOffset : 0))

@@ -8,9 +8,9 @@ import {
   updateWarpVisibility,
 } from '../utils/interactionUtils';
 import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from '../utils/riddles';
-import { ItemType, JournalEntry, NPCType, QuestType, WarpType } from './types';
+import { ItemType, JournalEntry, NPCType, PropType, QuestType, WarpType } from './types';
 
-export interface NPCDialog {
+export interface Dialog {
   conditions?: {
     hasItem?: ItemType;
     completedQuest?: QuestType;
@@ -27,7 +27,7 @@ export interface NPCDialog {
   onSelected?: (option: string, player: Player, npc?: NPC) => void;
 }
 
-const npcDialogs: Record<NPCType, NPCDialog[]> = {
+export const npcDialogs: Record<NPCType, Dialog[]> = {
   [NPCType.Inventor]: [
     {
       messages: ['I see you found the first gear. You should talk to the mayor to learn more about the old clock.'],
@@ -187,14 +187,30 @@ const npcDialogs: Record<NPCType, NPCDialog[]> = {
   ],
 };
 
-export const itemDialogs: { [key in ItemType]?: NPCDialog } = {
+export const itemDialogs: { [key in ItemType]?: Dialog } = {
   [ItemType.Gear1]: {
     messages: ['Hmm, this gear looks like it belongs in the clock tower. I should ask the inventor about it.'],
   },
 };
 
-export function getDialog(npc: NPCType, player: Player): NPCDialog | undefined {
-  const dialogs = npcDialogs[npc] || [];
+export const propDialogs: { [key in ItemType]?: Dialog[] } = {
+  [PropType.LabBook]: [
+    {
+      messages: [
+        'This book contains notes about an ancient alchemy experiement.',
+        'According to the notes, the experiment was a failure, and the alchemist disappeared.',
+        'It does say that there might have been a problem with one of the ingredients.',
+        'Maybe I can find more information in the lab.',
+      ],
+      conditions: {
+        journalEntry: JournalEntry.ForestMazeSolved,
+        invert: true,
+      },
+    },
+  ],
+};
+
+export function getDialog(dialogs: Dialog[], player: Player): Dialog | undefined {
   for (const dialog of dialogs) {
     const { conditions } = dialog;
 
@@ -210,8 +226,10 @@ export function getDialog(npc: NPCType, player: Player): NPCDialog | undefined {
 
     if (conditions?.invert) {
       if (conditions?.or) {
-        if (results.every((result) => !result)) return dialog;
+        if (results.some((result) => !result)) return dialog;
       } else if (results.every((result) => !result)) return dialog;
+
+      return undefined;
     }
 
     if (conditions?.or) {

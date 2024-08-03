@@ -1,7 +1,7 @@
 import { GameObjects, Math, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { getDialog } from '../../data/dialog';
+import { getDialog, npcDialogs } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { Data, NPCData } from '../../data/npc';
 import { InteractResult, Interactive, NPCType } from '../../data/types';
@@ -63,15 +63,15 @@ export class NPC extends Physics.Arcade.Image implements Interactive {
     if (this.player.message.visible || Date.now() < this.player.message.interactionTimeout) return InteractResult.None;
 
     if (keys[Key.Continue]) {
-      const dialog = getDialog(this.npcType, this.player);
-      if (!dialog) {
-        return InteractResult.None;
+      const dialogs = npcDialogs[this.npcType];
+      const dialog = getDialog(dialogs, this.player);
+
+      if (dialog) {
+        const showPortrait = NPCData[this.npcType].portrait.length > 0;
+        this.player.message.setDialog(dialog, showPortrait ? this : undefined);
+
+        return InteractResult.Talked;
       }
-
-      const showPortrait = NPCData[this.npcType].portrait.length > 0;
-      this.player.message.setDialog(dialog, showPortrait ? this : undefined);
-
-      return InteractResult.Talked;
     }
 
     return InteractResult.None;

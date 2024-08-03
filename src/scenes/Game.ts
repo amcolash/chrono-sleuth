@@ -6,6 +6,7 @@ import { Clock } from '../classes/Environment/Clock';
 import { Fireflies, FireflyPositions } from '../classes/Environment/Fireflies';
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
+import { Prop } from '../classes/Environment/Prop';
 import { Slope } from '../classes/Environment/Slope';
 import { Walls } from '../classes/Environment/Walls';
 import { Warp } from '../classes/Environment/Warp';
@@ -15,8 +16,9 @@ import { IconButton } from '../classes/UI/IconButton';
 import { Config } from '../config';
 import { backgroundData } from '../data/background';
 import { lightData } from '../data/lights';
+import { propData } from '../data/prop';
 import { slopeData } from '../data/slope';
-import { ItemType, NPCType, WarpType } from '../data/types';
+import { ItemType, NPCType, PropType, WarpType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
 import { getCurrentSaveState, load, loadConfig, save } from '../utils/save';
@@ -58,6 +60,7 @@ export class Game extends Scene {
     const npcs = this.createNpcs();
     const items = this.createItems();
     const slopes = this.createSlopes();
+    const props = this.createProps();
 
     const forestFireflies = new Fireflies(this, FireflyPositions.Forest[0], FireflyPositions.Forest[1]);
     const lakeFireflies = new Fireflies(this, FireflyPositions.Lake[0], FireflyPositions.Lake[1]);
@@ -73,7 +76,7 @@ export class Game extends Scene {
     this.clock = new Clock(this, rewindable, this.player);
 
     // interactive objects
-    this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items], {
+    this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items, ...props], {
       runChildUpdate: true,
     });
 
@@ -156,6 +159,12 @@ export class Game extends Scene {
 
   createSlopes(): Slope[] {
     return slopeData.map((s) => new Slope(this, s.x, s.y, s.width, s.height, s.flip, s.upwards));
+  }
+
+  createProps(): Prop[] {
+    return Object.values(PropType)
+      .filter((value) => typeof value === 'number')
+      .map((prop) => new Prop(this, prop as PropType, this.player));
   }
 
   createUI() {

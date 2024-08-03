@@ -7,6 +7,7 @@ export enum InteractResult {
   Teleported,
   Talked,
   Item,
+  Prop,
 }
 
 export interface Interactive {
@@ -93,4 +94,8 @@ export enum JournalEntry {
   SphinxRiddleSolved,
   MetTheMayor,
   ClockFirstGear,
+}
+
+export enum PropType {
+  LabBook,
 }

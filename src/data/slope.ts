@@ -18,6 +18,6 @@ export const slopeData: Data[] = [
 
   // Alchemy Lab
   { x: -710, y: 1577, width: 280, height: 190, upwards: true },
-  { x: -18, y: 1665, width: 200, height: 100 },
+  { x: -20, y: 1695, width: 200, height: 70 },
   { x: -1570, y: 1728, width: 200, height: 40, flip: true },
 ];

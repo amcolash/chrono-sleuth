@@ -80,16 +80,7 @@ export class Preloader extends Scene {
     this.load.image('journal', 'items/journal.png');
     this.load.image('wrench', 'items/wrench.png');
 
-    // this.load.image('map', 'items/map.png');
-    // this.load.image('book', 'items/book.png');
-    // this.load.image('candle', 'items/candle.png');
-    // this.load.image('dagger', 'items/dagger.png');
-    // this.load.image('lantern', 'items/lantern.png');
-    // this.load.image('letter', 'items/letter.png');
-    // this.load.image('lockpick', 'items/lockpick.png');
-
     // characters
-    // this.load.spritesheet('character', 'characters/player.png', { frameWidth: 24, frameHeight: 36 });
     this.load.spritesheet('character', 'characters/player.png', { frameWidth: 128, frameHeight: 80 });
     this.load.image('player_portrait', 'characters/player_portrait.png');
 
@@ -106,6 +97,9 @@ export class Preloader extends Scene {
     this.load.image('mayor_portrait', 'characters/mayor_portrait.png');
 
     this.load.image('clock_portrait', 'characters/clock_portrait.png');
+
+    // props
+    this.load.image('book', 'props/book.png');
   }
 
   create() {
