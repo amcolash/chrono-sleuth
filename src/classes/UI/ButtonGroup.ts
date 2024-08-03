@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Colors, getColorNumber } from '../../utils/colors';
 import { Button } from './Button';
@@ -7,7 +7,7 @@ export class ButtonGroup extends GameObjects.Container {
   buttons: Button[] = [];
   activeIndex = -1;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Scene) {
     super(scene);
     scene.add.existing(this).setScrollFactor(0);
 

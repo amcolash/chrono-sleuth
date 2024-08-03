@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { itemDialogs } from '../../data/dialog';
@@ -9,13 +9,13 @@ import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
-export class Item extends Phaser.Physics.Arcade.Image implements Interactive {
+export class Item extends Physics.Arcade.Image implements Interactive {
   itemType: ItemType;
   player: Player;
   particles: GameObjects.Particles.ParticleEmitter;
   light: GameObjects.Light | DebugLight;
 
-  constructor(scene: Phaser.Scene, type: ItemType, player: Player) {
+  constructor(scene: Scene, type: ItemType, player: Player) {
     const { x, y, image } = ItemData[type];
 
     super(scene, x, y, image);

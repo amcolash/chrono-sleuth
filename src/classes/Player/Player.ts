@@ -1,4 +1,4 @@
-import { GameObjects, Math as PhaserMath } from 'phaser';
+import { GameObjects, Math, Math as PhaserMath, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
@@ -20,7 +20,7 @@ const MAX_HISTORY = 1000;
 
 export const playerStart = new PhaserMath.Vector2(400, 650);
 
-export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
+export class Player extends Physics.Arcade.Sprite implements Rewindable {
   scene: Game;
 
   keys: InputManager;
@@ -37,7 +37,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
   journal: Journal;
 
   counter: number = 0;
-  history: Phaser.Math.Vector3[] = [];
+  history: Math.Vector3[] = [];
   rewinding = false;
 
   constructor(scene: Game) {
@@ -141,7 +141,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite implements Rewindable {
 
   record() {
     if (this.history.length < MAX_HISTORY)
-      this.history.push(new Phaser.Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
+      this.history.push(new Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
     else console.warn('Max history reached');
   }
 

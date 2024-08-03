@@ -1,4 +1,4 @@
-import { GameObjects, Types } from 'phaser';
+import { GameObjects, Scene, Types } from 'phaser';
 
 import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
@@ -7,7 +7,7 @@ export class Button extends GameObjects.Text {
   onClick: () => void;
 
   constructor(
-    scene: Phaser.Scene,
+    scene: Scene,
     x: number,
     y: number,
     text: string,

@@ -1,5 +1,5 @@
 import generateMaze, { Cell } from 'generate-maze';
-import { GameObjects, Math, Scene } from 'phaser';
+import { GameObjects, Geom, Math, Scene } from 'phaser';
 
 import { InputManager, Key } from '../classes/UI/InputManager';
 import { Config } from '../config';
@@ -55,16 +55,11 @@ export class Maze extends Scene {
     this.maze.forEach((row) => {
       row.forEach((col) => {
         if (col.top) {
-          const line = new Phaser.Geom.Line(
-            col.x * cellSize,
-            col.y * cellSize,
-            col.x * cellSize + cellSize,
-            col.y * cellSize
-          );
+          const line = new Geom.Line(col.x * cellSize, col.y * cellSize, col.x * cellSize + cellSize, col.y * cellSize);
           this.graphics.strokeLineShape(line);
         }
         if (col.bottom) {
-          const line = new Phaser.Geom.Line(
+          const line = new Geom.Line(
             col.x * cellSize,
             col.y * cellSize + cellSize,
             col.x * cellSize + cellSize,
@@ -73,16 +68,11 @@ export class Maze extends Scene {
           this.graphics.strokeLineShape(line);
         }
         if (col.left) {
-          const line = new Phaser.Geom.Line(
-            col.x * cellSize,
-            col.y * cellSize,
-            col.x * cellSize,
-            col.y * cellSize + cellSize
-          );
+          const line = new Geom.Line(col.x * cellSize, col.y * cellSize, col.x * cellSize, col.y * cellSize + cellSize);
           this.graphics.strokeLineShape(line);
         }
         if (col.right) {
-          const line = new Phaser.Geom.Line(
+          const line = new Geom.Line(
             col.x * cellSize + cellSize,
             col.y * cellSize,
             col.x * cellSize + cellSize,

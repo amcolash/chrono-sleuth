@@ -115,7 +115,7 @@ export class Pipes extends Scene {
           x,
           y,
           type,
-          rotation: Phaser.Math.Between(0, 3) * 90,
+          rotation: PhaserMath.Between(0, 3) * 90,
           interactive,
         };
 

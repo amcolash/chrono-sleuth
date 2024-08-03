@@ -1,4 +1,4 @@
-import { GameObjects, Math } from 'phaser';
+import { GameObjects, Math, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { getDialog } from '../../data/dialog';
@@ -10,7 +10,7 @@ import { ClockHands } from '../Environment/ClockHands';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
-export class NPC extends Phaser.Physics.Arcade.Image implements Interactive {
+export class NPC extends Physics.Arcade.Image implements Interactive {
   npcType: NPCType;
   player: Player;
   light: GameObjects.Light | DebugLight;
@@ -18,7 +18,7 @@ export class NPC extends Phaser.Physics.Arcade.Image implements Interactive {
   lastPos: Math.Vector2 = new Math.Vector2();
   clock?: ClockHands;
 
-  constructor(scene: Phaser.Scene, npcType: NPCType, player: Player) {
+  constructor(scene: Scene, npcType: NPCType, player: Player) {
     const { x, y, img, scale, onCreate, light, particles } = NPCData[npcType] as Data;
 
     super(scene, x, y, img);

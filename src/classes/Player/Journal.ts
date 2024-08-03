@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
@@ -13,7 +13,7 @@ export class Journal extends GameObjects.Image {
   journal: JournalEntry[] = [];
   unread: GameObjects.Ellipse;
 
-  constructor(scene: Phaser.Scene, player: Player) {
+  constructor(scene: Scene, player: Player) {
     super(scene, Config.width - 50, Config.height - 55, 'journal');
     this.setScrollFactor(0)
       .setDepth(Layer.Ui)

@@ -1,4 +1,4 @@
-import { GameObjects, Scene, Types } from 'phaser';
+import { GameObjects, Input, Math as PhaserMath, Scene, Types } from 'phaser';
 
 import { fontStyle } from '../../utils/fonts';
 
@@ -65,27 +65,21 @@ export class TextBox extends GameObjects.Container {
     this.updateTextPosition();
   }
 
-  private handleDrag(pointer: Phaser.Input.Pointer) {
+  private handleDrag(pointer: Input.Pointer) {
     if (pointer.isDown) {
       this.scrollY -= pointer.velocity.y;
       this.updateTextPosition();
     }
   }
 
-  private handleScroll(
-    _pointer: Phaser.Input.Pointer,
-    _currentlyOver: any,
-    _deltaX: number,
-    deltaY: number,
-    _deltaZ: number
-  ) {
+  private handleScroll(_pointer: Input.Pointer, _currentlyOver: any, _deltaX: number, deltaY: number, _deltaZ: number) {
     this.scrollY += deltaY * 0.5; // Adjust scroll speed as needed
     this.updateTextPosition();
   }
 
   private updateTextPosition() {
     const maxScrollY = Math.max(0, this.textObject.height - this.boxHeight);
-    this.scrollY = Phaser.Math.Clamp(this.scrollY, 0, maxScrollY);
+    this.scrollY = PhaserMath.Clamp(this.scrollY, 0, maxScrollY);
     this.textObject.y = -this.scrollY;
 
     // Update scrollbar

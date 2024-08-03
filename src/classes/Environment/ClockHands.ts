@@ -23,7 +23,7 @@ export class ClockHands extends GameObjects.Graphics {
   update2: boolean = false;
   update3: boolean = false;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Scene) {
     super(scene);
     scene.add.existing(this);
 

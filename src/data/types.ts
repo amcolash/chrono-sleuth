@@ -1,3 +1,5 @@
+import { Math } from 'phaser';
+
 import { Key } from '../classes/UI/InputManager';
 
 export enum InteractResult {
@@ -15,7 +17,7 @@ export interface Interactive {
 }
 
 export interface Rewindable {
-  history: Phaser.Math.Vector3[];
+  history: Math.Vector3[];
   rewinding: boolean;
 
   record(): void;

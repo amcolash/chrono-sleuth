@@ -1,21 +1,21 @@
-import { Display } from 'phaser';
+import { Display, Scene } from 'phaser';
 
 import { Colors, colorToNumber, fromRGB, getColorNumber } from './colors';
 
 const duration = 1200;
 let currentlyChanging = false;
 
-export function isDaytime(scene: Phaser.Scene) {
+export function isDaytime(scene: Scene) {
   const current = fromRGB(scene.lights.ambientColor);
   return current === getColorNumber(Colors.White);
 }
 
-export function isNighttime(scene: Phaser.Scene) {
+export function isNighttime(scene: Scene) {
   const current = fromRGB(scene.lights.ambientColor);
   return current === getColorNumber(Colors.Night);
 }
 
-export function toggleLighting(scene: Phaser.Scene) {
+export function toggleLighting(scene: Scene) {
   if (isDaytime(scene)) {
     setNighttime(scene);
   } else {
@@ -23,7 +23,7 @@ export function toggleLighting(scene: Phaser.Scene) {
   }
 }
 
-export function setDaytime(scene: Phaser.Scene, tween: boolean = true) {
+export function setDaytime(scene: Scene, tween: boolean = true) {
   if (currentlyChanging) return;
   fadeAmbient(scene, Colors.White, tween);
 
@@ -46,7 +46,7 @@ export function setDaytime(scene: Phaser.Scene, tween: boolean = true) {
   });
 }
 
-export function setNighttime(scene: Phaser.Scene, tween: boolean = true) {
+export function setNighttime(scene: Scene, tween: boolean = true) {
   if (currentlyChanging) return;
   fadeAmbient(scene, Colors.Night, tween);
 
@@ -66,7 +66,7 @@ export function setNighttime(scene: Phaser.Scene, tween: boolean = true) {
   });
 }
 
-export function fadeAmbient(scene: Phaser.Scene, target: string, tween: boolean) {
+export function fadeAmbient(scene: Scene, target: string, tween: boolean) {
   if (!tween) {
     scene.lights.setAmbientColor(getColorNumber(target));
     return;

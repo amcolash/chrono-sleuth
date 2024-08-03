@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
@@ -9,7 +9,7 @@ export class DebugLight extends GameObjects.GameObject {
   light: GameObjects.Light;
   debug: GameObjects.Graphics;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, radius: number, color: number, intensity: number) {
+  constructor(scene: Scene, x: number, y: number, radius: number, color: number, intensity: number) {
     super(scene, 'Light');
     scene.add.existing(this);
 

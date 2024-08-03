@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
@@ -6,7 +6,7 @@ import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 
 export class ButtonPrompt extends GameObjects.Text {
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Scene) {
     super(scene, Config.width / 2, Config.height - 50, '', fontStyle);
 
     this.setOrigin(0.5)

@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Layer } from '../../data/layers';
 import { Colors, getColorNumber } from '../../utils/colors';
@@ -7,7 +7,7 @@ export class IconButton extends GameObjects.Container {
   img: GameObjects.Image;
   rect: GameObjects.Rectangle;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, callback: (button: IconButton) => void) {
+  constructor(scene: Scene, x: number, y: number, texture: string, callback: (button: IconButton) => void) {
     super(scene, x, y);
     scene.add.existing(this);
     this.setScrollFactor(0).setDepth(Layer.Ui);

@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
@@ -15,7 +15,7 @@ export class Quests extends GameObjects.Container {
   quests: Quest[] = [];
   questRectangle: GameObjects.Rectangle;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Scene) {
     super(scene, Config.width - size - 20, 120);
     scene.add.existing(this);
 

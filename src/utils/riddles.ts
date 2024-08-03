@@ -1,3 +1,5 @@
+import { Scene } from 'phaser';
+
 import { NPCType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { getClockRewind } from './interactionUtils';
@@ -47,18 +49,18 @@ export const riddles = [
   },
 ];
 
-function getRiddleIndex(scene: Phaser.Scene): number {
+function getRiddleIndex(scene: Scene): number {
   if (scene instanceof Game) return getClockRewind(scene) % riddles.length;
 
   return 0;
 }
 
-export function getSphinxRiddle(scene: Phaser.Scene): string[] {
+export function getSphinxRiddle(scene: Scene): string[] {
   const index = getRiddleIndex(scene);
   return [riddles[index].question];
 }
 
-export function getSphinxOptions(scene: Phaser.Scene): string[] {
+export function getSphinxOptions(scene: Scene): string[] {
   const index = getRiddleIndex(scene);
   const options = [...riddles[index].options];
   const shuffled = options.sort(() => Math.random() - 0.5);
@@ -67,12 +69,12 @@ export function getSphinxOptions(scene: Phaser.Scene): string[] {
   return shuffled;
 }
 
-export function getSphinxAnswer(scene: Phaser.Scene): string {
+export function getSphinxAnswer(scene: Scene): string {
   const index = getRiddleIndex(scene);
   return riddles[index].answer;
 }
 
-export function getSphinxHint(scene: Phaser.Scene, npcType: NPCType.Inventor | NPCType.Stranger): string[] {
+export function getSphinxHint(scene: Scene, npcType: NPCType.Inventor | NPCType.Stranger): string[] {
   const index = getRiddleIndex(scene);
   return riddles[index].hints[npcType];
 }
