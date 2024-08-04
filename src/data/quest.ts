@@ -1,7 +1,17 @@
-import { QuestType } from './types';
+import { QuestType, WarpType } from './types';
 
-export const QuestNames: Record<QuestType, string> = {
-  [QuestType.ForestGear]: 'Find the gear in the forest',
-  [QuestType.SphinxRiddle]: 'Solve the Sphinx riddle',
-  [QuestType.ExploreLab]: 'Explore the hidden alchemy lab',
+interface Data {
+  description: string;
+  warpAdd?: WarpType;
+  warpComplete?: WarpType;
+}
+
+export const QuestData: Record<QuestType, Data> = {
+  [QuestType.ForestGear]: {
+    description: 'Find the gear in the forest',
+    warpAdd: WarpType.TownEast,
+    warpComplete: WarpType.TownNorth,
+  },
+  [QuestType.SphinxRiddle]: { description: 'Solve the Sphinx riddle' },
+  [QuestType.ExploreLab]: { description: 'Explore the hidden alchemy lab' },
 };

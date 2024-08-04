@@ -1,15 +1,11 @@
 import deepEqual from 'deep-equal';
 
-import { Warp } from '../classes/Environment/Warp';
 import { playerStart } from '../classes/Player/Player';
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
-import { ItemType, JournalEntry, Quest, QuestType, WarpType } from '../data/types';
+import { ItemType, JournalEntry, Quest, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
-import { getGameObjects } from './interactionUtils';
 import { isMobile, setZoomed } from './util';
-
-type WarpList = { warpType: WarpType; state: boolean }[];
 
 export const saveKey = 'chrono-sleuth-save';
 
@@ -29,7 +25,6 @@ type SaveData = {
   journal: JournalEntry[];
   inventory: ItemType[];
   quests: Quest[];
-  warpers: WarpList;
   settings: Settings;
 };
 
@@ -42,7 +37,6 @@ export const defaultSave: SaveData = {
   journal: [],
   inventory: [],
   quests: [],
-  warpers: [],
   settings: {
     gamepad: isMobile(),
     debug: false,
@@ -58,11 +52,9 @@ export const debugSave: SaveData = {
   },
   journal: [JournalEntry.FixTheClock, JournalEntry.SphinxRiddleSolved, JournalEntry.MetTheMayor],
   inventory: [ItemType.Wrench, ItemType.Gear1],
-  quests: [{ id: QuestType.SphinxRiddle, completed: true }],
-  warpers: [
-    { warpType: WarpType.TownEast, state: true },
-    { warpType: WarpType.TownNorth, state: true },
-    { warpType: WarpType.ClockSquareNorth, state: true },
+  quests: [
+    { id: QuestType.ForestGear, completed: true },
+    { id: QuestType.SphinxRiddle, completed: true },
   ],
   settings: {
     gamepad: false,
@@ -82,7 +74,6 @@ export function getCurrentSaveState(scene: Game): SaveData {
     journal: scene.player.journal.journal,
     inventory: scene.player.inventory.inventory,
     quests: scene.player.quests.quests,
-    warpers: getWarperState(scene),
     settings: {
       gamepad: scene.gamepad.visible,
       debug: Config.debug,
@@ -157,9 +148,6 @@ export function load(scene: Game) {
     savedata.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
     savedata.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
 
-    // TODO: Rethink if this should be more directly tied to journal entries as a side-effect
-    setWarperState(scene, savedata.warpers);
-
     scene.gamepad.setVisible(savedata.settings.gamepad);
 
     const loadType = deepEqual(savedata, defaultSave)
@@ -188,17 +176,4 @@ export function save(scene: Game, override?: SaveData): void {
   localStorage.setItem(saveKey, JSON.stringify(override || save));
 
   new Notification(scene, 'Game Saved');
-}
-
-function getWarperState(scene: Game): WarpList {
-  const warpers = getGameObjects<Warp>(scene, Warp);
-  return warpers.map((w) => ({ warpType: w.warpType, state: w.visible }));
-}
-
-function setWarperState(scene: Game, warpers: WarpList) {
-  const gaemWarpers = getGameObjects<Warp>(scene, Warp);
-  warpers.forEach((warp) => {
-    const found = gaemWarpers.find((w) => w.warpType === warp.warpType);
-    if (found) found.setVisible(warp.state);
-  });
 }

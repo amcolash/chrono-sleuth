@@ -1,6 +1,8 @@
 import { BlendModes, Cameras, GameObjects, Math as PhaserMath, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
+import { JournalData } from '../../data/journal';
+import { QuestData } from '../../data/quest';
 import { InteractResult, Interactive, JournalEntry, WarpType } from '../../data/types';
 import { WarpData, WarpVisual } from '../../data/warp';
 import { Colors, getColorNumber } from '../../utils/colors';
@@ -10,6 +12,17 @@ import { Key } from '../UI/InputManager';
 
 const defaultRange = 30;
 const warpYOffset = 12;
+
+// Some warps need to be added on scene load. Since warpers are lazily created,
+// any warps that might be enabled from save need to be added to scene.
+const forcedInitializations: WarpType[] = [];
+Object.values(QuestData).forEach((quest) => {
+  if (quest.warpAdd) forcedInitializations.push(quest.warpAdd);
+  if (quest.warpComplete) forcedInitializations.push(quest.warpComplete);
+});
+Object.values(JournalData).forEach((entry) => {
+  if (entry.warpAdd) forcedInitializations.push(entry.warpAdd);
+});
 
 export class Warp extends Physics.Arcade.Image implements Interactive {
   warpType: WarpType;
@@ -21,6 +34,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
 
   range: number;
   initialized: boolean = false;
+  unlocked: boolean = true;
 
   constructor(scene: Scene, warpType: WarpType, player: Player) {
     const { x, y, visual, range, skipLighting } = WarpData[warpType];
@@ -45,7 +59,9 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
       this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
     }
 
-    if (!Config.debug) this.setVisible(visual !== WarpVisual.WarpHidden && visual !== WarpVisual.Invisible);
+    const hidden = visual === WarpVisual.WarpHidden || visual === WarpVisual.Invisible;
+    if (hidden) this.unlocked = false;
+    if (!Config.debug) this.setVisible(!hidden);
 
     if (warpType === WarpType.Underground) {
       scene.add
@@ -58,38 +74,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
         .setPipeline('Light2D');
     }
 
-    if (Config.debug) {
-      this.setInteractive({ draggable: true });
-      this.graphics = scene.add.graphics();
-
-      // const target = WarpData[warpTo];
-
-      // const color = warpType % 2 === 0 ? 0xffff00 : 0x00ffff;
-      // graphics.fillStyle(color);
-      // graphics.lineStyle(3, color);
-
-      // let offsetX = -this.displayWidth / 2;
-      // let offsetY = -this.displayHeight / 2;
-
-      // if (target.x > x) offsetX *= -1;
-      // if (target.y > y) offsetY *= -1;
-
-      // const line = new Geom.Line(x + offsetX, y + offsetY, target.x + offsetX, target.y + offsetY);
-      // graphics.strokeLineShape(line);
-      // graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
-      // graphics.fillRect(x - this.body?.width / 2 - 7, y - this.body?.height / 2 - 7, 14, 14);
-
-      // if (warpType === WarpType.Forest) console.log(this.body?.left, this.body.top);
-
-      if (this.hasExtendedBounds()) {
-        this.graphics.lineStyle(2, 0xff00ff).setPosition(x, y);
-
-        const body = this.body as Physics.Arcade.Body;
-        this.graphics.lineBetween(-this.range, -body.halfHeight, -this.range, body.halfHeight);
-        this.graphics.lineBetween(this.range, -body.halfHeight, this.range, body.halfHeight);
-        this.graphics.strokeCircle(0, 0, 5);
-      }
-    }
+    // Only add warps which need to be in the scene when loading a save
+    if (forcedInitializations.includes(warpType)) scene.add.existing(this);
   }
 
   // Delay creating particles until the player is close enough to increase start up performance
@@ -130,6 +116,41 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
       if (!skipLighting) {
         this.particles1.setPipeline('Light2D');
         this.particles2.setPipeline('Light2D');
+      }
+    }
+  }
+
+  createDebug() {
+    if (Config.debug) {
+      this.setInteractive({ draggable: true });
+      this.graphics = this.scene.add.graphics();
+
+      // const target = WarpData[warpTo];
+
+      // const color = warpType % 2 === 0 ? 0xffff00 : 0x00ffff;
+      // graphics.fillStyle(color);
+      // graphics.lineStyle(3, color);
+
+      // let offsetX = -this.displayWidth / 2;
+      // let offsetY = -this.displayHeight / 2;
+
+      // if (target.x > x) offsetX *= -1;
+      // if (target.y > y) offsetY *= -1;
+
+      // const line = new Geom.Line(x + offsetX, y + offsetY, target.x + offsetX, target.y + offsetY);
+      // graphics.strokeLineShape(line);
+      // graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
+      // graphics.fillRect(x - this.body?.width / 2 - 7, y - this.body?.height / 2 - 7, 14, 14);
+
+      // if (warpType === WarpType.Forest) console.log(this.body?.left, this.body.top);
+
+      if (this.hasExtendedBounds()) {
+        this.graphics.lineStyle(2, 0xff00ff).setPosition(this.x, this.y);
+
+        const body = this.body as Physics.Arcade.Body;
+        this.graphics.lineBetween(-this.range, -body.halfHeight, -this.range, body.halfHeight);
+        this.graphics.lineBetween(this.range, -body.halfHeight, this.range, body.halfHeight);
+        this.graphics.strokeCircle(0, 0, 5);
       }
     }
   }
@@ -198,8 +219,10 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
   setVisible(value: boolean): this {
     super.setVisible(value);
 
+    // console.log('setting warp visibility', WarpType[this.warpType], value, this.unlocked);
+
     if (this.particles1 && this.particles2) {
-      if (value) {
+      if (value && this.unlocked) {
         this.particles1.start();
         this.particles2.start();
       } else {
@@ -214,13 +237,24 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
     return this;
   }
 
+  initialize() {
+    if (this.initialized) return;
+
+    // Only add warps which were not previously added
+    if (!forcedInitializations.includes(this.warpType)) this.scene.add.existing(this);
+
+    this.scene.physics.add.existing(this);
+    this.createParticles();
+    this.createDebug();
+
+    this.setVisible(this.visible);
+
+    this.initialized = true;
+  }
+
   update(_time: number, _delta: number) {
     if (!this.initialized && this.visible && PhaserMath.Distance.BetweenPointsSquared(this, this.player) < 1000 ** 2) {
-      this.scene.add.existing(this);
-      this.scene.physics.add.existing(this);
-      this.createParticles();
-
-      this.initialized = true;
+      this.initialize();
     }
   }
 

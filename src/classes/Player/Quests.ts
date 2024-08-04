@@ -2,11 +2,12 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
-import { QuestNames } from '../../data/quest';
+import { QuestData } from '../../data/quest';
 import { Quest, QuestType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
+import { updateWarpVisibility } from '../../utils/interactionUtils';
 import { Notification } from '../UI/Notification';
 
 const size = 330;
@@ -35,18 +36,26 @@ export class Quests extends GameObjects.Container {
     if (this.quests.find((q) => q.id === quest.id)) return;
 
     this.quests.push(quest);
-    this.add(this.scene.add.text(0, 0, QuestNames[quest.id], { ...fontStyle, fontSize: 20 }));
+    this.add(this.scene.add.text(0, 0, QuestData[quest.id].description, { ...fontStyle, fontSize: 20 }));
     this.updateQuests();
 
-    if (!silent) new Notification(this.scene, `New quest added: ${QuestNames[quest.id]}`);
+    const { warpAdd, warpComplete } = QuestData[quest.id];
+    if (warpAdd) updateWarpVisibility(this.scene as Game, warpAdd, true);
+    if (quest.completed && warpComplete) updateWarpVisibility(this.scene as Game, warpComplete, true);
+
+    if (!silent) new Notification(this.scene, `New quest added: ${QuestData[quest.id]}`);
   }
 
   updateExistingQuest(quest: QuestType, completed: boolean) {
     const q = this.quests.find((q) => q.id === quest);
     if (q) {
-      if (!q.completed && completed) new Notification(this.scene, `Quest completed: ${QuestNames[q.id]}`);
+      if (!q.completed && completed) new Notification(this.scene, `Quest completed: ${QuestData[q.id]}`);
       q.completed = completed;
     }
+
+    const { warpComplete } = QuestData[quest];
+    if (warpComplete) updateWarpVisibility(this.scene as Game, warpComplete, completed);
+
     this.updateQuests();
   }
 
@@ -57,7 +66,8 @@ export class Quests extends GameObjects.Container {
     let maxLength = 0;
     this.getAll<GameObjects.Text>().forEach((text) => {
       if (text instanceof GameObjects.Text) {
-        if (!activeQuests.find((q) => text.text === QuestNames[q.id]) && text.text !== 'Quests') text.destroy();
+        if (!activeQuests.find((q) => text.text === QuestData[q.id].description) && text.text !== 'Quests')
+          text.destroy();
         else if (text.text !== 'Quests') {
           const y = 14 + 30 * index;
           text.setPosition(10, y);

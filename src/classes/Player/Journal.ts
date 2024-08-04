@@ -1,10 +1,11 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
+import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
 import { JournalEntry, NPCType } from '../../data/types';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { getNPC, updateSphinx } from '../../utils/interactionUtils';
+import { getNPC, updateSphinx, updateWarpVisibility } from '../../utils/interactionUtils';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
 
@@ -66,6 +67,9 @@ export class Journal extends GameObjects.Image {
   }
 
   handleSideEffects(entry: JournalEntry, silent: boolean) {
+    const { warpAdd } = JournalData[entry];
+    if (warpAdd) updateWarpVisibility(this.scene, warpAdd, true);
+
     if (entry === JournalEntry.SphinxRiddleSolved) {
       updateSphinx(this.scene, true, silent);
     }

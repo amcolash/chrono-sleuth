@@ -16,7 +16,6 @@ import { IconButton } from '../classes/UI/IconButton';
 import { Config } from '../config';
 import { backgroundData } from '../data/background';
 import { lightData } from '../data/lights';
-import { propData } from '../data/prop';
 import { slopeData } from '../data/slope';
 import { ItemType, NPCType, PropType, WarpType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';

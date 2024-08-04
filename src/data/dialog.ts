@@ -1,14 +1,8 @@
 import { NPC } from '../classes/Environment/NPC';
 import { Player } from '../classes/Player/Player';
-import {
-  hasActiveQuest,
-  hasCompletedQuest,
-  hasItem,
-  hasJournalEntry,
-  updateWarpVisibility,
-} from '../utils/interactionUtils';
+import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry } from '../utils/interactionUtils';
 import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from '../utils/riddles';
-import { ItemType, JournalEntry, NPCType, PropType, QuestType, WarpType } from './types';
+import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
 export interface Dialog {
   conditions?: {
@@ -21,9 +15,9 @@ export interface Dialog {
   };
 
   messages: string[] | ((player: Player) => string[]);
-  onCompleted?: (player: Player, npc?: NPC) => void;
-
   options?: string[] | ((player: Player) => string[]);
+
+  onCompleted?: (player: Player, npc?: NPC) => void;
   onSelected?: (option: string, player: Player, npc?: NPC) => void;
 }
 
@@ -36,7 +30,6 @@ export const npcDialogs: Record<NPCType, Dialog[]> = {
       },
       onCompleted: (player) => {
         player.quests.updateExistingQuest(QuestType.ForestGear, true);
-        updateWarpVisibility(player.scene, WarpType.TownNorth, true);
       },
     },
     {
@@ -88,7 +81,6 @@ export const npcDialogs: Record<NPCType, Dialog[]> = {
           id: QuestType.ForestGear,
           completed: false,
         });
-        updateWarpVisibility(player.scene, WarpType.TownEast, true);
       },
     },
     {
@@ -156,7 +148,6 @@ export const npcDialogs: Record<NPCType, Dialog[]> = {
       ],
       onCompleted: (player) => {
         player.journal.addEntry(JournalEntry.MetTheMayor);
-        updateWarpVisibility(player.scene, WarpType.ClockSquareNorth, true);
       },
     },
   ],
