@@ -10,6 +10,10 @@ import { Game } from '../scenes/Game';
 
 export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {
   const sphinx = getNPC(scene, NPCType.Sphinx);
+  if (!sphinx) {
+    console.error('Sphinx not found');
+    return;
+  }
 
   const wall = getWall(scene, WallType.Sphinx);
   if (wall) {
@@ -20,8 +24,6 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
     }
     (wall.body as Physics.Arcade.Body)?.updateFromGameObject();
   }
-
-  if (!sphinx) return;
 
   const { x, y } = NPCData[NPCType.Sphinx];
   const newX = complete ? x + 200 : x;

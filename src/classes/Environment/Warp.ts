@@ -1,12 +1,13 @@
-import { BlendModes, Cameras, GameObjects, Math as PhaserMath, Physics, Scene } from 'phaser';
+import { BlendModes, Cameras, GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { JournalData } from '../../data/journal';
 import { QuestData } from '../../data/quest';
-import { InteractResult, Interactive, JournalEntry, WarpType } from '../../data/types';
+import { InteractResult, Interactive, JournalEntry, LazyInitialize, WarpType } from '../../data/types';
 import { WarpData, WarpVisual } from '../../data/warp';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { hasJournalEntry } from '../../utils/interactionUtils';
+import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
@@ -24,7 +25,7 @@ Object.values(JournalData).forEach((entry) => {
   if (entry.warpAdd) forcedInitializations.push(entry.warpAdd);
 });
 
-export class Warp extends Physics.Arcade.Image implements Interactive {
+export class Warp extends Physics.Arcade.Image implements Interactive, LazyInitialize {
   warpType: WarpType;
   player: Player;
 
@@ -233,8 +234,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
     return this;
   }
 
-  initialize() {
-    if (this.initialized) return;
+  lazyInit(forceInit?: boolean) {
+    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
 
     // Only add warps which were not previously added
     if (!forcedInitializations.includes(this.warpType)) this.scene.add.existing(this);
@@ -254,9 +255,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
   }
 
   update(_time: number, _delta: number) {
-    if (!this.initialized && this.visible && PhaserMath.Distance.BetweenPointsSquared(this, this.player) < 1000 ** 2) {
-      this.initialize();
-    }
+    this.lazyInit();
   }
 
   destroy(fromScene?: boolean): void {

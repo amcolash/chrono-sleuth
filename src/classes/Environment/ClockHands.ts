@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Layer } from '../../data/layers';
 import { Colors, getColorNumber } from '../../utils/colors';

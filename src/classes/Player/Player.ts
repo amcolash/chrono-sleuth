@@ -81,9 +81,10 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     }
 
     // Update UI
-    this.buttonPrompt.setVisible(
-      (this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false
-    );
+    const visible = (this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false;
+    if (visible && !this.buttonPrompt) this.buttonPrompt = this.buttonPrompt = new ButtonPrompt(this.scene);
+
+    this.buttonPrompt?.setVisible(visible);
 
     // Update player
     this.setVelocity(0);
@@ -168,6 +169,9 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
 
   setInteractiveObject(interactive?: any): undefined {
     this.interactive = interactive;
-    this.buttonPrompt.setText(interactive?.getButtonPrompt?.() || '');
+
+    const text = interactive?.getButtonPrompt?.() || '';
+    if (text && !this.buttonPrompt) this.buttonPrompt = new ButtonPrompt(this.scene);
+    this.buttonPrompt?.setText(text);
   }
 }

@@ -1,15 +1,16 @@
-import { GameObjects, Math as PhaserMath, Physics, Scene } from 'phaser';
+import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { itemDialogs } from '../../data/dialog';
 import { ItemData } from '../../data/item';
 import { Layer } from '../../data/layers';
-import { InteractResult, Interactive, ItemType } from '../../data/types';
+import { InteractResult, Interactive, ItemType, LazyInitialize } from '../../data/types';
+import { shouldInitialize } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
-export class Item extends Physics.Arcade.Image implements Interactive {
+export class Item extends Physics.Arcade.Image implements Interactive, LazyInitialize {
   itemType: ItemType;
   player: Player;
   particles: GameObjects.Particles.ParticleEmitter;
@@ -26,7 +27,9 @@ export class Item extends Physics.Arcade.Image implements Interactive {
     this.player = player;
   }
 
-  init() {
+  lazyInit(forceInit?: boolean) {
+    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
+
     const { x, y } = ItemData[this.itemType];
 
     this.scene.add.existing(this);
@@ -49,6 +52,7 @@ export class Item extends Physics.Arcade.Image implements Interactive {
       this.light = this.scene.lights.addLight(this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, 2);
     }
 
+    this.initialized = true;
     console.log('creating item', ItemType[this.itemType]);
   }
 
@@ -83,9 +87,6 @@ export class Item extends Physics.Arcade.Image implements Interactive {
   }
 
   update() {
-    if (!this.initialized && this.visible && PhaserMath.Distance.BetweenPointsSquared(this, this.player) < 1000 ** 2) {
-      this.init();
-      this.initialized = true;
-    }
+    this.lazyInit();
   }
 }

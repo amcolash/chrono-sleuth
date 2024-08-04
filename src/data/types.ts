@@ -27,6 +27,11 @@ export interface Rewindable {
   reset?(): void;
 }
 
+export interface LazyInitialize {
+  initialized: boolean;
+  lazyInit(forceInit?: boolean): void;
+}
+
 export enum WarpType {
   Underground,
   Town,

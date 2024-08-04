@@ -1,5 +1,6 @@
-import { Cameras, Scene } from 'phaser';
+import { Cameras, Math as PhaserMath, Scene, Types } from 'phaser';
 
+import { Player } from '../classes/Player/Player';
 import { Config, fullSize, zoomedSize } from '../config';
 import { Game } from '../scenes/Game';
 import { Colors, getColorNumber, getColorObject } from './colors';
@@ -63,4 +64,8 @@ export function fadeOut(scene: Scene, duration: number, callback?: () => void) {
       }
     }
   );
+}
+
+export function shouldInitialize(obj: Types.Math.Vector2Like, player: Player, distance?: number): boolean {
+  return PhaserMath.Distance.BetweenPointsSquared(obj, player) < (distance || 1000) ** 2;
 }

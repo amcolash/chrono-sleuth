@@ -2,6 +2,7 @@ import { GameObjects, Scene } from 'phaser';
 
 import { DebugLight } from '../classes/Debug/DebugLight';
 import { DebugUI } from '../classes/Debug/DebugUI';
+import { Background } from '../classes/Environment/Background';
 import { Clock } from '../classes/Environment/Clock';
 import { Fireflies, FireflyPositions } from '../classes/Environment/Fireflies';
 import { Item } from '../classes/Environment/Item';
@@ -53,6 +54,7 @@ export class Game extends Scene {
 
     // game objects
     this.player = new Player(this);
+    const backgrounds = this.createBackgrounds();
 
     const walls = new Walls(this, this.player);
     const warpers = this.createWarpers();
@@ -82,9 +84,12 @@ export class Game extends Scene {
     });
 
     // update items added to the group
-    const updateables = this.add.group([this.player, this.gamepad, forestFireflies, lakeFireflies, ...slopes], {
-      runChildUpdate: true,
-    });
+    const updateables = this.add.group(
+      [this.player, this.gamepad, forestFireflies, lakeFireflies, ...slopes, walls, ...backgrounds],
+      {
+        runChildUpdate: true,
+      }
+    );
     if (this.clock) updateables.add(this.clock);
 
     // collisions
@@ -123,14 +128,7 @@ export class Game extends Scene {
   }
 
   createBackgrounds() {
-    return backgroundData.map((b) => {
-      const background = this.physics.add.image(b.x, b.y, b.image).setOrigin(0);
-      if (!b.skipLighting) background.setPipeline('Light2D');
-      if (b.scale) background.setScale(b.scale);
-      if (Config.debug) background.setInteractive({ draggable: true });
-
-      return background;
-    });
+    return backgroundData.map((b) => new Background(this, b, this.player));
   }
 
   createWarpers(): Warp[] {

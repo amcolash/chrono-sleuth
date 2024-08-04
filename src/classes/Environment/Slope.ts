@@ -1,11 +1,13 @@
 import { GameObjects, Math as PhaserMath, Physics } from 'phaser';
 
 import { Config } from '../../config';
+import { LazyInitialize } from '../../data/types';
 import { Game } from '../../scenes/Game';
+import { shouldInitialize } from '../../utils/util';
 import { speed } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
-export class Slope extends Physics.Arcade.Image {
+export class Slope extends Physics.Arcade.Image implements LazyInitialize {
   scene: Game;
   width: number;
   height: number;
@@ -32,7 +34,9 @@ export class Slope extends Physics.Arcade.Image {
     this.upwards = upwards;
   }
 
-  setup() {
+  lazyInit(forceInit?: boolean) {
+    if (!forceInit && (this.initialized || !shouldInitialize(this, this.scene.player))) return;
+
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
 
@@ -61,18 +65,12 @@ export class Slope extends Physics.Arcade.Image {
       graphics.strokeCircle(left.x, left.y, 2);
       graphics.strokeCircle(right.x, right.y, 2);
     }
+
+    this.initialized = true;
   }
 
   update(_time: number, _delta: number) {
-    if (
-      !this.initialized &&
-      this.visible &&
-      PhaserMath.Distance.BetweenPointsSquared(this, this.scene.player) < 1000 ** 2
-    ) {
-      this.initialized = true;
-      this.setup();
-    }
-
+    this.lazyInit();
     if (!this.initialized) return;
 
     if (Config.debug && this.graphics) {
