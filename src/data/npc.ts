@@ -14,6 +14,7 @@ export type Data = {
   onCreate?: (npc: NPC) => void;
   light?: number;
   particles?: Types.GameObjects.Particles.ParticleEmitterConfig;
+  initOnStart?: boolean;
 };
 
 export const NPCData: Record<NPCType, Data> = {
@@ -42,6 +43,7 @@ export const NPCData: Record<NPCType, Data> = {
     name: 'Mystical Sphinx',
     onCreate: (npc) => updateSphinx(npc.scene, false),
     light: 1.85,
+    initOnStart: true,
   },
   [NPCType.Mayor]: {
     x: 1065,

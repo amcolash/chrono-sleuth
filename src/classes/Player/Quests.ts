@@ -18,22 +18,27 @@ export class Quests extends GameObjects.Container {
 
   constructor(scene: Scene) {
     super(scene, Config.width - size - 20, 120);
-    scene.add.existing(this);
+  }
+
+  createUI() {
+    this.scene.add.existing(this);
 
     this.setScrollFactor(0).setDepth(Layer.Ui).setVisible(false);
 
-    this.questRectangle = scene.add
+    this.questRectangle = this.scene.add
       .rectangle(0, 0, size, 60, getColorNumber(Colors.Teal))
       .setStrokeStyle(2, getColorNumber(Colors.White))
       .setAlpha(0.75)
       .setOrigin(0);
     this.add(this.questRectangle);
 
-    scene.time.delayedCall(100, () => this.add(scene.add.text(10, 4, 'Quests', { ...fontStyle, fontSize: 32 })));
+    const text = this.scene.add.text(10, 4, 'Quests', { ...fontStyle, fontSize: 32 });
+    this.add(text);
   }
 
   addQuest(quest: Quest, silent?: boolean) {
     if (this.quests.find((q) => q.id === quest.id)) return;
+    if (!this.questRectangle) this.createUI();
 
     this.quests.push(quest);
     this.add(this.scene.add.text(0, 0, QuestData[quest.id].description, { ...fontStyle, fontSize: 20 }));
@@ -43,13 +48,13 @@ export class Quests extends GameObjects.Container {
     if (warpAdd) updateWarpVisibility(this.scene as Game, warpAdd, true);
     if (quest.completed && warpComplete) updateWarpVisibility(this.scene as Game, warpComplete, true);
 
-    if (!silent) new Notification(this.scene, `New quest added: ${QuestData[quest.id]}`);
+    if (!silent) new Notification(this.scene, `New quest added: ${QuestData[quest.id].description}`);
   }
 
   updateExistingQuest(quest: QuestType, completed: boolean) {
     const q = this.quests.find((q) => q.id === quest);
     if (q) {
-      if (!q.completed && completed) new Notification(this.scene, `Quest completed: ${QuestData[q.id]}`);
+      if (!q.completed && completed) new Notification(this.scene, `Quest completed: ${QuestData[q.id].description}`);
       q.completed = completed;
     }
 
@@ -60,6 +65,8 @@ export class Quests extends GameObjects.Container {
   }
 
   updateQuests() {
+    if (!this.questRectangle) this.createUI();
+
     const activeQuests = this.quests.filter((q) => !q.completed);
 
     let index = 1;

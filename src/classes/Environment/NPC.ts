@@ -23,7 +23,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   initialized: boolean = false;
 
   constructor(scene: Scene, npcType: NPCType, player: Player) {
-    const { x, y, img, scale } = NPCData[npcType] as Data;
+    const { x, y, img, scale, initOnStart } = NPCData[npcType] as Data;
 
     super(scene, x, y, img);
     this.setScale(scale).setDepth(Layer.Npcs).setPipeline('Light2D');
@@ -32,8 +32,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     this.player = player;
 
     if (img === 'warp') this.setAlpha(0);
-
-    if (npcType === NPCType.Sphinx) this.lazyInit(true);
+    if (initOnStart) this.lazyInit(true);
   }
 
   lazyInit(forceInit?: boolean) {

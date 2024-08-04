@@ -37,9 +37,10 @@ export class Message extends GameObjects.Container {
   messageIndex: number;
   interactionTimeout: number;
 
+  initialized: boolean = false;
+
   constructor(scene: Scene, player: Player) {
     super(scene);
-    scene.add.existing(this);
 
     // Pull these values into constructor, so they are always up to date
     const { width, height } = Config;
@@ -63,6 +64,8 @@ export class Message extends GameObjects.Container {
   }
 
   createUI() {
+    this.scene.add.existing(this);
+
     this.npcName = new GameObjects.Text(this.scene, padding + portraitOffset, padding - 5, '', {
       ...fontStyle,
       color: '#' + Colors.Tan,

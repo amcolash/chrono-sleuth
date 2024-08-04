@@ -16,14 +16,13 @@ export class Gamepad extends GameObjects.Container {
 
   constructor(scene: Scene, minimal?: boolean) {
     super(scene, 100, Config.height - 100);
-    scene.add.existing(this);
-
     this.minimal = minimal;
-
     this.setScrollFactor(0).setDepth(Layer.Overlay);
   }
 
   createUI() {
+    this.scene.add.existing(this);
+
     this.createDPad();
     if (!this.minimal) this.createButtons();
 

@@ -2,6 +2,7 @@ import { BlendModes, Cameras, GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { JournalData } from '../../data/journal';
+import { Layer } from '../../data/layers';
 import { QuestData } from '../../data/quest';
 import { InteractResult, Interactive, JournalEntry, LazyInitialize, WarpType } from '../../data/types';
 import { WarpData, WarpVisual } from '../../data/warp';
@@ -44,7 +45,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     super(scene, x, y, texture);
     this.warpType = warpType;
     this.player = player;
-    this.setScale(0.6);
+    this.setScale(0.6).setDepth(Layer.Warpers);
     this.range = range || defaultRange;
 
     if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
@@ -59,17 +60,6 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     const hidden = visual === WarpVisual.WarpHidden || visual === WarpVisual.Invisible;
     if (hidden) this.unlocked = false;
     if (!Config.debug) this.setVisible(!hidden);
-
-    if (warpType === WarpType.Underground) {
-      scene.add
-        .image(x, y - 60, 'ladder')
-        .setScale(0.6)
-        .setPipeline('Light2D');
-      scene.add
-        .image(x, y - 105, 'ladder')
-        .setScale(0.6)
-        .setPipeline('Light2D');
-    }
 
     // Only add warps which need to be in the scene when loading a save
     if (forcedInitializations.includes(warpType)) scene.add.existing(this);
@@ -92,22 +82,25 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
           radial: true,
           blendMode: BlendModes.OVERLAY,
         })
-        .setScale(1, 2);
+        .setScale(1, 2)
+        .setDepth(Layer.Warpers);
       this.particles1.viewBounds = this.particles1.getBounds(30, 500);
 
-      this.particles2 = this.scene.add.particles(this.x, this.y - warpYOffset, 'warp', {
-        x: { min: -30, max: 30 },
-        y: { min: -50, max: 50 },
-        speed: { random: [-5, 5] },
-        scale: { min: 0.05, max: 0.15 },
-        alpha: { values: [0, 0.2, 0] },
-        angle: { min: 0, max: 360 },
-        lifespan: { min: 1000, max: 1400 },
-        color: [getColorNumber(Colors.Peach), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
-        colorEase: 'Linear',
-        radial: true,
-        maxAliveParticles: 20,
-      });
+      this.particles2 = this.scene.add
+        .particles(this.x, this.y - warpYOffset, 'warp', {
+          x: { min: -30, max: 30 },
+          y: { min: -50, max: 50 },
+          speed: { random: [-5, 5] },
+          scale: { min: 0.05, max: 0.15 },
+          alpha: { values: [0, 0.2, 0] },
+          angle: { min: 0, max: 360 },
+          lifespan: { min: 1000, max: 1400 },
+          color: [getColorNumber(Colors.Peach), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
+          colorEase: 'Linear',
+          radial: true,
+          maxAliveParticles: 20,
+        })
+        .setDepth(Layer.Warpers);
       this.particles2.viewBounds = this.particles2.getBounds(30, 500);
 
       if (!skipLighting) {
@@ -250,6 +243,17 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
 
     // run overridden setVisible to make sure particls are properly started/stopped
     this.setVisible(this.visible);
+
+    if (this.warpType === WarpType.Underground) {
+      this.scene.add
+        .image(this.x, this.y - 60, 'ladder')
+        .setScale(0.6)
+        .setPipeline('Light2D');
+      this.scene.add
+        .image(this.x, this.y - 105, 'ladder')
+        .setScale(0.6)
+        .setPipeline('Light2D');
+    }
 
     this.initialized = true;
   }

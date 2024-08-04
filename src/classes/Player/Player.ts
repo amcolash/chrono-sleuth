@@ -66,7 +66,6 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     createAnimation(this);
 
     this.keys = new InputManager(scene);
-    this.buttonPrompt = new ButtonPrompt(scene);
 
     this.message = new Message(scene, this);
     this.inventory = new Inventory(scene);
@@ -82,7 +81,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
 
     // Update UI
     const visible = (this.interactive && !this.message.visible && this.buttonPrompt.text.length > 0) || false;
-    if (visible && !this.buttonPrompt) this.buttonPrompt = this.buttonPrompt = new ButtonPrompt(this.scene);
+    if (visible && !this.buttonPrompt) this.buttonPrompt = new ButtonPrompt(this.scene);
 
     this.buttonPrompt?.setVisible(visible);
 

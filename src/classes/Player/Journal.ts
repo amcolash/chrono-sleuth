@@ -16,6 +16,10 @@ export class Journal extends GameObjects.Image {
 
   constructor(scene: Scene, player: Player) {
     super(scene, Config.width - 50, Config.height - 55, 'journal');
+    this.player = player;
+  }
+
+  createUI() {
     this.setScrollFactor(0)
       .setDepth(Layer.Ui)
       .setScale(0.5)
@@ -24,11 +28,9 @@ export class Journal extends GameObjects.Image {
       .setActive(false);
     this.on('pointerdown', this.openJournal);
 
-    scene.add.existing(this);
+    this.scene.add.existing(this);
 
-    this.player = player;
-
-    this.unread = scene.add
+    this.unread = this.scene.add
       .ellipse(Config.width - 21, Config.height - 89, 20, 20, 0xaa0000)
       .setStrokeStyle(2, getColorNumber(Colors.Black))
       .setScrollFactor(0)
@@ -37,6 +39,8 @@ export class Journal extends GameObjects.Image {
   }
 
   addEntry(entry: JournalEntry, silent?: boolean) {
+    if (!this.unread) this.createUI();
+
     if (this.journal.includes(entry)) return;
 
     if (this.journal.length === 0) {

@@ -17,24 +17,25 @@ export class Inventory extends GameObjects.Container {
   constructor(scene: Scene) {
     super(scene, 0, 0);
     this.setScrollFactor(0).setDepth(Layer.Ui).setVisible(false);
-    scene.add.existing(this);
+  }
 
-    this.rect = scene.add
+  createUI() {
+    this.scene.add.existing(this);
+
+    this.rect = this.scene.add
       .rectangle(0, 0, 0, 0, getColorNumber(Colors.Teal))
       .setStrokeStyle(2, getColorNumber(Colors.White))
       .setAlpha(0.75)
       .setOrigin(0);
     this.add(this.rect);
 
-    scene.time.delayedCall(100, () => {
-      this.text = scene.add.text(10, 4, 'Inventory', { ...fontStyle, fontSize: 32 });
-      this.add(this.text);
-
-      this.updateItems();
-    });
+    this.text = this.scene.add.text(10, 4, 'Inventory', { ...fontStyle, fontSize: 32 });
+    this.add(this.text);
   }
 
   addItem(item: ItemType, silent?: boolean) {
+    if (!this.text) this.createUI();
+
     this.inventory.push(item);
     this.add(this.scene.add.image(0, 0, ItemData[item].image).setScale(0.35));
     this.updateItems();
@@ -58,6 +59,8 @@ export class Inventory extends GameObjects.Container {
   }
 
   updateItems() {
+    if (!this.text) this.createUI();
+
     let index = 0;
     this.getAll<GameObjects.GameObject>().forEach((item) => {
       if (item instanceof GameObjects.Image) {

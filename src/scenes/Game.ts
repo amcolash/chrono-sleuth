@@ -46,14 +46,14 @@ export class Game extends Scene {
     // skip creation if already restarting the scene (due to config changes)
     if (!this.shouldInit) return;
 
+    const startTime = performance.now();
+
     // fade in on start
     fadeIn(this, 500);
 
-    // background
-    this.createBackgrounds();
-
     // game objects
     this.player = new Player(this);
+
     const backgrounds = this.createBackgrounds();
 
     const walls = new Walls(this, this.player);
@@ -102,9 +102,18 @@ export class Game extends Scene {
     const camera = this.cameras.main;
     camera.startFollow(this.player, true);
     camera.setFollowOffset(0, Config.cameraOffset);
-
     // load save, or start new game
     load(this);
+
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+    console.log(`Game.create() took ${duration.toFixed(1)}ms to initialize`);
+
+    if (import.meta.env.DEV) {
+      console.log('Debug', Config.debug);
+      if (Config.debug && duration > 250) alert(`Game.create() [debug] took ${duration.toFixed(1)}ms to initialize`);
+      if (!Config.debug && duration > 100) alert(`Game.create() took ${duration.toFixed(1)}ms to initialize`);
+    }
   }
 
   update(): void {
@@ -197,7 +206,7 @@ export class Game extends Scene {
     // debug
     let debugUI;
     if (import.meta.env.DEV) {
-      this.time.delayedCall(1000, () => {
+      this.time.delayedCall(500, () => {
         debugUI = new DebugUI(this, this.player);
         this.add.group(debugUI, { runChildUpdate: true });
       });

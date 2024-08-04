@@ -2,6 +2,7 @@ import { Math as PhaserMath, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Data as BackgroundInfo } from '../../data/background';
+import { Layer } from '../../data/layers';
 import { LazyInitialize } from '../../data/types';
 import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
@@ -18,7 +19,7 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
 
     this.info = info;
     this.player = player;
-    this.setOrigin(0);
+    this.setOrigin(0).setDepth(Layer.Backgrounds);
 
     const img = scene.textures.get(image)?.getSourceImage();
     this.center = new PhaserMath.Vector2(x + (img.width * (scale || 1)) / 2, y + img.height * ((scale || 1) / 2));
