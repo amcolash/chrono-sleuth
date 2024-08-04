@@ -54,7 +54,7 @@ export class Game extends Scene {
     // game objects
     this.player = new Player(this);
 
-    const walls = new Walls(this);
+    const walls = new Walls(this, this.player);
     const warpers = this.createWarpers();
     const npcs = this.createNpcs();
     const items = this.createItems();

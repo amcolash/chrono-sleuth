@@ -1,6 +1,12 @@
 import { WallType } from './types';
 
-export const WallData = [
+export interface Data {
+  x: number;
+  y: number;
+  id?: WallType;
+}
+
+export const WallData: Data[] = [
   // Town Surface
   { x: 40, y: 600 },
   { x: 1750, y: 600 },
