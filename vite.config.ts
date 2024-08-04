@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
 
 const manifest: Partial<ManifestOptions> = {
@@ -64,6 +65,19 @@ export default defineConfig({
         // Enable to have service worker/manifest in dev mode
         // enabled: true,
       },
+    }),
+    ViteImageOptimizer({
+      png: {
+        quality: 50,
+      },
+      jpg: {
+        quality: 40,
+      },
+      jpeg: {
+        quality: 40,
+      },
+      cache: true,
+      cacheLocation: 'node_modules/.cache/vite-plugin-image-optimizer',
     }),
   ],
 });

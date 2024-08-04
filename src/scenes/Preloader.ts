@@ -33,7 +33,7 @@ export class Preloader extends Scene {
 
     //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
     this.load.on('progress', (progress: number) => {
-      const p = import.meta.env.PROD ? progress * 0.5 : progress;
+      const p = import.meta.env.PROD ? progress * 0.6 : progress;
       bar.width = (width - margin * 2) * p;
     });
 
@@ -43,7 +43,7 @@ export class Preloader extends Scene {
         this.tweens.add({
           targets: bar,
           width: width - margin * 2,
-          duration: 2800,
+          duration: 2400,
         });
       });
     }
@@ -120,7 +120,7 @@ export class Preloader extends Scene {
     //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
 
     this.time.delayedCall(import.meta.env.PROD ? 3000 : 0, () => {
-      fadeOut(this, import.meta.env.PROD ? 300 : 0, () => {
+      fadeOut(this, 300, () => {
         this.scene.stop(this);
         this.scene.start('Game');
       });

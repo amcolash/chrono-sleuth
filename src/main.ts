@@ -46,6 +46,6 @@ const config: Types.Core.GameConfig = {
 };
 
 // TODO: Should this be in preload?
-loadFont('m6x11', 'assets/m6x11.ttf').then(() => {
+loadFont('m6x11', './m6x11.ttf').then(() => {
   new Game(config);
 });

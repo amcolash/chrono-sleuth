@@ -20,9 +20,12 @@
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^20.14.11",
     "prettier": "^3.3.2",
+    "sharp": "^0.33.4",
+    "svgo": "^3.3.2",
     "terser": "^5.31.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
+    "vite-plugin-image-optimizer": "^1.1.8",
     "vite-plugin-pwa": "^0.20.0"
   }
 }
