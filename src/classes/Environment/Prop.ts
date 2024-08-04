@@ -1,4 +1,4 @@
-import { Physics, Scene } from 'phaser';
+import { Math as PhaserMath, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { getDialog, propDialogs } from '../../data/dialog';
@@ -11,19 +11,22 @@ import { Key } from '../UI/InputManager';
 export class Prop extends Physics.Arcade.Image implements Interactive {
   propType: PropType;
   player: Player;
+  initialized: boolean = false;
 
   constructor(scene: Scene, type: PropType, player: Player) {
     const { x, y, image } = propData[type];
-
     super(scene, x, y, image);
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
-    if (Config.debug) this.setInteractive({ draggable: true });
-
-    this.setScale(0.35).setDepth(Layer.Items).setPipeline('Light2D');
 
     this.propType = type;
     this.player = player;
+  }
+
+  init() {
+    this.scene.add.existing(this);
+    this.scene.physics.add.existing(this);
+    if (Config.debug) this.setInteractive({ draggable: true });
+
+    this.setScale(0.35).setDepth(Layer.Items).setPipeline('Light2D');
   }
 
   onInteract(keys: Record<Key, boolean>): InteractResult {
@@ -44,5 +47,12 @@ export class Prop extends Physics.Arcade.Image implements Interactive {
 
   getButtonPrompt() {
     return [`Inspect ${PropType[this.propType]}`, 'Press [CONTINUE]'];
+  }
+
+  update() {
+    if (!this.initialized && this.visible && PhaserMath.Distance.BetweenPointsSquared(this, this.player) < 1000 ** 2) {
+      this.init();
+      this.initialized = true;
+    }
   }
 }

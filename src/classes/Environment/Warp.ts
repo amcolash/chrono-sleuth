@@ -55,10 +55,6 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
       this.setPipeline('Light2D');
     }
 
-    if (this.hasExtendedBounds() && this.body) {
-      this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
-    }
-
     const hidden = visual === WarpVisual.WarpHidden || visual === WarpVisual.Invisible;
     if (hidden) this.unlocked = false;
     if (!Config.debug) this.setVisible(!hidden);
@@ -247,6 +243,11 @@ export class Warp extends Physics.Arcade.Image implements Interactive {
     this.createParticles();
     this.createDebug();
 
+    if (this.hasExtendedBounds() && this.body) {
+      this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
+    }
+
+    // run overridden setVisible to make sure particls are properly started/stopped
     this.setVisible(this.visible);
 
     this.initialized = true;
