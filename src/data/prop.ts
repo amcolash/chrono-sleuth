@@ -13,4 +13,9 @@ export const propData: Record<PropType, Data> = {
     y: 1630,
     image: 'book',
   },
+  [PropType.AlchemySet]: {
+    x: -1000,
+    y: 1630,
+    image: 'alchemy_empty',
+  },
 };

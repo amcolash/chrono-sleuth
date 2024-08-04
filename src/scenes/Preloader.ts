@@ -112,6 +112,11 @@ export class Preloader extends Scene {
 
     // props
     this.load.image('book', 'props/book.png');
+    this.load.image('alchemy_empty', 'props/alchemy/alchemy_empty.png');
+    this.load.image('alchemy_blue', 'props/alchemy/alchemy_blue.png');
+    this.load.image('alchemy_full', 'props/alchemy/alchemy_full.png');
+    this.load.image('alchemy_green', 'props/alchemy/alchemy_green.png');
+    this.load.image('alchemy_red', 'props/alchemy/alchemy_red.png');
   }
 
   create() {

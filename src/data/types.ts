@@ -99,4 +99,5 @@ export enum JournalEntry {
 
 export enum PropType {
   LabBook,
+  AlchemySet,
 }
