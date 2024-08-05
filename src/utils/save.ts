@@ -51,14 +51,21 @@ export const debugSave: SaveData = {
     y: playerStart.y,
     flip: false,
   },
-  journal: [JournalEntry.FixTheClock, JournalEntry.SphinxRiddleSolved, JournalEntry.MetTheMayor],
+  journal: [
+    JournalEntry.FixTheClock,
+    JournalEntry.ForestMazeSolved,
+    JournalEntry.SphinxRiddleSolved,
+    JournalEntry.MetTheMayor,
+    JournalEntry.ClockFirstGear,
+  ],
   inventory: [
     { type: ItemType.Wrench, used: false },
-    { type: ItemType.Gear1, used: false },
+    { type: ItemType.Gear1, used: true },
   ],
   quests: [
     { id: QuestType.ForestGear, completed: true },
     { id: QuestType.SphinxRiddle, completed: true },
+    { id: QuestType.InvestigateTownWest, completed: false },
   ],
   settings: {
     gamepad: false,

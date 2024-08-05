@@ -56,10 +56,9 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
       this.setPipeline('Light2D');
     }
 
-    const hidden = visual === WarpVisual.WarpHidden || visual === WarpVisual.Invisible;
     if (!Config.debug) {
-      this.setVisible(!hidden);
-      if (visual === WarpVisual.Invisible) this.setAlpha(0);
+      if (visual === WarpVisual.WarpHidden || visual === WarpVisual.InvisibleHidden) this.setVisible(false);
+      if (visual === WarpVisual.Invisible || visual === WarpVisual.InvisibleHidden) this.setAlpha(0);
     }
 
     // Only add warps which need to be in the scene when loading a save

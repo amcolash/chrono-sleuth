@@ -4,7 +4,7 @@ import { Config } from '../../config';
 import { NPCDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { Data, NPCData } from '../../data/npc';
-import { InteractResult, Interactive, LazyInitialize, NPCType } from '../../data/types';
+import { InteractResult, Interactive, JournalEntry, LazyInitialize, NPCType } from '../../data/types';
 import { shouldInitialize } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { ClockHands } from '../Environment/ClockHands';
@@ -54,8 +54,13 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
       this.particles = this.scene.add.particles(x, y, '', particles);
     }
 
+    // TODO: Clock tower should likely be a Prop instead of an NPC
     if (this.npcType === NPCType.ClockTower) {
       this.clock = new ClockHands(this.scene);
+
+      if (this.player.journal.journal.find((entry) => entry === JournalEntry.ClockFirstGear)) {
+        this.player.journal.handleSideEffects(JournalEntry.ClockFirstGear, true);
+      }
     }
 
     if (onCreate) onCreate(this);

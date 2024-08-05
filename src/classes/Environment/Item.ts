@@ -59,7 +59,6 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
 
     this.initialized = true;
-    console.log('creating item', ItemType[this.itemType]);
   }
 
   onInteract(keys: Record<Key, boolean>): InteractResult {

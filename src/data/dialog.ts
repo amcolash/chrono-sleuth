@@ -136,6 +136,9 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       conditions: {
         journalEntry: JournalEntry.ClockFirstGear,
       },
+      onCompleted: (player) => {
+        player.quests.addQuest({ id: QuestType.InvestigateTownWest, completed: false });
+      },
     },
     {
       messages: ['Did you go into the clock tower yet?'],
@@ -165,7 +168,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
     {
       messages: [
         "This dusty clock tower hasn't told the correct time in many years. It appears to be missing some gears.",
-        'Let’s see what happens when we add the first gear.',
+        'Let’s see what happens when we add the first gear. You tighten the gear into place.',
         '[CREAKING NOISE]',
         'The clock tower is starting to partially move again. It looks like it’s missing two more gears.',
       ],

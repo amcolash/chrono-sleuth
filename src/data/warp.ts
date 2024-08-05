@@ -5,8 +5,11 @@ import { WarpType } from './types';
 export enum WarpVisual {
   Ladder,
   Warp,
-  WarpHidden, // Default to invisible
   Invisible,
+
+  // Not shown until unlocked
+  WarpHidden,
+  InvisibleHidden,
 }
 
 type Data = {
@@ -127,7 +130,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Left,
     warpTo: WarpType.MansionOutside,
-    visual: WarpVisual.Warp,
+    visual: WarpVisual.WarpHidden,
   },
   [WarpType.MansionOutside]: {
     x: -620,
@@ -158,7 +161,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 640,
     key: Key.Down,
     warpTo: WarpType.LabExit,
-    visual: WarpVisual.Invisible,
+    visual: WarpVisual.InvisibleHidden,
   },
   [WarpType.LabExit]: {
     x: -380,

@@ -123,16 +123,16 @@ export class Message extends GameObjects.Container {
     } else {
       this.portrait.setVisible(true);
 
+      this.text
+        .setPosition(padding + portraitOffset, padding + (target instanceof NPC ? nameOffset : 0))
+        .setWordWrapWidth(this.textWidth, true)
+        .setFixedSize(this.textWidth, this.textHeight);
+
       if (target instanceof NPC) {
         this.npcName.setVisible(true);
         this.npcName.setText(NPCData[target.npcType].name);
         this.portrait.setTexture(NPCData[target.npcType].portrait);
       } else if (portrait) this.portrait.setTexture(portrait);
-
-      this.text
-        .setPosition(padding + portraitOffset, padding + (target ? nameOffset : 0))
-        .setWordWrapWidth(this.textWidth, true)
-        .setFixedSize(this.textWidth, this.textHeight);
     }
 
     this.showMessage();
