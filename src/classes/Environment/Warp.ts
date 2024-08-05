@@ -36,7 +36,6 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   range: number;
   initialized: boolean = false;
-  unlocked: boolean = true;
 
   constructor(scene: Scene, warpType: WarpType, player: Player) {
     const { x, y, visual, range, skipLighting } = WarpData[warpType];
@@ -58,8 +57,10 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
 
     const hidden = visual === WarpVisual.WarpHidden || visual === WarpVisual.Invisible;
-    if (hidden) this.unlocked = false;
-    if (!Config.debug) this.setVisible(!hidden);
+    if (!Config.debug) {
+      this.setVisible(!hidden);
+      if (visual === WarpVisual.Invisible) this.setAlpha(0);
+    }
 
     // Only add warps which need to be in the scene when loading a save
     if (forcedInitializations.includes(warpType)) scene.add.existing(this);
@@ -243,7 +244,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     // console.log('setting warp visibility', WarpType[this.warpType], value, this.unlocked);
 
     if (this.particles1 && this.particles2) {
-      if (value && this.unlocked) {
+      if (value) {
         this.particles1.start();
         this.particles2.start();
       } else {

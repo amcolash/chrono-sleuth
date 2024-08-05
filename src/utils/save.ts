@@ -41,7 +41,7 @@ export const defaultSave: SaveData = {
   settings: {
     gamepad: isMobile(),
     debug: false,
-    zoomed: isMobile(),
+    zoomed: true,
   },
 };
 

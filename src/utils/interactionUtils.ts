@@ -81,7 +81,6 @@ export function getGameObjects<T extends GameObjects.GameObject>(
 export function updateWarpVisibility(scene: Scene, warpType: WarpType, visible: boolean) {
   const warp = getWarper(scene, warpType);
   if (warp) {
-    if (visible) warp.unlocked = true;
     warp.setVisible(visible);
   }
 }
