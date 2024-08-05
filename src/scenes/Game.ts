@@ -14,6 +14,7 @@ import { Warp } from '../classes/Environment/Warp';
 import { Player } from '../classes/Player/Player';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
+import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
 import { BackgroundData } from '../data/background';
 import { LightData } from '../data/lights';
@@ -110,9 +111,13 @@ export class Game extends Scene {
     console.log(`Game.create() took ${duration.toFixed(1)}ms to initialize`);
 
     if (import.meta.env.DEV) {
+      let message;
       if (Config.debug && duration > 300)
-        alert(`WARNING: Game.create() [debug] took ${duration.toFixed(1)}ms to initialize`);
-      if (!Config.debug && duration > 150) alert(`WARNING: Game.create() took ${duration.toFixed(1)}ms to initialize`);
+        message = `WARNING: Game.create() [debug] took ${duration.toFixed(1)}ms to initialize`;
+      if (!Config.debug && duration > 150)
+        message = `WARNING: Game.create() took ${duration.toFixed(1)}ms to initialize`;
+
+      if (message) new Notification(this, message, undefined, Colors.Warning);
     }
   }
 

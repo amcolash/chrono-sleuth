@@ -8,6 +8,8 @@ export const Colors = {
   Teal: '303646',
   Black: '1c1831',
 
+  Warning: '993333',
+
   Lights: 'ffccaa',
   Night: '335588',
 

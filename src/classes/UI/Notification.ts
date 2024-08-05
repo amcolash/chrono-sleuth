@@ -6,7 +6,7 @@ import { fontStyle } from '../../utils/fonts';
 import { getGameObjects } from '../../utils/interactionUtils';
 
 export class Notification extends GameObjects.Text {
-  constructor(scene: Scene, text: string, duration: number = 3500) {
+  constructor(scene: Scene, text: string, duration: number = 3500, color: string = Colors.Teal) {
     const y =
       getGameObjects(scene, Notification).reduce((acc, obj) => {
         return Math.max(acc, obj.y - 20);
@@ -14,7 +14,7 @@ export class Notification extends GameObjects.Text {
 
     super(scene, 20, y, text, {
       ...fontStyle,
-      backgroundColor: '#' + Colors.Teal,
+      backgroundColor: '#' + color,
       padding: { x: 10, y: 5 },
     });
     this.setAlpha(0).setDepth(Layer.Overlay).setScrollFactor(0);

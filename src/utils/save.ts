@@ -164,7 +164,7 @@ export function load(scene: Game) {
 
     // If new game, save now
     if (deepEqual(savedata, defaultSave)) {
-      save(scene);
+      save(scene, undefined, true);
     }
   } catch (err) {
     console.error(err);
@@ -175,9 +175,9 @@ export function load(scene: Game) {
   }
 }
 
-export function save(scene: Game, override?: SaveData): void {
+export function save(scene: Game, override?: SaveData, silent?: boolean): void {
   const save = getCurrentSaveState(scene);
   localStorage.setItem(saveKey, JSON.stringify(override || save));
 
-  new Notification(scene, 'Game Saved');
+  if (!silent) new Notification(scene, 'Game Saved');
 }
