@@ -208,15 +208,12 @@ export class Game extends Scene {
     this.gamepad = new Gamepad(this);
 
     // debug
-    let debugUI;
     if (import.meta.env.DEV) {
       this.time.delayedCall(500, () => {
-        debugUI = new DebugUI(this, this.player);
+        const debugUI = new DebugUI(this, this.player);
         this.add.group(debugUI, { runChildUpdate: true });
       });
     }
-
-    return { debugUI };
   }
 
   createLights(): void {
