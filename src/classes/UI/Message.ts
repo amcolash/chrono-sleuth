@@ -24,7 +24,7 @@ export class Message extends GameObjects.Container {
   textHeight: number;
 
   player: Player;
-  npc?: NPC;
+  target?: any;
   npcName: GameObjects.Text;
   text: GameObjects.Text;
   box: GameObjects.Rectangle;
@@ -33,7 +33,7 @@ export class Message extends GameObjects.Container {
   options?: string[];
   optionsContainer: ButtonGroup;
 
-  dialog?: Dialog;
+  dialog?: Dialog<any>;
   messageIndex: number;
   interactionTimeout: number;
 
@@ -96,12 +96,12 @@ export class Message extends GameObjects.Container {
     this.add([this.box, this.npcName, this.text, this.portrait]);
   }
 
-  setDialog(dialog?: Dialog, npc?: NPC, portrait?: string) {
+  setDialog<T>(dialog?: Dialog<T>, target?: T, portrait?: string) {
     if (!this.npcName) this.createUI();
 
     this.setVisible(dialog !== undefined);
 
-    this.npc = npc;
+    this.target = target;
     this.messageIndex = 0;
     this.dialog = dialog;
     this.interactionTimeout = Date.now() + timeout;
@@ -114,24 +114,23 @@ export class Message extends GameObjects.Container {
 
     this.npcName.setVisible(false);
 
-    if (!npc && !portrait) {
+    if (!target && !portrait) {
       this.portrait.setVisible(false);
       this.text
         .setPosition(padding, padding)
         .setWordWrapWidth(padding + portraitOffset + this.textWidth, true)
         .setFixedSize(padding + portraitOffset + this.textWidth, this.textHeight);
     } else {
-      if (npc) {
-        this.npcName.setVisible(true);
-        this.npcName.setText(NPCData[npc.npcType].name);
-      }
-
       this.portrait.setVisible(true);
-      if (npc) this.portrait.setTexture(NPCData[npc.npcType].portrait);
-      else if (portrait) this.portrait.setTexture(portrait);
+
+      if (target instanceof NPC) {
+        this.npcName.setVisible(true);
+        this.npcName.setText(NPCData[target.npcType].name);
+        this.portrait.setTexture(NPCData[target.npcType].portrait);
+      } else if (portrait) this.portrait.setTexture(portrait);
 
       this.text
-        .setPosition(padding + portraitOffset, padding + (npc ? nameOffset : 0))
+        .setPosition(padding + portraitOffset, padding + (target ? nameOffset : 0))
         .setWordWrapWidth(this.textWidth, true)
         .setFixedSize(this.textWidth, this.textHeight);
     }
@@ -183,7 +182,7 @@ export class Message extends GameObjects.Container {
 
   onSelectOption(option: string) {
     if (this.dialog?.onSelected) {
-      this.dialog.onSelected(option, this.player, this.npc);
+      this.dialog.onSelected(option, this.player, this.target);
       this.optionsContainer.removeAll(true);
     }
   }
@@ -199,7 +198,7 @@ export class Message extends GameObjects.Container {
     this.messageIndex++;
     if (this.messageIndex >= messages.length) {
       if (this.dialog.onCompleted) {
-        this.dialog.onCompleted(this.player, this.npc);
+        this.dialog.onCompleted(this.player, this.target);
       }
       this.dialog = undefined;
       this.setVisible(false);

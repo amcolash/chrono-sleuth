@@ -1,10 +1,12 @@
+import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
+import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
 import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry } from '../utils/interactionUtils';
 import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from '../utils/riddles';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
-export interface Dialog {
+export interface Dialog<T> {
   conditions?: {
     hasItem?: ItemType;
     completedQuest?: QuestType;
@@ -17,11 +19,11 @@ export interface Dialog {
   messages: string[] | ((player: Player) => string[]);
   options?: string[] | ((player: Player) => string[]);
 
-  onCompleted?: (player: Player, npc?: NPC) => void;
-  onSelected?: (option: string, player: Player, npc?: NPC) => void;
+  onCompleted?: (player: Player, target?: T) => void;
+  onSelected?: (option: string, player: Player, target?: T) => void;
 }
 
-export const npcDialogs: Record<NPCType, Dialog[]> = {
+export const npcDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [
     {
       messages: ['I see you found the first gear. You should talk to the mayor to learn more about the old clock.'],
@@ -97,7 +99,7 @@ export const npcDialogs: Record<NPCType, Dialog[]> = {
       onSelected: (option, player, npc) => {
         const answer = getSphinxAnswer(player.scene);
         if (option === answer) {
-          player.message.setDialog(
+          player.message.setDialog<NPC>(
             {
               messages: [`That is correct. Well done, you may pass.`],
               onCompleted: (player) => {
@@ -108,10 +110,10 @@ export const npcDialogs: Record<NPCType, Dialog[]> = {
             npc
           );
         } else if (option === 'I don’t know') {
-          player.message.setDialog({ messages: ['Come back when you have an answer for me.'] }, npc);
+          player.message.setDialog<NPC>({ messages: ['Come back when you have an answer for me.'] }, npc);
         } else {
           // TODO: Add back talking points so we can hide dialog in a different system that is reset
-          player.message.setDialog({ messages: ['That is not correct. Do not return.'] }, npc);
+          player.message.setDialog<NPC>({ messages: ['That is not correct. Do not return.'] }, npc);
         }
       },
     },
@@ -178,13 +180,15 @@ export const npcDialogs: Record<NPCType, Dialog[]> = {
   ],
 };
 
-export const itemDialogs: { [key in ItemType]?: Dialog } = {
-  [ItemType.Gear1]: {
-    messages: ['Hmm, this gear looks like it belongs in the clock tower. I should ask the inventor about it.'],
-  },
+export const itemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
+  [ItemType.Gear1]: [
+    {
+      messages: ['Hmm, this gear looks like it belongs in the clock tower. I should ask the inventor about it.'],
+    },
+  ],
 };
 
-export const propDialogs: { [key in ItemType]?: Dialog[] } = {
+export const propDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
   [PropType.LabBook]: [
     {
       messages: [
@@ -200,7 +204,7 @@ export const propDialogs: { [key in ItemType]?: Dialog[] } = {
   ],
 };
 
-export function getDialog(dialogs: Dialog[], player: Player): Dialog | undefined {
+export function getDialog<T>(dialogs: Dialog<T>[], player: Player): Dialog<T> | undefined {
   for (const dialog of dialogs) {
     const { conditions } = dialog;
 

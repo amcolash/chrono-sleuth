@@ -79,11 +79,11 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
 
     if (keys[Key.Continue]) {
       const dialogs = npcDialogs[this.npcType];
-      const dialog = getDialog(dialogs, this.player);
+      const dialog = getDialog<NPC>(dialogs, this.player);
 
       if (dialog) {
         const showPortrait = NPCData[this.npcType].portrait.length > 0;
-        this.player.message.setDialog(dialog, showPortrait ? this : undefined);
+        this.player.message.setDialog<NPC>(dialog, showPortrait ? this : undefined);
 
         return InteractResult.Talked;
       }

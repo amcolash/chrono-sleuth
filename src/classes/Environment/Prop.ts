@@ -39,10 +39,10 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
 
     if (keys[Key.Continue]) {
       const dialogs = propDialogs[this.propType] || [];
-      const dialog = getDialog(dialogs, this.player);
+      const dialog = getDialog<Prop>(dialogs, this.player);
 
       if (dialog) {
-        this.player.message.setDialog(dialog, undefined, propData[this.propType].portrait || 'player_portrait');
+        this.player.message.setDialog<Prop>(dialog, undefined, propData[this.propType].portrait || 'player_portrait');
         return InteractResult.Prop;
       }
     }
