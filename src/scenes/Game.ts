@@ -15,9 +15,9 @@ import { Player } from '../classes/Player/Player';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
 import { Config } from '../config';
-import { backgroundData } from '../data/background';
-import { lightData } from '../data/lights';
-import { slopeData } from '../data/slope';
+import { BackgroundData } from '../data/background';
+import { LightData } from '../data/lights';
+import { SlopeData } from '../data/slope';
 import { ItemType, NPCType, PropType, WarpType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
@@ -110,9 +110,9 @@ export class Game extends Scene {
     console.log(`Game.create() took ${duration.toFixed(1)}ms to initialize`);
 
     if (import.meta.env.DEV) {
-      console.log('Debug', Config.debug);
-      if (Config.debug && duration > 250) alert(`Game.create() [debug] took ${duration.toFixed(1)}ms to initialize`);
-      if (!Config.debug && duration > 100) alert(`Game.create() took ${duration.toFixed(1)}ms to initialize`);
+      if (Config.debug && duration > 300)
+        alert(`WARNING: Game.create() [debug] took ${duration.toFixed(1)}ms to initialize`);
+      if (!Config.debug && duration > 150) alert(`WARNING: Game.create() took ${duration.toFixed(1)}ms to initialize`);
     }
   }
 
@@ -137,7 +137,7 @@ export class Game extends Scene {
   }
 
   createBackgrounds() {
-    return backgroundData.map((b) => new Background(this, b, this.player));
+    return BackgroundData.map((b) => new Background(this, b, this.player));
   }
 
   createWarpers(): Warp[] {
@@ -163,7 +163,7 @@ export class Game extends Scene {
   }
 
   createSlopes(): Slope[] {
-    return slopeData.map((s) => new Slope(this, s.x, s.y, s.width, s.height, s.flip, s.upwards));
+    return SlopeData.map((s) => new Slope(this, s.x, s.y, s.width, s.height, s.flip, s.upwards));
   }
 
   createProps(): Prop[] {
@@ -218,7 +218,7 @@ export class Game extends Scene {
   createLights(): void {
     this.lights.enable().setAmbientColor(getColorNumber(Colors.White));
 
-    lightData.forEach((light) => {
+    LightData.forEach((light) => {
       if (Config.debug) {
         new DebugLight(
           this,

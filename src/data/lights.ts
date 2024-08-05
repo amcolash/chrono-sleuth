@@ -8,7 +8,7 @@ interface Data {
   intensity?: number;
 }
 
-export const lightData: Data[] = [
+export const LightData: Data[] = [
   // Town square
   { x: 135, y: 462, radius: 150, color: getColorNumber(Colors.Tan), intensity: 2.5 },
   { x: 697, y: 441 },

@@ -7,7 +7,7 @@ interface Data {
   portrait?: string;
 }
 
-export const propData: Record<PropType, Data> = {
+export const PropData: Record<PropType, Data> = {
   [PropType.LabBook]: {
     x: 300,
     y: 1630,

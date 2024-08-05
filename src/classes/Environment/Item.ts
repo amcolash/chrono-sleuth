@@ -1,7 +1,7 @@
 import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { getDialog, itemDialogs } from '../../data/dialog';
+import { ItemDialogs, getDialog } from '../../data/dialog';
 import { ItemData } from '../../data/item';
 import { Layer } from '../../data/layers';
 import { InteractResult, Interactive, ItemType, LazyInitialize } from '../../data/types';
@@ -62,7 +62,7 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
       this.destroy();
 
       // Optionally show dialog if there is any when item has been picked up
-      const dialogs = itemDialogs[this.itemType] || [];
+      const dialogs = ItemDialogs[this.itemType] || [];
       const dialog = getDialog<Item>(dialogs, this.player);
       if (dialog) this.player.message.setDialog<Item>(dialog, undefined, 'player_portrait');
 

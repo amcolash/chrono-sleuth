@@ -1,7 +1,7 @@
 import { GameObjects, Math, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { getDialog, npcDialogs } from '../../data/dialog';
+import { NPCDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { Data, NPCData } from '../../data/npc';
 import { InteractResult, Interactive, LazyInitialize, NPCType } from '../../data/types';
@@ -78,7 +78,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     if (this.player.message.visible || Date.now() < this.player.message.interactionTimeout) return InteractResult.None;
 
     if (keys[Key.Continue]) {
-      const dialogs = npcDialogs[this.npcType];
+      const dialogs = NPCDialogs[this.npcType];
       const dialog = getDialog<NPC>(dialogs, this.player);
 
       if (dialog) {

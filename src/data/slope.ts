@@ -7,7 +7,7 @@ interface Data {
   upwards?: boolean;
 }
 
-export const slopeData: Data[] = [
+export const SlopeData: Data[] = [
   // Clock
   { x: 740, y: -1370, width: 170, height: 95 },
   { x: 815, y: -2010, width: 90, height: 70 },

@@ -1,9 +1,9 @@
 import { Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { getDialog, propDialogs } from '../../data/dialog';
+import { PropDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
-import { propData } from '../../data/prop';
+import { PropData } from '../../data/prop';
 import { InteractResult, Interactive, LazyInitialize, PropType } from '../../data/types';
 import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
@@ -15,7 +15,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
   initialized: boolean = false;
 
   constructor(scene: Scene, type: PropType, player: Player) {
-    const { x, y, image } = propData[type];
+    const { x, y, image } = PropData[type];
     super(scene, x, y, image);
 
     this.propType = type;
@@ -38,11 +38,11 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (this.player.message.visible || Date.now() < this.player.message.interactionTimeout) return InteractResult.None;
 
     if (keys[Key.Continue]) {
-      const dialogs = propDialogs[this.propType] || [];
+      const dialogs = PropDialogs[this.propType] || [];
       const dialog = getDialog<Prop>(dialogs, this.player);
 
       if (dialog) {
-        this.player.message.setDialog<Prop>(dialog, undefined, propData[this.propType].portrait || 'player_portrait');
+        this.player.message.setDialog<Prop>(dialog, undefined, PropData[this.propType].portrait || 'player_portrait');
         return InteractResult.Prop;
       }
     }

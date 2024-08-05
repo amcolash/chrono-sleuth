@@ -23,7 +23,7 @@ export interface Dialog<T> {
   onSelected?: (option: string, player: Player, target?: T) => void;
 }
 
-export const npcDialogs: Record<NPCType, Dialog<NPC>[]> = {
+export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [
     {
       messages: ['I see you found the first gear. You should talk to the mayor to learn more about the old clock.'],
@@ -180,7 +180,7 @@ export const npcDialogs: Record<NPCType, Dialog<NPC>[]> = {
   ],
 };
 
-export const itemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
+export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
   [ItemType.Gear1]: [
     {
       messages: ['Hmm, this gear looks like it belongs in the clock tower. I should ask the inventor about it.'],
@@ -188,7 +188,7 @@ export const itemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
   ],
 };
 
-export const propDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
+export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
   [PropType.LabBook]: [
     {
       messages: [

@@ -6,7 +6,7 @@ export interface Data {
   skipLighting?: boolean;
 }
 
-export const backgroundData: Data[] = [
+export const BackgroundData: Data[] = [
   { x: 0, y: 0, image: 'town' },
   { x: 500, y: -1100, image: 'clock_outside' },
   { x: 500, y: -2400, image: 'clock_inner', skipLighting: true },
