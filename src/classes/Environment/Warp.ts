@@ -65,6 +65,37 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (forcedInitializations.includes(warpType)) scene.add.existing(this);
   }
 
+  lazyInit(forceInit?: boolean) {
+    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
+
+    // Only add warps which were not previously added
+    if (!forcedInitializations.includes(this.warpType)) this.scene.add.existing(this);
+
+    this.scene.physics.add.existing(this);
+    this.createParticles();
+    this.createDebug();
+
+    if (this.hasExtendedBounds() && this.body) {
+      this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
+    }
+
+    // run overridden setVisible to make sure particls are properly started/stopped
+    this.setVisible(this.visible);
+
+    if (this.warpType === WarpType.Underground) {
+      this.scene.add
+        .image(this.x, this.y - 60, 'ladder')
+        .setScale(0.6)
+        .setPipeline('Light2D');
+      this.scene.add
+        .image(this.x, this.y - 105, 'ladder')
+        .setScale(0.6)
+        .setPipeline('Light2D');
+    }
+
+    this.initialized = true;
+  }
+
   // Delay creating particles until the player is close enough to increase start up performance
   createParticles() {
     const { visual, skipLighting } = WarpData[this.warpType];
@@ -225,37 +256,6 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
 
     return this;
-  }
-
-  lazyInit(forceInit?: boolean) {
-    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
-
-    // Only add warps which were not previously added
-    if (!forcedInitializations.includes(this.warpType)) this.scene.add.existing(this);
-
-    this.scene.physics.add.existing(this);
-    this.createParticles();
-    this.createDebug();
-
-    if (this.hasExtendedBounds() && this.body) {
-      this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
-    }
-
-    // run overridden setVisible to make sure particls are properly started/stopped
-    this.setVisible(this.visible);
-
-    if (this.warpType === WarpType.Underground) {
-      this.scene.add
-        .image(this.x, this.y - 60, 'ladder')
-        .setScale(0.6)
-        .setPipeline('Light2D');
-      this.scene.add
-        .image(this.x, this.y - 105, 'ladder')
-        .setScale(0.6)
-        .setPipeline('Light2D');
-    }
-
-    this.initialized = true;
   }
 
   update(_time: number, _delta: number) {

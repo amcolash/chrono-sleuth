@@ -189,6 +189,24 @@ export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
 };
 
 export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
+  [PropType.LabHatch]: [
+    {
+      messages: ['Let me see if I can open this hatch.'],
+      conditions: {
+        hasItem: ItemType.Key,
+      },
+      onCompleted: (player, prop) => {
+        prop?.destroy();
+        console.log(prop);
+        player.inventory.removeItem(ItemType.Key);
+        player.journal.addEntry(JournalEntry.AlchemyLabFound);
+      },
+    },
+
+    {
+      messages: ['The hatch is locked. I wonder if there is a key somewhere.'],
+    },
+  ],
   [PropType.LabBook]: [
     {
       messages: [

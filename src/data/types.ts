@@ -66,6 +66,7 @@ export enum WarpType {
 export enum ItemType {
   Wrench,
   Gear1,
+  Key,
 }
 
 export enum QuestType {
@@ -100,9 +101,11 @@ export enum JournalEntry {
   SphinxRiddleSolved,
   MetTheMayor,
   ClockFirstGear,
+  AlchemyLabFound,
 }
 
 export enum PropType {
+  LabHatch,
   LabBook,
   AlchemySet,
 }

@@ -26,4 +26,8 @@ export const JournalData: Record<JournalEntry, Data> = {
     description:
       'I found the first gear for the clock tower and placed it into the clock face. I still need two more gears to fix it.',
   },
+  [JournalEntry.AlchemyLabFound]: {
+    description: 'I found a secret alchemy lab. I wonder what the previous alchemist was brewing up.',
+    warpAdd: WarpType.LabEntrance,
+  },
 };

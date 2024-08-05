@@ -3,11 +3,15 @@ import { PropType } from './types';
 interface Data {
   x: number;
   y: number;
-  image: string;
+  image?: string;
   portrait?: string;
 }
 
 export const PropData: Record<PropType, Data> = {
+  [PropType.LabHatch]: {
+    x: -1910,
+    y: 640,
+  },
   [PropType.LabBook]: {
     x: 300,
     y: 1630,

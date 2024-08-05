@@ -4,7 +4,7 @@ import { Config } from '../../config';
 import { PropDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { PropData } from '../../data/prop';
-import { InteractResult, Interactive, LazyInitialize, PropType } from '../../data/types';
+import { InteractResult, Interactive, JournalEntry, LazyInitialize, PropType } from '../../data/types';
 import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
@@ -16,7 +16,9 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   constructor(scene: Scene, type: PropType, player: Player) {
     const { x, y, image } = PropData[type];
-    super(scene, x, y, image);
+    super(scene, x, y, image || '');
+
+    if (!image) this.setAlpha(0);
 
     this.propType = type;
     this.player = player;
@@ -24,6 +26,12 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   lazyInit(forceInit?: boolean) {
     if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
+
+    // Remove this prop if player has already interacted with it
+    if (this.player.journal.journal.includes(JournalEntry.AlchemyLabFound) && this.propType === PropType.LabHatch) {
+      this.destroy();
+      return;
+    }
 
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
@@ -42,7 +50,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
       const dialog = getDialog<Prop>(dialogs, this.player);
 
       if (dialog) {
-        this.player.message.setDialog<Prop>(dialog, undefined, PropData[this.propType].portrait || 'player_portrait');
+        this.player.message.setDialog<Prop>(dialog, this, PropData[this.propType].portrait || 'player_portrait');
         return InteractResult.Prop;
       }
     }

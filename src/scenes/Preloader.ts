@@ -91,6 +91,7 @@ export class Preloader extends Scene {
     this.load.image('gear', 'items/gear.png');
     this.load.image('journal', 'items/journal.png');
     this.load.image('wrench', 'items/wrench.png');
+    this.load.image('key', 'items/key.png');
 
     // characters
     this.load.spritesheet('character', 'characters/player.png', { frameWidth: 128, frameHeight: 80 });

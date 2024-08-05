@@ -37,7 +37,10 @@ export class Inventory extends GameObjects.Container {
     if (!this.text) this.createUI();
 
     this.inventory.push(item);
-    this.add(this.scene.add.image(0, 0, ItemData[item].image).setScale(0.35));
+    const i = this.scene.add.image(0, 0, ItemData[item].image).setScale(0.35);
+    if (item === ItemType.Key) i.setAngle(45);
+    this.add(i);
+
     this.updateItems();
 
     const worldItem = getItem(this.scene, item);
