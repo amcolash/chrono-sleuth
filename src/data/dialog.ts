@@ -53,7 +53,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       ],
       onCompleted: (player) => {
         player.journal.addEntry(JournalEntry.FixTheClock);
-        player.inventory.addItem(ItemType.Wrench);
+        player.inventory.addItem({ type: ItemType.Wrench, used: false });
       },
     },
   ],

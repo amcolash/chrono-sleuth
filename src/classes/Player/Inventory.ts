@@ -9,8 +9,13 @@ import { fontStyle } from '../../utils/fonts';
 import { getItem } from '../../utils/interactionUtils';
 import { Notification } from '../UI/Notification';
 
+export interface InventoryData {
+  type: ItemType;
+  used: boolean;
+}
+
 export class Inventory extends GameObjects.Container {
-  inventory: ItemType[] = [];
+  inventory: InventoryData[] = [];
   text: GameObjects.Text;
   rect: GameObjects.Rectangle;
 
@@ -33,26 +38,30 @@ export class Inventory extends GameObjects.Container {
     this.add(this.text);
   }
 
-  addItem(item: ItemType, silent?: boolean) {
+  addItem(item: InventoryData, silent?: boolean) {
     if (!this.text) this.createUI();
 
     this.inventory.push(item);
-    const i = this.scene.add.image(0, 0, ItemData[item].image).setScale(0.35);
-    if (item === ItemType.Key) i.setAngle(45);
-    this.add(i);
+
+    if (!item.used) {
+      const i = this.scene.add.image(0, 0, ItemData[item.type].image).setScale(0.35);
+      if (item.type === ItemType.Key) i.setAngle(45);
+      this.add(i);
+    }
 
     this.updateItems();
 
-    const worldItem = getItem(this.scene, item);
-    if (worldItem) worldItem.destroy();
+    const worldItem = getItem(this.scene, item.type);
+    worldItem?.destroy();
 
-    if (!silent) new Notification(this.scene, `New item added: ${ItemData[item].name}`);
+    if (!silent) new Notification(this.scene, `New item added: ${ItemData[item.type].name}`);
   }
 
   removeItem(item: ItemType) {
-    const index = this.inventory.indexOf(item);
-    if (index > -1) {
-      this.inventory.splice(index, 1);
+    const found = this.inventory.find((i) => i.type === item);
+    if (found) {
+      found.used = true;
+
       this.getAll<GameObjects.Image>()
         .find((i) => i.texture?.key === ItemData[item].image)
         ?.destroy();

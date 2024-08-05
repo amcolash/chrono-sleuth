@@ -3,6 +3,7 @@ import { GameObjects, Physics, Scene } from 'phaser';
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Warp } from '../classes/Environment/Warp';
+import { InventoryData } from '../classes/Player/Inventory';
 import { NPCData } from '../data/npc';
 import { ItemType, JournalEntry, NPCType, Quest, QuestType, WallType, WarpType } from '../data/types';
 import { WallData } from '../data/wall';
@@ -53,8 +54,8 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
   });
 }
 
-export function hasItem(inventory: ItemType[], item: ItemType): boolean {
-  return inventory.includes(item);
+export function hasItem(inventory: InventoryData[], item: ItemType): boolean {
+  return inventory.find((i) => i.type === item) !== undefined;
 }
 
 export function hasActiveQuest(quests: Quest[], questId: QuestType): boolean {

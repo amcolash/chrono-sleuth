@@ -31,11 +31,7 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
 
     // Check if player already has item, if so, destroy this item
-    const journalRemoval = ItemData[this.itemType].journalRemoval;
-    if (
-      this.player.inventory.inventory.includes(this.itemType) ||
-      (journalRemoval && this.player.journal.journal.includes(journalRemoval))
-    ) {
+    if (this.player.inventory.inventory.find((i) => i.type === this.itemType)) {
       this.destroy();
       return;
     }
@@ -68,7 +64,7 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   onInteract(keys: Record<Key, boolean>): InteractResult {
     if (keys[Key.Continue]) {
-      this.player.inventory.addItem(this.itemType);
+      this.player.inventory.addItem({ type: this.itemType, used: false });
       this.destroy();
 
       // Optionally show dialog if there is any when item has been picked up

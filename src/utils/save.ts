@@ -1,5 +1,6 @@
 import deepEqual from 'deep-equal';
 
+import { InventoryData } from '../classes/Player/Inventory';
 import { playerStart } from '../classes/Player/Player';
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
@@ -23,7 +24,7 @@ type SaveData = {
     flip: boolean;
   };
   journal: JournalEntry[];
-  inventory: ItemType[];
+  inventory: InventoryData[];
   quests: Quest[];
   settings: Settings;
 };
@@ -51,7 +52,10 @@ export const debugSave: SaveData = {
     flip: false,
   },
   journal: [JournalEntry.FixTheClock, JournalEntry.SphinxRiddleSolved, JournalEntry.MetTheMayor],
-  inventory: [ItemType.Wrench, ItemType.Gear1],
+  inventory: [
+    { type: ItemType.Wrench, used: false },
+    { type: ItemType.Gear1, used: false },
+  ],
   quests: [
     { id: QuestType.ForestGear, completed: true },
     { id: QuestType.SphinxRiddle, completed: true },
