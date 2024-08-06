@@ -212,6 +212,12 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
   ],
   [PropType.LabBook]: [
     {
+      messages: ['Maybe I can find more information in the lab.'],
+      conditions: {
+        activeQuest: QuestType.ExploreLab,
+      },
+    },
+    {
       messages: [
         'This book contains notes about an ancient alchemy experiement.',
         'According to the notes, the experiment was a failure, and the alchemist disappeared.',
@@ -220,6 +226,27 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
       ],
       onCompleted: (player) => {
         player.quests.addQuest({ id: QuestType.ExploreLab, completed: false });
+      },
+    },
+  ],
+  [PropType.AlchemySet]: [
+    {
+      messages: ['Maybe the book has more information about using the alchemy set.'],
+      conditions: {
+        journalEntry: JournalEntry.AlchemySetFixed,
+      },
+    },
+    {
+      messages: [
+        'This alchemy set looks like the one in the book.',
+        'If I can figure out how the set connects together, I might be able to recreate the experiment.',
+      ],
+      onCompleted: (player) => {
+        const scene = player.scene;
+
+        scene.gamepad.setVisible(false);
+        scene.scene.pause();
+        scene.scene.launch('PipesDialog', { player });
       },
     },
   ],

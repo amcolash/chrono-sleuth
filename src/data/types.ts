@@ -103,6 +103,7 @@ export enum JournalEntry {
   MetTheMayor,
   ClockFirstGear,
   AlchemyLabFound,
+  AlchemySetFixed,
 }
 
 export enum PropType {

@@ -95,7 +95,7 @@ export class DebugUI extends GameObjects.Container {
     this.scene.input.keyboard?.on('keydown-P', () => {
       this.scene.gamepad.setVisible(false);
       this.scene.scene.pause();
-      this.scene.scene.launch('PipesDialog', { player: this.player, level: 0 });
+      this.scene.scene.launch('PipesDialog', { player: this.player });
     });
 
     if (Config.debug) {

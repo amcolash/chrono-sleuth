@@ -1,20 +1,20 @@
 import { GameObjects, Scene } from 'phaser';
 
+import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
 import { Button } from '../classes/UI/Button';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { InputManager } from '../classes/UI/InputManager';
 import { Config } from '../config';
-import { JournalEntry } from '../data/types';
+import { JournalEntry, PropType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { fontStyle } from '../utils/fonts';
-import { Game } from './Game';
+import { getProp } from '../utils/interactionUtils';
 
 export class PipesDialog extends Scene {
   player: Player;
   container: GameObjects.Container;
   keys: InputManager;
-  level: number;
 
   constructor() {
     super('PipesDialog');
@@ -22,7 +22,6 @@ export class PipesDialog extends Scene {
 
   init(data: { player: Player; level: number }) {
     this.player = data.player;
-    this.level = data.level;
   }
 
   create() {
@@ -49,7 +48,12 @@ export class PipesDialog extends Scene {
       this.close(false);
     });
 
-    new Gamepad(this, true).setVisible((this.player.scene as Game).gamepad.visible);
+    this.input.keyboard?.on('keydown-BACK_SLASH', () => {
+      this.close(true);
+    });
+
+    // Make a gamepad for controller listeners
+    new Gamepad(this).setVisible(false);
     this.keys = new InputManager(this);
 
     this.scene.launch('Pipes', { parent: this });
@@ -62,9 +66,11 @@ export class PipesDialog extends Scene {
     this.scene.resume('Game');
 
     if (success) {
-      if (this.level === 0) {
-        this.player.journal.addEntry(JournalEntry.ForestMazeSolved);
-      }
+      this.player.message.setDialog<Prop>(
+        { messages: ['There. It looks like the alchemy set is properly fit back together.'] },
+        getProp(this.player.scene, PropType.AlchemySet)
+      );
+      this.player.journal.addEntry(JournalEntry.AlchemySetFixed);
     }
   }
 }

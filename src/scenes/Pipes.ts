@@ -176,16 +176,18 @@ export class Pipes extends Scene {
     const keys = this.keys.keys;
     if (keys[Key.Continue]) {
       const pipe = this.pipes[this.position.y][this.position.x];
-      pipe.rotation = (pipe.rotation + 90) % 360;
-      this.updatePipes();
+      if (pipe.interactive) {
+        pipe.rotation = (pipe.rotation + 90) % 360;
+        this.updatePipes();
+      }
     } else if (keys[Key.Left]) this.position.x = Math.max(0, this.position.x - 1);
-    else if (keys[Key.Right]) this.position.x = Math.min(width, this.position.x + 1);
+    else if (keys[Key.Right]) this.position.x = Math.min(width - 1, this.position.x + 1);
     else if (keys[Key.Up]) this.position.y = Math.max(0, this.position.y - 1);
-    else if (keys[Key.Down]) this.position.y = Math.min(height, this.position.y + 1);
+    else if (keys[Key.Down]) this.position.y = Math.min(height - 1, this.position.y + 1);
     else handled = false;
 
     if (handled) {
-      this.nextUpdate = time + 200;
+      this.nextUpdate = time + 170;
       this.cursor.setVisible(true);
       this.cursor.setPosition(
         this.images.x + this.position.x * this.pipeSize,

@@ -5,6 +5,7 @@ interface Data {
   y: number;
   image?: string;
   portrait?: string;
+  skipLighting?: boolean;
 }
 
 export const PropData: Record<PropType, Data> = {
@@ -18,8 +19,9 @@ export const PropData: Record<PropType, Data> = {
     image: 'book',
   },
   [PropType.AlchemySet]: {
-    x: -1000,
-    y: 1630,
+    x: -1650,
+    y: 1600,
     image: 'alchemy_empty',
+    skipLighting: true,
   },
 };

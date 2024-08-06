@@ -2,10 +2,11 @@ import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
+import { Prop } from '../classes/Environment/Prop';
 import { Warp } from '../classes/Environment/Warp';
 import { InventoryData } from '../classes/Player/Inventory';
 import { NPCData } from '../data/npc';
-import { ItemType, JournalEntry, NPCType, Quest, QuestType, WallType, WarpType } from '../data/types';
+import { ItemType, JournalEntry, NPCType, PropType, Quest, QuestType, WallType, WarpType } from '../data/types';
 import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
 
@@ -101,6 +102,10 @@ export function getNPC(scene: Scene, npcType: NPCType): NPC | undefined {
 
 export function getItem(scene: Scene, item: ItemType): Item | undefined {
   return getGameObjects<Item>(scene, Item).find((n) => n.itemType === item);
+}
+
+export function getProp(scene: Scene, prop: PropType): Prop | undefined {
+  return getGameObjects<Prop>(scene, Prop).find((n) => n.propType === prop);
 }
 
 export function getClockRewind(scene: Game): number {

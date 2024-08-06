@@ -18,8 +18,7 @@ export function expDecay(a: number, b: number, decay: number, delta: number) {
 }
 
 export function setZoomed(scene: Game, zoomed: boolean) {
-  console.log('setZoomed', zoomed);
-
+  // console.log('setZoomed', zoomed);
   const size = zoomed ? zoomedSize : fullSize;
 
   Config.zoomed = zoomed;

@@ -15,10 +15,12 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
   initialized: boolean = false;
 
   constructor(scene: Scene, type: PropType, player: Player) {
-    const { x, y, image } = PropData[type];
+    const { x, y, image, skipLighting } = PropData[type];
     super(scene, x, y, image || '');
 
     if (!image) this.setAlpha(0);
+    this.setScale(0.35).setDepth(Layer.Items);
+    if (!skipLighting) this.setPipeline('Light2D');
 
     this.propType = type;
     this.player = player;
@@ -36,8 +38,6 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
-
-    this.setScale(0.35).setDepth(Layer.Items).setPipeline('Light2D');
 
     this.initialized = true;
   }
