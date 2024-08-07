@@ -216,6 +216,22 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
   ],
   [PropType.LabBook]: [
     {
+      messages: [
+        'With the alchemy set fixed, I should be able to recreate the experiment.',
+        'I will need to find three ingredients according to this.',
+        'I need to find a red herb, a green herb, and a blue herb.',
+      ],
+      conditions: {
+        journalEntry: JournalEntry.AlchemySetFixed,
+      },
+      onCompleted: (player) => {
+        const scene = player.scene;
+        scene.interactiveObjects.add(new Item(scene, ItemType.HerbRed, player));
+        scene.interactiveObjects.add(new Item(scene, ItemType.HerbGreen, player));
+        scene.interactiveObjects.add(new Item(scene, ItemType.HerbBlue, player));
+      },
+    },
+    {
       messages: ['Maybe I can find more information in the lab.'],
       conditions: {
         activeQuest: QuestType.ExploreLab,
@@ -235,6 +251,94 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
   ],
   [PropType.AlchemySet]: [
     {
+      messages: ['There’s nothing more that I can do here.'],
+      conditions: {
+        hasItem: ItemType.Potion,
+      },
+    },
+    {
+      messages: [
+        'Now we have all of the ingredients.',
+        'Now I should be able to recreate the experiment.',
+        'According to the book...',
+      ],
+      conditions: {
+        hasUsedItem: ItemType.HerbBlue,
+      },
+      onCompleted: (player, target) => {
+        const scene = player.scene;
+
+        player.inventory.removeItem(ItemType.HerbBlue);
+        player.active = false;
+
+        fadeOut(scene, 500, () => {
+          scene.time.delayedCall(700, () => {
+            target?.setTexture('alchemy_full');
+            target?.particles
+              ?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x660077], x: 30 })
+              .start();
+
+            fadeIn(scene, 1500, () => {
+              player.message.setDialog<Prop>(
+                {
+                  messages: [
+                    'I have created the potion mentioned in the old journal.',
+                    'I should bring it to the mysterious stranger to see if they know how to use it.',
+                  ],
+                  onCompleted: (player, target) => {
+                    player.inventory.addItem({ type: ItemType.Potion, used: false });
+                    target?.setTexture('alchemy_empty');
+
+                    player.active = true;
+                  },
+                },
+                target,
+                'player_portrait'
+              );
+            });
+          });
+        });
+      },
+    },
+    {
+      messages: ['The Blue Plumed Frond is last.'],
+      conditions: {
+        hasItem: ItemType.HerbBlue,
+        hasUsedItem: ItemType.HerbRed,
+      },
+      onCompleted: (player, target) => {
+        player.inventory.removeItem(ItemType.HerbBlue);
+        target?.setTexture('alchemy_blue');
+
+        target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x0000aa], x: -5 }).start();
+      },
+    },
+    {
+      messages: ['The Crimson Starbloom comes next.'],
+      conditions: {
+        hasItem: ItemType.HerbRed,
+        hasUsedItem: ItemType.HerbGreen,
+      },
+      onCompleted: (player, target) => {
+        player.inventory.removeItem(ItemType.HerbRed);
+        target?.setTexture('alchemy_red');
+
+        target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0xaa0000], x: -20 }).start();
+      },
+    },
+    {
+      messages: ['The Green Writhewood goes in first.'],
+      conditions: {
+        hasItem: ItemType.HerbGreen,
+      },
+      onCompleted: (player, target) => {
+        player.inventory.removeItem(ItemType.HerbGreen);
+        target?.setTexture('alchemy_green');
+
+        target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x00aa00], x: -35 }).start();
+      },
+    },
+    {
       messages: ['Maybe the book has more information about using the alchemy set.'],
       conditions: {
         journalEntry: JournalEntry.AlchemySetFixed,
@@ -245,6 +349,9 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
         'This alchemy set looks like the one in the book.',
         'If I can figure out how the set connects together, I might be able to recreate the experiment.',
       ],
+      conditions: {
+        activeQuest: QuestType.ExploreLab,
+      },
       onCompleted: (player) => {
         const scene = player.scene;
 
@@ -253,10 +360,13 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
         scene.scene.launch('PipesDialog', { player });
       },
     },
+    {
+      messages: ['I shouldn’t touch this without knowing what it does.'],
+    },
   ],
 };
 
-export function getDialog<T>(dialogs: Dialog<T>[], player: Player): Dialog<T> | undefined {
+export function getDialog<T>(dialogs: Dialog<T>[], player: Player, target: T): Dialog<T> | undefined {
   for (const dialog of dialogs) {
     const { conditions } = dialog;
 

@@ -1,6 +1,7 @@
 import { GameObjects, Math as PhaserMath, Physics } from 'phaser';
 
 import { Config } from '../../config';
+import { Layer } from '../../data/layers';
 import { LazyInitialize } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { shouldInitialize } from '../../utils/util';
@@ -40,7 +41,7 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
 
-    this.setOrigin(0);
+    this.setOrigin(0).setDepth(Layer.Debug);
 
     if (!Config.debug) this.setVisible(false);
     this.setSize(this.width, this.height * 1.5);
@@ -48,7 +49,7 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
     if (Config.debug) {
       this.setInteractive({ draggable: true });
 
-      const graphics = this.scene.add.graphics();
+      const graphics = this.scene.add.graphics().setDepth(Layer.Debug);
       this.graphics = graphics;
 
       graphics.lineStyle(2, 0x00ff00, 1);

@@ -47,9 +47,9 @@ export const defaultSave: SaveData = {
 
 export const debugSave: SaveData = {
   player: {
-    x: playerStart.x - 200,
+    x: -770,
     y: playerStart.y,
-    flip: false,
+    flip: true,
   },
   journal: [
     JournalEntry.FixTheClock,

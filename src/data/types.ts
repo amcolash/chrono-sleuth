@@ -67,6 +67,10 @@ export enum ItemType {
   Wrench,
   Gear1,
   Key,
+  HerbRed,
+  HerbGreen,
+  HerbBlue,
+  Potion,
 }
 
 export enum QuestType {

@@ -36,15 +36,13 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
       return;
     }
 
-    const { x, y } = ItemData[this.itemType];
-
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
 
     this.setScale(0.35).setDepth(Layer.Items).setPipeline('Light2D');
 
-    this.particles = this.scene.add.particles(x, y, 'warp', {
+    this.particles = this.scene.add.particles(this.x, this.y, 'warp', {
       scale: { start: 0, end: 0.9 },
       alpha: { start: 0.8, end: 0 },
       delay: 500,
@@ -87,7 +85,7 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
   }
 
   getButtonPrompt() {
-    return [`Pick Up ${ItemType[this.itemType]}`, 'Press [CONTINUE]'];
+    return [`Pick Up ${ItemData[this.itemType].name}`, 'Press [CONTINUE]'];
   }
 
   update() {

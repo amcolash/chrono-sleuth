@@ -1,4 +1,4 @@
-import { Physics, Scene } from 'phaser';
+import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { PropDialogs, getDialog } from '../../data/dialog';
@@ -13,6 +13,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
   propType: PropType;
   player: Player;
   initialized: boolean = false;
+  particles: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Scene, type: PropType, player: Player) {
     const { x, y, image, skipLighting } = PropData[type];
@@ -38,6 +39,11 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
+
+    const particles = PropData[this.propType].particles;
+    if (particles) {
+      this.particles = this.scene.add.particles(this.x, this.y, 'warp', particles).setDepth(Layer.Items);
+    }
 
     this.initialized = true;
   }
