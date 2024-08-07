@@ -49,23 +49,40 @@ export default defineConfig({
   },
   define: {
     __BUILD_TIME__: new Date(),
+    __TAURI__: process.env.TAURI_PLATFORM !== undefined,
   },
   plugins: [
-    VitePWA({
-      // TODO: Is this the right choice?
-      registerType: 'autoUpdate',
+    // Only include PWA plugin if not building for Tauri
+    process.env.TAURI_PLATFORM === undefined && [
+      // Inject SW registration in main.ts - only when building for web
+      {
+        name: 'injectServiceWorker',
+        transform(code, id) {
+          if (id.endsWith('src/main.ts')) {
+            return `import { registerSW } from "virtual:pwa-register";
+            registerSW({ immediate: true });
 
-      workbox: {
-        maximumFileSizeToCacheInBytes: 10 * 1000 * 1000, // 10mb
-        globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,webp,svg,gif}'],
+            ${code}`;
+          }
+          return code;
+        },
       },
-      manifest,
+      VitePWA({
+        // TODO: Is this the right choice?
+        registerType: 'autoUpdate',
 
-      devOptions: {
-        // Enable to have service worker/manifest in dev mode
-        // enabled: true,
-      },
-    }),
+        workbox: {
+          maximumFileSizeToCacheInBytes: 10 * 1000 * 1000, // 10mb
+          globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,webp,svg,gif}'],
+        },
+        manifest,
+
+        devOptions: {
+          // Enable to have service worker/manifest in dev mode
+          // enabled: true,
+        },
+      }),
+    ],
     ViteImageOptimizer({
       png: {
         quality: 50,

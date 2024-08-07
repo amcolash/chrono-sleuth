@@ -6,16 +6,21 @@
   "license": "MIT",
   "scripts": {
     "start": "vite",
+    "start:tauri": "tauri dev",
     "build": "vite build",
+    "build:tauri": "tauri build",
     "preview": "vite preview",
-    "lint": "tsc --noEmit -p ."
+    "lint": "tsc --noEmit -p .",
+    "tauri": "tauri"
   },
   "dependencies": {
+    "@tauri-apps/api": "^1.6.0",
     "deep-equal": "^2.2.3",
     "generate-maze": "^1.1.0",
     "phaser": "^3.80.1"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^1.6.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^20.14.11",
