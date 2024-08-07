@@ -19,8 +19,8 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     const { x, y, image, skipLighting } = PropData[type];
     super(scene, x, y, image || '');
 
-    if (!image) this.setAlpha(0);
     this.setScale(0.35).setDepth(Layer.Items);
+    if (!image) this.setAlpha(0).setScale(2);
     if (!skipLighting) this.setPipeline('Light2D');
 
     this.propType = type;

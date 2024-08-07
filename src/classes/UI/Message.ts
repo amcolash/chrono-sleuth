@@ -16,6 +16,7 @@ const padding = 20;
 const boxHeight = 170;
 const portraitOffset = 150;
 const nameOffset = 40;
+const maxLines = 5;
 
 const timeout = 350;
 
@@ -44,7 +45,7 @@ export class Message extends GameObjects.Container {
 
     // Pull these values into constructor, so they are always up to date
     const { width, height } = Config;
-    this.textWidth = width - 130 - padding * 4;
+    this.textWidth = width - 135 - padding * 4;
     this.textHeight = boxHeight - padding * 2;
 
     this.setScrollFactor(0);
@@ -75,7 +76,7 @@ export class Message extends GameObjects.Container {
     this.text.width = this.textWidth;
     this.text.height = this.textHeight;
 
-    this.text.setOrigin(0).setMaxLines(3);
+    this.text.setOrigin(0).setMaxLines(maxLines);
 
     this.portrait = new GameObjects.Image(this.scene, padding, padding, '').setOrigin(0).setScale(1.5);
 
@@ -144,7 +145,7 @@ export class Message extends GameObjects.Container {
 
     if (message) {
       this.text.setText(message);
-      if (this.text.getWrappedText().length > 3) console.error('Message too long!', message);
+      if (this.text.getWrappedText().length > maxLines) console.error('Message too long!', message);
     }
 
     this.updateOptions();

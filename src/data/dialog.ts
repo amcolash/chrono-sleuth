@@ -239,7 +239,7 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
     },
     {
       messages: [
-        'This book contains notes about an ancient alchemy experiement.',
+        'This lab journal contains notes about an ancient alchemy experiement.',
         'According to the notes, the experiment was a failure, and the alchemist disappeared.',
         'It does say that there might have been a problem with one of the ingredients.',
         'Maybe I can find more information in the lab.',
@@ -362,6 +362,30 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
     },
     {
       messages: ['I shouldn’t touch this without knowing what it does.'],
+    },
+  ],
+  [PropType.LabBookshelf1]: [
+    {
+      messages: [
+        '[Secrets of the Silver Transmutation]\n"Silver, the mirror of the soul, can be yielded from common materials. Begin with a lead base, cleanse it with the tears of a willow, and chant thrice under a new moon. Such processes, though fraught with danger, promise immense reward. Meticulous preparation of the material is crucial."',
+        '"Among these pages lie safeguards against volatile spirits and the precise lunar phases essential for success. Here are protective circles and counter-spells to be used should spirits prove malevolent. This knowledge has been passed down and refined for safety."',
+      ],
+    },
+  ],
+  [PropType.LabBookshelf2]: [
+    {
+      messages: [
+        '[Whispering Woods: A Compendium]\n"The sentient trees of Eldergrove are not myths; their trunks groan with ancient wisdom. To engage them, perform the Ritual of Leaves, using moonlit water and rare herbs, along with whispered incantations passed down by forest guardians."',
+        '"Notes on the rare Blue Moonflower, whose petals glow ghostly and unlock forest languages, are also included. Its bloom is brief, and harvesting must be timed at midnight to retain its properties. The chapter concludes with a discussion on plant symbiosis with Eldertrees."',
+      ],
+    },
+  ],
+  [PropType.LabBookshelf3]: [
+    {
+      messages: [
+        '[The Essence of Fire: Ignite and Control]\n"Mastering fire requires strength of will and profound respect for its power. Here, summoning circles and incantations to call forth fire spirits are detailed. Each summoning demands a tribute of phoenix ash. The endeavor is perilous, as spirits may lash out if provoked."',
+        '"The tome also discusses methods to quell flames should they rise against the summoner. Included are the chant of suppression and a dousing mixture from elemental waters and frost-bitten herbs. These countermeasures are vital for maintaining control over summoned entities."',
+      ],
     },
   ],
 };

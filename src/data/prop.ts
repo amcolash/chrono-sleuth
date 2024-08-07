@@ -7,6 +7,7 @@ interface Data {
   y: number;
   image?: string;
   portrait?: string;
+  prompt?: string;
   skipLighting?: boolean;
   particles?: Types.GameObjects.Particles.ParticleEmitterConfig;
 }
@@ -35,5 +36,17 @@ export const PropData: Record<PropType, Data> = {
       emitting: false,
       stopAfter: 60,
     },
+  },
+  [PropType.LabBookshelf1]: {
+    x: -1015,
+    y: 1700,
+  },
+  [PropType.LabBookshelf2]: {
+    x: -290,
+    y: 1700,
+  },
+  [PropType.LabBookshelf3]: {
+    x: -115,
+    y: 1700,
   },
 };

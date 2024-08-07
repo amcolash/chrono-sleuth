@@ -114,4 +114,7 @@ export enum PropType {
   LabHatch,
   LabBook,
   AlchemySet,
+  LabBookshelf1,
+  LabBookshelf2,
+  LabBookshelf3,
 }
