@@ -1,3 +1,4 @@
+import { exit } from '@tauri-apps/api/process';
 import { Scene } from 'phaser';
 
 import { Button } from '../classes/UI/Button';
@@ -38,33 +39,71 @@ export class Paused extends Scene {
         .setOrigin(1, 0);
     }
 
-    const tall = !Config.zoomed;
-    const spacing = tall ? 100 : 88;
-    const start = height / 2 - (tall ? 100 : 70);
+    const large = !Config.zoomed;
+    const spacing = large ? 100 : 80;
+    const fontSize = large ? 48 : 36;
+    const start = large ? 220 : 180;
 
     const buttonGroup = new ButtonGroup(this);
 
-    buttonGroup.addButton(new Button(this, width / 2, start, 'Resume', () => this.resume()));
+    buttonGroup.addButton(new Button(this, width / 2, start, 'Resume', () => this.resume(), { fontSize }));
 
     buttonGroup.addButton(
-      new Button(this, width / 2, start + spacing, 'Save', () => {
-        this.resume();
-        save(this.parent);
-      })
+      new Button(
+        this,
+        width / 2,
+        start + spacing,
+        'Save',
+        () => {
+          this.resume();
+          save(this.parent);
+        },
+        { fontSize }
+      )
     );
 
     buttonGroup.addButton(
-      new Button(this, width / 2, start + spacing * 2, 'Load', () => {
-        this.resume();
-        this.parent.scene.restart();
-      })
+      new Button(
+        this,
+        width / 2,
+        start + spacing * 2,
+        'Load',
+        () => {
+          this.resume();
+          this.parent.scene.restart();
+        },
+        { fontSize }
+      )
     );
 
     buttonGroup.addButton(
-      new Button(this, width / 2, start + spacing * 3, 'Toggle Gamepad', () => {
-        this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
-      })
+      new Button(
+        this,
+        width / 2,
+        start + spacing * 3,
+        'Toggle Gamepad',
+        () => {
+          this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
+        },
+        { fontSize }
+      )
     );
+
+    __TAURI__ &&
+      buttonGroup.addButton(
+        new Button(
+          this,
+          width / 2,
+          start + spacing * 4,
+          'Exit',
+          () => {
+            exit(0)
+              .then(() => console.log('Exited'))
+              .catch((e) => console.error(e));
+          },
+          { fontSize }
+        )
+      );
 
     // Keyboard interactions
     this.input.keyboard?.on('keydown-ESC', () => this.resume());

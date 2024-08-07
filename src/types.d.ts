@@ -2,6 +2,7 @@
 /// <reference types="vite-plugin-pwa/client" />
 
 declare const __BUILD_TIME__: string;
+declare const __TAURI__: boolean;
 
 // generate-maze types
 declare module 'generate-maze' {
