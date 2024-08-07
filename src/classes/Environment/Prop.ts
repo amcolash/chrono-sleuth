@@ -16,12 +16,17 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
   particles: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Scene, type: PropType, player: Player) {
-    const { x, y, image, skipLighting } = PropData[type];
+    const { x, y, angle, scale, image, skipLighting } = PropData[type];
     super(scene, x, y, image || '');
 
     this.setScale(0.35).setDepth(Layer.Items);
     if (!image) this.setAlpha(0).setScale(2);
+
+    if (angle) this.setAngle(angle);
+    if (scale) this.setScale(scale);
     if (!skipLighting) this.setPipeline('Light2D');
+
+    if (type === PropType.Picture) this.setOrigin(0);
 
     this.propType = type;
     this.player = player;

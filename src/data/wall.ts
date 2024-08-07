@@ -38,6 +38,8 @@ export const WallData: Data[] = [
   { x: -2075, y: 575 },
 
   // Mansion Inside
+  { x: -1930, y: -480 },
+  { x: -930, y: -480 },
 
   // Alchemy Lab
   { x: -2075, y: 1630 },

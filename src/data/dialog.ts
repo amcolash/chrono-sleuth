@@ -388,6 +388,18 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
       ],
     },
   ],
+  [PropType.Picture]: [
+    {
+      messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture', '[CREAK]'],
+      onCompleted: (_player, prop) => {
+        prop?.scene.tweens.add({
+          targets: prop,
+          angle: 97,
+          duration: 1500,
+        });
+      },
+    },
+  ],
 };
 
 export function getDialog<T>(dialogs: Dialog<T>[], player: Player, target: T): Dialog<T> | undefined {

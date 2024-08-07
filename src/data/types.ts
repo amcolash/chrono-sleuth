@@ -117,4 +117,5 @@ export enum PropType {
   LabBookshelf1,
   LabBookshelf2,
   LabBookshelf3,
+  Picture,
 }

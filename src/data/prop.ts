@@ -5,6 +5,8 @@ import { PropType } from './types';
 interface Data {
   x: number;
   y: number;
+  scale?: number;
+  angle?: number;
   image?: string;
   portrait?: string;
   prompt?: string;
@@ -48,5 +50,12 @@ export const PropData: Record<PropType, Data> = {
   [PropType.LabBookshelf3]: {
     x: -115,
     y: 1700,
+  },
+  [PropType.Picture]: {
+    x: -1233,
+    y: -580,
+    scale: 1.2,
+    angle: 5,
+    image: 'picture',
   },
 };
