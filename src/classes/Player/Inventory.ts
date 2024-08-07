@@ -18,6 +18,7 @@ export class Inventory extends GameObjects.Container {
   inventory: InventoryData[] = [];
   text: GameObjects.Text;
   rect: GameObjects.Rectangle;
+  initialized: boolean = false;
 
   constructor(scene: Scene) {
     super(scene, 0, 0);
@@ -25,6 +26,8 @@ export class Inventory extends GameObjects.Container {
   }
 
   createUI() {
+    if (this.initialized) return;
+
     this.scene.add.existing(this);
 
     this.rect = this.scene.add
@@ -36,10 +39,12 @@ export class Inventory extends GameObjects.Container {
 
     this.text = this.scene.add.text(10, 4, 'Inventory', { ...fontStyle, fontSize: 32 });
     this.add(this.text);
+
+    this.initialized = true;
   }
 
   addItem(item: InventoryData, silent?: boolean) {
-    if (!this.text) this.createUI();
+    if (!this.initialized) this.createUI();
 
     this.inventory.push(item);
 
@@ -58,9 +63,14 @@ export class Inventory extends GameObjects.Container {
   }
 
   removeItem(item: ItemType) {
+    if (!this.initialized) this.createUI();
+
     const found = this.inventory.find((i) => i.type === item);
     if (found) {
       found.used = true;
+
+      const onUsed = ItemData[item]?.onUsed;
+      if (onUsed) onUsed(this.scene);
 
       this.getAll<GameObjects.Image>()
         .find((i) => i.texture?.key === ItemData[item].image)
@@ -71,7 +81,7 @@ export class Inventory extends GameObjects.Container {
   }
 
   updateItems() {
-    if (!this.text) this.createUI();
+    if (!this.initialized) this.createUI();
 
     let index = 0;
     this.getAll<GameObjects.GameObject>().forEach((item) => {

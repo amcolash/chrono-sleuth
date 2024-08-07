@@ -198,7 +198,7 @@ export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
 export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
   [PropType.LabHatch]: [
     {
-      messages: ['Let me see if I can open this hatch.'],
+      messages: ['Let me see if I can open this hatch.', '[CREAKING NOISE]', 'Alright, let’s see what is down there!'],
       conditions: {
         hasItem: ItemType.Key,
       },

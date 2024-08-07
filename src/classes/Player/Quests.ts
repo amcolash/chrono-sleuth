@@ -16,11 +16,15 @@ export class Quests extends GameObjects.Container {
   quests: Quest[] = [];
   questRectangle: GameObjects.Rectangle;
 
+  initialized: boolean = false;
+
   constructor(scene: Scene) {
     super(scene, Config.width - size - 20, 120);
   }
 
   createUI() {
+    if (this.initialized) return;
+
     this.scene.add.existing(this);
 
     this.setScrollFactor(0).setDepth(Layer.Ui).setVisible(false);
@@ -34,11 +38,13 @@ export class Quests extends GameObjects.Container {
 
     const text = this.scene.add.text(10, 4, 'Quests', { ...fontStyle, fontSize: 32 });
     this.add(text);
+
+    this.initialized = true;
   }
 
   addQuest(quest: Quest, silent?: boolean) {
+    if (!this.initialized) this.createUI();
     if (this.quests.find((q) => q.id === quest.id)) return;
-    if (!this.questRectangle) this.createUI();
 
     this.quests.push(quest);
     this.add(this.scene.add.text(0, 0, QuestData[quest.id].description, { ...fontStyle, fontSize: 20 }));
@@ -52,6 +58,8 @@ export class Quests extends GameObjects.Container {
   }
 
   updateExistingQuest(quest: QuestType, completed: boolean) {
+    if (!this.initialized) this.createUI();
+
     const q = this.quests.find((q) => q.id === quest);
     if (q) {
       if (!q.completed && completed) new Notification(this.scene, `Quest completed: ${QuestData[q.id].description}`);
@@ -65,7 +73,7 @@ export class Quests extends GameObjects.Container {
   }
 
   updateQuests() {
-    if (!this.questRectangle) this.createUI();
+    if (!this.initialized) this.createUI();
 
     const activeQuests = this.quests.filter((q) => !q.completed);
 

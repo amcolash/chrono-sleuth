@@ -66,5 +66,6 @@ export function fadeOut(scene: Scene, duration: number, callback?: () => void) {
 }
 
 export function shouldInitialize(obj: Types.Math.Vector2Like, player: Player, distance?: number): boolean {
+  if (!player.inventory.initialized || !player.quests.initialized || !player.journal.initialized) return false;
   return PhaserMath.Distance.BetweenPointsSquared(obj, player) < (distance || 1000) ** 2;
 }

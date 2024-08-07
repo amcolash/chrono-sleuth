@@ -109,16 +109,12 @@ export class Game extends Scene {
 
     const endTime = performance.now();
     const duration = endTime - startTime;
-    console.log(`Game.create() took ${duration.toFixed(1)}ms to initialize`);
+    const message = `Game.create() took ${duration.toFixed(1)}ms to initialize`;
 
     if (import.meta.env.DEV) {
-      let message;
-      if (Config.debug && duration > 300)
-        message = `WARNING: Game.create() [debug] took ${duration.toFixed(1)}ms to initialize`;
-      if (!Config.debug && duration > 150)
-        message = `WARNING: Game.create() took ${duration.toFixed(1)}ms to initialize`;
-
-      if (message) new Notification(this, message, undefined, Colors.Warning);
+      if (Config.debug && duration > 300) new Notification(this, message, undefined, Colors.Warning);
+      else if (!Config.debug && duration > 150) new Notification(this, message, undefined, Colors.Warning);
+      else new Notification(this, message);
     }
   }
 

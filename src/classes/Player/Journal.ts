@@ -14,12 +14,16 @@ export class Journal extends GameObjects.Image {
   journal: JournalEntry[] = [];
   unread: GameObjects.Ellipse;
 
+  initialized: boolean = false;
+
   constructor(scene: Scene, player: Player) {
     super(scene, Config.width - 50, Config.height - 55, 'journal');
     this.player = player;
   }
 
   createUI() {
+    if (this.initialized) return;
+
     this.setScrollFactor(0)
       .setDepth(Layer.Ui)
       .setScale(0.5)
@@ -36,10 +40,12 @@ export class Journal extends GameObjects.Image {
       .setScrollFactor(0)
       .setDepth(Layer.Ui2)
       .setVisible(false);
+
+    this.initialized = true;
   }
 
   addEntry(entry: JournalEntry, silent?: boolean) {
-    if (!this.unread) this.createUI();
+    if (!this.initialized) this.createUI();
 
     if (this.journal.includes(entry)) return;
 
@@ -63,6 +69,7 @@ export class Journal extends GameObjects.Image {
   }
 
   openJournal() {
+    if (!this.initialized) this.createUI();
     if (this.journal.length === 0) return;
 
     this.unread.setVisible(false);
