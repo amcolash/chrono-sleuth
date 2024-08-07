@@ -103,6 +103,7 @@ export class Game extends Scene {
     const camera = this.cameras.main;
     camera.startFollow(this.player, true);
     camera.setFollowOffset(0, Config.cameraOffset);
+
     // load save, or start new game
     load(this);
 
@@ -177,31 +178,21 @@ export class Game extends Scene {
   }
 
   createUI() {
-    this.time.delayedCall(300, () => {
-      [
-        new IconButton(this, 31, 30, 'settings', () => {
-          this.scene.pause();
-          this.scene.launch('Paused', { game: this });
-        }),
-        new IconButton(this, 81, 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
-          const prev = isDaytime(this);
-          toggleLighting(this);
-          button.img.setTexture(prev ? 'sun' : 'moon');
-        }),
-        new IconButton(this, 131, 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
-          const savedata = getCurrentSaveState(this);
-          save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
+    this.time.delayedCall(50, () => {
+      new IconButton(this, 31, 30, 'settings', () => {
+        this.scene.pause();
+        this.scene.launch('Paused', { game: this });
+      });
+      new IconButton(this, 81, 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
+        const prev = isDaytime(this);
+        toggleLighting(this);
+        button.img.setTexture(prev ? 'sun' : 'moon');
+      });
+      new IconButton(this, 131, 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
+        const savedata = getCurrentSaveState(this);
+        save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
 
-          this.scene.restart();
-        }),
-      ].forEach((button) => {
-        button.setAlpha(0);
-        this.tweens.add({
-          targets: button,
-
-          alpha: 1,
-          duration: 250,
-        });
+        this.scene.restart();
       });
     });
 

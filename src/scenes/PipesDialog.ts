@@ -32,11 +32,15 @@ export class PipesDialog extends Scene {
         .rectangle(0, 0, Config.width * 0.95, Config.height * 0.95, 0x000000, 0.9)
         .setStrokeStyle(4, getColorNumber(Colors.Tan))
     );
-    this.container.add(new Button(this, Config.width * 0.44, Config.height * -0.4, 'X', () => this.close(false)));
+    this.container.add(
+      new Button(this, Config.width * 0.44, Config.height * -0.4, 'X', () => this.close(false), {
+        backgroundColor: `#${Colors.Warning}`,
+      })
+    );
 
     this.container.add(
       this.add
-        .text(0, Config.height * -0.4, 'Rotate the pipes to fix the alchemy equipment', { ...fontStyle, fontSize: 48 })
+        .text(0, Config.height * -0.4, 'Rotate the pipes to fix the equipment', { ...fontStyle, fontSize: 48 })
         .setOrigin(0.5)
     );
 

@@ -155,9 +155,12 @@ export function load(scene: Game) {
     scene.player.setY(savedata.player.y);
     scene.player.setFlipX(savedata.player.flip);
 
-    savedata.journal.forEach((entry) => scene.player.journal.addEntry(entry, true));
-    savedata.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
-    savedata.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
+    // Delay loading this data as it can make UI which slows down initial game load
+    scene.time.delayedCall(50, () => {
+      savedata.journal.forEach((entry) => scene.player.journal.addEntry(entry, true));
+      savedata.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
+      savedata.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
+    });
 
     scene.gamepad.setVisible(savedata.settings.gamepad);
 
@@ -167,7 +170,9 @@ export function load(scene: Game) {
         ? '[Debug]'
         : '[Storage]';
 
-    scene.time.delayedCall(150, () => new Notification(scene, `Game Loaded ${import.meta.env.DEV ? loadType : ''}`));
+    scene.time.delayedCall(200, () => {
+      new Notification(scene, `Game Loaded ${import.meta.env.DEV ? loadType : ''}`);
+    });
 
     // If new game, save now
     if (deepEqual(savedata, defaultSave)) {
