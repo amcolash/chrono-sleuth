@@ -2,16 +2,20 @@ import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
-import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry } from '../utils/interactionUtils';
+import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry, hasUsedItem } from '../utils/interactionUtils';
 import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from '../utils/riddles';
+import { fadeIn, fadeOut } from '../utils/util';
+import { PropData } from './prop';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
 export interface Dialog<T> {
   conditions?: {
     hasItem?: ItemType;
+    hasUsedItem?: ItemType;
     completedQuest?: QuestType;
     activeQuest?: QuestType;
     journalEntry?: JournalEntry;
+    custom?: (player: Player, target: T) => boolean;
     or?: boolean;
     invert?: boolean;
   };
@@ -259,12 +263,15 @@ export function getDialog<T>(dialogs: Dialog<T>[], player: Player): Dialog<T> | 
     const results = [];
 
     if (conditions?.hasItem !== undefined) results.push(hasItem(player.inventory.inventory, conditions.hasItem));
+    if (conditions?.hasUsedItem !== undefined)
+      results.push(hasUsedItem(player.inventory.inventory, conditions.hasUsedItem));
     if (conditions?.completedQuest !== undefined)
       results.push(hasCompletedQuest(player.quests.quests, conditions.completedQuest));
     if (conditions?.activeQuest !== undefined)
       results.push(hasActiveQuest(player.quests.quests, conditions.activeQuest));
     if (conditions?.journalEntry !== undefined)
       results.push(hasJournalEntry(player.journal.journal, conditions.journalEntry));
+    if (conditions?.custom) results.push(conditions.custom(player, target));
 
     if (conditions?.invert) {
       if (conditions?.or) {

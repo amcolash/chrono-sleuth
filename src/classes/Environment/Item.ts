@@ -68,7 +68,7 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
 
       // Optionally show dialog if there is any when item has been picked up
       const dialogs = ItemDialogs[this.itemType] || [];
-      const dialog = getDialog<Item>(dialogs, this.player);
+      const dialog = getDialog<Item>(dialogs, this.player, this);
       if (dialog) this.player.message.setDialog<Item>(dialog, this, 'player_portrait');
 
       return InteractResult.Item;
