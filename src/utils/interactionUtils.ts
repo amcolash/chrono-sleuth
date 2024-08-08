@@ -1,11 +1,21 @@
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
 import { Warp } from '../classes/Environment/Warp';
 import { InventoryData } from '../classes/Player/Inventory';
-import { ItemType, JournalEntry, NPCType, PropType, Quest, QuestType, WallType, WarpType } from '../data/types';
+import {
+  DataProps,
+  ItemType,
+  JournalEntry,
+  NPCType,
+  PropType,
+  Quest,
+  QuestType,
+  WallType,
+  WarpType,
+} from '../data/types';
 import { Game } from '../scenes/Game';
 
 export function hasItem(inventory: InventoryData[], item: ItemType): boolean {
@@ -68,4 +78,15 @@ export function getProp(scene: Scene, prop: PropType): Prop | undefined {
 export function getClockRewind(scene: Game): number {
   const gameScene = scene.scene.get('Game') as Game;
   return gameScene.clock?.rewindCount || 0;
+}
+
+export function initializeObject(obj: Physics.Arcade.Image, config: DataProps) {
+  const { scale, alpha, angle, depth, skipLighting, origin } = config;
+
+  if (scale) obj.setScale(scale);
+  if (alpha) obj.setAlpha(alpha);
+  if (angle) obj.setAngle(angle);
+  if (depth) obj.setDepth(depth);
+  if (!skipLighting) obj.setPipeline('Light2D');
+  if (origin) obj.setOrigin(origin.x, origin.y);
 }

@@ -1,5 +1,5 @@
 export enum Layer {
-  Backgrounds,
+  Backgrounds = -1, // Backgrounds are behind the default layer
   Warpers,
   Npcs,
   Items,

@@ -34,6 +34,20 @@ export interface LazyInitialize {
   lazyInit(forceInit?: boolean): void;
 }
 
+export type DataProps = {
+  x: number;
+  y: number;
+  image?: string;
+
+  scale?: number;
+  alpha?: number;
+  angle?: number;
+  depth?: number;
+  skipLighting?: boolean;
+  particles?: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig;
+  origin?: { x: number; y: number };
+};
+
 export enum WarpType {
   Underground,
   Town,

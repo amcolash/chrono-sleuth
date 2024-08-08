@@ -7,7 +7,7 @@ import { QuestData } from '../../data/quest';
 import { InteractResult, Interactive, JournalEntry, LazyInitialize, WarpType } from '../../data/types';
 import { WarpData, WarpVisual } from '../../data/warp';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { hasJournalEntry } from '../../utils/interactionUtils';
+import { hasJournalEntry, initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
@@ -38,28 +38,27 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   initialized: boolean = false;
 
   constructor(scene: Scene, warpType: WarpType, player: Player) {
-    const { x, y, visual, range, skipLighting } = WarpData[warpType];
+    const { x, y, visual, range } = WarpData[warpType];
     const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
 
     super(scene, x, y, texture);
     this.warpType = warpType;
     this.player = player;
-    this.setScale(0.6).setDepth(Layer.Warpers);
     this.range = range || defaultRange;
+
+    this.setScale(0.6).setDepth(Layer.Warpers);
 
     if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
       this.setScale(0.6, 1);
       this.setPosition(x, y - warpYOffset);
     }
 
-    if (!skipLighting) {
-      this.setPipeline('Light2D');
-    }
-
     if (!Config.debug) {
       if (visual === WarpVisual.WarpHidden || visual === WarpVisual.InvisibleHidden) this.setVisible(false);
       if (visual === WarpVisual.Invisible || visual === WarpVisual.InvisibleHidden) this.setAlpha(0);
     }
+
+    initializeObject(this, WarpData[warpType]);
 
     // Only add warps which need to be in the scene when loading a save
     if (forcedInitializations.includes(warpType)) scene.add.existing(this);

@@ -1,18 +1,8 @@
-import { Types } from 'phaser';
+import { DataProps, PropType } from './types';
 
-import { PropType } from './types';
-
-interface Data {
-  x: number;
-  y: number;
-  scale?: number;
-  angle?: number;
-  image?: string;
+type Data = DataProps & {
   portrait?: string;
-  prompt?: string;
-  skipLighting?: boolean;
-  particles?: Types.GameObjects.Particles.ParticleEmitterConfig;
-}
+};
 
 export const PropData: Record<PropType, Data> = {
   [PropType.LabHatch]: {
@@ -61,6 +51,7 @@ export const PropData: Record<PropType, Data> = {
     scale: 1.2,
     angle: 5,
     image: 'picture',
+    origin: { x: 0, y: 0 },
   },
   [PropType.MansionHole]: {
     x: -1870,

@@ -1,8 +1,6 @@
-import { ItemType } from './types';
+import { DataProps, ItemType } from './types';
 
-type Data = {
-  x: number;
-  y: number;
+type Data = DataProps & {
   image: string;
   name: string;
 };

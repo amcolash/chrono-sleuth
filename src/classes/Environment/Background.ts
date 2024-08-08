@@ -4,6 +4,7 @@ import { Config } from '../../config';
 import { Data as BackgroundInfo } from '../../data/background';
 import { Layer } from '../../data/layers';
 import { LazyInitialize } from '../../data/types';
+import { initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 
@@ -19,7 +20,9 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
 
     this.info = info;
     this.player = player;
+
     this.setOrigin(0).setDepth(Layer.Backgrounds);
+    initializeObject(this, info);
 
     const img = scene.textures.get(image)?.getSourceImage();
     this.center = new PhaserMath.Vector2(x + (img.width * (scale || 1)) / 2, y + img.height * ((scale || 1) / 2));
@@ -34,9 +37,6 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
     if (Config.debug) {
       this.setInteractive({ draggable: true });
     }
-
-    if (!this.info.skipLighting) this.setPipeline('Light2D');
-    if (this.info.scale) this.setScale(this.info.scale);
 
     this.initialized = true;
   }

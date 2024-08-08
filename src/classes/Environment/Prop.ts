@@ -5,6 +5,7 @@ import { PropDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { PropData } from '../../data/prop';
 import { InteractResult, Interactive, JournalEntry, LazyInitialize, PropType } from '../../data/types';
+import { initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
@@ -16,23 +17,16 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
   particles: GameObjects.Particles.ParticleEmitter;
 
   constructor(scene: Scene, type: PropType, player: Player) {
-    const { x, y, angle, scale, image, skipLighting } = PropData[type];
+    const { x, y, image } = PropData[type];
     super(scene, x, y, image || '');
-
-    this.setScale(0.35).setDepth(Layer.Items);
-    if (!image) {
-      if (!Config.debug) this.setAlpha(0);
-      this.setScale(2);
-    }
-
-    if (angle) this.setAngle(angle);
-    if (scale) this.setScale(scale);
-    if (!skipLighting) this.setPipeline('Light2D');
-
-    if (type === PropType.MansionPicture) this.setOrigin(0);
 
     this.propType = type;
     this.player = player;
+
+    this.setScale(!image ? 2 : 0.35).setDepth(Layer.Items);
+    if (!image && !Config.debug) this.setAlpha(0);
+
+    initializeObject(this, PropData[type]);
   }
 
   lazyInit(forceInit?: boolean) {

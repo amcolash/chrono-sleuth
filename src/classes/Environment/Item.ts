@@ -5,6 +5,7 @@ import { ItemDialogs, getDialog } from '../../data/dialog';
 import { ItemData } from '../../data/item';
 import { Layer } from '../../data/layers';
 import { InteractResult, Interactive, ItemType, LazyInitialize } from '../../data/types';
+import { initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
@@ -25,6 +26,9 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
 
     this.itemType = type;
     this.player = player;
+
+    this.setScale(0.35).setDepth(Layer.Items);
+    initializeObject(this, ItemData[type]);
   }
 
   lazyInit(forceInit?: boolean) {
@@ -39,8 +43,6 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
-
-    this.setScale(0.35).setDepth(Layer.Items).setPipeline('Light2D');
 
     this.particles = this.scene.add.particles(this.x, this.y, 'warp', {
       scale: { start: 0, end: 0.9 },

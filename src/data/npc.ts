@@ -1,19 +1,13 @@
-import { Types } from 'phaser';
-
 import { NPC } from '../classes/Environment/NPC';
 import { updateSphinx } from './cutscene';
-import { NPCType } from './types';
+import { DataProps, NPCType } from './types';
 
-export type Data = {
-  x: number;
-  y: number;
-  scale: number;
-  img: string;
+export type Data = DataProps & {
+  image: string;
   portrait: string;
   name: string;
   onCreate?: (npc: NPC) => void;
   light?: number;
-  particles?: Types.GameObjects.Particles.ParticleEmitterConfig;
   initOnStart?: boolean;
 };
 
@@ -22,7 +16,7 @@ export const NPCData: Record<NPCType, Data> = {
     x: 550,
     y: 635,
     scale: 0.75,
-    img: 'inventor',
+    image: 'inventor',
     portrait: 'inventor_portrait',
     name: 'Johan the Inventor',
   },
@@ -30,7 +24,7 @@ export const NPCData: Record<NPCType, Data> = {
     x: 750,
     y: 865,
     scale: 1.35,
-    img: 'stranger',
+    image: 'stranger',
     portrait: 'stranger_portrait',
     name: 'Mysterious Stranger',
   },
@@ -38,7 +32,7 @@ export const NPCData: Record<NPCType, Data> = {
     x: 3520,
     y: 790,
     scale: 1,
-    img: 'sphinx',
+    image: 'sphinx',
     portrait: 'sphinx_portrait',
     name: 'Mystical Sphinx',
     onCreate: (npc) => updateSphinx(npc.scene, false),
@@ -49,7 +43,7 @@ export const NPCData: Record<NPCType, Data> = {
     x: 1065,
     y: -340,
     scale: 0.9,
-    img: 'mayor',
+    image: 'mayor',
     portrait: 'mayor_portrait',
     name: 'Mayor of Town',
   },
@@ -58,7 +52,7 @@ export const NPCData: Record<NPCType, Data> = {
     x: 880,
     y: -2090,
     scale: 0.5,
-    img: 'warp',
+    image: 'warp',
     portrait: 'clock_portrait',
     name: 'Clock Tower',
     particles: {

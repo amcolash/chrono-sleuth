@@ -1,10 +1,8 @@
-export interface Data {
-  x: number;
-  y: number;
+import { DataProps } from './types';
+
+export type Data = DataProps & {
   image: string;
-  scale?: number;
-  skipLighting?: boolean;
-}
+};
 
 export const BackgroundData: Data[] = [
   { x: 0, y: 0, image: 'town' },

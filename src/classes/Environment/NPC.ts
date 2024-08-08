@@ -5,6 +5,7 @@ import { NPCDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { Data, NPCData } from '../../data/npc';
 import { InteractResult, Interactive, JournalEntry, LazyInitialize, NPCType } from '../../data/types';
+import { initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { ClockHands } from '../Environment/ClockHands';
@@ -23,15 +24,16 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   initialized: boolean = false;
 
   constructor(scene: Scene, npcType: NPCType, player: Player) {
-    const { x, y, img, scale, initOnStart } = NPCData[npcType] as Data;
+    const { x, y, image, initOnStart } = NPCData[npcType] as Data;
 
-    super(scene, x, y, img);
-    this.setScale(scale).setDepth(Layer.Npcs).setPipeline('Light2D');
-
+    super(scene, x, y, image);
     this.npcType = npcType;
     this.player = player;
 
-    if (img === 'warp') this.setAlpha(0);
+    this.setDepth(Layer.Npcs);
+    if (image === 'warp') this.setAlpha(0);
+
+    initializeObject(this, NPCData[npcType]);
     if (initOnStart) this.lazyInit(true);
   }
 

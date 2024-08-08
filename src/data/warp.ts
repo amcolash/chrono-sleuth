@@ -1,6 +1,6 @@
 import { Player } from '../classes/Player/Player';
 import { Key } from '../classes/UI/InputManager';
-import { WarpType } from './types';
+import { DataProps, WarpType } from './types';
 
 export enum WarpVisual {
   Ladder,
@@ -12,15 +12,12 @@ export enum WarpVisual {
   InvisibleHidden,
 }
 
-type Data = {
-  x: number;
-  y: number;
+type Data = DataProps & {
   range?: number;
   key: Key;
   warpTo: WarpType;
   visual: WarpVisual;
   onWarp?: (player: Player) => void;
-  skipLighting?: boolean;
 };
 
 export const WarpData: Record<WarpType, Data> = {

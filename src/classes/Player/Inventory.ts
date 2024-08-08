@@ -69,9 +69,6 @@ export class Inventory extends GameObjects.Container {
     if (found) {
       found.used = true;
 
-      const onUsed = ItemData[item]?.onUsed;
-      if (onUsed) onUsed(this.scene);
-
       this.getAll<GameObjects.Image>()
         .find((i) => i.texture?.key === ItemData[item].image)
         ?.destroy();
