@@ -12,8 +12,10 @@ export enum InteractResult {
 
 export interface Interactive {
   interactionTimeout?: number;
-  getButtonPrompt?(): string | string[];
+  getButtonPrompt?(): string | string[] | undefined;
+  canInteract?(): boolean;
 
+  onCollided?(): void;
   onInteract(keys: Record<Key, boolean>): InteractResult;
 }
 
@@ -117,5 +119,7 @@ export enum PropType {
   LabBookshelf1,
   LabBookshelf2,
   LabBookshelf3,
-  Picture,
+  LabPotionShelf1,
+  MansionPicture,
+  MansionHole,
 }

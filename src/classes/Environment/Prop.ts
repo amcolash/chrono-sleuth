@@ -20,13 +20,16 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     super(scene, x, y, image || '');
 
     this.setScale(0.35).setDepth(Layer.Items);
-    if (!image) this.setAlpha(0).setScale(2);
+    if (!image) {
+      if (!Config.debug) this.setAlpha(0);
+      this.setScale(2);
+    }
 
     if (angle) this.setAngle(angle);
     if (scale) this.setScale(scale);
     if (!skipLighting) this.setPipeline('Light2D');
 
-    if (type === PropType.Picture) this.setOrigin(0);
+    if (type === PropType.MansionPicture) this.setOrigin(0);
 
     this.propType = type;
     this.player = player;
@@ -70,7 +73,10 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
   }
 
   getButtonPrompt() {
-    return [`Inspect ${PropType[this.propType]}`, 'Press [CONTINUE]'];
+    const dialogs = PropDialogs[this.propType] || [];
+    const dialog = getDialog<Prop>(dialogs, this.player, this);
+
+    return dialog ? [`Inspect ${PropType[this.propType]}`, 'Press [CONTINUE]'] : '';
   }
 
   update() {

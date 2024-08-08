@@ -30,6 +30,15 @@ export interface Dialog<T> {
 export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [
     {
+      messages: [
+        'There are rumors of an abandoned mansion west of the town.',
+        'Some say it is haunted and dark magic lurks within.',
+      ],
+      conditions: {
+        activeQuest: QuestType.InvestigateTownWest,
+      },
+    },
+    {
       messages: ['I see you found the first gear. You should talk to the mayor to learn more about the old clock.'],
       conditions: {
         hasItem: ItemType.Gear1,
@@ -62,6 +71,15 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
     },
   ],
   [NPCType.Stranger]: [
+    {
+      messages: [
+        'You heard of the mansion to the west? It was abandoned many years ago.',
+        'There is a rumor of an alchemy lab hidden somewhere nearby, but I have been searching for years and have found not even a single potion.',
+      ],
+      conditions: {
+        activeQuest: QuestType.InvestigateTownWest,
+      },
+    },
     {
       messages: ['Now that you have the first gear, I would talk to the inventor.'],
       conditions: {
@@ -195,10 +213,15 @@ export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
   ],
 };
 
-export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
+export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.LabHatch]: [
     {
-      messages: ['Let me see if I can open this hatch.', '[CREAKING NOISE]', 'Alright, let’s see what is down there!'],
+      messages: [
+        'Let me see if I can open this hatch.',
+        'The rusty key fits!',
+        '[CREAKING NOISE]',
+        'Alright, let’s see what is down there!',
+      ],
       conditions: {
         hasItem: ItemType.Key,
       },
@@ -215,6 +238,12 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
     },
   ],
   [PropType.LabBook]: [
+    {
+      messages: ['I should speak to the mysterious stranger about this lab and the potion I brewed.'],
+      conditions: {
+        hasItem: ItemType.Potion,
+      },
+    },
     {
       messages: [
         'With the alchemy set fixed, I should be able to recreate the experiment.',
@@ -287,8 +316,9 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
                   ],
                   onCompleted: (player, target) => {
                     player.inventory.addItem({ type: ItemType.Potion, used: false });
-                    target?.setTexture('alchemy_empty');
+                    player.quests.updateExistingQuest(QuestType.ExploreLab, true);
 
+                    target?.setTexture('alchemy_empty');
                     player.active = true;
                   },
                 },
@@ -339,14 +369,14 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
       },
     },
     {
-      messages: ['Maybe the book has more information about using the alchemy set.'],
+      messages: ['Maybe the journal has more information about using this alchemy set.'],
       conditions: {
         journalEntry: JournalEntry.AlchemySetFixed,
       },
     },
     {
       messages: [
-        'This alchemy set looks like the one in the book.',
+        'This alchemy set looks like the one in the journal.',
         'If I can figure out how the set connects together, I might be able to recreate the experiment.',
       ],
       conditions: {
@@ -370,6 +400,9 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
         '[Secrets of the Silver Transmutation]\n"Silver, the mirror of the soul, can be yielded from common materials. Begin with a lead base, cleanse it with the tears of a willow, and chant thrice under a new moon. Such processes, though fraught with danger, promise immense reward. Meticulous preparation of the material is crucial."',
         '"Among these pages lie safeguards against volatile spirits and the precise lunar phases essential for success. Here are protective circles and counter-spells to be used should spirits prove malevolent. This knowledge has been passed down and refined for safety."',
       ],
+      conditions: {
+        activeQuest: QuestType.ExploreLab,
+      },
     },
   ],
   [PropType.LabBookshelf2]: [
@@ -378,6 +411,9 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
         '[Whispering Woods: A Compendium]\n"The sentient trees of Eldergrove are not myths; their trunks groan with ancient wisdom. To engage them, perform the Ritual of Leaves, using moonlit water and rare herbs, along with whispered incantations passed down by forest guardians."',
         '"Notes on the rare Blue Moonflower, whose petals glow ghostly and unlock forest languages, are also included. Its bloom is brief, and harvesting must be timed at midnight to retain its properties. The chapter concludes with a discussion on plant symbiosis with Eldertrees."',
       ],
+      conditions: {
+        activeQuest: QuestType.ExploreLab,
+      },
     },
   ],
   [PropType.LabBookshelf3]: [
@@ -386,9 +422,22 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
         '[The Essence of Fire: Ignite and Control]\n"Mastering fire requires strength of will and profound respect for its power. Here, summoning circles and incantations to call forth fire spirits are detailed. Each summoning demands a tribute of phoenix ash. The endeavor is perilous, as spirits may lash out if provoked."',
         '"The tome also discusses methods to quell flames should they rise against the summoner. Included are the chant of suppression and a dousing mixture from elemental waters and frost-bitten herbs. These countermeasures are vital for maintaining control over summoned entities."',
       ],
+      conditions: {
+        activeQuest: QuestType.ExploreLab,
+      },
     },
   ],
-  [PropType.Picture]: [
+  [PropType.LabPotionShelf1]: [
+    {
+      messages: [
+        'Hm, this is an interesting collection. What’s this "Elixir of Luminescence"? Could light up some dark corners. And "Brew of Bravery"... might make me bold enough to face a dragon, or foolish enough to try. What about "Draught of the Depths"—sounds like it could show me treasures or drown me in visions. Better not risk it; these might just burn me to a crisp!',
+      ],
+      conditions: {
+        activeQuest: QuestType.ExploreLab,
+      },
+    },
+  ],
+  [PropType.MansionPicture]: [
     {
       messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture', '[CREAK]'],
       onCompleted: (_player, prop) => {
@@ -398,6 +447,17 @@ export const PropDialogs: { [key in ItemType]?: Dialog<Prop>[] } = {
           duration: 1500,
         });
       },
+      conditions: {
+        hasItem: ItemType.Potion,
+      },
+    },
+    {
+      messages: ['An abstract picture of blocks.'],
+    },
+  ],
+  [PropType.MansionHole]: [
+    {
+      messages: ['Literally a hole in the wall.'],
     },
   ],
 };

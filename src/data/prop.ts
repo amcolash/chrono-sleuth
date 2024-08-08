@@ -40,7 +40,7 @@ export const PropData: Record<PropType, Data> = {
     },
   },
   [PropType.LabBookshelf1]: {
-    x: -1015,
+    x: -1025,
     y: 1700,
   },
   [PropType.LabBookshelf2]: {
@@ -51,11 +51,19 @@ export const PropData: Record<PropType, Data> = {
     x: -115,
     y: 1700,
   },
-  [PropType.Picture]: {
+  [PropType.LabPotionShelf1]: {
+    x: -790,
+    y: 1700,
+  },
+  [PropType.MansionPicture]: {
     x: -1233,
     y: -580,
     scale: 1.2,
     angle: 5,
     image: 'picture',
+  },
+  [PropType.MansionHole]: {
+    x: -1870,
+    y: -490,
   },
 };

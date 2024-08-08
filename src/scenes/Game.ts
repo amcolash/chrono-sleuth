@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, Scene, Types } from 'phaser';
 
 import { DebugLight } from '../classes/Debug/DebugLight';
 import { DebugUI } from '../classes/Debug/DebugUI';
@@ -19,7 +19,7 @@ import { Config } from '../config';
 import { BackgroundData } from '../data/background';
 import { LightData } from '../data/lights';
 import { SlopeData } from '../data/slope';
-import { ItemType, NPCType, PropType, WarpType } from '../data/types';
+import { Interactive, ItemType, NPCType, PropType, WarpType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
 import { getCurrentSaveState, load, loadConfig, save } from '../utils/save';
@@ -124,11 +124,13 @@ export class Game extends Scene {
       this.player,
       this.player.setInteractiveObject,
       (object, _player) => {
-        if ((object as any).visible !== undefined) {
-          return (object as any).visible;
-        }
+        const o = object as any as Types.Physics.Arcade.ImageWithDynamicBody & Interactive;
+        let interactive = true;
 
-        return true;
+        if (o.canInteract) interactive = o.canInteract();
+        if (o.visible !== undefined) interactive = interactive && o.visible;
+
+        return interactive;
       },
       this.player
     );
