@@ -1,11 +1,12 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
+import { updateSphinx } from '../../data/cutscene';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
 import { JournalEntry, NPCType } from '../../data/types';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { getNPC, updateSphinx, updateWarpVisibility } from '../../utils/interactionUtils';
+import { getNPC, updateWarpVisibility } from '../../utils/interactionUtils';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
 

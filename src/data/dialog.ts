@@ -3,8 +3,8 @@ import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
 import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry, hasUsedItem } from '../utils/interactionUtils';
-import { getSphinxAnswer, getSphinxHint, getSphinxOptions, getSphinxRiddle } from '../utils/riddles';
-import { fadeIn, fadeOut } from '../utils/util';
+import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
+import { makePotion } from './cutscene';
 import { PropData } from './prop';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
@@ -118,26 +118,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       conditions: {
         activeQuest: QuestType.SphinxRiddle,
       },
-      onSelected: (option, player, npc) => {
-        const answer = getSphinxAnswer(player.scene);
-        if (option === answer) {
-          player.message.setDialog<NPC>(
-            {
-              messages: [`That is correct. Well done, you may pass.`],
-              onCompleted: (player) => {
-                player.quests.updateExistingQuest(QuestType.SphinxRiddle, true);
-                player.journal.addEntry(JournalEntry.SphinxRiddleSolved);
-              },
-            },
-            npc
-          );
-        } else if (option === 'I don’t know') {
-          player.message.setDialog<NPC>({ messages: ['Come back when you have an answer for me.'] }, npc);
-        } else {
-          // TODO: Add back talking points so we can hide dialog in a different system that is reset
-          player.message.setDialog<NPC>({ messages: ['That is not correct. Do not return.'] }, npc);
-        }
-      },
+      onSelected: handleSphinxAnswer,
     },
     {
       messages: [
@@ -294,41 +275,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       conditions: {
         hasUsedItem: ItemType.HerbBlue,
       },
-      onCompleted: (player, target) => {
-        const scene = player.scene;
-
-        player.inventory.removeItem(ItemType.HerbBlue);
-        player.active = false;
-
-        fadeOut(scene, 500, () => {
-          scene.time.delayedCall(700, () => {
-            target?.setTexture('alchemy_full');
-            target?.particles
-              ?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x660077], x: 30 })
-              .start();
-
-            fadeIn(scene, 1500, () => {
-              player.message.setDialog<Prop>(
-                {
-                  messages: [
-                    'I have created the potion mentioned in the old journal.',
-                    'I should bring it to the mysterious stranger to see if they know how to use it.',
-                  ],
-                  onCompleted: (player, target) => {
-                    player.inventory.addItem({ type: ItemType.Potion, used: false });
-                    player.quests.updateExistingQuest(QuestType.ExploreLab, true);
-
-                    target?.setTexture('alchemy_empty');
-                    player.active = true;
-                  },
-                },
-                target,
-                'player_portrait'
-              );
-            });
-          });
-        });
-      },
+      onCompleted: makePotion,
     },
     {
       messages: ['The Blue Plumed Frond is last.'],

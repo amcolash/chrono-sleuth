@@ -1,6 +1,8 @@
 import { Scene } from 'phaser';
 
-import { NPCType } from '../data/types';
+import { NPC } from '../classes/Environment/NPC';
+import { Player } from '../classes/Player/Player';
+import { JournalEntry, NPCType, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { getClockRewind } from './interactionUtils';
 
@@ -77,4 +79,25 @@ export function getSphinxAnswer(scene: Scene): string {
 export function getSphinxHint(scene: Scene, npcType: NPCType.Inventor | NPCType.Stranger): string[] {
   const index = getRiddleIndex(scene);
   return riddles[index].hints[npcType];
+}
+
+export function handleSphinxAnswer(option: string, player: Player, npc?: NPC) {
+  const answer = getSphinxAnswer(player.scene);
+  if (option === answer) {
+    player.message.setDialog<NPC>(
+      {
+        messages: [`That is correct. Well done, you may pass.`],
+        onCompleted: (player) => {
+          player.quests.updateExistingQuest(QuestType.SphinxRiddle, true);
+          player.journal.addEntry(JournalEntry.SphinxRiddleSolved);
+        },
+      },
+      npc
+    );
+  } else if (option === 'I don’t know') {
+    player.message.setDialog<NPC>({ messages: ['Come back when you have an answer for me.'] }, npc);
+  } else {
+    // TODO: Add back talking points so we can hide dialog in a different system that is reset
+    player.message.setDialog<NPC>({ messages: ['That is not correct. Do not return.'] }, npc);
+  }
 }

@@ -1,7 +1,7 @@
 import { Types } from 'phaser';
 
 import { NPC } from '../classes/Environment/NPC';
-import { updateSphinx } from '../utils/interactionUtils';
+import { updateSphinx } from './cutscene';
 import { NPCType } from './types';
 
 export type Data = {

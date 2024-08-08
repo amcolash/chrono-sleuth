@@ -1,59 +1,12 @@
-import { GameObjects, Physics, Scene } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
 import { Warp } from '../classes/Environment/Warp';
 import { InventoryData } from '../classes/Player/Inventory';
-import { NPCData } from '../data/npc';
 import { ItemType, JournalEntry, NPCType, PropType, Quest, QuestType, WallType, WarpType } from '../data/types';
-import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
-
-export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {
-  const sphinx = getNPC(scene, NPCType.Sphinx);
-  if (!sphinx) {
-    console.error('Sphinx not found');
-    return;
-  }
-
-  const wall = getWall(scene, WallType.Sphinx);
-  if (wall) {
-    if (complete) {
-      wall.setX(WallData.find((data) => data.id === WallType.Sphinx)?.x || 0);
-    } else {
-      wall.setX(wall.x - 150);
-    }
-    (wall.body as Physics.Arcade.Body)?.updateFromGameObject();
-  }
-
-  const { x, y } = NPCData[NPCType.Sphinx];
-  const newX = complete ? x + 200 : x;
-  const newY = complete ? y - 90 : y;
-
-  scene.tweens.add({
-    targets: sphinx,
-    alpha: 0,
-    duration: !complete || instant ? 0 : 300,
-    ease: 'Power1',
-    yoyo: true,
-    repeat: 0,
-    onYoyo: () => {
-      sphinx.setPosition(newX, newY);
-    },
-    onComplete: () => {
-      sphinx.alpha = 1;
-    },
-  });
-
-  scene.tweens.add({
-    targets: sphinx.light,
-    x: newX,
-    y: newY,
-    duration: !complete || instant ? 0 : 450,
-    ease: 'Power1',
-  });
-}
 
 export function hasItem(inventory: InventoryData[], item: ItemType): boolean {
   return inventory.find((i) => i.type === item) !== undefined;
