@@ -113,9 +113,11 @@ export class Message extends GameObjects.Container {
       return;
     }
 
+    const finalPortrait = portrait || (target instanceof NPC ? NPCData[(target as NPC).npcType].portrait : undefined);
+
     this.npcName.setVisible(false);
 
-    if (!target && !portrait) {
+    if (!finalPortrait) {
       this.portrait.setVisible(false);
       this.text
         .setPosition(padding, padding)
@@ -123,6 +125,7 @@ export class Message extends GameObjects.Container {
         .setFixedSize(padding + portraitOffset + this.textWidth, this.textHeight);
     } else {
       this.portrait.setVisible(true);
+      this.portrait.setTexture(finalPortrait);
 
       this.text
         .setPosition(padding + portraitOffset, padding + (target instanceof NPC ? nameOffset : 0))
@@ -132,8 +135,7 @@ export class Message extends GameObjects.Container {
       if (target instanceof NPC) {
         this.npcName.setVisible(true);
         this.npcName.setText(NPCData[target.npcType].name);
-        this.portrait.setTexture(NPCData[target.npcType].portrait);
-      } else if (portrait) this.portrait.setTexture(portrait);
+      }
     }
 
     this.showMessage();

@@ -92,8 +92,6 @@ export class Pipes extends Scene {
       .container()
       .setPosition(Config.width / 2 - (width * this.pipeSize) / 2 + this.pipeSize / 2, Config.height / 4);
 
-    const delay = 10;
-
     // 1st pass to initialize pipe data
     for (let y = 0; y < height; y++) {
       if (!this.pipes[y]) this.pipes[y] = [];
@@ -128,6 +126,7 @@ export class Pipes extends Scene {
       }
     }
 
+    const delay = 5;
     const connected = getConnectedPipes(this.pipes, 0, 0);
 
     // 2nd pass to create images with proper coloring (based on connected pipes)
