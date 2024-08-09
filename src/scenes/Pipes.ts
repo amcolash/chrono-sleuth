@@ -30,6 +30,8 @@ export class Pipes extends Scene {
   pipeSize: number;
   nextUpdate: number = 0;
 
+  initialized: boolean = false;
+
   constructor() {
     super('Pipes');
   }
@@ -81,7 +83,6 @@ export class Pipes extends Scene {
     this.position = new PhaserMath.Vector2(0, 0);
 
     this.createPipes();
-    this.updatePipes();
   }
 
   createPipes() {
@@ -91,6 +92,9 @@ export class Pipes extends Scene {
       .container()
       .setPosition(Config.width / 2 - (width * this.pipeSize) / 2 + this.pipeSize / 2, Config.height / 4);
 
+    const delay = 10;
+
+    // 1st pass to initialize pipe data
     for (let y = 0; y < height; y++) {
       if (!this.pipes[y]) this.pipes[y] = [];
 
@@ -121,17 +125,56 @@ export class Pipes extends Scene {
 
         if (start) this.pipes[y][x].rotation = Rotation.Up;
         if (end) this.pipes[y][x].rotation = Rotation.Down;
+      }
+    }
 
-        const key = `pipe_${type}`;
-        const iamge = this.add.image(x * this.pipeSize, y * this.pipeSize, key).on('pointerdown', () => {
-          this.cursor.setVisible(false);
-          this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
-          this.updatePipes();
+    const connected = getConnectedPipes(this.pipes, 0, 0);
+
+    // 2nd pass to create images with proper coloring (based on connected pipes)
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const index = x + y * level[0].length;
+        const pipe = this.pipes[y][x];
+
+        this.time.delayedCall(50 + index * delay, () => {
+          const key = `pipe_${pipe.type}`;
+          const image = this.add.image(x * this.pipeSize, y * this.pipeSize, key).on('pointerdown', () => {
+            if (this.initialized) {
+              this.cursor.setVisible(false);
+              this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
+              this.updatePipes();
+            }
+          });
+
+          const end = x === width - 1 && y === height - 1;
+
+          image.setAlpha(0).setScale(0.5).setAngle(this.pipes[y][x].rotation);
+          this.tweens.add({
+            targets: image,
+            alpha: 1,
+            scale: 1,
+            duration: 300,
+            onComplete: end
+              ? () => {
+                  this.initialized = true;
+                  this.updatePipes();
+                }
+              : undefined,
+          });
+
+          if (pipe.interactive) image.setInteractive();
+          else image.setTint(0x666666);
+
+          if (connected.includes(pipe)) {
+            if (pipe.interactive) {
+              image.setTint(0x335599);
+            } else {
+              image.setTint(0x002255);
+            }
+          }
+
+          this.images.add(image);
         });
-
-        if (interactive) iamge.setInteractive();
-
-        this.images.add(iamge);
       }
     }
   }
@@ -170,7 +213,7 @@ export class Pipes extends Scene {
   }
 
   update(time: number, _delta: number): void {
-    if (time < this.nextUpdate) return;
+    if (this.initialized && time < this.nextUpdate) return;
     let handled = true;
 
     const keys = this.keys.keys;
