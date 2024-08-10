@@ -157,6 +157,10 @@ export function load(scene: Game) {
 
     // Delay loading this data as it can make UI which slows down initial game load
     scene.time.delayedCall(50, () => {
+      scene.player.journal.createUI();
+      scene.player.inventory.createUI();
+      scene.player.quests.createUI();
+
       savedata.journal.forEach((entry) => scene.player.journal.addEntry(entry, true));
       savedata.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
       savedata.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
