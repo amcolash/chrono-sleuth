@@ -3,13 +3,14 @@ import { Game, Types } from 'phaser';
 import { Config } from './config';
 import { Boot } from './scenes/Boot';
 import { Game as MainGame } from './scenes/Game';
-import { JournalDialog } from './scenes/JournalDialog';
-import { Maze } from './scenes/Maze';
-import { MazeDialog } from './scenes/MazeDialog';
-import { Paused } from './scenes/Paused';
-import { Pipes } from './scenes/Pipes';
-import { PipesDialog } from './scenes/PipesDialog';
 import { Preloader } from './scenes/Preloader';
+import { DebugTool } from './scenes/dialogs/DebugTool';
+import { JournalDialog } from './scenes/dialogs/JournalDialog';
+import { Maze } from './scenes/dialogs/Maze';
+import { MazeDialog } from './scenes/dialogs/MazeDialog';
+import { Paused } from './scenes/dialogs/Paused';
+import { Pipes } from './scenes/dialogs/Pipes';
+import { PipesDialog } from './scenes/dialogs/PipesDialog';
 import { Colors, getColorNumber } from './utils/colors';
 import { loadFont } from './utils/fonts';
 
@@ -27,7 +28,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainGame, Paused, JournalDialog, MazeDialog, Maze, PipesDialog, Pipes],
+  scene: [Boot, Preloader, MainGame, Paused, JournalDialog, MazeDialog, Maze, PipesDialog, Pipes, DebugTool],
   input: {
     gamepad: true,
   },

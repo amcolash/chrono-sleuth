@@ -1,10 +1,10 @@
 import { GameObjects, Math as PhaserMath, Scene } from 'phaser';
 
-import { InputManager, Key } from '../classes/UI/InputManager';
-import { Config } from '../config';
-import { Colors, getColorNumber } from '../utils/colors';
-import { Pipe, PipeShapes, PipeType, Rotation, getConnectedPipes, level } from '../utils/pipes';
-import { getRandomElement } from '../utils/util';
+import { InputManager, Key } from '../../classes/UI/InputManager';
+import { Config } from '../../config';
+import { Colors, getColorNumber } from '../../utils/colors';
+import { Pipe, PipeShapes, PipeType, Rotation, getConnectedPipes, level } from '../../utils/pipes';
+import { getRandomElement } from '../../utils/util';
 import { MazeDialog } from './MazeDialog';
 
 // TODO: Maybe this should be like nancy drew instead, where every single pipe needs to be connected to solve the puzzle

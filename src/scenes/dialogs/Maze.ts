@@ -1,10 +1,10 @@
 import generateMaze, { Cell } from 'generate-maze';
 import { GameObjects, Geom, Math, Scene } from 'phaser';
 
-import { InputManager, Key } from '../classes/UI/InputManager';
-import { Config } from '../config';
-import { getClockRewind } from '../utils/interactionUtils';
-import { Game } from './Game';
+import { InputManager, Key } from '../../classes/UI/InputManager';
+import { Config } from '../../config';
+import { getClockRewind } from '../../utils/interactionUtils';
+import { Game } from '../Game';
 import { MazeDialog } from './MazeDialog';
 
 const cells = 24;
@@ -90,10 +90,6 @@ export class Maze extends Scene {
     if (time < this.nextUpdate) return;
 
     const keys = this.keys.keys;
-    // Skip the maze if in development mode
-    if (keys[Key.Continue] && import.meta.env.MODE !== 'production') {
-      this.parent.close(true);
-    }
 
     const velocity = new Math.Vector2(0, 0);
     if (keys[Key.Left]) velocity.x = -cellSize;

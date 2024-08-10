@@ -92,6 +92,12 @@ export class DebugUI extends GameObjects.Container {
       toggleLighting(this.scene);
     });
 
+    this.scene.input.keyboard?.on('keydown-O', () => {
+      this.scene.gamepad.setVisible(false);
+      this.scene.scene.pause();
+      this.scene.scene.launch('MazeDialog', { player: this.player });
+    });
+
     this.scene.input.keyboard?.on('keydown-P', () => {
       this.scene.gamepad.setVisible(false);
       this.scene.scene.pause();

@@ -1,13 +1,13 @@
 import { exit } from '@tauri-apps/api/process';
 import { Scene } from 'phaser';
 
-import { Button } from '../classes/UI/Button';
-import { ButtonGroup } from '../classes/UI/ButtonGroup';
-import { Gamepad } from '../classes/UI/Gamepad';
-import { Config } from '../config';
-import { fontStyle } from '../utils/fonts';
-import { save } from '../utils/save';
-import { Game } from './Game';
+import { Button } from '../../classes/UI/Button';
+import { ButtonGroup } from '../../classes/UI/ButtonGroup';
+import { Gamepad } from '../../classes/UI/Gamepad';
+import { Config } from '../../config';
+import { fontStyle } from '../../utils/fonts';
+import { save } from '../../utils/save';
+import { Game } from '../Game';
 
 export class Paused extends Scene {
   parent: Game;
