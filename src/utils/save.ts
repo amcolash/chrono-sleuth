@@ -1,78 +1,10 @@
 import deepEqual from 'deep-equal';
 
-import { InventoryData } from '../classes/Player/Inventory';
-import { playerStart } from '../classes/Player/Player';
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
-import { ItemType, JournalEntry, Quest, QuestType } from '../data/types';
+import { SaveData, SaveType, saveKey, saves } from '../data/saves';
 import { Game } from '../scenes/Game';
-import { isMobile, setZoomed } from './util';
-
-export const saveKey = 'chrono-sleuth-save';
-
-// TODO: Add settings
-export type Settings = {
-  gamepad: boolean;
-  debug: boolean;
-  zoomed: boolean;
-};
-
-type SaveData = {
-  player: {
-    x: number;
-    y: number;
-    flip: boolean;
-  };
-  journal: JournalEntry[];
-  inventory: InventoryData[];
-  quests: Quest[];
-  settings: Settings;
-};
-
-export const defaultSave: SaveData = {
-  player: {
-    x: playerStart.x,
-    y: playerStart.y,
-    flip: false,
-  },
-  journal: [],
-  inventory: [],
-  quests: [],
-  settings: {
-    gamepad: isMobile(),
-    debug: false,
-    zoomed: true,
-  },
-};
-
-export const debugSave: SaveData = {
-  player: {
-    x: -770,
-    y: playerStart.y,
-    flip: true,
-  },
-  journal: [
-    JournalEntry.FixTheClock,
-    JournalEntry.ForestMazeSolved,
-    JournalEntry.SphinxRiddleSolved,
-    JournalEntry.MetTheMayor,
-    JournalEntry.ClockFirstGear,
-  ],
-  inventory: [
-    { type: ItemType.Wrench, used: false },
-    { type: ItemType.Gear1, used: true },
-  ],
-  quests: [
-    { id: QuestType.ForestGear, completed: true },
-    { id: QuestType.SphinxRiddle, completed: true },
-    { id: QuestType.InvestigateTownWest, completed: false },
-  ],
-  settings: {
-    gamepad: false,
-    debug: false,
-    zoomed: true,
-  },
-};
+import { setZoomed } from './util';
 
 // Get the current state of the game before saving
 export function getCurrentSaveState(scene: Game): SaveData {
@@ -107,7 +39,7 @@ function getSavedData(): { save: SaveData; error: unknown } {
     error = err;
   }
 
-  return { save: parsed || defaultSave, error };
+  return { save: parsed || saves[SaveType.New], error };
 }
 
 function checkConfig(savedata: SaveData, scene: Game): boolean {
@@ -168,25 +100,21 @@ export function load(scene: Game) {
 
     scene.gamepad.setVisible(savedata.settings.gamepad);
 
-    const loadType = deepEqual(savedata, defaultSave)
-      ? '[New]'
-      : deepEqual(savedata, debugSave)
-        ? '[Debug]'
-        : '[Storage]';
+    const loadType = deepEqual(savedata, saves[SaveType.New]) ? '[New]' : '[Storage]';
 
     scene.time.delayedCall(200, () => {
       new Notification(scene, `Game Loaded ${import.meta.env.DEV ? loadType : ''}`);
     });
 
     // If new game, save now
-    if (deepEqual(savedata, defaultSave)) {
+    if (deepEqual(savedata, saves[SaveType.New])) {
       save(scene, undefined, true);
     }
   } catch (err) {
     console.error(err);
     new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
 
-    save(scene, defaultSave);
+    save(scene, saves[SaveType.New]);
     load(scene);
   }
 }
