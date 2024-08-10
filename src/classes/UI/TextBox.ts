@@ -12,7 +12,14 @@ export class TextBox extends GameObjects.Container {
   scrollY: number;
   boxHeight: number;
 
-  constructor(scene: Scene, x: number, y: number, text: string | string[], style?: Types.GameObjects.Text.TextStyle) {
+  constructor(
+    scene: Scene,
+    x: number,
+    y: number,
+    text: string | string[],
+    style?: Types.GameObjects.Text.TextStyle,
+    handleClick?: (line: number) => void
+  ) {
     super(scene, x, y);
     scene.add.existing(this);
 
@@ -27,6 +34,12 @@ export class TextBox extends GameObjects.Container {
     // Set up scroll events
     scene.input.on('wheel', this.handleScroll, this);
     this.textObject.on('pointermove', this.handleDrag, this);
+    this.textObject.on('pointerdown', (_pointer: Input.Pointer, _localX: number, localY: number) => {
+      const lines = this.textObject.getWrappedText().length;
+      const percentage = localY / this.textObject.height;
+      const line = Math.floor(percentage * lines);
+      if (handleClick) handleClick(line);
+    });
 
     scene.input.keyboard?.on('keydown-UP', () => {
       this.scrollY -= 30;
@@ -47,7 +60,7 @@ export class TextBox extends GameObjects.Container {
     this.add(this.scrollbar);
   }
 
-  setBoxSize(width: number, height: number) {
+  setBoxSize(width: number, height: number): TextBox {
     this.boxHeight = height;
 
     // Create mask
@@ -63,6 +76,14 @@ export class TextBox extends GameObjects.Container {
 
     // Ensure initial cropping
     this.updateTextPosition();
+
+    return this;
+  }
+
+  setText(text: string | string[]): TextBox {
+    this.textObject.setText(text);
+    this.updateTextPosition();
+    return this;
   }
 
   private handleDrag(pointer: Input.Pointer) {

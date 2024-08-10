@@ -7,6 +7,7 @@ import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { toggleLighting } from '../../utils/lighting';
 import { debugSave, defaultSave, getCurrentSaveState, save } from '../../utils/save';
+import { openDialog } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
 
@@ -93,15 +94,15 @@ export class DebugUI extends GameObjects.Container {
     });
 
     this.scene.input.keyboard?.on('keydown-O', () => {
-      this.scene.gamepad.setVisible(false);
-      this.scene.scene.pause();
-      this.scene.scene.launch('MazeDialog', { player: this.player });
+      openDialog(this.scene, 'MazeDialog');
     });
 
     this.scene.input.keyboard?.on('keydown-P', () => {
-      this.scene.gamepad.setVisible(false);
-      this.scene.scene.pause();
-      this.scene.scene.launch('PipesDialog', { player: this.player });
+      openDialog(this.scene, 'PipesDialog');
+    });
+
+    this.scene.input.keyboard?.on('keydown-CLOSED_BRACKET', () => {
+      openDialog(this.scene, 'DebugTool');
     });
 
     if (Config.debug) {

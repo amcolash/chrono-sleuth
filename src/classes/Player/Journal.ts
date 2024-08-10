@@ -5,8 +5,10 @@ import { updateSphinx } from '../../data/cutscene';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
 import { JournalEntry, NPCType, PropType } from '../../data/types';
+import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { getNPC, getProp, updateWarpVisibility } from '../../utils/interactionUtils';
+import { openDialog } from '../../utils/util';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
 
@@ -42,6 +44,10 @@ export class Journal extends GameObjects.Image {
       .setDepth(Layer.Ui2)
       .setVisible(false);
 
+    this.scene.input.keyboard?.on('keydown-J', () => {
+      this.openJournal();
+    });
+
     this.initialized = true;
   }
 
@@ -73,9 +79,7 @@ export class Journal extends GameObjects.Image {
     if (!this.initialized) this.createUI();
     if (this.journal.length === 0) return;
 
-    this.unread.setVisible(false);
-    this.scene.scene.pause();
-    this.scene.scene.launch('JournalDialog', { player: this.player });
+    openDialog(this.scene as Game, 'JournalDialog');
   }
 
   handleSideEffects(entry: JournalEntry, silent: boolean) {

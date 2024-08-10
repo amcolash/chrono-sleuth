@@ -23,8 +23,16 @@ export function hasItem(inventory: InventoryData[], item: ItemType): boolean {
   return inventory.find((i) => i.type === item) !== undefined;
 }
 
+export function hasUnusedItem(inventory: InventoryData[], item: ItemType): boolean {
+  return inventory.find((i) => i.type === item && !i.used) !== undefined;
+}
+
 export function hasUsedItem(inventory: InventoryData[], item: ItemType): boolean {
   return inventory.find((i) => i.type === item && i.used) !== undefined;
+}
+
+export function hasQuest(quests: Quest[], questId: QuestType): boolean {
+  return quests.some((quest) => quest.id === questId);
 }
 
 export function hasActiveQuest(quests: Quest[], questId: QuestType): boolean {

@@ -6,9 +6,10 @@ import { Layer } from '../../data/layers';
 import { QuestData } from '../../data/quest';
 import { InteractResult, Interactive, JournalEntry, LazyInitialize, WarpType } from '../../data/types';
 import { WarpData, WarpVisual } from '../../data/warp';
+import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { hasJournalEntry, initializeObject } from '../../utils/interactionUtils';
-import { shouldInitialize } from '../../utils/util';
+import { openDialog, shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
@@ -197,8 +198,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
       !hasJournalEntry(this.player.journal.journal, JournalEntry.ForestMazeSolved) &&
       !Config.debug
     ) {
-      this.scene.scene.pause();
-      this.scene.scene.launch('MazeDialog', { player: this.player });
+      openDialog(this.scene as Game, 'MazeDialog');
       return InteractResult.None;
     }
 

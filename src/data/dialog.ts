@@ -4,6 +4,7 @@ import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
 import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry, hasUsedItem } from '../utils/interactionUtils';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
+import { openDialog } from '../utils/util';
 import { makePotion } from './cutscene';
 import { PropData } from './prop';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
@@ -387,9 +388,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       onCompleted: (player) => {
         const scene = player.scene;
 
-        scene.gamepad.setVisible(false);
-        scene.scene.pause();
-        scene.scene.launch('PipesDialog', { player });
+        openDialog(scene, 'PipesDialog', { gamepadVisible: scene.gamepad.visible });
       },
     },
     {

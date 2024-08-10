@@ -23,7 +23,7 @@ import { Interactive, ItemType, NPCType, PropType, WarpType } from '../data/type
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
 import { getCurrentSaveState, load, loadConfig, save } from '../utils/save';
-import { fadeIn } from '../utils/util';
+import { fadeIn, openDialog } from '../utils/util';
 
 export class Game extends Scene {
   player: Player;
@@ -192,6 +192,12 @@ export class Game extends Scene {
 
         this.scene.restart();
       });
+
+      if (import.meta.env.DEV) {
+        new IconButton(this, 181, 30, 'terminal', () => {
+          openDialog(this, 'DebugTool');
+        });
+      }
     });
 
     this.gamepad = new Gamepad(this);
@@ -236,10 +242,6 @@ export class Game extends Scene {
     this.input.keyboard?.on('keydown-ESC', () => {
       this.scene.pause();
       this.scene.launch('Paused', { game: this });
-    });
-
-    this.input.keyboard?.on('keydown-J', () => {
-      this.player.journal.openJournal();
     });
 
     this.events.on('resume', () => {

@@ -6,6 +6,7 @@ import { InputManager } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
+import { Game } from '../Game';
 
 type DialogData = {
   key: string;
@@ -56,7 +57,7 @@ export abstract class Dialog extends Scene {
     }
 
     this.keys = new InputManager(this);
-    new Gamepad(this).setVisible(this.dialogData.gamepadVisible);
+    new Gamepad(this, true).setVisible(this.dialogData.gamepadVisible);
 
     if (this.dialogData.childScene) this.scene.launch(this.dialogData.childScene, { parent: this });
   }
@@ -66,6 +67,7 @@ export abstract class Dialog extends Scene {
     if (this.dialogData.childScene) this.scene.stop(this.dialogData.childScene);
 
     this.scene.resume('Game');
+    (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
 
     this.handleSuccess(success);
   }
