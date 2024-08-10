@@ -12,8 +12,9 @@ export enum InteractResult {
 
 export interface Interactive {
   interactionTimeout?: number;
+  disabled?: boolean;
+
   getButtonPrompt?(): string | string[] | undefined;
-  canInteract?(): boolean;
 
   onCollided?(): void;
   onInteract(keys: Record<Key, boolean>): InteractResult;
@@ -46,6 +47,7 @@ export type DataProps = {
   skipLighting?: boolean;
   particles?: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig;
   origin?: { x: number; y: number };
+  initializeOnStart?: boolean;
 };
 
 export enum WarpType {
@@ -82,6 +84,7 @@ export enum WarpType {
 export enum ItemType {
   Wrench,
   Gear1,
+  Gear2,
   Key,
   HerbRed,
   HerbGreen,
@@ -124,6 +127,9 @@ export enum JournalEntry {
   ClockFirstGear,
   AlchemyLabFound,
   AlchemySetFixed,
+  SafeDiscovered,
+  ExtraPotionInformation,
+  ClockSecondGear,
 }
 
 export enum PropType {

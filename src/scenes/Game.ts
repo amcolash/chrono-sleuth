@@ -127,7 +127,7 @@ export class Game extends Scene {
         const o = object as any as Types.Physics.Arcade.ImageWithDynamicBody & Interactive;
         let interactive = true;
 
-        if (o.canInteract) interactive = o.canInteract();
+        if (o.disabled) interactive = false;
         if (o.visible !== undefined) interactive = interactive && o.visible;
 
         return interactive;

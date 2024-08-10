@@ -33,4 +33,15 @@ export const JournalData: Record<JournalEntry, Data> = {
   [JournalEntry.AlchemySetFixed]: {
     description: 'With the alchemy set fixed, I can now attempt to create the brew mentioned in the old journal.',
   },
+  [JournalEntry.SafeDiscovered]: {
+    description: 'I discovered a safe in the abandonded mansion. I wonder what secrets it holds.',
+  },
+  [JournalEntry.ExtraPotionInformation]: {
+    description:
+      'I found an extra journal entry with more information on the potion. It stated the name of the potion was the "Keyless Elixir". This potion must be the key to unlocking the safe.',
+  },
+  [JournalEntry.ClockSecondGear]: {
+    description:
+      'I found the second gear for the clock tower inside a safe, which was located within the abandoned mansion. I still need one more gear to fix it.',
+  },
 };

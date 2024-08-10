@@ -1,13 +1,16 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Layer } from '../../data/layers';
+import { JournalEntry } from '../../data/types';
 import { Colors, getColorNumber } from '../../utils/colors';
+import { hasJournalEntry } from '../../utils/interactionUtils';
+import { Player } from '../Player/Player';
 
 const radius1 = 50;
 const radius2 = 40;
 const radius3 = 25;
 
-const speed = 20;
+const speed = 35;
 const PI2 = Math.PI * 2;
 
 const sec = 1000 * 60;
@@ -15,6 +18,8 @@ const min = sec * 60;
 const hour = min * 12;
 
 export class ClockHands extends GameObjects.Graphics {
+  player: Player;
+
   angle1: number = 0;
   angle2: number = 1;
   angle3: number = 4;
@@ -23,12 +28,16 @@ export class ClockHands extends GameObjects.Graphics {
   update2: boolean = false;
   update3: boolean = false;
 
-  constructor(scene: Scene) {
+  constructor(scene: Scene, player: Player) {
     super(scene);
     scene.add.existing(this);
 
+    this.player = player;
+
     this.setPosition(842, -2107);
     this.setDepth(Layer.Npcs);
+
+    this.updateHands();
   }
 
   update(time: number): void {
@@ -51,5 +60,11 @@ export class ClockHands extends GameObjects.Graphics {
 
       this.lineBetween(x, y, x * 1.5, y * 1.5);
     }
+  }
+
+  updateHands(): void {
+    const journal = this.player.journal.journal;
+    if (hasJournalEntry(journal, JournalEntry.ClockFirstGear)) this.update1 = true;
+    if (hasJournalEntry(journal, JournalEntry.ClockSecondGear)) this.update2 = true;
   }
 }

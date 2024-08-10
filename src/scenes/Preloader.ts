@@ -89,6 +89,7 @@ export class Preloader extends Scene {
 
     // items
     this.load.image('gear', 'items/gear.png');
+    this.load.image('gear2', 'items/gear2.png');
     this.load.image('journal', 'items/journal.png');
     this.load.image('wrench', 'items/wrench.png');
     this.load.image('key', 'items/key.png');

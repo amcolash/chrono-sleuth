@@ -72,6 +72,21 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   ],
   [NPCType.Stranger]: [
     {
+      messages: ['The lock on that safe is no ordinary lock. It requires something special to open it.'],
+      conditions: {
+        journalEntry: JournalEntry.SafeDiscovered,
+      },
+    },
+    {
+      messages: [
+        'Hmm a potion, I wonder what it does.',
+        'The alchemist was no ordinary person and built magical safeguards against intruders.',
+      ],
+      conditions: {
+        hasItem: ItemType.Potion,
+      },
+    },
+    {
       messages: [
         'You heard of the mansion to the west? It was abandoned many years ago.',
         'There is a rumor of an alchemy lab hidden somewhere nearby, but I have been searching for years and have found not even a single potion.',
@@ -163,6 +178,26 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   // TODO: Should the clock tower be a different type than NPC?
   [NPCType.ClockTower]: [
     {
+      messages: ['With two of the gears in place, the clocks hands are moving again.'],
+      conditions: {
+        journalEntry: JournalEntry.ClockSecondGear,
+      },
+    },
+    {
+      messages: [
+        'Slowly, you align and tighten the second gear into place.',
+        '[CREAKING NOISE]',
+        'Now two of the hands of the clock are moving again.',
+      ],
+      conditions: {
+        hasItem: ItemType.Gear2,
+      },
+      onCompleted: (player) => {
+        player.inventory.removeItem(ItemType.Gear2);
+        player.journal.addEntry(JournalEntry.ClockSecondGear);
+      },
+    },
+    {
       messages: ['The clock is partially moving again, but it is still missing two gears.'],
       conditions: {
         journalEntry: JournalEntry.ClockFirstGear,
@@ -192,6 +227,14 @@ export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
       messages: ['Hmm, this gear looks like it belongs in the clock tower. I should ask the inventor about it.'],
     },
   ],
+  [ItemType.Gear2]: [
+    {
+      messages: ['Finally! I found the second gear.', 'I should take this to the clock tower.'],
+      onCompleted: (player) => {
+        player.quests.updateExistingQuest(QuestType.InvestigateTownWest, true);
+      },
+    },
+  ],
 };
 
 export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
@@ -199,7 +242,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     {
       messages: [
         'Let me see if I can open this hatch.',
-        'The rusty key fits!',
+        'tow, The rusty key fits!',
         '[CREAKING NOISE]',
         'Alright, let’s see what is down there!',
       ],
@@ -219,6 +262,18 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     },
   ],
   [PropType.LabBook]: [
+    {
+      messages: [
+        'How could I have missed this? The potion is called the "Keyless Exlixir".',
+        'This must be the key to the safe.',
+      ],
+      conditions: {
+        journalEntry: JournalEntry.SafeDiscovered,
+      },
+      onCompleted: (player) => {
+        player.journal.addEntry(JournalEntry.ExtraPotionInformation);
+      },
+    },
     {
       messages: ['I should speak to the mysterious stranger about this lab and the potion I brewed.'],
       conditions: {
@@ -386,13 +441,45 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   ],
   [PropType.MansionPicture]: [
     {
-      messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture', '[CREAK]'],
-      onCompleted: (_player, prop) => {
-        prop?.scene.tweens.add({
-          targets: prop,
-          angle: 97,
-          duration: 1500,
+      messages: ['You pour the potion into the safe keyhole.', '[CLUNK]', 'The safe clicks open.', 'Huh, what’s that?'],
+      conditions: {
+        journalEntry: JournalEntry.ExtraPotionInformation,
+      },
+      onCompleted: (player, target) => {
+        player.inventory.removeItem(ItemType.Potion);
+
+        const scene = player.scene;
+        const gear = new Item(player.scene, ItemType.Gear2, player);
+        scene.interactiveObjects.add(gear);
+
+        gear.setPosition(target?.x, target?.y + 20);
+        gear.disabled = true;
+
+        scene.tweens.add({
+          targets: gear,
+          x: target?.x - 10,
+          y: target?.y + 120,
+          duration: 1000,
+          onComplete: () => {
+            gear.disabled = false;
+          },
+          ease: 'Bounce.easeOut',
         });
+      },
+    },
+    {
+      messages: [
+        'A sturdy looking safe was hidden behind the picture.',
+        'It looks like it requires a special key to open.',
+      ],
+      conditions: {
+        journalEntry: JournalEntry.SafeDiscovered,
+      },
+    },
+    {
+      messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture', '[CREAK]'],
+      onCompleted: (player) => {
+        player.journal.addEntry(JournalEntry.SafeDiscovered);
       },
       conditions: {
         hasItem: ItemType.Potion,

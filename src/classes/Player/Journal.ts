@@ -4,9 +4,9 @@ import { Config } from '../../config';
 import { updateSphinx } from '../../data/cutscene';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
-import { JournalEntry, NPCType } from '../../data/types';
+import { JournalEntry, NPCType, PropType } from '../../data/types';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { getNPC, updateWarpVisibility } from '../../utils/interactionUtils';
+import { getNPC, getProp, updateWarpVisibility } from '../../utils/interactionUtils';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
 
@@ -86,9 +86,18 @@ export class Journal extends GameObjects.Image {
       updateSphinx(this.scene, true, silent);
     }
 
-    if (entry === JournalEntry.ClockFirstGear) {
+    if (entry === JournalEntry.ClockFirstGear || entry === JournalEntry.ClockSecondGear) {
       const clock = getNPC(this.scene, NPCType.ClockTower);
-      if (clock?.clock) clock.clock.update1 = true;
+      if (clock?.clock) clock.clock.updateHands();
+    }
+
+    if (entry === JournalEntry.SafeDiscovered) {
+      const picture = getProp(this.scene, PropType.MansionPicture);
+      picture?.scene.tweens.add({
+        targets: picture,
+        angle: 97,
+        duration: 1500,
+      });
     }
   }
 }

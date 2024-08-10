@@ -17,6 +17,7 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
   particles: GameObjects.Particles.ParticleEmitter;
   light: GameObjects.Light | DebugLight;
 
+  disabled?: boolean = false;
   initialized: boolean = false;
 
   constructor(scene: Scene, type: ItemType, player: Player) {
@@ -92,5 +93,6 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   update() {
     this.lazyInit();
+    this.particles?.setPosition(this.x, this.y);
   }
 }

@@ -52,6 +52,7 @@ export const PropData: Record<PropType, Data> = {
     angle: 5,
     image: 'picture',
     origin: { x: 0, y: 0 },
+    initializeOnStart: true,
   },
   [PropType.MansionHole]: {
     x: -1870,

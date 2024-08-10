@@ -8,7 +8,6 @@ export type Data = DataProps & {
   name: string;
   onCreate?: (npc: NPC) => void;
   light?: number;
-  initOnStart?: boolean;
 };
 
 export const NPCData: Record<NPCType, Data> = {
@@ -35,9 +34,9 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'sphinx',
     portrait: 'sphinx_portrait',
     name: 'Mystical Sphinx',
-    onCreate: (npc) => updateSphinx(npc.scene, false),
+    onCreate: (npc) => updateSphinx(npc.scene, false, true),
     light: 1.85,
-    initOnStart: true,
+    initializeOnStart: true,
   },
   [NPCType.Mayor]: {
     x: 1065,

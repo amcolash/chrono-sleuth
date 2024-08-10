@@ -24,7 +24,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   initialized: boolean = false;
 
   constructor(scene: Scene, npcType: NPCType, player: Player) {
-    const { x, y, image, initOnStart } = NPCData[npcType] as Data;
+    const { x, y, image } = NPCData[npcType] as Data;
 
     super(scene, x, y, image);
     this.npcType = npcType;
@@ -34,7 +34,6 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     if (image === 'warp') this.setAlpha(0);
 
     initializeObject(this, NPCData[npcType]);
-    if (initOnStart) this.lazyInit(true);
   }
 
   lazyInit(forceInit?: boolean) {
@@ -58,11 +57,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
 
     // TODO: Clock tower should likely be a Prop instead of an NPC
     if (this.npcType === NPCType.ClockTower) {
-      this.clock = new ClockHands(this.scene);
-
-      if (this.player.journal.journal.find((entry) => entry === JournalEntry.ClockFirstGear)) {
-        this.player.journal.handleSideEffects(JournalEntry.ClockFirstGear, true);
-      }
+      this.clock = new ClockHands(this.scene, this.player);
     }
 
     if (onCreate) onCreate(this);

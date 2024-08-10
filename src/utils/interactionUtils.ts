@@ -9,6 +9,7 @@ import {
   DataProps,
   ItemType,
   JournalEntry,
+  LazyInitialize,
   NPCType,
   PropType,
   Quest,
@@ -80,8 +81,8 @@ export function getClockRewind(scene: Game): number {
   return gameScene.clock?.rewindCount || 0;
 }
 
-export function initializeObject(obj: Physics.Arcade.Image, config: DataProps) {
-  const { scale, alpha, angle, depth, skipLighting, origin } = config;
+export function initializeObject(obj: Physics.Arcade.Image & LazyInitialize, config: DataProps) {
+  const { scale, alpha, angle, depth, skipLighting, origin, initializeOnStart } = config;
 
   if (scale) obj.setScale(scale);
   if (alpha) obj.setAlpha(alpha);
@@ -89,4 +90,6 @@ export function initializeObject(obj: Physics.Arcade.Image, config: DataProps) {
   if (depth) obj.setDepth(depth);
   if (!skipLighting) obj.setPipeline('Light2D');
   if (origin) obj.setOrigin(origin.x, origin.y);
+
+  if (initializeOnStart) obj.lazyInit(true);
 }
