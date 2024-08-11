@@ -41,7 +41,7 @@ const questList = Object.keys(QuestType)
 export class DebugTool extends Dialog {
   player: Player;
   tabs: Button[] = [];
-  tab: Tab = Tab.Save;
+  tab: Tab = Tab.Items;
   textBox: TextBox;
   helperText: GameObjects.Text;
   saveContainer: GameObjects.Container;

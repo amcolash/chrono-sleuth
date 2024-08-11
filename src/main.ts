@@ -3,6 +3,7 @@ import { Game, Types } from 'phaser';
 import { Config } from './config';
 import { Boot } from './scenes/Boot';
 import { Game as MainGame } from './scenes/Game';
+import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
 import { DebugTool } from './scenes/dialogs/DebugTool';
 import { JournalDialog } from './scenes/dialogs/JournalDialog';
@@ -28,7 +29,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainGame, Paused, JournalDialog, MazeDialog, Maze, PipesDialog, Pipes, DebugTool],
+  scene: [Boot, Preloader, MainGame, Paused, JournalDialog, MazeDialog, Maze, PipesDialog, Pipes, DebugTool, MainMenu],
   input: {
     gamepad: true,
   },

@@ -10,7 +10,7 @@ export class Preloader extends Scene {
     super('Preloader');
   }
 
-  init() {
+  init(data: { skipFade: boolean }) {
     this.add.image(0, 0, 'splash').setOrigin(0).setDisplaySize(Config.width, Config.height);
     this.add
       .image(30, Config.height - 15, 'logo')
@@ -54,7 +54,7 @@ export class Preloader extends Scene {
 
     this.add.dom(0, 0, gear);
 
-    fadeIn(this, 300);
+    if (!data?.skipFade) fadeIn(this, 300);
   }
 
   preload() {
