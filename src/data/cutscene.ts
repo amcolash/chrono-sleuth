@@ -2,7 +2,7 @@ import { Physics, Scene } from 'phaser';
 
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
-import { getNPC, getWall, getWarper } from '../utils/interactionUtils';
+import { getNPC, getProp, getWall, getWarper } from '../utils/interactionUtils';
 import { fadeIn, fadeOut } from '../utils/util';
 import { NPCData } from './npc';
 import { PropData } from './prop';
@@ -88,5 +88,31 @@ export function makePotion(player: Player, target?: Prop) {
         );
       });
     });
+  });
+}
+
+export function revealSafe(player: Player, silent: boolean) {
+  const picture = getProp(player.scene, PropType.MansionPicture);
+
+  if (!silent) player.setActive(false);
+  picture?.scene.tweens.add({
+    targets: picture,
+    angle: 97,
+    duration: silent ? 0 : 1500,
+    onComplete: () => {
+      if (!silent) {
+        player.setActive(true);
+        player.message.setDialog(
+          {
+            messages: [
+              'A sturdy looking safe was hidden behind the picture.',
+              'It looks like it requires a special key to open.',
+            ],
+          },
+          undefined,
+          'player_portrait'
+        );
+      }
+    },
   });
 }

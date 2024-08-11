@@ -32,6 +32,15 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [
     {
       messages: [
+        'You found a secret safe in the mansion?',
+        'Very interesting. There may be a hint about opening it nearby.',
+      ],
+      conditions: {
+        journalEntry: JournalEntry.SafeDiscovered,
+      },
+    },
+    {
+      messages: [
         'Blue Plumed Frond? I have not heard of such a plant.',
         'The stranger may know. Many secrets lie under this town.',
       ],
@@ -154,9 +163,6 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
             {
               messages: (player) => getSphinxRiddle(player.scene),
               options: (player) => getSphinxOptions(player.scene),
-              conditions: {
-                activeQuest: QuestType.FindPotionIngredients,
-              },
               onSelected: handleSphinxAnswer,
             },
             target
@@ -266,7 +272,7 @@ export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
   ],
   [ItemType.Gear2]: [
     {
-      messages: ['Finally! I found the second gear.', 'I should take this to the clock tower.'],
+      messages: ['Finally! I found the second gear to the clock tower.', 'I should take this and put it back.'],
       onCompleted: (player) => {
         player.quests.updateExistingQuest(QuestType.InvestigateTownWest, true);
       },
@@ -279,7 +285,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     {
       messages: [
         'Let me see if I can open this hatch.',
-        'tow, The rusty key fits!',
+        'Wow,tThe rusty key fits!',
         '[CREAKING NOISE]',
         'Alright, let’s see what is down there!',
       ],

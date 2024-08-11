@@ -1,13 +1,13 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { updateSphinx } from '../../data/cutscene';
+import { revealSafe, updateSphinx } from '../../data/cutscene';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
-import { JournalEntry, NPCType, PropType } from '../../data/types';
+import { JournalEntry, NPCType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { getNPC, getProp, updateWarpVisibility } from '../../utils/interactionUtils';
+import { getNPC, updateWarpVisibility } from '../../utils/interactionUtils';
 import { openDialog } from '../../utils/util';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
@@ -96,12 +96,7 @@ export class Journal extends GameObjects.Image {
     }
 
     if (entry === JournalEntry.SafeDiscovered) {
-      const picture = getProp(this.scene, PropType.MansionPicture);
-      picture?.scene.tweens.add({
-        targets: picture,
-        angle: 97,
-        duration: 1500,
-      });
+      revealSafe(this.player, silent);
     }
   }
 }
