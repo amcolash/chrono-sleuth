@@ -28,6 +28,7 @@ export enum SaveType {
   New,
   Act1,
   Act2,
+  LabItems,
 }
 
 const debugSettings: Settings = {
@@ -95,8 +96,39 @@ const act2: SaveData = {
   settings: { ...debugSettings },
 };
 
+const labItems: SaveData = {
+  player: {
+    x: -150,
+    y: 1729,
+    flip: true,
+  },
+  journal: [
+    JournalEntry.FixTheClock,
+    JournalEntry.ForestMazeSolved,
+    JournalEntry.SphinxRiddleSolved,
+    JournalEntry.MetTheMayor,
+    JournalEntry.ClockFirstGear,
+    JournalEntry.AlchemyLabFound,
+    JournalEntry.AlchemySetFixed,
+  ],
+  inventory: [
+    { type: ItemType.Wrench, used: false },
+    { type: ItemType.Gear1, used: true },
+    { type: ItemType.Key, used: true },
+  ],
+  quests: [
+    { id: QuestType.ForestGear, completed: true },
+    { id: QuestType.SphinxRiddle, completed: true },
+    { id: QuestType.InvestigateTownWest, completed: false },
+    { id: QuestType.ExploreLab, completed: false },
+    { id: QuestType.FindPotionIngredients, completed: false },
+  ],
+  settings: { ...debugSettings },
+};
+
 export const saves: Record<SaveType, SaveData> = {
   [SaveType.New]: defaultSave,
   [SaveType.Act1]: act1,
   [SaveType.Act2]: act2,
+  [SaveType.LabItems]: labItems,
 };

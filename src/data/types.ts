@@ -60,8 +60,6 @@ export enum WarpType {
   ForestEast,
   Lake,
 
-  LakeEast,
-
   TownNorth,
   ClockSquare,
 
@@ -84,12 +82,12 @@ export enum WarpType {
 export enum ItemType {
   Wrench,
   Gear1,
-  Gear2,
   Key,
   HerbRed,
   HerbGreen,
   HerbBlue,
   Potion,
+  Gear2,
 }
 
 export enum QuestType {
@@ -97,6 +95,7 @@ export enum QuestType {
   SphinxRiddle,
   InvestigateTownWest,
   ExploreLab,
+  FindPotionIngredients,
 }
 
 export enum NPCType {

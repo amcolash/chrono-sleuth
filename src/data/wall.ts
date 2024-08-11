@@ -31,7 +31,7 @@ export const WallData: Data[] = [
 
   // Lake
   { x: 4575, y: 850 },
-  { x: 6160, y: 690 },
+  { x: 5835, y: 900 },
 
   // Mansion Outside
   { x: -565, y: 575 },

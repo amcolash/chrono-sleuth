@@ -32,6 +32,15 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [
     {
       messages: [
+        'Blue Plumed Frond? I have not heard of such a plant.',
+        'The stranger may know. Many secrets lie under this town.',
+      ],
+      conditions: {
+        activeQuest: QuestType.FindPotionIngredients,
+      },
+    },
+    {
+      messages: [
         'There are rumors of an abandoned mansion west of the town.',
         'Some say it is haunted and dark magic lurks within.',
       ],
@@ -88,6 +97,12 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       },
     },
     {
+      messages: ['Green Writhewood? Hm, there might be some near the forest or lake.'],
+      conditions: {
+        activeQuest: QuestType.FindPotionIngredients,
+      },
+    },
+    {
       messages: [
         'You heard of the mansion to the west? It was abandoned many years ago.',
         'There is a rumor of an alchemy lab hidden somewhere nearby, but I have been searching for years and have found not even a single potion.',
@@ -128,6 +143,27 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
     },
   ],
   [NPCType.Sphinx]: [
+    {
+      messages: ['Back again? You must answer another riddle to pass.'],
+      conditions: {
+        activeQuest: QuestType.FindPotionIngredients,
+      },
+      onCompleted: (player, target) => {
+        player.scene.time.delayedCall(50, () => {
+          player.message.setDialog<NPC>(
+            {
+              messages: (player) => getSphinxRiddle(player.scene),
+              options: (player) => getSphinxOptions(player.scene),
+              conditions: {
+                activeQuest: QuestType.FindPotionIngredients,
+              },
+              onSelected: handleSphinxAnswer,
+            },
+            target
+          );
+        });
+      },
+    },
     {
       messages: (player) => getSphinxRiddle(player.scene),
       options: (player) => getSphinxOptions(player.scene),
@@ -284,11 +320,14 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     {
       messages: [
         'With the alchemy set fixed, I should be able to recreate the experiment.',
-        'I will need to find three ingredients according to this.',
-        'I need to find a red herb, a green herb, and a blue herb.',
+        'I will need to find three ingredients according to this - Crimson Starbloom, Green Writhewood, and a Blue Plumed Frond.',
+        'Maybe I can find them in the lab or the forest. The villagers will know more.',
       ],
       conditions: {
         journalEntry: JournalEntry.AlchemySetFixed,
+      },
+      onCompleted: (player) => {
+        player.quests.addQuest({ id: QuestType.FindPotionIngredients, completed: false });
       },
     },
     {
@@ -335,8 +374,9 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
       onCompleted: (player, target) => {
         player.inventory.removeItem(ItemType.HerbBlue);
-        target?.setTexture('alchemy_blue');
+        player.quests.updateExistingQuest(QuestType.FindPotionIngredients, true);
 
+        target?.setTexture('alchemy_blue');
         target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x0000aa], x: -5 }).start();
       },
     },
@@ -348,8 +388,8 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
       onCompleted: (player, target) => {
         player.inventory.removeItem(ItemType.HerbRed);
-        target?.setTexture('alchemy_red');
 
+        target?.setTexture('alchemy_red');
         target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0xaa0000], x: -20 }).start();
       },
     },
@@ -360,8 +400,8 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
       onCompleted: (player, target) => {
         player.inventory.removeItem(ItemType.HerbGreen);
-        target?.setTexture('alchemy_green');
 
+        target?.setTexture('alchemy_green');
         target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x00aa00], x: -35 }).start();
       },
     },
@@ -425,6 +465,19 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.LabPotionShelf1]: [
     {
       messages: [
+        'Nightshade, wolfsbane, starvine, frost ferns... No, those are not the right ingedients.',
+        'Oh, a Crimson Starbloom! Yes, this should work!',
+      ],
+      conditions: {
+        activeQuest: QuestType.FindPotionIngredients,
+        custom: (player) => !hasItem(player.inventory.inventory, ItemType.HerbRed),
+      },
+      onCompleted(player) {
+        player.inventory.addItem({ type: ItemType.HerbRed, used: false });
+      },
+    },
+    {
+      messages: [
         'Hm, this is an interesting collection. What’s this "Elixir of Luminescence"? Could light up some dark corners. And "Brew of Bravery"... might make me bold enough to face a dragon, or foolish enough to try. What about "Draught of the Depths"—sounds like it could show me treasures or drown me in visions. Better not risk it; these might just burn me to a crisp!',
       ],
       conditions: {
@@ -445,13 +498,15 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         const gear = new Item(player.scene, ItemType.Gear2, player);
         scene.interactiveObjects.add(gear);
 
-        gear.setPosition(target?.x, target?.y + 20);
+        if (!target) return;
+
         gear.disabled = true;
+        gear.setPosition(target.x, target.y + 20);
 
         scene.tweens.add({
           targets: gear,
-          x: target?.x - 10,
-          y: target?.y + 120,
+          x: target.x - 10,
+          y: target.y + 120,
           duration: 1000,
           onComplete: () => {
             gear.disabled = false;

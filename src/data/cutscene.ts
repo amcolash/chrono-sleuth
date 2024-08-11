@@ -2,11 +2,11 @@ import { Physics, Scene } from 'phaser';
 
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
-import { getNPC, getWall } from '../utils/interactionUtils';
+import { getNPC, getWall, getWarper } from '../utils/interactionUtils';
 import { fadeIn, fadeOut } from '../utils/util';
 import { NPCData } from './npc';
 import { PropData } from './prop';
-import { ItemType, NPCType, PropType, QuestType, WallType } from './types';
+import { ItemType, NPCType, PropType, QuestType, WallType, WarpType } from './types';
 import { WallData } from './wall';
 
 export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {
@@ -25,6 +25,9 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
     }
     (wall.body as Physics.Arcade.Body)?.updateFromGameObject();
   }
+
+  const warper = getWarper(scene, WarpType.ForestEast);
+  warper?.setVisible(complete || false);
 
   const { x, y } = NPCData[NPCType.Sphinx];
   const newX = complete ? x + 200 : x;
@@ -58,7 +61,7 @@ export function makePotion(player: Player, target?: Prop) {
   const scene = player.scene;
 
   player.inventory.removeItem(ItemType.HerbBlue);
-  player.active = false;
+  player.setActive(false);
 
   fadeOut(scene, 500, () => {
     scene.time.delayedCall(700, () => {
@@ -77,7 +80,7 @@ export function makePotion(player: Player, target?: Prop) {
               player.quests.updateExistingQuest(QuestType.ExploreLab, true);
 
               target?.setTexture('alchemy_empty');
-              player.active = true;
+              player.setActive(true);
             },
           },
           target,

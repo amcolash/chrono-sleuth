@@ -89,12 +89,14 @@ export function load(scene: Game) {
 
     // Delay loading this data as it can make UI which slows down initial game load
     scene.time.delayedCall(50, () => {
-      scene.player.journal.createUI();
       scene.player.inventory.createUI();
       scene.player.quests.createUI();
+      scene.player.journal.createUI();
 
-      savedata.journal.sort().forEach((entry) => scene.player.journal.addEntry(entry, true));
       savedata.inventory.sort((a, b) => a.type - b.type).forEach((item) => scene.player.inventory.addItem(item, true));
+
+      // Journals are second, quests third. Both have side-effects, but quests always happen last
+      savedata.journal.sort().forEach((entry) => scene.player.journal.addEntry(entry, true));
       savedata.quests.sort((a, b) => a.id - b.id).forEach((quest) => scene.player.quests.addQuest(quest, true));
     });
 

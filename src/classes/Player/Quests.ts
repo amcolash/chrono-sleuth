@@ -1,25 +1,30 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
+import { updateSphinx } from '../../data/cutscene';
 import { Layer } from '../../data/layers';
 import { QuestData } from '../../data/quest';
-import { Quest, QuestType } from '../../data/types';
+import { ItemType, Quest, QuestType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
-import { updateWarpVisibility } from '../../utils/interactionUtils';
+import { hasItem, updateWarpVisibility } from '../../utils/interactionUtils';
+import { Item } from '../Environment/Item';
 import { Notification } from '../UI/Notification';
+import { Player } from './Player';
 
 const size = 330;
 
 export class Quests extends GameObjects.Container {
+  player: Player;
   quests: Quest[] = [];
   questRectangle: GameObjects.Rectangle;
 
   initialized: boolean = false;
 
-  constructor(scene: Scene) {
+  constructor(scene: Scene, player: Player) {
     super(scene, Config.width - size - 20, 120);
+    this.player = player;
   }
 
   createUI() {
@@ -50,11 +55,9 @@ export class Quests extends GameObjects.Container {
     this.add(this.scene.add.text(0, 0, QuestData[quest.id].description, { ...fontStyle, fontSize: 20 }));
     this.updateQuests();
 
-    const { warpAdd, warpComplete } = QuestData[quest.id];
-    if (warpAdd) updateWarpVisibility(this.scene as Game, warpAdd, true);
-    if (quest.completed && warpComplete) updateWarpVisibility(this.scene as Game, warpComplete, true);
-
     if (!silent) new Notification(this.scene, `New quest added: ${QuestData[quest.id].description}`);
+
+    this.handleSideEffects(quest.id, quest.completed);
   }
 
   updateExistingQuest(quest: QuestType, completed: boolean) {
@@ -64,12 +67,13 @@ export class Quests extends GameObjects.Container {
     if (q) {
       if (!q.completed && completed) new Notification(this.scene, `Quest completed: ${QuestData[q.id].description}`);
       q.completed = completed;
+
+      this.updateQuests();
+
+      this.handleSideEffects(quest, completed);
+    } else {
+      console.error(`Quest ${quest} not found in player quests`);
     }
-
-    const { warpComplete } = QuestData[quest];
-    if (warpComplete) updateWarpVisibility(this.scene as Game, warpComplete, completed);
-
-    this.updateQuests();
   }
 
   updateQuests() {
@@ -99,6 +103,22 @@ export class Quests extends GameObjects.Container {
     this.setY((this.scene as Game).player.inventory.inventory.length > 0 ? 140 : 20);
     this.setVisible(activeQuests.length > 0);
     this.questRectangle.setSize(newWidth, 50 + 30 * activeQuests.length);
+  }
+
+  handleSideEffects(type: QuestType, completed: boolean) {
+    const { warpAdd, warpComplete } = QuestData[type];
+    if (warpAdd) updateWarpVisibility(this.scene as Game, warpAdd, true);
+    if (completed && warpComplete) updateWarpVisibility(this.scene as Game, warpComplete, true);
+
+    if (type === QuestType.FindPotionIngredients && !completed) {
+      const scene = this.player.scene;
+
+      scene.interactiveObjects.add(new Item(scene, ItemType.HerbGreen, this.player));
+      scene.interactiveObjects.add(new Item(scene, ItemType.HerbBlue, this.player));
+
+      const hasGreenHerb = hasItem(this.player.inventory.inventory, ItemType.HerbGreen);
+      updateSphinx(scene, hasGreenHerb, true);
+    }
   }
 
   reset() {

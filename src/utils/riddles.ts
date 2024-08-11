@@ -2,9 +2,10 @@ import { Scene } from 'phaser';
 
 import { NPC } from '../classes/Environment/NPC';
 import { Player } from '../classes/Player/Player';
+import { updateSphinx } from '../data/cutscene';
 import { JournalEntry, NPCType, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
-import { getClockRewind } from './interactionUtils';
+import { hasActiveQuest } from './interactionUtils';
 
 export const riddles = [
   {
@@ -52,7 +53,14 @@ export const riddles = [
 ];
 
 function getRiddleIndex(scene: Scene): number {
-  if (scene instanceof Game) return getClockRewind(scene) % riddles.length;
+  // if (scene instanceof Game) return getClockRewind(scene) % riddles.length;
+
+  if (scene instanceof Game) {
+    const player = scene.player;
+    if (hasActiveQuest(player.quests.quests, QuestType.FindPotionIngredients)) {
+      return 1;
+    }
+  }
 
   return 0;
 }
@@ -90,6 +98,8 @@ export function handleSphinxAnswer(option: string, player: Player, npc?: NPC) {
         onCompleted: (player) => {
           player.quests.updateExistingQuest(QuestType.SphinxRiddle, true);
           player.journal.addEntry(JournalEntry.SphinxRiddleSolved);
+
+          updateSphinx(player.scene as Game, true, false);
         },
       },
       npc

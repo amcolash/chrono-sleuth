@@ -15,4 +15,5 @@ export const QuestData: Record<QuestType, Data> = {
   [QuestType.SphinxRiddle]: { description: 'Solve the Sphinx riddle' },
   [QuestType.InvestigateTownWest]: { description: 'Investigate the west side of town', warpAdd: WarpType.TownWest },
   [QuestType.ExploreLab]: { description: 'Explore the hidden alchemy lab' },
+  [QuestType.FindPotionIngredients]: { description: 'Find the 3 potion ingredients' },
 };

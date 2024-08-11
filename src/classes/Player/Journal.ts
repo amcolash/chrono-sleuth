@@ -4,12 +4,11 @@ import { Config } from '../../config';
 import { updateSphinx } from '../../data/cutscene';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
-import { ItemType, JournalEntry, NPCType, PropType } from '../../data/types';
+import { JournalEntry, NPCType, PropType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { getNPC, getProp, hasItem, updateWarpVisibility } from '../../utils/interactionUtils';
+import { getNPC, getProp, updateWarpVisibility } from '../../utils/interactionUtils';
 import { openDialog } from '../../utils/util';
-import { Item } from '../Environment/Item';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
 
@@ -94,20 +93,6 @@ export class Journal extends GameObjects.Image {
     if (entry === JournalEntry.ClockFirstGear || entry === JournalEntry.ClockSecondGear) {
       const clock = getNPC(this.scene, NPCType.ClockTower);
       if (clock?.clock) clock.clock.updateHands();
-    }
-
-    if (entry === JournalEntry.AlchemySetFixed) {
-      const scene = this.player.scene;
-      const inventory = this.player.inventory.inventory;
-
-      if (!hasItem(inventory, ItemType.HerbRed))
-        scene.interactiveObjects.add(new Item(scene, ItemType.HerbRed, this.player));
-      if (!hasItem(inventory, ItemType.HerbGreen)) {
-        scene.interactiveObjects.add(new Item(scene, ItemType.HerbGreen, this.player));
-        updateSphinx(scene, false, true);
-      }
-      if (!hasItem(inventory, ItemType.HerbBlue))
-        scene.interactiveObjects.add(new Item(scene, ItemType.HerbBlue, this.player));
     }
 
     if (entry === JournalEntry.SafeDiscovered) {

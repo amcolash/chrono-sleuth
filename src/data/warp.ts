@@ -114,13 +114,6 @@ export const WarpData: Record<WarpType, Data> = {
     warpTo: WarpType.ForestEast,
     visual: WarpVisual.Warp,
   },
-  [WarpType.LakeEast]: {
-    x: 6121,
-    y: 760,
-    key: Key.Right,
-    warpTo: WarpType.Lake,
-    visual: WarpVisual.Warp,
-  },
 
   [WarpType.TownWest]: {
     x: 90,

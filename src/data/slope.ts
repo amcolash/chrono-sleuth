@@ -14,7 +14,6 @@ export const SlopeData: Data[] = [
 
   // Lake
   { x: 5150, y: 953, width: 100, height: 60, flip: true },
-  { x: 5820, y: 795, width: 220, height: 220 },
 
   // Mansion
   { x: -1300, y: -415, width: 90, height: 35 },

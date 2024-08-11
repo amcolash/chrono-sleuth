@@ -69,7 +69,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
 
     this.message = new Message(scene, this);
     this.inventory = new Inventory(scene);
-    this.quests = new Quests(scene);
+    this.quests = new Quests(scene, this);
     this.journal = new Journal(scene, this);
   }
 
