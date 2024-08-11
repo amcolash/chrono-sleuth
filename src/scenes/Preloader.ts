@@ -135,7 +135,6 @@ export class Preloader extends Scene {
 
     this.time.delayedCall(import.meta.env.PROD ? 3000 : 0, () => {
       fadeOut(this, 300, () => {
-        this.scene.stop(this);
         this.scene.start('Game');
       });
     });

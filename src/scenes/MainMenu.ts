@@ -27,10 +27,7 @@ export class MainMenu extends Scene {
           Config.width - 120,
           Config.height - 145,
           'Continue',
-          () => {
-            this.scene.stop(this);
-            this.scene.start('Preloader', { skipFade: true });
-          },
+          () => this.scene.start('Preloader', { skipFade: true }),
           { align: 'center' }
         ).setFixedSize(200, 70)
       );
@@ -44,7 +41,6 @@ export class MainMenu extends Scene {
         'New Game',
         () => {
           localStorage.removeItem(saveKey);
-          this.scene.stop(this);
           this.scene.start('Preloader', { skipFade: true });
         },
         { align: 'center' }
