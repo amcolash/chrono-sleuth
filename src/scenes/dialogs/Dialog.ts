@@ -19,6 +19,7 @@ export abstract class Dialog extends Scene {
   dialogData: DialogData;
   container: GameObjects.Container;
   keys: InputManager;
+  title: GameObjects.Text;
 
   constructor(data: DialogData) {
     super(data.key);
@@ -38,9 +39,11 @@ export abstract class Dialog extends Scene {
         backgroundColor: `#${Colors.Warning}`,
       })
     );
-    this.container.add(
-      this.add.text(0, Config.height * -0.4, this.dialogData.title, { ...fontStyle, fontSize: 48 }).setOrigin(0.5)
-    );
+
+    this.title = this.add
+      .text(0, Config.height * -0.4, this.dialogData.title, { ...fontStyle, fontSize: 48 })
+      .setOrigin(0.5);
+    this.container.add(this.title);
 
     this.input.keyboard?.on('keydown-ESC', () => {
       this.close(false);

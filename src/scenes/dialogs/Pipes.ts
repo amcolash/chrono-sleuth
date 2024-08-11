@@ -3,14 +3,8 @@ import { GameObjects, Math as PhaserMath, Scene } from 'phaser';
 import { InputManager, Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { Pipe, PipeShapes, PipeType, Rotation, getConnectedPipes, level } from '../../utils/pipes';
-import { getRandomElement } from '../../utils/util';
+import { Pipe, PipeShapes, PipeType, getConnectedPipes, level, startPipe } from '../../utils/pipes';
 import { MazeDialog } from './MazeDialog';
-
-// TODO: Maybe this should be like nancy drew instead, where every single pipe needs to be connected to solve the puzzle
-// https://the-spoiler.com/ADVENTURE/Her.interactive/nancy.drew.last.train.to.blue.moon.canyon.1/Nancy%20Drew%2013%20Last%20train%20to%20Blue%20Moon%20Canyon_files/sleepingcarpipes.jpg?ezimgfmt=rs:282x166/rscb1/ng:webp/ngcb1
-// https://the-spoiler.com/ADVENTURE/Her.interactive/nancy.drew.last.train.to.blue.moon.canyon.1/Nancy%20Drew%2013%20Last%20train%20to%20Blue%20Moon%20Canyon_files/ornategrillpipes.jpg?ezimgfmt=rs:285x172/rscb1/ng:webp/ngcb1
-// https://the-spoiler.com/ADVENTURE/Her.interactive/nancy.drew.last.train.to.blue.moon.canyon.1/Nancy%20Drew%2013%20Last%20train%20to%20Blue%20Moon%20Canyon_files/Jake'scarpipes.jpg?ezimgfmt=rs:272x156/rscb1/ng:webp/ngcb1
 
 const width = 16;
 const height = 8;
@@ -24,6 +18,7 @@ export class Pipes extends Scene {
 
   keys: InputManager;
   pipes: Pipe[][] = [];
+  totalPipes: number = 0;
   images: GameObjects.Container;
 
   blockSize: number;
@@ -80,7 +75,7 @@ export class Pipes extends Scene {
       .rectangle(100, 100, this.pipeSize, this.pipeSize, 0, 0)
       .setStrokeStyle(2, getColorNumber(Colors.Tan), 0.75)
       .setVisible(false);
-    this.position = new PhaserMath.Vector2(0, 0);
+    this.position = new PhaserMath.Vector2(1, 1);
 
     this.createPipes();
   }
@@ -92,7 +87,11 @@ export class Pipes extends Scene {
       .container()
       .setPosition(Config.width / 2 - (width * this.pipeSize) / 2 + this.pipeSize / 2, Config.height / 4);
 
-    // 1st pass to initialize pipe data
+    this.totalPipes = 0;
+
+    const delay = 5;
+
+    // initialize pipes and add them in a delayed manner
     for (let y = 0; y < height; y++) {
       if (!this.pipes[y]) this.pipes[y] = [];
 
@@ -100,43 +99,23 @@ export class Pipes extends Scene {
         // Access using y for rows and x for columns
         let type = level[y][x];
 
-        const start = x === 0 && y === 0;
-        const end = x === width - 1 && y === height - 1;
-
-        let interactive = !start && !end;
-
-        if (type === PipeType.Empty && Math.random() < 0.9) {
-          type = getRandomElement(Object.values(PipeType).filter((value) => typeof value !== 'number'));
-          // reduce the chance of cross pipes
-          if (type === PipeType.Cross && Math.random() < 0.5) type = PipeType.T;
-
-          if (Math.random() < 0.25) interactive = false;
-        }
+        const onBorder = x === 0 || y === 0 || x === width - 1 || y === height - 1;
+        const last = x === width - 1 && y === height - 1;
+        const interactive = !onBorder;
 
         this.pipes[y][x] = {
           x,
           y,
           type,
-          rotation: PhaserMath.Between(0, 3) * 90,
+          rotation: onBorder ? 0 : PhaserMath.Between(0, 3) * 90,
           interactive,
         };
 
-        if (start) this.pipes[y][x].rotation = Rotation.Up;
-        if (end) this.pipes[y][x].rotation = Rotation.Down;
-      }
-    }
+        if (type !== PipeType.Empty) this.totalPipes++;
 
-    const delay = 5;
-    const connected = getConnectedPipes(this.pipes, 0, 0);
-
-    // 2nd pass to create images with proper coloring (based on connected pipes)
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
         const index = x + y * level[0].length;
-        const pipe = this.pipes[y][x];
-
         this.time.delayedCall(50 + index * delay, () => {
-          const key = `pipe_${pipe.type}`;
+          const key = `pipe_${type}`;
           const image = this.add.image(x * this.pipeSize, y * this.pipeSize, key).on('pointerdown', () => {
             if (this.initialized) {
               this.cursor.setVisible(false);
@@ -145,15 +124,13 @@ export class Pipes extends Scene {
             }
           });
 
-          const end = x === width - 1 && y === height - 1;
-
           image.setAlpha(0).setScale(0.5).setAngle(this.pipes[y][x].rotation);
           this.tweens.add({
             targets: image,
             alpha: 1,
             scale: 1,
             duration: 300,
-            onComplete: end
+            onComplete: last
               ? () => {
                   this.initialized = true;
                   this.updatePipes();
@@ -161,16 +138,8 @@ export class Pipes extends Scene {
               : undefined,
           });
 
-          if (pipe.interactive) image.setInteractive();
+          if (interactive) image.setInteractive();
           else image.setTint(0x666666);
-
-          if (connected.includes(pipe)) {
-            if (pipe.interactive) {
-              image.setTint(0x335599);
-            } else {
-              image.setTint(0x002255);
-            }
-          }
 
           this.images.add(image);
         });
@@ -179,36 +148,21 @@ export class Pipes extends Scene {
   }
 
   updatePipes() {
-    const connected = getConnectedPipes(this.pipes, 0, 0);
+    const connected = getConnectedPipes(this.pipes, startPipe.x, startPipe.y);
 
-    // Update pipe rotation, tint and check if puzzle solved
+    // Update pipe rotation and check if puzzle solved
     this.pipes.forEach((row) => {
       row.forEach((pipe) => {
         const sprite = this.images.getAt(pipe.x + pipe.y * level[0].length) as GameObjects.Sprite;
         sprite.setAngle(pipe.rotation);
-
-        if (connected.includes(pipe)) {
-          if (pipe.interactive) {
-            sprite.setTint(0x335599);
-          } else {
-            sprite.setTint(0x002255);
-          }
-
-          // Check if the last pipe is connected: win condition
-          if (pipe.x === level[0].length - 1 && pipe.y === level.length - 1) {
-            this.parent.time.delayedCall(500, () => {
-              this.parent.close(true);
-            });
-          }
-        } else {
-          if (pipe.interactive) {
-            sprite.setTint(0xffffff);
-          } else {
-            sprite.setTint(0x666666);
-          }
-        }
       });
     });
+
+    if (connected.length === this.totalPipes) {
+      this.parent.time.delayedCall(500, () => {
+        this.parent.close(true);
+      });
+    }
   }
 
   update(time: number, _delta: number): void {
@@ -222,10 +176,10 @@ export class Pipes extends Scene {
         pipe.rotation = (pipe.rotation + 90) % 360;
         this.updatePipes();
       }
-    } else if (keys[Key.Left]) this.position.x = Math.max(0, this.position.x - 1);
-    else if (keys[Key.Right]) this.position.x = Math.min(width - 1, this.position.x + 1);
-    else if (keys[Key.Up]) this.position.y = Math.max(0, this.position.y - 1);
-    else if (keys[Key.Down]) this.position.y = Math.min(height - 1, this.position.y + 1);
+    } else if (keys[Key.Left]) this.position.x = Math.max(1, this.position.x - 1);
+    else if (keys[Key.Right]) this.position.x = Math.min(width - 2, this.position.x + 1);
+    else if (keys[Key.Up]) this.position.y = Math.max(1, this.position.y - 1);
+    else if (keys[Key.Down]) this.position.y = Math.min(height - 2, this.position.y + 1);
     else handled = false;
 
     if (handled) {

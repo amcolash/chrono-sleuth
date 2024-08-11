@@ -10,7 +10,7 @@ export class PipesDialog extends Dialog {
   constructor() {
     super({
       key: 'PipesDialog',
-      title: 'Rotate the pipes to fix the alchemy set',
+      title: 'Attach all of the pipes to fix the alchemy set.\n[CONTINUE/CLICK] to rotate',
       gamepadVisible: false,
       childScene: 'Pipes',
     });
@@ -18,6 +18,15 @@ export class PipesDialog extends Dialog {
 
   init(data: { player: Player; level: number }) {
     this.player = data.player;
+  }
+
+  create(): void {
+    super.create();
+
+    this.title
+      .setFontSize(36)
+      .setAlign('center')
+      .setY(this.title.y + 10);
   }
 
   handleSuccess(success?: boolean): void {

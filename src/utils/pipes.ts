@@ -1,5 +1,6 @@
 export enum PipeType {
-  Straight = 'S',
+  Horizontal = 'H',
+  Vertical = 'V',
   Corner = 'C',
   T = 'T',
   Cross = 'X',
@@ -22,10 +23,15 @@ export type Pipe = {
 };
 
 export const PipeShapes: Record<PipeType, number[][]> = {
-  [PipeType.Straight]: [
+  [PipeType.Horizontal]: [
     [0, 0, 0],
     [1, 1, 1],
     [0, 0, 0],
+  ],
+  [PipeType.Vertical]: [
+    [0, 1, 0],
+    [0, 1, 0],
+    [0, 1, 0],
   ],
   [PipeType.Corner]: [
     [0, 0, 0],
@@ -50,15 +56,17 @@ export const PipeShapes: Record<PipeType, number[][]> = {
 };
 
 export const level: PipeType[][] = [
-  ['C', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-  ['T', 'C', ' ', ' ', ' ', 'C', 'C', ' ', 'C', 'S', 'T', 'X', ' ', ' ', ' ', ' '],
-  [' ', 'S', ' ', ' ', ' ', 'T', 'S', ' ', 'X', ' ', ' ', 'S', ' ', ' ', ' ', ' '],
-  [' ', 'X', 'S', 'T', ' ', 'S', 'S', ' ', 'X', ' ', ' ', 'X', 'X', 'T', ' ', ' '],
-  [' ', ' ', ' ', 'C', 'X', 'T', 'T', 'X', 'S', ' ', ' ', 'T', 'C', 'S', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X', 'T', ' ', ' ', ' ', ' ', 'S', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'S', 'T', ' ', ' ', ' ', ' ', 'T', 'S', 'C'],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'C', 'C', ' ', ' ', ' ', ' ', ' ', ' ', 'C'],
+  [' ', ' ', ' ', 'V', ' ', ' ', 'V', ' ', ' ', 'V', ' ', ' ', ' ', 'V', ' ', ' '],
+  [' ', ' ', 'C', 'C', ' ', ' ', 'V', ' ', ' ', 'V', ' ', ' ', 'C', 'T', 'H', 'H'],
+  ['H', 'H', 'X', 'T', 'T', 'H', 'C', ' ', 'C', 'C', ' ', ' ', 'V', ' ', ' ', ' '],
+  [' ', ' ', 'V', 'C', 'T', ' ', ' ', ' ', 'T', 'H', 'T', 'H', 'X', 'H', 'C', ' '],
+  [' ', ' ', 'C', 'C', 'T', 'H', 'C', ' ', 'V', ' ', 'V', ' ', 'V', ' ', 'T', 'H'],
+  ['H', 'T', 'H', 'T', 'V', ' ', 'T', 'H', 'X', 'H', 'T', 'H', 'T', ' ', 'V', ' '],
+  [' ', 'V', ' ', 'C', 'X', 'H', 'C', ' ', 'T', 'C', ' ', ' ', 'C', 'C', 'C', 'H'],
+  [' ', 'V', ' ', ' ', 'V', ' ', ' ', ' ', 'V', 'V', ' ', ' ', ' ', 'V', ' ', ' '],
 ].map((row) => row.map((cell) => cell as PipeType));
+
+export const startPipe = { x: 0, y: 2 };
 
 export function isPipeType(key: string): key is PipeType {
   return Object.values(PipeType).includes(key as PipeType);
