@@ -18,7 +18,7 @@ const weights = [500, 200, 100, 50, 10];
 
 export class Fireflies extends GameObjects.GameObject implements LazyInitialize {
   scene: Game;
-  center: PhaserMath.Vector2;
+  center: PhaserMath.Vector2 = new PhaserMath.Vector2(0, 0);
 
   lights: GameObjects.PointLight[] = [];
   count: number;
@@ -36,12 +36,12 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
     this.scene = scene;
     this.count = count;
     this.bounds = bounds;
-    this.center = new PhaserMath.Vector2(x, y);
 
     this.setPosition(x, y);
   }
 
   setPosition(x: number, y: number) {
+    this.center.set(x, y);
     this.centers = [];
 
     for (let i = 0; i < this.count; i++) {
@@ -76,14 +76,14 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
       this.biases.push(biases);
     }
 
-    this.setPosition(this.center.x, this.center.y);
-
     if (Config.debug) {
       this.debug = this.scene.add.graphics().fillStyle(0xff0000, 0.5).lineStyle(2, 0xff0000, 1);
 
       this.debug.fillCircle(this.bounds[0] / 2, this.bounds[1] / 2, 10);
       this.debug.strokeRect(0, 0, this.bounds[0], this.bounds[1]);
     }
+
+    this.setPosition(this.center.x, this.center.y);
 
     this.initialized = true;
   }

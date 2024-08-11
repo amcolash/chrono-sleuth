@@ -94,5 +94,6 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
   update() {
     this.lazyInit();
     this.particles?.setPosition(this.x, this.y);
+    this.light?.setPosition(this.x, this.y);
   }
 }

@@ -290,12 +290,6 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       conditions: {
         journalEntry: JournalEntry.AlchemySetFixed,
       },
-      onCompleted: (player) => {
-        const scene = player.scene;
-        scene.interactiveObjects.add(new Item(scene, ItemType.HerbRed, player));
-        scene.interactiveObjects.add(new Item(scene, ItemType.HerbGreen, player));
-        scene.interactiveObjects.add(new Item(scene, ItemType.HerbBlue, player));
-      },
     },
     {
       messages: ['Maybe I can find more information in the lab.'],
