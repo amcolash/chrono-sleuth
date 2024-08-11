@@ -14,9 +14,9 @@ export function getCurrentSaveState(scene: Game): SaveData {
       y: scene.player.y,
       flip: scene.player.flipX,
     },
-    journal: scene.player.journal.journal,
-    inventory: scene.player.inventory.inventory,
-    quests: scene.player.quests.quests,
+    journal: scene.player.journal.journal.sort(),
+    inventory: scene.player.inventory.inventory.sort((a, b) => a.type - b.type),
+    quests: scene.player.quests.quests.sort((a, b) => a.id - b.id),
     settings: {
       gamepad: scene.gamepad.visible,
       debug: Config.debug,
@@ -93,9 +93,9 @@ export function load(scene: Game) {
       scene.player.inventory.createUI();
       scene.player.quests.createUI();
 
-      savedata.journal.forEach((entry) => scene.player.journal.addEntry(entry, true));
-      savedata.inventory.forEach((item) => scene.player.inventory.addItem(item, true));
-      savedata.quests.forEach((quest) => scene.player.quests.addQuest(quest, true));
+      savedata.journal.sort().forEach((entry) => scene.player.journal.addEntry(entry, true));
+      savedata.inventory.sort((a, b) => a.type - b.type).forEach((item) => scene.player.inventory.addItem(item, true));
+      savedata.quests.sort((a, b) => a.id - b.id).forEach((quest) => scene.player.quests.addQuest(quest, true));
     });
 
     scene.gamepad.setVisible(savedata.settings.gamepad);

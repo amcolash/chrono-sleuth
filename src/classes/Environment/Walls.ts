@@ -24,7 +24,7 @@ export class Walls extends Physics.Arcade.StaticGroup {
 
   createWall(data: WallInfo, index: number) {
     const wall = this.scene.add.rectangle(data.x, data.y, width, height).setOrigin(0).setVisible(Config.debug);
-    if (data.id) wall.setData('WallType', data.id);
+    if (data.id !== undefined) wall.setData('WallType', data.id);
 
     if (Config.debug) wall.setInteractive({ draggable: true });
     this.add(wall);
@@ -32,9 +32,11 @@ export class Walls extends Physics.Arcade.StaticGroup {
   }
 
   update() {
-    WallData.forEach((rect, i) => {
-      if (this.initialized.includes(i)) return;
-      if (PhaserMath.Distance.BetweenPointsSquared(rect, this.player) < 1000 ** 2) this.createWall(rect, i);
-    });
+    for (let i = 0; i < WallData.length; i++) {
+      if (this.initialized.includes(i)) continue;
+
+      const wall = WallData[i];
+      if (PhaserMath.Distance.BetweenPointsSquared(wall, this.player) < 1000 ** 2) this.createWall(wall, i);
+    }
   }
 }
