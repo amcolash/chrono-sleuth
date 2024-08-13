@@ -1,7 +1,6 @@
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
-import { SphinxPosition } from '../classes/Player/GameState';
 import { Player } from '../classes/Player/Player';
 import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry, hasUsedItem } from '../utils/interactionUtils';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
@@ -341,7 +340,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         player.gameState.updateData({
           mazeSolved: false,
           mazeSeed: player.gameState.data.mazeSeed + 1,
-          sphinxPosition: SphinxPosition.Ground,
+          sphinxMoved: false,
         });
       },
     },

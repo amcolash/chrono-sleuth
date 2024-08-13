@@ -1,4 +1,4 @@
-import { GameData, SphinxPosition, defaultState } from '../classes/Player/GameState';
+import { GameData, defaultState } from '../classes/Player/GameState';
 import { InventoryData } from '../classes/Player/Inventory';
 import { playerStart } from '../classes/Player/Player';
 import { isMobile } from '../utils/util';
@@ -71,7 +71,7 @@ const act1: SaveData = {
     { id: QuestType.ForestGear, completed: false },
     { id: QuestType.SphinxRiddle, completed: true },
   ],
-  gameState: { ...defaultState, mazeSolved: true, sphinxPosition: SphinxPosition.Ledge },
+  gameState: { ...defaultState, mazeSolved: true, sphinxMoved: true },
   settings: { ...debugSettings },
 };
 
@@ -91,7 +91,7 @@ const act2: SaveData = {
     { id: QuestType.SphinxRiddle, completed: true },
     { id: QuestType.InvestigateTownWest, completed: false },
   ],
-  gameState: { ...defaultState, mazeSolved: true, sphinxPosition: SphinxPosition.Ledge },
+  gameState: { ...defaultState, mazeSolved: true, sphinxMoved: true },
   settings: { ...debugSettings },
 };
 
@@ -120,7 +120,7 @@ const labItems: SaveData = {
     { id: QuestType.ExploreLab, completed: false },
     { id: QuestType.FindPotionIngredients, completed: false },
   ],
-  gameState: { ...defaultState, mazeSolved: false, sphinxPosition: SphinxPosition.Ground },
+  gameState: { ...defaultState, mazeSolved: false, sphinxMoved: false },
   settings: { ...debugSettings },
 };
 

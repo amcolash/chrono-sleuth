@@ -2,7 +2,6 @@ import { Scene } from 'phaser';
 
 import { NPC } from '../classes/Environment/NPC';
 import { warpTo } from '../classes/Environment/Warp';
-import { SphinxPosition } from '../classes/Player/GameState';
 import { Player } from '../classes/Player/Player';
 import { NPCType, QuestType, WarpType } from '../data/types';
 import { Game } from '../scenes/Game';
@@ -98,7 +97,7 @@ export function handleSphinxAnswer(option: string, player: Player, npc?: NPC) {
         messages: [`That is correct. Well done, you may pass.`],
         onCompleted: (player) => {
           player.quests.updateExistingQuest(QuestType.SphinxRiddle, true);
-          player.gameState.updateData({ sphinxPosition: SphinxPosition.Ledge, sphinxFail: false });
+          player.gameState.updateData({ sphinxMoved: true, sphinxFail: false });
         },
       },
       npc

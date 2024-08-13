@@ -60,6 +60,10 @@ export class DebugTool extends Dialog {
   create() {
     super.create();
 
+    this.add
+      .rectangle(sidebarWidth + 50, 100, Config.width * 0.65, Config.height * 0.75, getColorNumber('#112233'))
+      .setOrigin(0);
+
     const itemsTab = this.makeTab('Items', Tab.Items);
     const journalTab = this.makeTab('Journal', Tab.Journal);
     const questsTab = this.makeTab('Quests', Tab.Quests);
@@ -111,11 +115,6 @@ export class DebugTool extends Dialog {
   createStateContainer() {
     this.stateContainer = this.add.container(sidebarWidth + 60, 100);
 
-    const background = this.add
-      .rectangle(-10, 0, Config.width * 0.65, Config.height * 0.75, getColorNumber('#112233'))
-      .setOrigin(0);
-    this.stateContainer.add(background);
-
     const data = this.player.gameState.data;
 
     Object.entries(data).forEach((s, i) => {
@@ -137,27 +136,14 @@ export class DebugTool extends Dialog {
           });
           break;
         case 'number':
-          const minus = this.add.text(text.width + 30, 13 + 50 * i, '-', {
-            ...fontStyle,
-            fontSize: 42,
-            backgroundColor: '#111',
-            padding: { x: 7, y: 0 },
-          });
-          const plus = this.add.text(text.width + 75, 13 + 50 * i, '+', {
-            ...fontStyle,
-            fontSize: 42,
-            backgroundColor: '#111',
-            padding: { x: 7, y: 0 },
-          });
-
-          minus.setInteractive().on('pointerdown', () => {
+          const minus = this.smallButton(text.width + 30, 13 + 50 * i, '-', () => {
             /* @ts-ignore */
             data[key]--;
             /* @ts-ignore */
             text.setText(`${key}: ${data[key]}`);
           });
 
-          plus.setInteractive().on('pointerdown', () => {
+          const plus = this.smallButton(text.width + 75, 13 + 50 * i, '+', () => {
             /* @ts-ignore */
             data[key]++;
             /* @ts-ignore */
@@ -172,6 +158,17 @@ export class DebugTool extends Dialog {
     });
   }
 
+  smallButton(x: number, y: number, text: string, onClick: () => void): Button {
+    const button = new Button(this, x, y, text, onClick, {
+      ...fontStyle,
+      fontSize: 42,
+      backgroundColor: '#111',
+      padding: { x: 7, y: 0 },
+    }).setOrigin(0);
+
+    return button;
+  }
+
   createSaveContainer() {
     this.saveContainer = this.add.container(sidebarWidth + 60, 100);
     Object.entries(saves).forEach((s, i) => {
@@ -179,13 +176,13 @@ export class DebugTool extends Dialog {
       const button = new Button(
         this,
         0,
-        80 * i,
+        10 + 80 * i,
         SaveType[Number(key)],
         () => {
           save(this.player.scene, data);
           this.close(true);
         },
-        { align: 'center' }
+        { align: 'center', backgroundColor: '#111' }
       )
         .setOrigin(0)
         .setFixedSize(sidebarWidth, 70);

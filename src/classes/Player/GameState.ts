@@ -2,23 +2,18 @@ import { updateSphinx } from '../../data/cutscene';
 import { Game } from '../../scenes/Game';
 import { Player } from './Player';
 
-export enum SphinxPosition {
-  Ground,
-  Ledge,
-}
-
 export type GameData = {
   mazeSolved: boolean;
   mazeSeed: number;
   sphinxFail: boolean;
-  sphinxPosition: SphinxPosition;
+  sphinxMoved: boolean;
 };
 
 export const defaultState: GameData = {
   mazeSolved: false,
   mazeSeed: 0,
   sphinxFail: false,
-  sphinxPosition: SphinxPosition.Ground,
+  sphinxMoved: false,
 };
 
 export class GameState {
@@ -46,8 +41,8 @@ export class GameState {
     // By using a state instead of side effects in various different places,
     // we can consistently move the sphinx back and forth and not have to worry
     // about ordering of effects.
-    if (key === 'sphinxPosition') {
-      updateSphinx(this.scene, value === SphinxPosition.Ledge, silent);
+    if (key === 'sphinxMoved') {
+      updateSphinx(this.scene, value, silent);
     }
   }
 }
