@@ -1,4 +1,5 @@
 import { Game, Types } from 'phaser';
+import { FontPlugin } from 'phaser-font-plugin';
 
 import { Config } from './config';
 import { Boot } from './scenes/Boot';
@@ -13,7 +14,6 @@ import { Paused } from './scenes/dialogs/Paused';
 import { Pipes } from './scenes/dialogs/Pipes';
 import { PipesDialog } from './scenes/dialogs/PipesDialog';
 import { Colors, getColorNumber } from './utils/colors';
-import { loadFont } from './utils/fonts';
 
 // SW injection is done build-time in vite config
 
@@ -43,9 +43,15 @@ const config: Types.Core.GameConfig = {
   dom: {
     createContainer: true,
   },
+  plugins: {
+    global: [
+      {
+        key: 'FontPlugin',
+        plugin: FontPlugin,
+        start: true,
+      },
+    ],
+  },
 };
 
-// TODO: Should this be in preload?
-loadFont('m6x11', './m6x11.ttf').then(() => {
-  new Game(config);
-});
+new Game(config);

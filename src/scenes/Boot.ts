@@ -13,6 +13,7 @@ export class Boot extends Scene {
 
     this.load.image('logo', 'logo.png');
     this.load.image('splash', 'splash.png');
+    this.load.font('m6x11', '../m6x11.ttf');
   }
 
   create() {
