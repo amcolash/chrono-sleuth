@@ -160,32 +160,26 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   ],
   [NPCType.Sphinx]: [
     {
-      messages: ['Back again? You must answer another riddle to pass.'],
+      messages: (player) => {
+        if (player.gameState.data.sphinxFail)
+          return ['You have returned. I am surprised you were able to find your way back.', 'Try again.'];
+
+        if (hasActiveQuest(player.quests.quests, QuestType.FindPotionIngredients))
+          return [
+            'I see you are back again. You may find what you are looking for ahead, but must first answer my riddle.',
+          ];
+
+        return ['Ponder this riddle. Answer wisely.'];
+      },
       conditions: {
-        activeQuest: QuestType.FindPotionIngredients,
+        activeQuest: QuestType.SphinxRiddle,
+        completedQuest: QuestType.SphinxRiddle,
+        or: true,
       },
       onCompleted: (player, target) => {
         player.scene.time.delayedCall(50, () => {
           player.message.setDialog<NPC>({ ...sphinxRiddle }, target);
         });
-      },
-    },
-    {
-      messages: ['You have returned. I am surprised you were able to find your way back.', 'Try again.'],
-      conditions: {
-        activeQuest: QuestType.SphinxRiddle,
-        custom: (player) => player.gameState.data.sphinxFail,
-      },
-      onCompleted: (player, target) => {
-        player.scene.time.delayedCall(50, () => {
-          player.message.setDialog<NPC>({ ...sphinxRiddle }, target);
-        });
-      },
-    },
-    {
-      ...sphinxRiddle,
-      conditions: {
-        activeQuest: QuestType.SphinxRiddle,
       },
     },
     {

@@ -4,7 +4,7 @@ import { Config } from '../../config';
 import { NPCDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { Data, NPCData } from '../../data/npc';
-import { InteractResult, Interactive, JournalEntry, LazyInitialize, NPCType } from '../../data/types';
+import { InteractResult, Interactive, LazyInitialize, NPCType } from '../../data/types';
 import { initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
@@ -21,6 +21,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
 
   clock?: ClockHands;
 
+  disabled: boolean = false;
   initialized: boolean = false;
 
   constructor(scene: Scene, npcType: NPCType, player: Player) {

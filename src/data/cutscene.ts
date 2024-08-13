@@ -45,6 +45,7 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
     },
     onComplete: () => {
       sphinx.alpha = 1;
+      sphinx.disabled = complete || false;
     },
   });
 
