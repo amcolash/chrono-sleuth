@@ -4,9 +4,13 @@
 
 - [x] Add npc portraits to dialog
 - [x] Add npc names to dialog
-- [ ] Main menu
+- [x] Main menu
 
 ## Mechanics
+
+- [ ] Lockpicking / Safe cracking minigame
+
+  - Spin rings to click and match the lock
 
 - [ ] Determine how to handle the player's inventory between days
   - [ ] What happens to the player's inventory / talking points?
@@ -26,7 +30,7 @@
 - [ ] Add more quests
   - [ ] Trading quest between multiple npcs
 - [ ] Add more maps
-  - [ ] Abandoned mansion
+  - [x] Abandoned mansion
   - [ ] Town buildings
 
 ## Artwork (Placeholder)
