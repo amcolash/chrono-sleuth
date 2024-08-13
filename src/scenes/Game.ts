@@ -57,11 +57,14 @@ export class Game extends Scene {
 
     const backgrounds = this.createBackgrounds();
 
+    // objects without side effects
     const walls = new Walls(this, this.player);
     const warpers = this.createWarpers();
+    const slopes = this.createSlopes();
+
+    // objects with side effects
     const npcs = this.createNpcs();
     const items = this.createItems();
-    const slopes = this.createSlopes();
     const props = this.createProps();
 
     const forestFireflies = new Fireflies(this, FireflyPositions.Forest[0], FireflyPositions.Forest[1]);

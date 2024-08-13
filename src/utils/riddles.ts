@@ -1,9 +1,10 @@
 import { Scene } from 'phaser';
 
 import { NPC } from '../classes/Environment/NPC';
+import { warpTo } from '../classes/Environment/Warp';
+import { SphinxPosition } from '../classes/Player/GameState';
 import { Player } from '../classes/Player/Player';
-import { updateSphinx } from '../data/cutscene';
-import { JournalEntry, NPCType, QuestType } from '../data/types';
+import { NPCType, QuestType, WarpType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { hasActiveQuest } from './interactionUtils';
 
@@ -97,9 +98,7 @@ export function handleSphinxAnswer(option: string, player: Player, npc?: NPC) {
         messages: [`That is correct. Well done, you may pass.`],
         onCompleted: (player) => {
           player.quests.updateExistingQuest(QuestType.SphinxRiddle, true);
-          player.journal.addEntry(JournalEntry.SphinxRiddleSolved);
-
-          updateSphinx(player.scene as Game, true, false);
+          player.gameState.updateData({ sphinxPosition: SphinxPosition.Ledge, sphinxFail: false });
         },
       },
       npc
@@ -108,6 +107,20 @@ export function handleSphinxAnswer(option: string, player: Player, npc?: NPC) {
     player.message.setDialog<NPC>({ messages: ['Come back when you have an answer for me.'] }, npc);
   } else {
     // TODO: Add back talking points so we can hide dialog in a different system that is reset
-    player.message.setDialog<NPC>({ messages: ['That is not correct. Do not return.'] }, npc);
+    player.message.setDialog<NPC>(
+      {
+        messages: ['That is not correct. You will not remember how to get back to me.'],
+        onCompleted: (player) => {
+          player.gameState.updateData({
+            mazeSolved: false,
+            mazeSeed: player.gameState.data.mazeSeed + 1,
+            sphinxFail: true,
+          });
+
+          warpTo(WarpType.TownEast, player, { x: -100, y: 0 });
+        },
+      },
+      npc
+    );
   }
 }

@@ -1,6 +1,7 @@
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
+import { SphinxPosition } from '../classes/Player/GameState';
 import { Player } from '../classes/Player/Player';
 import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry, hasUsedItem } from '../utils/interactionUtils';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
@@ -27,6 +28,12 @@ export interface Dialog<T> {
   onCompleted?: (player: Player, target?: T) => void;
   onSelected?: (option: string, player: Player, target?: T) => void;
 }
+
+const sphinxRiddle: Dialog<NPC> = {
+  messages: (player) => getSphinxRiddle(player.scene),
+  options: (player) => getSphinxOptions(player.scene),
+  onSelected: handleSphinxAnswer,
+};
 
 export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [
@@ -159,24 +166,27 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       },
       onCompleted: (player, target) => {
         player.scene.time.delayedCall(50, () => {
-          player.message.setDialog<NPC>(
-            {
-              messages: (player) => getSphinxRiddle(player.scene),
-              options: (player) => getSphinxOptions(player.scene),
-              onSelected: handleSphinxAnswer,
-            },
-            target
-          );
+          player.message.setDialog<NPC>({ ...sphinxRiddle }, target);
         });
       },
     },
     {
-      messages: (player) => getSphinxRiddle(player.scene),
-      options: (player) => getSphinxOptions(player.scene),
+      messages: ['You have returned. I am surprised you were able to find your way back.', 'Try again.'],
+      conditions: {
+        activeQuest: QuestType.SphinxRiddle,
+        custom: (player) => player.gameState.data.sphinxFail,
+      },
+      onCompleted: (player, target) => {
+        player.scene.time.delayedCall(50, () => {
+          player.message.setDialog<NPC>({ ...sphinxRiddle }, target);
+        });
+      },
+    },
+    {
+      ...sphinxRiddle,
       conditions: {
         activeQuest: QuestType.SphinxRiddle,
       },
-      onSelected: handleSphinxAnswer,
     },
     {
       messages: [
@@ -334,6 +344,11 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
       onCompleted: (player) => {
         player.quests.addQuest({ id: QuestType.FindPotionIngredients, completed: false });
+        player.gameState.updateData({
+          mazeSolved: false,
+          mazeSeed: player.gameState.data.mazeSeed + 1,
+          sphinxPosition: SphinxPosition.Ground,
+        });
       },
     },
     {

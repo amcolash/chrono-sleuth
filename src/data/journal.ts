@@ -10,13 +10,6 @@ export const JournalData: Record<JournalEntry, Data> = {
     description:
       'The inventor gave me a wrench to help fix the clock tower. I will also need three gears to repair it.',
   },
-  [JournalEntry.ForestMazeSolved]: {
-    description: 'I finally got through the forest maze. Next time should be much easier.',
-  },
-  [JournalEntry.SphinxRiddleSolved]: {
-    description: 'I solved the sphinx’s riddle. Now I can pass through the forest.',
-    warpAdd: WarpType.ForestEast,
-  },
   [JournalEntry.MetTheMayor]: {
     description:
       'I have met the mayor of the town. She told me about the old clock tower. I should see if I can use the gear I found to try and fix it.',

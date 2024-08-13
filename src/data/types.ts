@@ -120,8 +120,6 @@ export interface Quest {
 
 export enum JournalEntry {
   FixTheClock,
-  ForestMazeSolved,
-  SphinxRiddleSolved,
   MetTheMayor,
   ClockFirstGear,
   AlchemyLabFound,

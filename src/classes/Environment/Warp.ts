@@ -1,14 +1,14 @@
-import { BlendModes, Cameras, GameObjects, Physics, Scene } from 'phaser';
+import { BlendModes, Cameras, GameObjects, Physics, Scene, Types } from 'phaser';
 
 import { Config } from '../../config';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
 import { QuestData } from '../../data/quest';
-import { InteractResult, Interactive, JournalEntry, LazyInitialize, WarpType } from '../../data/types';
+import { InteractResult, Interactive, LazyInitialize, WarpType } from '../../data/types';
 import { WarpData, WarpVisual } from '../../data/warp';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { hasJournalEntry, initializeObject } from '../../utils/interactionUtils';
+import { initializeObject } from '../../utils/interactionUtils';
 import { openDialog, shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
@@ -79,7 +79,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
       this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
     }
 
-    // run overridden setVisible to make sure particls are properly started/stopped
+    // run overridden setVisible to make sure particles are properly started/stopped
     this.setVisible(this.visible);
 
     if (this.warpType === WarpType.Underground) {
@@ -192,12 +192,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     const warpKeys = WarpData[this.warpType].key;
     const shouldWarp = keys[warpKeys] && withinRange;
 
-    if (
-      shouldWarp &&
-      this.warpType === WarpType.TownEast &&
-      !hasJournalEntry(this.player.journal.journal, JournalEntry.ForestMazeSolved) &&
-      !Config.debug
-    ) {
+    if (shouldWarp && this.warpType === WarpType.TownEast && !this.player.gameState.data.mazeSolved && !Config.debug) {
       openDialog(this.scene as Game, 'MazeDialog');
       return InteractResult.None;
     }
@@ -241,7 +236,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   setVisible(value: boolean): this {
     super.setVisible(value);
 
-    // console.log('setting warp visibility', WarpType[this.warpType], value, this.unlocked);
+    // console.log('setting warp visibility', WarpType[this.warpType], value);
 
     if (this.particles1 && this.particles2) {
       if (value) {
@@ -273,8 +268,13 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   }
 }
 
-export function warpTo(location: WarpType, player: Player) {
-  const { x, y, onWarp } = WarpData[location];
+export function warpTo(location: WarpType, player: Player, offset?: Types.Math.Vector2Like) {
+  let { x, y, onWarp } = WarpData[location];
+  if (offset) {
+    x += offset.x;
+    y += offset.y;
+  }
+
   const scene = player.scene;
 
   const targetScrollX = x - scene.cameras.main.width / 2;

@@ -1,7 +1,7 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { revealSafe, updateSphinx } from '../../data/cutscene';
+import { revealSafe } from '../../data/cutscene';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
 import { JournalEntry, NPCType } from '../../data/types';
@@ -85,10 +85,6 @@ export class Journal extends GameObjects.Image {
   handleSideEffects(entry: JournalEntry, silent: boolean) {
     const { warpAdd } = JournalData[entry];
     if (warpAdd) updateWarpVisibility(this.scene, warpAdd, true);
-
-    if (entry === JournalEntry.SphinxRiddleSolved) {
-      updateSphinx(this.scene, true, silent);
-    }
 
     if (entry === JournalEntry.ClockFirstGear || entry === JournalEntry.ClockSecondGear) {
       const clock = getNPC(this.scene, NPCType.ClockTower);

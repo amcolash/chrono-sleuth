@@ -17,6 +17,7 @@ export function getCurrentSaveState(scene: Game): SaveData {
     journal: scene.player.journal.journal.sort(),
     inventory: scene.player.inventory.inventory.sort((a, b) => a.type - b.type),
     quests: scene.player.quests.quests.sort((a, b) => a.id - b.id),
+    gameState: scene.player.gameState.data,
     settings: {
       gamepad: scene.gamepad.visible,
       debug: Config.debug,
@@ -98,6 +99,9 @@ export function load(scene: Game) {
       // Journals are second, quests third. Both have side-effects, but quests always happen last
       savedata.journal.sort().forEach((entry) => scene.player.journal.addEntry(entry, true));
       savedata.quests.sort((a, b) => a.id - b.id).forEach((quest) => scene.player.quests.addQuest(quest, true));
+
+      // Side effects of data are always last
+      scene.player.gameState.updateData(savedata.gameState, true);
     });
 
     scene.gamepad.setVisible(savedata.settings.gamepad);

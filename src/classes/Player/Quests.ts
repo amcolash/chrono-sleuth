@@ -1,14 +1,13 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { updateSphinx } from '../../data/cutscene';
 import { Layer } from '../../data/layers';
 import { QuestData } from '../../data/quest';
 import { ItemType, Quest, QuestType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
-import { hasItem, updateWarpVisibility } from '../../utils/interactionUtils';
+import { updateWarpVisibility } from '../../utils/interactionUtils';
 import { Item } from '../Environment/Item';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
@@ -115,9 +114,6 @@ export class Quests extends GameObjects.Container {
 
       scene.interactiveObjects.add(new Item(scene, ItemType.HerbGreen, this.player));
       scene.interactiveObjects.add(new Item(scene, ItemType.HerbBlue, this.player));
-
-      const hasGreenHerb = hasItem(this.player.inventory.inventory, ItemType.HerbGreen);
-      updateSphinx(scene, hasGreenHerb, true);
     }
   }
 

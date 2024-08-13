@@ -21,7 +21,8 @@ enum Tab {
   Items,
   Journal,
   Quests,
-  Save,
+  GameState,
+  Saves,
 }
 
 const sidebarWidth = 250;
@@ -57,10 +58,11 @@ export class DebugTool extends Dialog {
   create() {
     super.create();
 
-    const itemsTab = this.makeTab('Items', 0);
-    const journalTab = this.makeTab('Journal', 1);
-    const questsTab = this.makeTab('Quests', 2);
-    const saveTab = this.makeTab('Saves', 3);
+    const itemsTab = this.makeTab('Items', Tab.Items);
+    const journalTab = this.makeTab('Journal', Tab.Journal);
+    const questsTab = this.makeTab('Quests', Tab.Quests);
+    const stateTab = this.makeTab('State', Tab.GameState);
+    const saveTab = this.makeTab('Saves', Tab.Saves);
 
     this.helperText = this.add
       .text(Config.width * 0.94, 110, '', { ...fontStyle, fontSize: 24 })
@@ -79,13 +81,13 @@ export class DebugTool extends Dialog {
       (line) => this.handleLineClick(line)
     ).setBoxSize(Config.width * 0.65, Config.height * 0.75);
 
-    this.tabs = [itemsTab, journalTab, questsTab, saveTab];
+    this.tabs = [itemsTab, journalTab, questsTab, stateTab, saveTab];
     this.container.add(this.tabs);
 
     const debugMode = new Button(
       this,
       -this.container.x + 40,
-      Config.height / 2 - 100,
+      -Config.height / 2 + 20,
       'Debug Mode',
       () => {
         Config.debug = !Config.debug;
@@ -181,9 +183,12 @@ export class DebugTool extends Dialog {
       tab.setBackgroundColor(i === this.tab ? '#123' : '#151515');
     });
 
-    this.saveContainer?.setVisible(this.tab === Tab.Save);
-    this.textBox.setVisible(this.tab !== Tab.Save);
-    this.helperText.setVisible(this.tab !== Tab.Save);
+    const showText = this.tab === Tab.Items || this.tab === Tab.Journal || this.tab === Tab.Quests;
+
+    this.saveContainer?.setVisible(this.tab === Tab.Saves);
+
+    this.textBox.setVisible(showText);
+    this.helperText.setVisible(showText);
 
     let text = '';
     switch (this.tab) {

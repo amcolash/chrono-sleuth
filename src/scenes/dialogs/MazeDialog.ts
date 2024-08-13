@@ -3,7 +3,7 @@ import { GameObjects } from 'phaser';
 import { warpTo } from '../../classes/Environment/Warp';
 import { Player } from '../../classes/Player/Player';
 import { Config } from '../../config';
-import { JournalEntry, WarpType } from '../../data/types';
+import { WarpType } from '../../data/types';
 import { WarpData } from '../../data/warp';
 import { Game } from '../Game';
 import { Dialog } from './Dialog';
@@ -39,9 +39,9 @@ export class MazeDialog extends Dialog {
   handleSuccess(success: boolean): void {
     if (success) {
       warpTo(WarpType.Forest, this.player);
-      this.player.journal.addEntry(JournalEntry.ForestMazeSolved);
+      this.player.gameState.updateData({ mazeSolved: true, mazeSeed: this.player.gameState.data.mazeSeed + 1 }, false);
     } else {
-      this.player.setPosition(WarpData[WarpType.TownEast].x - 40, WarpData[WarpType.TownEast].y);
+      this.player.setPosition(WarpData[WarpType.TownEast].x - 100, WarpData[WarpType.TownEast].y);
     }
   }
 }

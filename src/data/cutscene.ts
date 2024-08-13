@@ -2,7 +2,7 @@ import { Physics, Scene } from 'phaser';
 
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
-import { getNPC, getProp, getWall, getWarper } from '../utils/interactionUtils';
+import { getNPC, getProp, getWall, updateWarpVisibility } from '../utils/interactionUtils';
 import { fadeIn, fadeOut } from '../utils/util';
 import { NPCData } from './npc';
 import { PropData } from './prop';
@@ -18,16 +18,16 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
 
   const wall = getWall(scene, WallType.Sphinx);
   if (wall) {
+    const x = WallData.find((data) => data.id === WallType.Sphinx)?.x || 0;
     if (complete) {
-      wall.setX(WallData.find((data) => data.id === WallType.Sphinx)?.x || 0);
+      wall.setX(x || 0);
     } else {
-      wall.setX(wall.x - 150);
+      wall.setX(x - 150);
     }
     (wall.body as Physics.Arcade.Body)?.updateFromGameObject();
   }
 
-  const warper = getWarper(scene, WarpType.ForestEast);
-  warper?.setVisible(complete || false);
+  updateWarpVisibility(scene, WarpType.ForestEast, complete || false);
 
   const { x, y } = NPCData[NPCType.Sphinx];
   const newX = complete ? x + 200 : x;

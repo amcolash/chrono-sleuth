@@ -1,4 +1,6 @@
 import { NPC } from '../classes/Environment/NPC';
+import { SphinxPosition } from '../classes/Player/GameState';
+import { Game } from '../scenes/Game';
 import { updateSphinx } from './cutscene';
 import { DataProps, NPCType } from './types';
 
@@ -34,7 +36,8 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'sphinx',
     portrait: 'sphinx_portrait',
     name: 'Mystical Sphinx',
-    onCreate: (npc) => updateSphinx(npc.scene, false, true),
+    onCreate: (npc) =>
+      updateSphinx(npc.scene, (npc.scene as Game).player.gameState.data.sphinxPosition === SphinxPosition.Ledge, true),
     light: 1.85,
     initializeOnStart: true,
   },

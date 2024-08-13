@@ -106,6 +106,7 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Right,
     warpTo: WarpType.Lake,
     visual: WarpVisual.WarpHidden,
+    initializeOnStart: true,
   },
   [WarpType.Lake]: {
     x: 4625,

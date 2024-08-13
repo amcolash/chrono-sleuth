@@ -3,8 +3,6 @@ import { GameObjects, Geom, Math, Scene } from 'phaser';
 
 import { InputManager, Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
-import { getClockRewind } from '../../utils/interactionUtils';
-import { Game } from '../Game';
 import { MazeDialog } from './MazeDialog';
 
 const cells = 24;
@@ -41,8 +39,14 @@ export class Maze extends Scene {
     this.keys = this.parent.keys;
   }
 
+  getMazeSeed() {
+    // getClockRewind(this.parent.player.scene as Game);
+
+    return this.parent.player.gameState.data.mazeSeed || 0;
+  }
+
   createMaze() {
-    const seed = getClockRewind(this.parent.player.scene as Game);
+    const seed = this.getMazeSeed();
 
     this.maze = generateMaze(cells, cells, true, seed);
     this.graphics = this.add.graphics();

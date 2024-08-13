@@ -1,3 +1,4 @@
+import { GameData, SphinxPosition, defaultState } from '../classes/Player/GameState';
 import { InventoryData } from '../classes/Player/Inventory';
 import { playerStart } from '../classes/Player/Player';
 import { isMobile } from '../utils/util';
@@ -21,6 +22,7 @@ export type SaveData = {
   journal: JournalEntry[];
   inventory: InventoryData[];
   quests: Quest[];
+  gameState: GameData;
   settings: Settings;
 };
 
@@ -46,6 +48,7 @@ const defaultSave: SaveData = {
   journal: [],
   inventory: [],
   quests: [],
+  gameState: { ...defaultState },
   settings: {
     gamepad: isMobile(),
     debug: false,
@@ -59,7 +62,7 @@ const act1: SaveData = {
     y: playerStart.y,
     flip: false,
   },
-  journal: [JournalEntry.FixTheClock, JournalEntry.ForestMazeSolved, JournalEntry.SphinxRiddleSolved],
+  journal: [JournalEntry.FixTheClock],
   inventory: [
     { type: ItemType.Wrench, used: false },
     { type: ItemType.Gear1, used: false },
@@ -68,6 +71,7 @@ const act1: SaveData = {
     { id: QuestType.ForestGear, completed: false },
     { id: QuestType.SphinxRiddle, completed: true },
   ],
+  gameState: { ...defaultState, mazeSolved: true, sphinxPosition: SphinxPosition.Ledge },
   settings: { ...debugSettings },
 };
 
@@ -77,13 +81,7 @@ const act2: SaveData = {
     y: playerStart.y,
     flip: true,
   },
-  journal: [
-    JournalEntry.FixTheClock,
-    JournalEntry.ForestMazeSolved,
-    JournalEntry.SphinxRiddleSolved,
-    JournalEntry.MetTheMayor,
-    JournalEntry.ClockFirstGear,
-  ],
+  journal: [JournalEntry.FixTheClock, JournalEntry.MetTheMayor, JournalEntry.ClockFirstGear],
   inventory: [
     { type: ItemType.Wrench, used: false },
     { type: ItemType.Gear1, used: true },
@@ -93,6 +91,7 @@ const act2: SaveData = {
     { id: QuestType.SphinxRiddle, completed: true },
     { id: QuestType.InvestigateTownWest, completed: false },
   ],
+  gameState: { ...defaultState, mazeSolved: true, sphinxPosition: SphinxPosition.Ledge },
   settings: { ...debugSettings },
 };
 
@@ -104,8 +103,6 @@ const labItems: SaveData = {
   },
   journal: [
     JournalEntry.FixTheClock,
-    JournalEntry.ForestMazeSolved,
-    JournalEntry.SphinxRiddleSolved,
     JournalEntry.MetTheMayor,
     JournalEntry.ClockFirstGear,
     JournalEntry.AlchemyLabFound,
@@ -123,6 +120,7 @@ const labItems: SaveData = {
     { id: QuestType.ExploreLab, completed: false },
     { id: QuestType.FindPotionIngredients, completed: false },
   ],
+  gameState: { ...defaultState, mazeSolved: false, sphinxPosition: SphinxPosition.Ground },
   settings: { ...debugSettings },
 };
 

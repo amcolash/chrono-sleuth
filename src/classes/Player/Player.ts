@@ -10,6 +10,7 @@ import { rewindInterval, rewindSpeed } from '../Environment/Clock';
 import { ButtonPrompt } from '../UI/ButtonPrompt';
 import { InputManager, Key } from '../UI/InputManager';
 import { Message } from '../UI/Message';
+import { GameState } from './GameState';
 import { Inventory } from './Inventory';
 import { Journal } from './Journal';
 import { Quests } from './Quests';
@@ -32,9 +33,11 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   interactionTimeout: number = 0;
 
   message: Message;
+
   inventory: Inventory;
   quests: Quests;
   journal: Journal;
+  gameState: GameState;
 
   counter: number = 0;
   history: Math.Vector3[] = [];
@@ -71,6 +74,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     this.inventory = new Inventory(scene);
     this.quests = new Quests(scene, this);
     this.journal = new Journal(scene, this);
+    this.gameState = new GameState(scene, this);
   }
 
   update(_time: number, delta: number) {
