@@ -5,7 +5,7 @@ import { ItemDialogs, getDialog } from '../../data/dialog';
 import { ItemData } from '../../data/item';
 import { Layer } from '../../data/layers';
 import { InteractResult, Interactive, ItemType, LazyInitialize } from '../../data/types';
-import { initializeObject } from '../../utils/interactionUtils';
+import { hasItem, initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
@@ -36,7 +36,7 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
 
     // Check if player already has item, if so, destroy this item
-    if (this.player.inventory.inventory.find((i) => i.type === this.itemType)) {
+    if (hasItem(this.player, this.itemType)) {
       this.destroy();
       return;
     }

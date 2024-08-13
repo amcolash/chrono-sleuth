@@ -63,8 +63,7 @@ export class ClockHands extends GameObjects.Graphics {
   }
 
   updateHands(): void {
-    const journal = this.player.journal.journal;
-    if (hasJournalEntry(journal, JournalEntry.ClockFirstGear)) this.update1 = true;
-    if (hasJournalEntry(journal, JournalEntry.ClockSecondGear)) this.update2 = true;
+    if (hasJournalEntry(this.player, JournalEntry.ClockFirstGear)) this.update1 = true;
+    if (hasJournalEntry(this.player, JournalEntry.ClockSecondGear)) this.update2 = true;
   }
 }

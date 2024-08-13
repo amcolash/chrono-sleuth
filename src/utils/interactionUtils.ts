@@ -4,7 +4,7 @@ import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
 import { Warp } from '../classes/Environment/Warp';
-import { InventoryData } from '../classes/Player/Inventory';
+import { Player } from '../classes/Player/Player';
 import {
   DataProps,
   ItemType,
@@ -12,39 +12,38 @@ import {
   LazyInitialize,
   NPCType,
   PropType,
-  Quest,
   QuestType,
   WallType,
   WarpType,
 } from '../data/types';
 import { Game } from '../scenes/Game';
 
-export function hasItem(inventory: InventoryData[], item: ItemType): boolean {
-  return inventory.find((i) => i.type === item) !== undefined;
+export function hasItem(player: Player, item: ItemType): boolean {
+  return player.inventory.inventory.find((i) => i.type === item) !== undefined;
 }
 
-export function hasUnusedItem(inventory: InventoryData[], item: ItemType): boolean {
-  return inventory.find((i) => i.type === item && !i.used) !== undefined;
+export function hasUnusedItem(player: Player, item: ItemType): boolean {
+  return player.inventory.inventory.find((i) => i.type === item && !i.used) !== undefined;
 }
 
-export function hasUsedItem(inventory: InventoryData[], item: ItemType): boolean {
-  return inventory.find((i) => i.type === item && i.used) !== undefined;
+export function hasUsedItem(player: Player, item: ItemType): boolean {
+  return player.inventory.inventory.find((i) => i.type === item && i.used) !== undefined;
 }
 
-export function hasQuest(quests: Quest[], questId: QuestType): boolean {
-  return quests.some((quest) => quest.id === questId);
+export function hasQuest(player: Player, questId: QuestType): boolean {
+  return player.quests.quests.some((quest) => quest.id === questId);
 }
 
-export function hasActiveQuest(quests: Quest[], questId: QuestType): boolean {
-  return quests.some((quest) => quest.id === questId && !quest.completed);
+export function hasActiveQuest(player: Player, questId: QuestType): boolean {
+  return player.quests.quests.some((quest) => quest.id === questId && !quest.completed);
 }
 
-export function hasCompletedQuest(quests: Quest[], questId: QuestType): boolean {
-  return quests.some((quest) => quest.id === questId && quest.completed);
+export function hasCompletedQuest(player: Player, questId: QuestType): boolean {
+  return player.quests.quests.some((quest) => quest.id === questId && quest.completed);
 }
 
-export function hasJournalEntry(journal: JournalEntry[], entry: JournalEntry): boolean {
-  return journal.includes(entry);
+export function hasJournalEntry(player: Player, entry: JournalEntry): boolean {
+  return player.journal.journal.includes(entry);
 }
 
 export function getGameObjects<T extends GameObjects.GameObject>(

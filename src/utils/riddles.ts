@@ -57,7 +57,7 @@ function getRiddleIndex(scene: Scene): number {
 
   if (scene instanceof Game) {
     const player = scene.player;
-    if (hasActiveQuest(player.quests.quests, QuestType.FindPotionIngredients)) {
+    if (hasActiveQuest(player, QuestType.FindPotionIngredients)) {
       return 1;
     }
   }

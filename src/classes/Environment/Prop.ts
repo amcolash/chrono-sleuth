@@ -5,7 +5,7 @@ import { PropDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { PropData } from '../../data/prop';
 import { InteractResult, Interactive, JournalEntry, LazyInitialize, PropType } from '../../data/types';
-import { initializeObject } from '../../utils/interactionUtils';
+import { hasJournalEntry, initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
@@ -33,7 +33,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
 
     // Remove this prop if player has already interacted with it
-    if (this.player.journal.journal.includes(JournalEntry.AlchemyLabFound) && this.propType === PropType.LabHatch) {
+    if (hasJournalEntry(this.player, JournalEntry.AlchemyLabFound) && this.propType === PropType.LabHatch) {
       this.destroy();
       return;
     }

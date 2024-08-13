@@ -224,7 +224,7 @@ export class DebugTool extends Dialog {
       case Tab.Journal:
         const entry = journalList[line];
         const journal = this.player.journal.journal;
-        if (hasJournalEntry(journal, entry)) {
+        if (hasJournalEntry(this.player, entry)) {
           journal.splice(journal.indexOf(entry), 1);
         } else {
           this.player.journal.addEntry(entry, true);
@@ -262,28 +262,25 @@ export class DebugTool extends Dialog {
     let text = '';
     switch (this.tab) {
       case Tab.Items:
-        const inventory = this.player.inventory.inventory;
         text = itemList
           .map(
             (entry) =>
-              `[${hasUnusedItem(inventory, entry) ? '-' : hasUsedItem(inventory, entry) ? 'x' : ' '}] ${ItemType[entry]}`
+              `[${hasUnusedItem(this.player, entry) ? '-' : hasUsedItem(this.player, entry) ? 'x' : ' '}] ${ItemType[entry]}`
           )
           .join('\n');
         this.helperText.setText('[-] item held\n[x] item used');
         break;
       case Tab.Journal:
-        const journal = this.player.journal.journal;
         text = journalList
-          .map((entry) => `[${hasJournalEntry(journal, entry) ? 'x' : ' '}] ${JournalEntry[entry]}`)
+          .map((entry) => `[${hasJournalEntry(this.player, entry) ? 'x' : ' '}] ${JournalEntry[entry]}`)
           .join('\n');
         this.helperText.setText('');
         break;
       case Tab.Quests:
-        const quests = this.player.quests.quests;
         text = questList
           .map(
             (entry) =>
-              `[${hasActiveQuest(quests, entry) ? '-' : hasCompletedQuest(quests, entry) ? 'x' : ' '}] ${QuestType[entry]}`
+              `[${hasActiveQuest(this.player, entry) ? '-' : hasCompletedQuest(this.player, entry) ? 'x' : ' '}] ${QuestType[entry]}`
           )
           .join('\n');
         this.helperText.setText('[-] quest active\n[x] quest complete');

@@ -163,7 +163,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
         if (player.gameState.data.sphinxFail)
           return ['You have returned. I am surprised you were able to find your way back.', 'Try again.'];
 
-        if (hasActiveQuest(player.quests.quests, QuestType.FindPotionIngredients))
+        if (hasActiveQuest(player, QuestType.FindPotionIngredients))
           return [
             'I see you are back again. You may find what you are looking for ahead, but must first answer my riddle.',
           ];
@@ -484,7 +484,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       ],
       conditions: {
         activeQuest: QuestType.FindPotionIngredients,
-        custom: (player) => !hasItem(player.inventory.inventory, ItemType.HerbRed),
+        custom: (player) => !hasItem(player, ItemType.HerbRed),
       },
       onCompleted(player) {
         player.inventory.addItem({ type: ItemType.HerbRed, used: false });
@@ -564,15 +564,11 @@ export function getDialog<T>(dialogs: Dialog<T>[], player: Player, target: T): D
 
     const results = [];
 
-    if (conditions?.hasItem !== undefined) results.push(hasItem(player.inventory.inventory, conditions.hasItem));
-    if (conditions?.hasUsedItem !== undefined)
-      results.push(hasUsedItem(player.inventory.inventory, conditions.hasUsedItem));
-    if (conditions?.completedQuest !== undefined)
-      results.push(hasCompletedQuest(player.quests.quests, conditions.completedQuest));
-    if (conditions?.activeQuest !== undefined)
-      results.push(hasActiveQuest(player.quests.quests, conditions.activeQuest));
-    if (conditions?.journalEntry !== undefined)
-      results.push(hasJournalEntry(player.journal.journal, conditions.journalEntry));
+    if (conditions?.hasItem !== undefined) results.push(hasItem(player, conditions.hasItem));
+    if (conditions?.hasUsedItem !== undefined) results.push(hasUsedItem(player, conditions.hasUsedItem));
+    if (conditions?.completedQuest !== undefined) results.push(hasCompletedQuest(player, conditions.completedQuest));
+    if (conditions?.activeQuest !== undefined) results.push(hasActiveQuest(player, conditions.activeQuest));
+    if (conditions?.journalEntry !== undefined) results.push(hasJournalEntry(player, conditions.journalEntry));
     if (conditions?.custom) results.push(conditions.custom(player, target));
 
     if (conditions?.invert) {
