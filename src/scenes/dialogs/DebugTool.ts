@@ -6,6 +6,7 @@ import { TextBox } from '../../classes/UI/TextBox';
 import { Config } from '../../config';
 import { SaveType, saves } from '../../data/saves';
 import { ItemType, JournalEntry, QuestType } from '../../data/types';
+import { getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import {
   hasActiveQuest,
@@ -21,7 +22,7 @@ enum Tab {
   Items,
   Journal,
   Quests,
-  GameState,
+  State,
   Saves,
 }
 
@@ -42,9 +43,10 @@ const questList = Object.keys(QuestType)
 export class DebugTool extends Dialog {
   player: Player;
   tabs: Button[] = [];
-  tab: Tab = Tab.Items;
+  tab: Tab = Tab.State;
   textBox: TextBox;
   helperText: GameObjects.Text;
+  stateContainer: GameObjects.Container;
   saveContainer: GameObjects.Container;
 
   constructor() {
@@ -61,7 +63,7 @@ export class DebugTool extends Dialog {
     const itemsTab = this.makeTab('Items', Tab.Items);
     const journalTab = this.makeTab('Journal', Tab.Journal);
     const questsTab = this.makeTab('Quests', Tab.Quests);
-    const stateTab = this.makeTab('State', Tab.GameState);
+    const stateTab = this.makeTab('State', Tab.State);
     const saveTab = this.makeTab('Saves', Tab.Saves);
 
     this.helperText = this.add
@@ -100,13 +102,84 @@ export class DebugTool extends Dialog {
 
     this.container.add(debugMode);
 
-    this.saveContainer = this.add.container(0, 0);
+    this.createStateContainer();
+    this.createSaveContainer();
+
+    this.updateTabs();
+  }
+
+  createStateContainer() {
+    this.stateContainer = this.add.container(sidebarWidth + 60, 100);
+
+    const background = this.add
+      .rectangle(-10, 0, Config.width * 0.65, Config.height * 0.75, getColorNumber('#112233'))
+      .setOrigin(0);
+    this.stateContainer.add(background);
+
+    const data = this.player.gameState.data;
+
+    Object.entries(data).forEach((s, i) => {
+      const [key, value] = s;
+
+      // console.log(key, data, s, i);
+
+      const text = this.add.text(0, 20 + 50 * i, `${key}: ${value}`, { ...fontStyle, fontSize: 32 }).setOrigin(0);
+      this.stateContainer.add(text);
+
+      switch (typeof value) {
+        case 'boolean':
+          text.setText(`${value ? '[x]' : '[ ]'} ${key}`);
+          text.setInteractive().on('pointerdown', () => {
+            /* @ts-ignore */
+            data[key] = !data[key];
+            /* @ts-ignore */
+            text.setText(`${data[key] ? '[x]' : '[ ]'} ${key}`);
+          });
+          break;
+        case 'number':
+          const minus = this.add.text(text.width + 30, 13 + 50 * i, '-', {
+            ...fontStyle,
+            fontSize: 42,
+            backgroundColor: '#111',
+            padding: { x: 7, y: 0 },
+          });
+          const plus = this.add.text(text.width + 75, 13 + 50 * i, '+', {
+            ...fontStyle,
+            fontSize: 42,
+            backgroundColor: '#111',
+            padding: { x: 7, y: 0 },
+          });
+
+          minus.setInteractive().on('pointerdown', () => {
+            /* @ts-ignore */
+            data[key]--;
+            /* @ts-ignore */
+            text.setText(`${key}: ${data[key]}`);
+          });
+
+          plus.setInteractive().on('pointerdown', () => {
+            /* @ts-ignore */
+            data[key]++;
+            /* @ts-ignore */
+            text.setText(`${key}: ${data[key]}`);
+          });
+
+          this.stateContainer.add([minus, plus]);
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  createSaveContainer() {
+    this.saveContainer = this.add.container(sidebarWidth + 60, 100);
     Object.entries(saves).forEach((s, i) => {
       const [key, data] = s;
       const button = new Button(
         this,
-        sidebarWidth + 60,
-        100 + 80 * i,
+        0,
+        80 * i,
         SaveType[Number(key)],
         () => {
           save(this.player.scene, data);
@@ -118,8 +191,6 @@ export class DebugTool extends Dialog {
         .setFixedSize(sidebarWidth, 70);
       this.saveContainer.add(button);
     });
-
-    this.updateTabs();
   }
 
   makeTab(title: string, index: number): Button {
@@ -185,6 +256,7 @@ export class DebugTool extends Dialog {
 
     const showText = this.tab === Tab.Items || this.tab === Tab.Journal || this.tab === Tab.Quests;
 
+    this.stateContainer?.setVisible(this.tab === Tab.State);
     this.saveContainer?.setVisible(this.tab === Tab.Saves);
 
     this.textBox.setVisible(showText);
