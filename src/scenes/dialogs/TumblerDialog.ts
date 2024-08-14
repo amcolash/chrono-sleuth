@@ -107,14 +107,6 @@ export class TumblerDialog extends Dialog {
 
     this.container.add(this.markerContainer);
     this.updateMarkers();
-
-    if (import.meta.env.DEV) {
-      this.input.keyboard?.on('keydown-L', () => {
-        this.angles = [0, 0, 0, 0, 0];
-        this.updateMarkers();
-        this.completed();
-      });
-    }
   }
 
   handleMove(index: number, angle: number, checkComplete?: boolean) {
@@ -149,11 +141,14 @@ export class TumblerDialog extends Dialog {
     });
 
     if (complete && checkComplete) {
-      this.completed();
+      this.close(true);
     }
   }
 
-  completed() {
+  completed(closeHandler?: () => void) {
+    this.angles = [0, 0, 0, 0, 0];
+    this.updateMarkers();
+
     this.disabled = true;
     this.active = -1;
     this.markers.forEach((m) => m.setStrokeStyle(4, getColorNumber(Colors.Tan)));
@@ -164,7 +159,7 @@ export class TumblerDialog extends Dialog {
       delay: 500,
       duration: 1500,
       hold: 1000,
-      onComplete: () => this.close(true),
+      onComplete: closeHandler,
     });
   }
 
@@ -184,6 +179,11 @@ export class TumblerDialog extends Dialog {
       m.setFillStyle(i === this.active ? getColorNumber(Colors.Peach) : undefined);
       m.setScale(i === this.active ? 1.3 : 1);
     });
+  }
+
+  close(success?: boolean): void {
+    if (success) this.completed(() => super.close(success));
+    else super.close(success);
   }
 
   handleSuccess(success: boolean): void {
