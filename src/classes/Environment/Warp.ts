@@ -318,6 +318,15 @@ export function warpTo(location: WarpType, player: Player, offset?: Types.Math.V
     },
   });
 
+  scene.tweens.add({
+    targets: player.light,
+    intensity: 0,
+    duration: 50,
+    hold: 600,
+    yoyo: true,
+    repeat: 0,
+  });
+
   // move player to new location
   const light = player.light instanceof GameObjects.Light ? player.light : player.light.light;
   scene.tweens.add({
