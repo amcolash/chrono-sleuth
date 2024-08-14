@@ -1,4 +1,4 @@
-import { Math } from 'phaser';
+import { Math, Types } from 'phaser';
 
 import { Key } from '../classes/UI/InputManager';
 
@@ -40,13 +40,13 @@ export type DataProps = {
   y: number;
   image?: string;
 
-  scale?: number;
+  scale?: number | Types.Math.Vector2Like;
   alpha?: number;
   angle?: number;
   depth?: number;
   skipLighting?: boolean;
   particles?: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig;
-  origin?: { x: number; y: number };
+  origin?: Types.Math.Vector2Like;
   initializeOnStart?: boolean;
 };
 
@@ -130,6 +130,7 @@ export enum JournalEntry {
 }
 
 export enum PropType {
+  Chest,
   LabHatch,
   LabBook,
   AlchemySet,

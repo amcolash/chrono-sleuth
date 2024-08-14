@@ -4,8 +4,8 @@ import { Config } from '../../config';
 import { PropDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { PropData } from '../../data/prop';
-import { InteractResult, Interactive, JournalEntry, LazyInitialize, PropType } from '../../data/types';
-import { hasJournalEntry, initializeObject } from '../../utils/interactionUtils';
+import { InteractResult, Interactive, ItemType, JournalEntry, LazyInitialize, PropType } from '../../data/types';
+import { hasItem, hasJournalEntry, initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
@@ -13,8 +13,10 @@ import { Key } from '../UI/InputManager';
 export class Prop extends Physics.Arcade.Image implements Interactive, LazyInitialize {
   propType: PropType;
   player: Player;
-  initialized: boolean = false;
   particles: GameObjects.Particles.ParticleEmitter;
+
+  initialized: boolean = false;
+  disabled?: boolean = false;
 
   constructor(scene: Scene, type: PropType, player: Player) {
     const { x, y, image } = PropData[type];
@@ -32,11 +34,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
   lazyInit(forceInit?: boolean) {
     if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
 
-    // Remove this prop if player has already interacted with it
-    if (hasJournalEntry(this.player, JournalEntry.AlchemyLabFound) && this.propType === PropType.LabHatch) {
-      this.destroy();
-      return;
-    }
+    if (this.checkDestroyed()) return;
 
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
@@ -64,6 +62,19 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
 
     return InteractResult.None;
+  }
+
+  checkDestroyed(): boolean {
+    let destroyed = false;
+
+    // Remove this prop if player has already interacted with it
+    if (this.propType === PropType.LabHatch && hasJournalEntry(this.player, JournalEntry.AlchemyLabFound))
+      destroyed = true;
+    if (this.propType === PropType.Chest && hasItem(this.player, ItemType.Gear1)) destroyed = true;
+
+    if (destroyed) this.destroy();
+
+    return destroyed;
   }
 
   getButtonPrompt() {

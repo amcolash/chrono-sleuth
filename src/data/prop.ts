@@ -5,6 +5,12 @@ type Data = DataProps & {
 };
 
 export const PropData: Record<PropType, Data> = {
+  [PropType.Chest]: {
+    x: 5110,
+    y: 915,
+    image: 'chest',
+    scale: { x: 4.5, y: 3 },
+  },
   [PropType.LabHatch]: {
     x: -1910,
     y: 640,

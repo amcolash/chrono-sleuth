@@ -167,7 +167,7 @@ export class Game extends Scene {
   }
 
   createItems(): Item[] {
-    return [ItemType.Gear1, ItemType.Key].map((item) => new Item(this, item, this.player));
+    return [ItemType.Key].map((item) => new Item(this, item, this.player));
   }
 
   createSlopes(): Slope[] {

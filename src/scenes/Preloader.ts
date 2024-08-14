@@ -118,6 +118,8 @@ export class Preloader extends Scene {
     this.load.image('clock_portrait', 'characters/clock_portrait.png');
 
     // props
+    this.load.image('chest', 'props/chest.png');
+    this.load.image('chest_open', 'props/chest_open.png');
     this.load.image('book', 'props/book.png');
     this.load.image('picture', 'props/picture.png');
 

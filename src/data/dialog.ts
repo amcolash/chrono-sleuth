@@ -2,7 +2,15 @@ import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
-import { hasActiveQuest, hasCompletedQuest, hasItem, hasJournalEntry, hasUsedItem } from '../utils/interactionUtils';
+import {
+  getItem,
+  hasActiveQuest,
+  hasCompletedQuest,
+  hasItem,
+  hasJournalEntry,
+  hasUnusedItem,
+  hasUsedItem,
+} from '../utils/interactionUtils';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
 import { openDialog } from '../utils/util';
 import { makePotion } from './cutscene';
@@ -12,6 +20,7 @@ import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 export interface Dialog<T> {
   conditions?: {
     hasItem?: ItemType;
+    hasUnusedItem?: ItemType;
     hasUsedItem?: ItemType;
     completedQuest?: QuestType;
     activeQuest?: QuestType;
@@ -284,6 +293,17 @@ export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
 };
 
 export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
+  [PropType.Chest]: [
+    {
+      messages: ['The chest seems to be locked.', 'It appears to have a puzzle around the latch'],
+      conditions: {
+        custom: (player) => !hasItem(player, ItemType.Gear1) && getItem(player.scene, ItemType.Gear1) === undefined,
+      },
+      onCompleted: (player) => {
+        openDialog(player.scene, 'TumblerDialog', { player });
+      },
+    },
+  ],
   [PropType.LabHatch]: [
     {
       messages: [
@@ -504,6 +524,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       messages: ['You pour the potion into the safe keyhole.', '[CLUNK]', 'The safe clicks open.', 'Huh, what’s that?'],
       conditions: {
         journalEntry: JournalEntry.ExtraPotionInformation,
+        hasUnusedItem: ItemType.Potion,
       },
       onCompleted: (player, target) => {
         player.inventory.removeItem(ItemType.Potion);
@@ -565,6 +586,7 @@ export function getDialog<T>(dialogs: Dialog<T>[], player: Player, target: T): D
     const results = [];
 
     if (conditions?.hasItem !== undefined) results.push(hasItem(player, conditions.hasItem));
+    if (conditions?.hasUnusedItem !== undefined) results.push(hasUnusedItem(player, conditions.hasUnusedItem));
     if (conditions?.hasUsedItem !== undefined) results.push(hasUsedItem(player, conditions.hasUsedItem));
     if (conditions?.completedQuest !== undefined) results.push(hasCompletedQuest(player, conditions.completedQuest));
     if (conditions?.activeQuest !== undefined) results.push(hasActiveQuest(player, conditions.activeQuest));

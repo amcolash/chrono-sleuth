@@ -1,8 +1,13 @@
 import { GameObjects, Input, Math as PhaserMath } from 'phaser';
 
+import { Item } from '../../classes/Environment/Item';
+import { Player } from '../../classes/Player/Player';
 import { Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
+import { spawnGear } from '../../data/cutscene';
+import { ItemType, PropType } from '../../data/types';
 import { Colors, getColorNumber } from '../../utils/colors';
+import { getProp } from '../../utils/interactionUtils';
 import { Dialog } from './Dialog';
 
 const rings = [
@@ -20,21 +25,35 @@ const snapPoints = 16;
 const snapThreshold = (Math.PI * 2) / snapPoints;
 
 export class TumblerDialog extends Dialog {
-  angles: number[] = [];
-  markers: GameObjects.Arc[] = [];
+  player: Player;
+
+  angles: number[];
+  markers: GameObjects.Arc[];
   markerContainer: GameObjects.Container;
 
-  active: number = -1;
-  nextUpdate: number = 0;
+  active: number;
+  nextUpdate: number;
 
-  disabled: boolean = false;
+  disabled: boolean;
 
   constructor() {
     super({ key: 'TumblerDialog', title: 'Open the lock by aligning all rings', gamepadVisible: false });
   }
 
+  init(data: { player: Player }) {
+    this.player = data.player;
+  }
+
   create(): void {
     super.create();
+
+    this.angles = [];
+    this.markers = [];
+
+    this.active = -1;
+    this.nextUpdate = 0;
+
+    this.disabled = false;
 
     this.markerContainer = this.add.container(offset.x, offset.y);
 
@@ -119,7 +138,7 @@ export class TumblerDialog extends Dialog {
 
       const angle = PhaserMath.Snap.To(a, snapThreshold);
 
-      if (!(Math.abs(angle - 0) < snapThreshold / 2 || Math.abs(angle - Math.PI * 2) < snapThreshold / 2)) {
+      if (!(Math.abs(angle - 0) < snapThreshold * 0.6 || Math.abs(angle - Math.PI * 2) < snapThreshold * 0.6)) {
         complete = false;
       }
 
@@ -167,5 +186,7 @@ export class TumblerDialog extends Dialog {
     });
   }
 
-  handleSuccess(): void {}
+  handleSuccess(success: boolean): void {
+    if (success) spawnGear(this.player);
+  }
 }

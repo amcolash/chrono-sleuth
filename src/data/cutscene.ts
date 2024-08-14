@@ -1,5 +1,6 @@
 import { Physics, Scene } from 'phaser';
 
+import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
 import { getNPC, getProp, getWall, updateWarpVisibility } from '../utils/interactionUtils';
@@ -115,5 +116,35 @@ export function revealSafe(player: Player, silent: boolean) {
         );
       }
     },
+  });
+}
+
+export function spawnGear(player: Player) {
+  const scene = player.scene;
+  const gear = new Item(scene, ItemType.Gear1, player);
+  scene.interactiveObjects.add(gear);
+
+  const target = getProp(scene, PropType.Chest);
+  if (!target) return;
+
+  player.setX(target.x - 100);
+
+  target.setTexture('chest_open');
+
+  target.disabled = true;
+  gear.disabled = true;
+  gear.setPosition(target.x, target.y - 20);
+  gear.setScale(0.15);
+
+  scene.tweens.add({
+    targets: gear,
+    scale: 0.35,
+    y: target.y + 20,
+    duration: 700,
+    onComplete: () => {
+      target.disabled = false;
+      gear.disabled = false;
+    },
+    ease: 'Bounce.easeOut',
   });
 }

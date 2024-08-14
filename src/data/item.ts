@@ -7,7 +7,7 @@ type Data = DataProps & {
 
 export const ItemData: Record<ItemType, Data> = {
   [ItemType.Wrench]: { x: 0, y: 0, image: 'wrench', name: 'Old Wrench' },
-  [ItemType.Gear1]: { x: 5120, y: 915, image: 'gear', name: 'Shiny Gear' },
+  [ItemType.Gear1]: { x: 0, y: 0, image: 'gear', name: 'Shiny Gear' },
   [ItemType.Key]: { x: -1750, y: -420, image: 'key', name: 'Rusty Key' },
   [ItemType.HerbRed]: { x: -200, y: 1730, image: 'herb_red', name: 'Crimson Starbloom' },
   [ItemType.HerbGreen]: { x: 5295, y: 985, image: 'herb_green', name: 'Green Writhewood' },
