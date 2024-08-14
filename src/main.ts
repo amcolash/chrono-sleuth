@@ -32,17 +32,22 @@ const config: Types.Core.GameConfig = {
   },
   scene: [
     Boot,
+    MainMenu,
+    Preloader,
+
+    MainGame,
+
+    Paused,
+    JournalDialog,
 
     DebugTool,
-    JournalDialog,
-    MainGame,
-    MainMenu,
-    Maze,
+
     MazeDialog,
-    Paused,
-    Pipes,
+    Maze,
+
     PipesDialog,
-    Preloader,
+    Pipes,
+
     TumblerDialog,
   ],
   input: {

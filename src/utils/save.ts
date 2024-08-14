@@ -4,6 +4,7 @@ import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
 import { SaveData, SaveType, saveKey, saves } from '../data/saves';
 import { Game } from '../scenes/Game';
+import { Colors } from './colors';
 import { setZoomed } from './util';
 
 // Get the current state of the game before saving
@@ -90,18 +91,33 @@ export function load(scene: Game) {
 
     // Delay loading this data as it can make UI which slows down initial game load
     scene.time.delayedCall(50, () => {
-      scene.player.inventory.createUI();
-      scene.player.quests.createUI();
-      scene.player.journal.createUI();
+      try {
+        scene.player.inventory.createUI();
+        scene.player.quests.createUI();
+        scene.player.journal.createUI();
 
-      savedata.inventory.sort((a, b) => a.type - b.type).forEach((item) => scene.player.inventory.addItem(item, true));
+        savedata.inventory
+          .sort((a, b) => a.type - b.type)
+          .forEach((item) => scene.player.inventory.addItem(item, true));
 
-      // Journals are second, quests third. Both have side-effects, but quests always happen last
-      savedata.journal.sort().forEach((entry) => scene.player.journal.addEntry(entry, true));
-      savedata.quests.sort((a, b) => a.id - b.id).forEach((quest) => scene.player.quests.addQuest(quest, true));
+        // Journals are second, quests third. Both have side-effects, but quests always happen last
+        savedata.journal.sort().forEach((entry) => scene.player.journal.addEntry(entry, true));
+        savedata.quests.sort((a, b) => a.id - b.id).forEach((quest) => scene.player.quests.addQuest(quest, true));
 
-      // Side effects of data are always last
-      scene.player.gameState.updateData(savedata.gameState, true);
+        // Side effects of data are always last
+        scene.player.gameState.updateData(savedata.gameState, true);
+      } catch (err) {
+        console.error(err);
+        new Notification(
+          scene,
+          'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game',
+          10000,
+          Colors.Warning
+        );
+
+        save(scene, saves[SaveType.New]);
+        load(scene);
+      }
     });
 
     scene.gamepad.setVisible(savedata.settings.gamepad);
@@ -118,7 +134,12 @@ export function load(scene: Game) {
     }
   } catch (err) {
     console.error(err);
-    new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
+    new Notification(
+      scene,
+      'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game',
+      10000,
+      Colors.Warning
+    );
 
     save(scene, saves[SaveType.New]);
     load(scene);
