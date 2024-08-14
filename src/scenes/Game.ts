@@ -122,24 +122,26 @@ export class Game extends Scene {
   }
 
   update(): void {
-    const isOverlapping = this.physics.overlap(
-      this.interactiveObjects,
-      this.player,
-      this.player.setInteractiveObject,
-      (object, _player) => {
-        const o = object as any as Types.Physics.Arcade.ImageWithDynamicBody & Interactive;
-        let interactive = true;
+    if (this.player) {
+      const isOverlapping = this.physics.overlap(
+        this.interactiveObjects,
+        this.player,
+        this.player.setInteractiveObject,
+        (object, _player) => {
+          const o = object as any as Types.Physics.Arcade.ImageWithDynamicBody & Interactive;
+          let interactive = true;
 
-        if (o.disabled) interactive = false;
-        if (o.visible !== undefined) interactive = interactive && o.visible;
+          if (o.disabled) interactive = false;
+          if (o.visible !== undefined) interactive = interactive && o.visible;
 
-        return interactive;
-      },
-      this.player
-    );
+          return interactive;
+        },
+        this.player
+      );
 
-    if (!isOverlapping) {
-      this.player.setInteractiveObject(undefined);
+      if (!isOverlapping) {
+        this.player.setInteractiveObject(undefined);
+      }
     }
   }
 

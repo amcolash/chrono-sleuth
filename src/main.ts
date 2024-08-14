@@ -13,6 +13,7 @@ import { MazeDialog } from './scenes/dialogs/MazeDialog';
 import { Paused } from './scenes/dialogs/Paused';
 import { Pipes } from './scenes/dialogs/Pipes';
 import { PipesDialog } from './scenes/dialogs/PipesDialog';
+import { TumblerDialog } from './scenes/dialogs/TumblerDialog';
 import { Colors, getColorNumber } from './utils/colors';
 
 // SW injection is done build-time in vite config
@@ -29,7 +30,21 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainGame, Paused, JournalDialog, MazeDialog, Maze, PipesDialog, Pipes, DebugTool, MainMenu],
+  scene: [
+    Boot,
+
+    DebugTool,
+    JournalDialog,
+    MainGame,
+    MainMenu,
+    Maze,
+    MazeDialog,
+    Paused,
+    Pipes,
+    PipesDialog,
+    Preloader,
+    TumblerDialog,
+  ],
   input: {
     gamepad: true,
   },
