@@ -113,10 +113,10 @@ export class TumblerDialog extends Dialog {
     if (this.disabled) return;
 
     const movement = this.angles[index] - angle;
-    this.angles[index] = angle;
+    this.angles[index] = angle % (Math.PI * 2);
 
     rings[index].forEach((r, j) => {
-      if (j !== index) this.angles[j] += r * movement;
+      if (j !== index) this.angles[j] = (this.angles[j] + r * movement) % (Math.PI * 2);
     });
 
     this.updateMarkers(checkComplete);
