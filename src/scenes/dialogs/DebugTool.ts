@@ -307,6 +307,7 @@ export class DebugTool extends Dialog {
         break;
       case Tab.Warp:
         text = warpList.map((entry) => WarpType[entry]).join('\n');
+        this.helperText.setText('');
         break;
     }
 

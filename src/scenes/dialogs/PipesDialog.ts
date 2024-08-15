@@ -3,6 +3,7 @@ import { Player } from '../../classes/Player/Player';
 import { JournalEntry, PropType } from '../../data/types';
 import { getProp } from '../../utils/interactionUtils';
 import { Dialog } from './Dialog';
+import { Pipes } from './Pipes';
 
 export class PipesDialog extends Dialog {
   player: Player;
@@ -27,6 +28,13 @@ export class PipesDialog extends Dialog {
       .setFontSize(36)
       .setAlign('center')
       .setY(this.title.y + 10);
+  }
+
+  close(success?: boolean): void {
+    const childScene = this.scene.get('Pipes');
+    if (success && childScene) {
+      (childScene as Pipes).completed(() => super.close(success));
+    } else super.close(success);
   }
 
   handleSuccess(success?: boolean): void {

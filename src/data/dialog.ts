@@ -13,8 +13,7 @@ import {
 } from '../utils/interactionUtils';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
 import { openDialog } from '../utils/util';
-import { makePotion } from './cutscene';
-import { PropData } from './prop';
+import { addHerb, makePotion } from './cutscene';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
 export interface Dialog<T> {
@@ -202,6 +201,14 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Mayor]: [
     {
       messages: [
+        'Herbs? I haven’t the faintest idea where to being looking. Start at the source - there are bound to be a few ingredients in the lab you found.',
+      ],
+      conditions: {
+        activeQuest: QuestType.FindPotionIngredients,
+      },
+    },
+    {
+      messages: [
         'The minute hand on the clock is spinning again.',
         'It looks like it’s missing two more gears.',
         'The abandoned mansion west of the town might be a good place to look.',
@@ -308,7 +315,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     {
       messages: [
         'Let me see if I can open this hatch.',
-        'Wow,tThe rusty key fits!',
+        'Wow, the rusty key fits!',
         '[CREAKING NOISE]',
         'Alright, let’s see what is down there!',
       ],
@@ -317,7 +324,6 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
       onCompleted: (player, prop) => {
         prop?.destroy();
-        console.log(prop);
         player.inventory.removeItem(ItemType.Key);
         player.journal.addEntry(JournalEntry.AlchemyLabFound);
       },
@@ -350,7 +356,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       messages: [
         'With the alchemy set fixed, I should be able to recreate the experiment.',
         'I will need to find three ingredients according to this - Crimson Starbloom, Green Writhewood, and a Blue Plumed Frond.',
-        'Maybe I can find them in the lab or the forest. The villagers will know more.',
+        'Maybe I can find them in the lab or the forest. The villagers should know more.',
       ],
       conditions: {
         journalEntry: JournalEntry.AlchemySetFixed,
@@ -406,13 +412,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         hasItem: ItemType.HerbBlue,
         hasUsedItem: ItemType.HerbRed,
       },
-      onCompleted: (player, target) => {
-        player.inventory.removeItem(ItemType.HerbBlue);
-        player.quests.updateExistingQuest(QuestType.FindPotionIngredients, true);
-
-        target?.setTexture('alchemy_blue');
-        target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x0000aa], x: -5 }).start();
-      },
+      onCompleted: (player, target) => addHerb(player, target, ItemType.HerbBlue),
     },
     {
       messages: ['The Crimson Starbloom comes next.'],
@@ -420,24 +420,14 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         hasItem: ItemType.HerbRed,
         hasUsedItem: ItemType.HerbGreen,
       },
-      onCompleted: (player, target) => {
-        player.inventory.removeItem(ItemType.HerbRed);
-
-        target?.setTexture('alchemy_red');
-        target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0xaa0000], x: -20 }).start();
-      },
+      onCompleted: (player, target) => addHerb(player, target, ItemType.HerbRed),
     },
     {
       messages: ['The Green Writhewood goes in first.'],
       conditions: {
         hasItem: ItemType.HerbGreen,
       },
-      onCompleted: (player, target) => {
-        player.inventory.removeItem(ItemType.HerbGreen);
-
-        target?.setTexture('alchemy_green');
-        target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x00aa00], x: -35 }).start();
-      },
+      onCompleted: (player, target) => addHerb(player, target, ItemType.HerbGreen),
     },
     {
       messages: ['Maybe the journal has more information about using this alchemy set.'],
@@ -460,7 +450,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
     },
     {
-      messages: ['I shouldn’t touch this without knowing what it does.'],
+      messages: ['A series of pipes and tubes. I shouldn’t touch this without knowing what it does.'],
     },
   ],
   [PropType.LabBookshelf1]: [

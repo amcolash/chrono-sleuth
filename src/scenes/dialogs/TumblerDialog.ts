@@ -1,13 +1,10 @@
 import { GameObjects, Input, Math as PhaserMath } from 'phaser';
 
-import { Item } from '../../classes/Environment/Item';
 import { Player } from '../../classes/Player/Player';
 import { Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
-import { spawnGear } from '../../data/cutscene';
-import { ItemType, PropType } from '../../data/types';
+import { openChest } from '../../data/cutscene';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { getProp } from '../../utils/interactionUtils';
 import { Dialog } from './Dialog';
 
 const rings = [
@@ -65,7 +62,7 @@ export class TumblerDialog extends Dialog {
 
     const center = { x: Config.width / 2, y: Config.height / 2 };
 
-    rings.forEach((r, i) => {
+    for (let i = 0; i < rings.length; i++) {
       let angle = Math.floor(Math.random() * Math.PI * 2);
       angle = PhaserMath.Snap.To(angle, snapThreshold);
       this.angles.push(angle);
@@ -103,7 +100,7 @@ export class TumblerDialog extends Dialog {
       this.markers.push(marker);
 
       this.markerContainer.add(marker);
-    });
+    }
 
     this.container.add(this.markerContainer);
     this.updateMarkers();
@@ -163,7 +160,7 @@ export class TumblerDialog extends Dialog {
     });
   }
 
-  update(time: number, delta: number): void {
+  update(time: number, _delta: number): void {
     if (time < this.nextUpdate) return;
     this.nextUpdate = time + 100;
 
@@ -187,6 +184,6 @@ export class TumblerDialog extends Dialog {
   }
 
   handleSuccess(success: boolean): void {
-    if (success) spawnGear(this.player);
+    if (success) openChest(this.player);
   }
 }

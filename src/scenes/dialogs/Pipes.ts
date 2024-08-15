@@ -1,8 +1,8 @@
-import { GameObjects, Math as PhaserMath, Scene } from 'phaser';
+import { Display, GameObjects, Math as PhaserMath, Scene } from 'phaser';
 
 import { InputManager, Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
-import { Colors, getColorNumber } from '../../utils/colors';
+import { Colors, colorToNumber, getColorNumber, getColorObject } from '../../utils/colors';
 import { Pipe, PipeShapes, PipeType, getConnectedPipes, level, startPipe } from '../../utils/pipes';
 import { MazeDialog } from './MazeDialog';
 
@@ -159,8 +159,30 @@ export class Pipes extends Scene {
     });
 
     if (connected.length === this.totalPipes) {
-      this.parent.time.delayedCall(500, () => {
-        this.parent.close(true);
+      this.completed(() => this.parent.close(true));
+    }
+  }
+
+  completed(closeHandler?: () => void) {
+    const total = this.images.length;
+    const start = new Display.Color(255, 255, 255);
+    const end = getColorObject(getColorNumber(Colors.Teal));
+
+    for (let i = 0; i < total; i++) {
+      const sprite = this.images.getAt(i) as GameObjects.Sprite;
+      const last = i === total - 1;
+
+      this.tweens.addCounter({
+        from: 0,
+        to: 100,
+        onUpdate: (tween) => {
+          const value = Display.Color.Interpolate.ColorWithColor(start, end, 100, tween.getValue());
+          sprite.setTint(colorToNumber(value));
+        },
+        duration: 500,
+        delay: i * 10,
+        hold: 1000,
+        onComplete: last ? closeHandler : undefined,
       });
     }
   }

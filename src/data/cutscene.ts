@@ -119,7 +119,7 @@ export function revealSafe(player: Player, silent: boolean) {
   });
 }
 
-export function spawnGear(player: Player) {
+export function openChest(player: Player) {
   const scene = player.scene;
   const gear = new Item(scene, ItemType.Gear1, player);
   scene.interactiveObjects.add(gear);
@@ -147,4 +147,26 @@ export function spawnGear(player: Player) {
     },
     ease: 'Bounce.easeOut',
   });
+}
+
+const herbData = {
+  [ItemType.HerbRed]: { texture: 'alchemy_red', tint: 0xaa0000 },
+  [ItemType.HerbGreen]: { texture: 'alchemy_green', tint: 0x00aa00 },
+  [ItemType.HerbBlue]: { texture: 'alchemy_blue', tint: 0x0000aa },
+};
+
+export function addHerb(
+  player: Player,
+  target: Prop | undefined,
+  type: ItemType.HerbRed | ItemType.HerbGreen | ItemType.HerbBlue
+) {
+  player.inventory.removeItem(type);
+
+  if (!target || !target.particles) return;
+  target.disabled = true;
+  target.setTexture(herbData[type].texture);
+  target.particles
+    .setConfig({ ...PropData[PropType.AlchemySet].particles, tint: herbData[type].tint, x: -20 })
+    .start()
+    .on('complete', () => (target.disabled = false));
 }
