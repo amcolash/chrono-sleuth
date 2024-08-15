@@ -68,7 +68,9 @@ export function makePotion(player: Player, target?: Prop) {
   fadeOut(scene, 500, () => {
     scene.time.delayedCall(700, () => {
       target?.setTexture('alchemy_full');
-      target?.particles?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x660077], x: 30 }).start();
+      target?.particles
+        ?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x660077], x: 30, delay: 200, stopAfter: 120 })
+        .start();
 
       fadeIn(scene, 1500, () => {
         player.message.setDialog<Prop>(
@@ -150,9 +152,9 @@ export function openChest(player: Player) {
 }
 
 const herbData = {
-  [ItemType.HerbRed]: { texture: 'alchemy_red', tint: 0xaa0000 },
-  [ItemType.HerbGreen]: { texture: 'alchemy_green', tint: 0x00aa00 },
-  [ItemType.HerbBlue]: { texture: 'alchemy_blue', tint: 0x0000aa },
+  [ItemType.HerbRed]: { texture: 'alchemy_red', tint: 0xaa0000, x: -20 },
+  [ItemType.HerbGreen]: { texture: 'alchemy_green', tint: 0x00aa00, x: -35 },
+  [ItemType.HerbBlue]: { texture: 'alchemy_blue', tint: 0x0000aa, x: -5 },
 };
 
 export function addHerb(
@@ -161,12 +163,16 @@ export function addHerb(
   type: ItemType.HerbRed | ItemType.HerbGreen | ItemType.HerbBlue
 ) {
   player.inventory.removeItem(type);
+  player.setActive(false);
 
   if (!target || !target.particles) return;
   target.disabled = true;
   target.setTexture(herbData[type].texture);
   target.particles
-    .setConfig({ ...PropData[PropType.AlchemySet].particles, tint: herbData[type].tint, x: -20 })
+    .setConfig({ ...PropData[PropType.AlchemySet].particles, tint: herbData[type].tint, x: herbData[type].x })
     .start()
-    .on('complete', () => (target.disabled = false));
+    .on('complete', () => {
+      target.disabled = false;
+      player.setActive(true);
+    });
 }
