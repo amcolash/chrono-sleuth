@@ -18,6 +18,8 @@ export class JournalDialog extends Dialog {
   create() {
     super.create();
 
+    this.player.journal.unread.setVisible(false);
+
     const text = this.player.journal.journal.map((entry) => `- ${JournalData[entry].description}\n`).reverse();
     const textBox = new TextBox(this, Config.width * 0.08, Config.height * 0.25, text, { fontSize: 32 });
     textBox.setBoxSize(Config.width * 0.84, Config.height * 0.62);

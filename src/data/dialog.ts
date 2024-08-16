@@ -8,6 +8,7 @@ import {
   hasCompletedQuest,
   hasItem,
   hasJournalEntry,
+  hasQuest,
   hasUnusedItem,
   hasUsedItem,
 } from '../utils/interactionUtils';
@@ -44,6 +45,12 @@ const sphinxRiddle: Dialog<NPC> = {
 
 export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [
+    {
+      messages: ['Ah, the second gear. You should take it to the clock tower.'],
+      conditions: {
+        hasItem: ItemType.Gear2,
+      },
+    },
     {
       messages: [
         'You found a secret safe in the mansion?',
@@ -105,9 +112,16 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   ],
   [NPCType.Stranger]: [
     {
+      messages: ['Another gear? The mayor probably wants that put back in the clock tower.'],
+      conditions: {
+        hasItem: ItemType.Gear2,
+      },
+    },
+    {
       messages: ['The lock on that safe is no ordinary lock. It requires something special to open it.'],
       conditions: {
         journalEntry: JournalEntry.SafeDiscovered,
+        hasUnusedItem: ItemType.Potion,
       },
     },
     {
@@ -116,7 +130,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
         'The alchemist was no ordinary person and built magical safeguards against intruders.',
       ],
       conditions: {
-        hasItem: ItemType.Potion,
+        hasUnusedItem: ItemType.Potion,
       },
     },
     {
@@ -153,6 +167,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       ],
       conditions: {
         hasItem: ItemType.Wrench,
+        custom: (player) => !hasQuest(player, QuestType.ForestGear),
       },
       onCompleted: (player) => {
         player.quests.addQuest({
@@ -412,7 +427,10 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         hasItem: ItemType.HerbBlue,
         hasUsedItem: ItemType.HerbRed,
       },
-      onCompleted: (player, target) => addHerb(player, target, ItemType.HerbBlue),
+      onCompleted: (player, target) => {
+        addHerb(player, target, ItemType.HerbBlue);
+        player.quests.updateExistingQuest(QuestType.FindPotionIngredients, true);
+      },
     },
     {
       messages: ['The Crimson Starbloom comes next.'],

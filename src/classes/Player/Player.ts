@@ -129,8 +129,11 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   }
 
   updateVelocity() {
-    let calcSpeed = speed;
     const keys = this.keys.keys;
+    let multiplier = 1;
+    if (import.meta.env.DEV && keys[Key.Shift]) multiplier = 2;
+
+    const calcSpeed = speed * multiplier;
 
     if (keys[Key.Left]) this.setVelocityX(-calcSpeed);
     if (keys[Key.Right]) this.setVelocityX(calcSpeed);

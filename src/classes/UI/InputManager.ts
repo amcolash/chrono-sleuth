@@ -7,19 +7,15 @@ export enum Key {
   Right,
   Continue,
   Back,
+  Shift,
 }
 
 export class InputManager {
   scene: Scene;
 
-  keys: Record<Key, boolean> = {
-    [Key.Up]: false,
-    [Key.Down]: false,
-    [Key.Left]: false,
-    [Key.Right]: false,
-    [Key.Continue]: false,
-    [Key.Back]: false,
-  };
+  keys: Record<Key, boolean> = Object.keys(Key)
+    .map(Number)
+    .reduce((acc, key) => ({ ...acc, [key]: false }), {}) as Record<Key, boolean>;
 
   constructor(scene: Scene) {
     this.scene = scene;
@@ -37,6 +33,7 @@ export class InputManager {
     this.listener(Key.Continue, 'SPACE');
     this.listener(Key.Continue, 'ENTER');
     this.listener(Key.Back, 'BACKSPACE');
+    this.listener(Key.Shift, 'SHIFT');
   }
 
   listener(key: Key, str: string) {
@@ -45,11 +42,7 @@ export class InputManager {
   }
 
   resetKeys() {
-    this.keys[Key.Up] = false;
-    this.keys[Key.Down] = false;
-    this.keys[Key.Left] = false;
-    this.keys[Key.Right] = false;
-    this.keys[Key.Continue] = false;
-    this.keys[Key.Back] = false;
+    const entries = Object.entries(this.keys);
+    entries.forEach(([key, _]) => (this.keys[Number(key) as Key] = false));
   }
 }
