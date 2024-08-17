@@ -1,5 +1,7 @@
 import { Scene } from 'phaser';
 
+import { Config } from '../config';
+
 export class Boot extends Scene {
   constructor() {
     super('Boot');
@@ -17,7 +19,7 @@ export class Boot extends Scene {
   }
 
   create() {
-    if (import.meta.env.DEV) this.scene.start('Preloader');
+    if (!Config.prod) this.scene.start('Preloader');
     else this.scene.start('MainMenu');
   }
 }

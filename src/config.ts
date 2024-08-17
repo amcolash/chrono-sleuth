@@ -17,16 +17,21 @@ let rewindEnabled = false;
 let fastMode = false;
 fastMode = true;
 
+let prod = import.meta.env.PROD;
+prod = true;
+
 // TODO: Remove width/height overrides since they are always loaded
 const { width, height } = fullSize;
 
 if (import.meta.env.PROD) {
   debug = false;
   fastMode = false;
+  prod = true;
 }
 
 export const Config = {
   debug,
+  prod,
 
   width,
   height,

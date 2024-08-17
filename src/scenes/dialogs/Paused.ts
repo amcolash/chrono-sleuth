@@ -30,7 +30,7 @@ export class Paused extends Scene {
 
     this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
 
-    if (import.meta.env.PROD) {
+    if (Config.prod) {
       this.add
         .text(width - 20, 20, `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}`, {
           ...fontStyle,

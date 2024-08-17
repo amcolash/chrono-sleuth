@@ -53,7 +53,7 @@ export abstract class Dialog extends Scene {
       this.close(false);
     });
 
-    if (import.meta.env.MODE === 'development') {
+    if (!Config.prod) {
       this.input.keyboard?.on('keydown-BACK_SLASH', () => {
         this.close(true);
       });

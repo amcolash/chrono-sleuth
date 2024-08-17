@@ -114,7 +114,7 @@ export class Game extends Scene {
     const duration = endTime - startTime;
     const message = `Game.create() took ${duration.toFixed(1)}ms to initialize`;
 
-    if (import.meta.env.DEV) {
+    if (!Config.prod) {
       if (Config.debug && duration > 300) new Notification(this, message, undefined, Colors.Warning);
       else if (!Config.debug && duration > 150) new Notification(this, message, undefined, Colors.Warning);
       else new Notification(this, message);
@@ -198,7 +198,7 @@ export class Game extends Scene {
         this.scene.restart();
       });
 
-      if (import.meta.env.DEV) {
+      if (!Config.prod) {
         new IconButton(this, 181, 30, 'terminal', () => {
           openDialog(this, 'DebugTool');
         });
@@ -208,7 +208,7 @@ export class Game extends Scene {
     this.gamepad = new Gamepad(this);
 
     // debug
-    if (import.meta.env.DEV) {
+    if (!Config.prod) {
       this.time.delayedCall(500, () => {
         const debugUI = new DebugUI(this, this.player);
         this.add.group(debugUI, { runChildUpdate: true });
