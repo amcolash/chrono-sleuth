@@ -13,6 +13,7 @@ const total = 12;
 export class MemoryDialog extends Dialog {
   sequence: number[];
   pressed: number[];
+  buttons: ButtonGroup;
 
   constructor() {
     super({ key: 'MemoryDialog', title: 'Figure out the secret code', gamepadVisible: false });
@@ -31,17 +32,17 @@ export class MemoryDialog extends Dialog {
 
     console.log(this.sequence.map((n) => n + 1));
 
-    const buttonGroup = new ButtonGroup(this);
-    this.container.add(buttonGroup);
+    this.buttons = new ButtonGroup(this);
+    this.container.add(this.buttons);
 
-    const size = Config.width / 14;
+    const size = Config.width / 13;
     const sizePadded = size * 1.3;
 
     for (let i = 0; i < total; i++) {
       const button = new CenteredButton(
         this,
         -sizePadded + (i % 3) * sizePadded,
-        -sizePadded + Math.floor(i / 3) * sizePadded,
+        -sizePadded * 1.2 + Math.floor(i / 3) * sizePadded,
         (i + 1).toString(),
         (btn) => {
           const index = this.pressed.length;
@@ -50,17 +51,16 @@ export class MemoryDialog extends Dialog {
             btn.disable();
 
             const start = new Display.Color(255, 255, 255);
-            const end = getColorObject(0x33aa33);
+            const end = getColorObject(getColorNumber(Colors.Success));
 
             tweenColor(this, start, end, (color) => btn.setTint(color), {
               duration: 250,
               yoyo: true,
-              onComplete: () => btn.setTint(0x333333),
+              onComplete: () => {
+                btn.setTint(0x333333);
+                if (this.sequence.length === this.pressed.length) this.close(true);
+              },
             });
-
-            if (this.sequence.length === this.pressed.length) {
-              this.close(true);
-            }
           } else {
             btn.disable();
 
@@ -75,15 +75,39 @@ export class MemoryDialog extends Dialog {
 
             this.pressed = [];
 
-            buttonGroup.each((b: CenteredButton) => b.enable());
+            this.buttons.each((b: CenteredButton) => b.enable());
           }
         },
         { fontSize: 56 },
         { x: size, y: size },
         { x: 0.5, y: 0.5 }
       );
-      buttonGroup.add(button);
+      this.buttons.add(button);
     }
+  }
+
+  close(success?: boolean): void {
+    if (success) this.completed(() => super.close(success));
+    else super.close();
+  }
+
+  completed(callback: () => void) {
+    this.time.delayedCall(300, () => {
+      this.buttons.getAll<CenteredButton>().forEach((b, i) => {
+        const last = i === total - 1;
+
+        const start = getColorObject(b.tint);
+        const end = getColorObject(getColorNumber(Colors.Success));
+
+        b.disable();
+        tweenColor(this, start, end, (color) => b.setTint(color), {
+          duration: 200,
+          delay: i * 30,
+          hold: 500,
+          onComplete: last ? callback : undefined,
+        });
+      });
+    });
   }
 
   handleSuccess(success?: boolean): void {}

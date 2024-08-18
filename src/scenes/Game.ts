@@ -205,7 +205,7 @@ export class Game extends Scene {
       });
 
       if (Config.bootDialog) {
-        this.time.delayedCall(100, () => openDialog(this, Config.bootDialog));
+        this.time.delayedCall(150, () => openDialog(this, Config.bootDialog!));
       }
     }
   }
