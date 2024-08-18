@@ -18,7 +18,7 @@ let fastMode = false;
 fastMode = true;
 
 let prod = import.meta.env.PROD;
-prod = true;
+// prod = true;
 
 // TODO: Remove width/height overrides since they are always loaded
 const { width, height } = fullSize;

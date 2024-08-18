@@ -16,10 +16,11 @@ import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
+import { npcList, propList, warpList } from '../data/arrays';
 import { BackgroundData } from '../data/background';
 import { LightData } from '../data/lights';
 import { SlopeData } from '../data/slope';
-import { Interactive, ItemType, NPCType, PropType, WarpType } from '../data/types';
+import { Interactive, ItemType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
 import { getCurrentSaveState, load, loadConfig, save } from '../utils/save';
@@ -150,20 +151,11 @@ export class Game extends Scene {
   }
 
   createWarpers(): Warp[] {
-    const warpers: Warp[] = [];
-    for (const warp in WarpType) {
-      if (isNaN(Number(warp))) {
-        warpers.push(new Warp(this, WarpType[warp as keyof typeof WarpType], this.player));
-      }
-    }
-
-    return warpers;
+    return warpList.map((warp) => new Warp(this, warp, this.player));
   }
 
   createNpcs(): NPC[] {
-    return Object.values(NPCType)
-      .filter((value) => typeof value === 'number')
-      .map((npc) => new NPC(this, npc as NPCType, this.player));
+    return npcList.map((npc) => new NPC(this, npc, this.player));
   }
 
   createItems(): Item[] {
@@ -175,9 +167,7 @@ export class Game extends Scene {
   }
 
   createProps(): Prop[] {
-    return Object.values(PropType)
-      .filter((value) => typeof value === 'number')
-      .map((prop) => new Prop(this, prop as PropType, this.player));
+    return propList.map((prop) => new Prop(this, prop, this.player));
   }
 
   createUI() {
