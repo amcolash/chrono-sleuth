@@ -7,7 +7,7 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { toggleLighting } from '../../utils/lighting';
-import { getCurrentSaveState, save } from '../../utils/save';
+import { save } from '../../utils/save';
 import { openDialog } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
@@ -78,28 +78,8 @@ export class DebugUI extends GameObjects.Container {
       this.scene.scene.restart();
     });
 
-    this.scene.input.keyboard?.on('keydown-X', () => {
-      const savedata = getCurrentSaveState(this.scene);
-      save(this.scene, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
-
-      this.scene.scene.restart();
-    });
-
-    this.scene.input.keyboard?.on('keydown-COMMA', () => {
-      const lights = this.scene.lights.lights;
-      console.table(lights, ['x', 'y']);
-    });
-
     this.scene.input.keyboard?.on('keydown-FORWARD_SLASH', () => {
       toggleLighting(this.scene);
-    });
-
-    this.scene.input.keyboard?.on('keydown-O', () => {
-      openDialog(this.scene, 'MazeDialog');
-    });
-
-    this.scene.input.keyboard?.on('keydown-P', () => {
-      openDialog(this.scene, 'PipesDialog');
     });
 
     this.scene.input.keyboard?.on('keydown-CLOSED_BRACKET', () => {
@@ -108,6 +88,11 @@ export class DebugUI extends GameObjects.Container {
 
     if (Config.debug) {
       // Keys
+      this.scene.input.keyboard?.on('keydown-COMMA', () => {
+        const lights = this.scene.lights.lights;
+        console.table(lights, ['x', 'y']);
+      });
+
       this.scene.input.keyboard?.on('keydown-PERIOD', () => {
         const pointer = this.scene.input.activePointer;
         new DebugLight(this.scene, pointer.worldX, pointer.worldY, 100, getColorNumber(Colors.Lights), 1);

@@ -40,7 +40,7 @@ export class ButtonGroup extends GameObjects.Container {
   setActiveButton(index: number) {
     this.buttons[this.activeIndex]?.setTint(0xffffff);
     this.activeIndex = index;
-    this.buttons[this.activeIndex]?.setTint(getColorNumber(Colors.Tan));
+    this.buttons[this.activeIndex]?.setTint(getColorNumber(Colors.ButtonActive));
   }
 
   clearButtons() {

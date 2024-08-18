@@ -14,6 +14,7 @@ export const Colors = {
   Night: '335588',
 
   Background: '111111',
+  ButtonActive: 'ddaaee',
 };
 
 export function getColorNumber(color: string): number {

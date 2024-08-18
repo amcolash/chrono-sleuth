@@ -1,9 +1,10 @@
 import { GameObjects } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
-import { Button } from '../../classes/UI/Button';
+import { Button, CenteredButton } from '../../classes/UI/Button';
 import { TextBox } from '../../classes/UI/TextBox';
 import { Config } from '../../config';
+import { itemList, journalList, questList, warpList } from '../../data/arrays';
 import { SaveType, saves } from '../../data/saves';
 import { ItemType, JournalEntry, QuestType, WarpType } from '../../data/types';
 import { WarpData } from '../../data/warp';
@@ -16,7 +17,9 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../../utils/interactionUtils';
-import { save } from '../../utils/save';
+import { getCurrentSaveState, save } from '../../utils/save';
+import { openDialog } from '../../utils/util';
+import { Game } from '../Game';
 import { Dialog } from './Dialog';
 
 enum Tab {
@@ -24,37 +27,24 @@ enum Tab {
   Journal,
   Quests,
   State,
-  Saves,
   Warp,
+  Saves,
+  Misc,
 }
 
 const sidebarWidth = 250;
 const lastDebugKey = 'chrono-sleuth-debug-tab';
 
-const itemList = Object.keys(ItemType)
-  .map((key: any) => ItemType[key])
-  .filter((k) => typeof k === 'number');
-
-const journalList = Object.keys(JournalEntry)
-  .map((key: any) => JournalEntry[key])
-  .filter((k) => typeof k === 'number');
-
-const questList = Object.keys(QuestType)
-  .map((key: any) => QuestType[key])
-  .filter((k) => typeof k === 'number');
-
-const warpList = Object.keys(WarpType)
-  .map((key: any) => WarpType[key])
-  .filter((k) => typeof k === 'number');
-
 export class DebugTool extends Dialog {
   player: Player;
   tabs: Button[] = [];
   tab: Tab = Tab.Items;
+
   textBox: TextBox;
   helperText: GameObjects.Text;
   stateContainer: GameObjects.Container;
   saveContainer: GameObjects.Container;
+  miscContainer: GameObjects.Container;
 
   constructor() {
     super({ key: 'DebugTool', title: 'Debug Tool', gamepadVisible: false });
@@ -78,11 +68,12 @@ export class DebugTool extends Dialog {
     const journalTab = this.makeTab('Journal', Tab.Journal);
     const questsTab = this.makeTab('Quests', Tab.Quests);
     const stateTab = this.makeTab('State', Tab.State);
-    const saveTab = this.makeTab('Saves', Tab.Saves);
     const warpTab = this.makeTab('Warp', Tab.Warp);
+    const saveTab = this.makeTab('Saves', Tab.Saves);
+    const miscTab = this.makeTab('Misc', Tab.Misc);
 
     this.helperText = this.add
-      .text(Config.width * 0.94, 110, '', { ...fontStyle, fontSize: 24 })
+      .text(Config.zoomed ? Config.width * 0.94 : Config.width * 0.87, 110, '', { ...fontStyle, fontSize: 24 })
       .setOrigin(1, 0)
       .setDepth(1);
 
@@ -98,27 +89,12 @@ export class DebugTool extends Dialog {
       (line) => this.handleLineClick(line)
     ).setBoxSize(Config.width * 0.65, Config.height * 0.75);
 
-    this.tabs = [itemsTab, journalTab, questsTab, stateTab, saveTab, warpTab];
+    this.tabs = [itemsTab, journalTab, questsTab, stateTab, warpTab, saveTab, miscTab];
     this.container.add(this.tabs);
-
-    const debugMode = new Button(
-      this,
-      -this.container.x + 40,
-      -Config.height / 2 + 20,
-      'Debug Mode',
-      () => {
-        Config.debug = !Config.debug;
-        this.close();
-      },
-      { align: 'center' }
-    )
-      .setOrigin(0)
-      .setFixedSize(sidebarWidth, 70);
-
-    this.container.add(debugMode);
 
     this.createStateContainer();
     this.createSaveContainer();
+    this.createMiscContainer();
 
     this.updateTabs();
   }
@@ -130,8 +106,6 @@ export class DebugTool extends Dialog {
 
     Object.entries(data).forEach((s, i) => {
       const [key, value] = s;
-
-      // console.log(key, data, s, i);
 
       const text = this.add.text(0, 20 + 40 * i, `${key}: ${value}`, { ...fontStyle, fontSize: 32 }).setOrigin(0);
       this.stateContainer.add(text);
@@ -170,12 +144,19 @@ export class DebugTool extends Dialog {
   }
 
   smallButton(x: number, y: number, text: string, onClick: () => void): Button {
-    const button = new Button(this, x, y, text, onClick, {
-      fontSize: 36,
-      backgroundColor: '#111',
-      padding: { x: 6, y: -4 },
-      align: 'center',
-    }).setOrigin(0);
+    const button = new CenteredButton(
+      this,
+      x,
+      y,
+      text,
+      onClick,
+      {
+        fontSize: 36,
+        backgroundColor: '#111',
+        padding: { x: 6, y: -4 },
+      },
+      null
+    );
 
     return button;
   }
@@ -184,41 +165,82 @@ export class DebugTool extends Dialog {
     this.saveContainer = this.add.container(sidebarWidth + 60, 100);
     Object.entries(saves).forEach((s, i) => {
       const [key, data] = s;
-      const button = new Button(
+      const button = new CenteredButton(
         this,
         0,
-        10 + 80 * i,
+        10 + 60 * i,
         SaveType[Number(key)],
         () => {
           save(this.player.scene, data);
           this.close(true);
         },
-        { align: 'center', backgroundColor: '#111' }
-      )
-        .setOrigin(0)
-        .setFixedSize(sidebarWidth, 70);
+        { backgroundColor: '#111' }
+      );
       this.saveContainer.add(button);
+    });
+
+    const debugSave = new CenteredButton(
+      this,
+      350,
+      10,
+      'Dump Save',
+      () => {
+        const data = getCurrentSaveState(this.player.scene);
+        console.log(data);
+      },
+      { backgroundColor: '#111' }
+    );
+    this.saveContainer.add(debugSave);
+  }
+
+  createMiscContainer() {
+    this.miscContainer = this.add.container(sidebarWidth + 60, 100);
+
+    const debugMode = new CenteredButton(
+      this,
+      0,
+      10,
+      'Debug Mode',
+      () => {
+        Config.debug = !Config.debug;
+        this.close();
+      },
+      { backgroundColor: '#111' }
+    );
+    this.miscContainer.add(debugMode);
+
+    ['MainMenu', 'MazeDialog', 'PipesDialog', 'TumblerDialog'].forEach((d, i) => {
+      const scene = new CenteredButton(
+        this,
+        350,
+        10 + 60 * i,
+        d,
+        () => {
+          if (d === 'MainMenu') {
+            this.scene.sendToBack('Game');
+            this.scene.start(d);
+          } else {
+            this.scene.stop('DebugTool');
+            this.scene.resume('Game');
+            (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
+
+            openDialog(this.player.scene, d);
+          }
+        },
+        {
+          backgroundColor: '#111',
+        }
+      );
+      this.miscContainer.add(scene);
     });
   }
 
   makeTab(title: string, index: number): Button {
-    return new Button(
-      this,
-      -this.container.x + 40,
-      -this.container.y + 100 + 64 * index,
-      title,
-      () => {
-        this.tab = index;
-        localStorage.setItem(lastDebugKey, String(index));
-        this.updateTabs();
-      },
-      {
-        fontSize: 32,
-        align: 'center',
-      }
-    )
-      .setOrigin(0)
-      .setFixedSize(sidebarWidth, 54);
+    return new CenteredButton(this, -this.container.x + 40, -this.container.y + 100 + 60 * index, title, () => {
+      this.tab = index;
+      localStorage.setItem(lastDebugKey, String(index));
+      this.updateTabs();
+    });
   }
 
   handleLineClick(line: number): void {
@@ -270,14 +292,17 @@ export class DebugTool extends Dialog {
       tab.setBackgroundColor(i === this.tab ? '#123' : '#151515');
     });
 
-    const showText =
+    const showTextBox =
       this.tab === Tab.Items || this.tab === Tab.Journal || this.tab === Tab.Quests || this.tab === Tab.Warp;
+
+    const showHelper = this.tab === Tab.Items || this.tab === Tab.Quests;
 
     this.stateContainer?.setVisible(this.tab === Tab.State);
     this.saveContainer?.setVisible(this.tab === Tab.Saves);
+    this.miscContainer?.setVisible(this.tab === Tab.Misc);
 
-    this.textBox.setVisible(showText);
-    this.helperText.setVisible(showText);
+    this.textBox.setVisible(showTextBox);
+    this.helperText.setVisible(showHelper);
 
     let text = '';
     switch (this.tab) {
@@ -294,7 +319,6 @@ export class DebugTool extends Dialog {
         text = journalList
           .map((entry) => `[${hasJournalEntry(this.player, entry) ? 'x' : ' '}] ${JournalEntry[entry]}`)
           .join('\n');
-        this.helperText.setText('');
         break;
       case Tab.Quests:
         text = questList
@@ -307,7 +331,6 @@ export class DebugTool extends Dialog {
         break;
       case Tab.Warp:
         text = warpList.map((entry) => WarpType[entry]).join('\n');
-        this.helperText.setText('');
         break;
     }
 

@@ -34,3 +34,20 @@ export class Button extends GameObjects.Text {
     this.on('pointerout', () => this.setTint(0xffffff));
   }
 }
+
+export class CenteredButton extends Button {
+  constructor(
+    scene: Scene,
+    x: number,
+    y: number,
+    text: string,
+    onClick: () => void,
+    style?: Types.GameObjects.Text.TextStyle,
+    size?: Types.Math.Vector2Like | null
+  ) {
+    super(scene, x, y, text, onClick, { fontSize: 32, align: 'center', ...style });
+    this.setOrigin(0);
+
+    if (size !== null) this.setFixedSize(size?.x || 250, size?.y || 50);
+  }
+}

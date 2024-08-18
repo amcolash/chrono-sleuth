@@ -19,7 +19,7 @@ export class MazeDialog extends Dialog {
 
   init(data: { player: Player }) {
     this.player = data.player;
-    this.dialogData.gamepadVisible = (data.player.scene as Game).gamepad.visible;
+    this.dialogData.gamepadVisible = (data.player.scene as Game)?.gamepad?.visible;
   }
 
   create() {
