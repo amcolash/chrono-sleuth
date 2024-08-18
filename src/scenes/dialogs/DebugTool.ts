@@ -209,7 +209,7 @@ export class DebugTool extends Dialog {
     );
     this.miscContainer.add(debugMode);
 
-    ['MainMenu', 'MazeDialog', 'PipesDialog', 'TumblerDialog'].forEach((d, i) => {
+    ['MainMenu', 'MazeDialog', 'PipesDialog', 'TumblerDialog', 'MemoryDialog'].forEach((d, i) => {
       const scene = new CenteredButton(
         this,
         350,
@@ -220,7 +220,7 @@ export class DebugTool extends Dialog {
             this.scene.sendToBack('Game');
             this.scene.start(d);
           } else {
-            this.scene.stop('DebugTool');
+            this.scene.stop(this);
             this.scene.resume('Game');
             (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
 

@@ -20,6 +20,9 @@ fastMode = true;
 let prod = import.meta.env.PROD;
 // prod = true;
 
+let bootDialog;
+bootDialog = 'MemoryDialog';
+
 // TODO: Remove width/height overrides since they are always loaded
 const { width, height } = fullSize;
 
@@ -27,11 +30,13 @@ if (import.meta.env.PROD) {
   debug = false;
   fastMode = false;
   prod = true;
+  bootDialog = undefined;
 }
 
 export const Config = {
   debug,
   prod,
+  bootDialog,
 
   width,
   height,

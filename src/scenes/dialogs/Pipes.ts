@@ -2,8 +2,9 @@ import { Display, GameObjects, Math as PhaserMath, Scene } from 'phaser';
 
 import { InputManager, Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
-import { Colors, colorToNumber, getColorNumber, getColorObject } from '../../utils/colors';
+import { Colors, getColorNumber, getColorObject } from '../../utils/colors';
 import { Pipe, PipeShapes, PipeType, getConnectedPipes, level, startPipe } from '../../utils/pipes';
+import { tweenColor } from '../../utils/util';
 import { MazeDialog } from './MazeDialog';
 
 const width = 16;
@@ -172,13 +173,7 @@ export class Pipes extends Scene {
       const sprite = this.images.getAt(i) as GameObjects.Sprite;
       const last = i === total - 1;
 
-      this.tweens.addCounter({
-        from: 0,
-        to: 100,
-        onUpdate: (tween) => {
-          const value = Display.Color.Interpolate.ColorWithColor(start, end, 100, tween.getValue());
-          sprite.setTint(colorToNumber(value));
-        },
+      tweenColor(this, start, end, (color) => sprite.setTint(color), {
         duration: 500,
         delay: i * 10,
         hold: 1000,

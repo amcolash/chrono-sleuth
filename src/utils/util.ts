@@ -1,9 +1,9 @@
-import { Cameras, Math as PhaserMath, Scene, Types } from 'phaser';
+import { Cameras, Display, Math as PhaserMath, Scene, Tweens, Types } from 'phaser';
 
 import { Player } from '../classes/Player/Player';
 import { Config, fullSize, zoomedSize } from '../config';
 import { Game } from '../scenes/Game';
-import { Colors, getColorNumber, getColorObject } from './colors';
+import { Colors, colorToNumber, getColorNumber, getColorObject } from './colors';
 
 export function isMobile() {
   const toMatch = [/Android/i, /webOS/i, /iPhone/i, /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
@@ -74,4 +74,24 @@ export function openDialog(scene: Game, dialog: string, opts?: any) {
   scene.gamepad?.setAlpha(0);
   scene.scene.pause();
   scene.scene.launch(dialog, { player: scene.player, ...opts });
+}
+
+export function tweenColor(
+  scene: Scene,
+  start: Display.Color,
+  end: Display.Color,
+  onChange: (color: number) => void,
+  config: Types.Tweens.NumberTweenBuilderConfig
+): Tweens.Tween {
+  const frames = (config.duration || 100) * 0.3;
+
+  return scene.tweens.addCounter({
+    from: 0,
+    to: frames,
+    onUpdate: (tween) => {
+      const tweenedColor = Display.Color.Interpolate.ColorWithColor(start, end, frames, tween.getValue());
+      onChange(colorToNumber(tweenedColor));
+    },
+    ...config,
+  });
 }

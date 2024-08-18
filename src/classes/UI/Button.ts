@@ -4,14 +4,15 @@ import { Colors } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 
 export class Button extends GameObjects.Text {
-  onClick: () => void;
+  onClick: (button: Button) => void;
+  disabled: boolean;
 
   constructor(
     scene: Scene,
     x: number,
     y: number,
     text: string,
-    onClick: () => void,
+    onClick: (button: Button) => void,
     style?: Types.GameObjects.Text.TextStyle
   ) {
     super(scene, x, y, text, {
@@ -26,12 +27,32 @@ export class Button extends GameObjects.Text {
     scene.add.existing(this);
 
     this.onClick = onClick;
+    this.disabled = false;
 
     // Button interactions
     this.setInteractive({ useHandCursor: true }).setScrollFactor(0);
-    this.on('pointerdown', () => onClick());
-    this.on('pointerover', () => this.setTint(0xbbbbbb));
-    this.on('pointerout', () => this.setTint(0xffffff));
+
+    this.on('pointerdown', () => {
+      if (!this.disabled) onClick(this);
+    });
+    this.on('pointerover', () => {
+      if (!this.disabled) this.setTint(0xbbbbbb);
+    });
+    this.on('pointerout', () => {
+      if (!this.disabled) this.setTint(0xffffff);
+    });
+  }
+
+  disable() {
+    this.disabled = true;
+    this.disableInteractive();
+    this.setTint(0x666666);
+  }
+
+  enable() {
+    this.disabled = false;
+    this.setInteractive();
+    this.setTint(0xffffff);
   }
 }
 
@@ -41,13 +62,14 @@ export class CenteredButton extends Button {
     x: number,
     y: number,
     text: string,
-    onClick: () => void,
+    onClick: (button: Button) => void,
     style?: Types.GameObjects.Text.TextStyle,
-    size?: Types.Math.Vector2Like | null
+    size?: Types.Math.Vector2Like | null,
+    origin?: Types.Math.Vector2Like
   ) {
     super(scene, x, y, text, onClick, { fontSize: 32, align: 'center', ...style });
-    this.setOrigin(0);
 
+    this.setOrigin(origin?.x || 0, origin?.y || 0);
     if (size !== null) this.setFixedSize(size?.x || 250, size?.y || 50);
   }
 }

@@ -1,6 +1,7 @@
 import { Display, Scene } from 'phaser';
 
-import { Colors, colorToNumber, fromRGB, getColorNumber } from './colors';
+import { Colors, fromRGB, getColorNumber } from './colors';
+import { tweenColor } from './util';
 
 const duration = 1200;
 let currentlyChanging = false;
@@ -79,14 +80,8 @@ export function fadeAmbient(scene: Scene, target: string, tween: boolean) {
   const startColor = Display.Color.ValueToColor(current);
   const endColor = Display.Color.ValueToColor(target);
 
-  scene.tweens.addCounter({
-    from: 0,
-    to: 100,
+  tweenColor(scene, startColor, endColor, (color) => scene.lights.setAmbientColor(color), {
     duration,
-    onUpdate: (tween) => {
-      const value = Display.Color.Interpolate.ColorWithColor(startColor, endColor, 100, tween.getValue());
-      scene.lights.setAmbientColor(colorToNumber(value));
-    },
     onComplete: () => {
       currentlyChanging = false;
     },

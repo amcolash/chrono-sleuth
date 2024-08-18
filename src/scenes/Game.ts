@@ -203,6 +203,10 @@ export class Game extends Scene {
         const debugUI = new DebugUI(this, this.player);
         this.add.group(debugUI, { runChildUpdate: true });
       });
+
+      if (Config.bootDialog) {
+        this.time.delayedCall(100, () => openDialog(this, Config.bootDialog));
+      }
     }
   }
 

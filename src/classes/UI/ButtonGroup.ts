@@ -7,8 +7,8 @@ export class ButtonGroup extends GameObjects.Container {
   buttons: Button[] = [];
   activeIndex = -1;
 
-  constructor(scene: Scene) {
-    super(scene);
+  constructor(scene: Scene, x?: number, y?: number) {
+    super(scene, x, y);
     scene.add.existing(this).setScrollFactor(0);
 
     scene.input.keyboard?.on('keydown-UP', () => {
@@ -20,7 +20,7 @@ export class ButtonGroup extends GameObjects.Container {
     });
 
     scene.input.keyboard?.on('keydown-ENTER', () => {
-      this.buttons[this.activeIndex]?.onClick();
+      this.buttons[this.activeIndex]?.onClick(this.buttons[this.activeIndex]);
     });
   }
 

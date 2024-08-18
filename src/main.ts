@@ -10,6 +10,7 @@ import { DebugTool } from './scenes/dialogs/DebugTool';
 import { JournalDialog } from './scenes/dialogs/JournalDialog';
 import { Maze } from './scenes/dialogs/Maze';
 import { MazeDialog } from './scenes/dialogs/MazeDialog';
+import { MemoryDialog } from './scenes/dialogs/MemoryDialog';
 import { Paused } from './scenes/dialogs/Paused';
 import { Pipes } from './scenes/dialogs/Pipes';
 import { PipesDialog } from './scenes/dialogs/PipesDialog';
@@ -49,6 +50,8 @@ const config: Types.Core.GameConfig = {
     Pipes,
 
     TumblerDialog,
+
+    MemoryDialog,
   ],
   input: {
     gamepad: true,
