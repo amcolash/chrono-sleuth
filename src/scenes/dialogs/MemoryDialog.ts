@@ -30,7 +30,18 @@ export class MemoryDialog extends Dialog {
       if (!this.sequence.includes(random)) this.sequence.push(random);
     }
 
-    console.log(this.sequence.map((n) => n + 1));
+    if (!Config.prod) {
+      console.log(this.sequence.map((n) => n + 1));
+
+      this.container.add(
+        this.add
+          .text(0, Config.height * 0.42, `[ ${this.sequence.map((n) => n + 1).join(', ')} ]`, {
+            fontSize: 16,
+            align: 'center',
+          })
+          .setOrigin(0.5)
+      );
+    }
 
     this.buttons = new ButtonGroup(this);
     this.container.add(this.buttons);
@@ -55,10 +66,16 @@ export class MemoryDialog extends Dialog {
 
             tweenColor(this, start, end, (color) => btn.setTint(color), {
               duration: 250,
-              yoyo: true,
               onComplete: () => {
-                btn.setTint(0x333333);
-                if (this.sequence.length === this.pressed.length) this.close(true);
+                const start = getColorObject(getColorNumber(Colors.Success));
+                const end = getColorObject(0x333333);
+
+                tweenColor(this, start, end, (color) => btn.setTint(color), {
+                  duration: 250,
+                  onComplete: () => {
+                    if (this.sequence.length === this.pressed.length) this.close(true);
+                  },
+                });
               },
             });
           } else {
@@ -96,13 +113,17 @@ export class MemoryDialog extends Dialog {
       this.buttons.getAll<CenteredButton>().forEach((b, i) => {
         const last = i === total - 1;
 
-        const start = getColorObject(b.tint);
+        const initialTint = b.tint;
+
+        const start = getColorObject(initialTint);
         const end = getColorObject(getColorNumber(Colors.Success));
 
         b.disable();
+        b.setTint(initialTint);
+
         tweenColor(this, start, end, (color) => b.setTint(color), {
           duration: 200,
-          delay: i * 30,
+          delay: i * 70,
           hold: 500,
           onComplete: last ? callback : undefined,
         });
