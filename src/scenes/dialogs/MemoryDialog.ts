@@ -31,12 +31,10 @@ export class MemoryDialog extends Dialog {
     }
 
     if (!Config.prod) {
-      console.log(this.sequence.map((n) => n + 1));
-
       this.container.add(
         this.add
-          .text(0, Config.height * 0.42, `[ ${this.sequence.map((n) => n + 1).join(', ')} ]`, {
-            fontSize: 16,
+          .text(0, Config.height * 0.43, `[ ${this.sequence.map((n) => n + 1).join(', ')} ]`, {
+            fontSize: 18,
             align: 'center',
           })
           .setOrigin(0.5)
