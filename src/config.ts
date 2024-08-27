@@ -21,7 +21,7 @@ let prod = import.meta.env.PROD;
 // prod = true;
 
 let bootDialog;
-bootDialog = 'MemoryDialog';
+bootDialog = 'PipesDialog';
 
 // TODO: Remove width/height overrides since they are always loaded
 const { width, height } = fullSize;

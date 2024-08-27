@@ -31,7 +31,7 @@ export abstract class Dialog extends Scene {
 
     this.container.add(
       this.add
-        .rectangle(0, 0, Config.width * 0.95, Config.height * 0.95, 0x000000, 0.9)
+        .rectangle(0, 0, Config.width * 0.95, Config.height * 0.95, 0x000000, 0.75)
         .setStrokeStyle(4, getColorNumber(Colors.Tan))
     );
     this.container.add(
@@ -63,16 +63,31 @@ export abstract class Dialog extends Scene {
     new Gamepad(this, true).setVisible(this.dialogData.gamepadVisible);
 
     if (this.dialogData.childScene) this.scene.launch(this.dialogData.childScene, { parent: this });
+
+    this.container.setAlpha(0);
+    this.tweens.add({
+      targets: this.container,
+      alpha: 1,
+      duration: 500,
+    });
   }
 
   close(success?: boolean) {
-    this.scene.stop();
-    if (this.dialogData.childScene) this.scene.stop(this.dialogData.childScene);
+    this.tweens.add({
+      targets: this.container,
+      alpha: 0,
+      duration: 500,
 
-    this.scene.resume('Game');
-    (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
+      onComplete: () => {
+        this.scene.stop();
+        if (this.dialogData.childScene) this.scene.stop(this.dialogData.childScene);
 
-    this.handleSuccess(success);
+        this.scene.resume('Game');
+        (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
+
+        this.handleSuccess(success);
+      },
+    });
   }
 
   abstract handleSuccess(success?: boolean): void;

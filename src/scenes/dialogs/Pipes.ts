@@ -1,6 +1,7 @@
 import { Display, GameObjects, Math as PhaserMath, Scene } from 'phaser';
 
-import { InputManager, Key } from '../../classes/UI/InputManager';
+import { Cursor } from '../../classes/UI/Cursor';
+import { InputManager } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
 import { Colors, getColorNumber, getColorObject } from '../../utils/colors';
 import { Pipe, PipeShapes, PipeType, getConnectedPipes, level, startPipe } from '../../utils/pipes';
@@ -14,17 +15,16 @@ export class Pipes extends Scene {
   parent: MazeDialog;
   graphics: GameObjects.Graphics;
 
-  cursor: GameObjects.Rectangle;
-  position: PhaserMath.Vector2;
+  cursor: Cursor;
 
   keys: InputManager;
   pipes: Pipe[][] = [];
   totalPipes: number = 0;
-  images: GameObjects.Container;
+  images: GameObjects.Image[] = [];
+  container: GameObjects.Container;
 
   blockSize: number;
   pipeSize: number;
-  nextUpdate: number = 0;
 
   initialized: boolean = false;
 
@@ -71,20 +71,39 @@ export class Pipes extends Scene {
   create() {
     this.graphics = this.add.graphics();
     this.keys = this.parent.keys;
-
-    this.cursor = this.add
-      .rectangle(100, 100, this.pipeSize, this.pipeSize, 0, 0)
-      .setStrokeStyle(2, getColorNumber(Colors.Tan), 0.75)
-      .setVisible(false);
-    this.position = new PhaserMath.Vector2(1, 1);
-
+    this.container = this.add.container();
     this.createPipes();
+
+    const regions: PhaserMath.Vector2[][] = [];
+    for (let y = 0; y < height - 2; y++) {
+      regions.push([]);
+      for (let x = 0; x < width - 2; x++) {
+        regions[y].push(new PhaserMath.Vector2((x + 1) * this.pipeSize, (y + 1) * this.pipeSize));
+      }
+    }
+
+    this.cursor = new Cursor(
+      this,
+      {
+        regions,
+        size: this.pipeSize,
+        keyHandler: (pos) => {
+          const pipe = this.pipes[pos.y + 1][pos.x + 1];
+          if (pipe.interactive) {
+            pipe.rotation = (pipe.rotation + 90) % 360;
+            this.updatePipes();
+          }
+        },
+      },
+      this.keys
+    );
+    this.container.add(this.cursor);
   }
 
   createPipes() {
     this.pipes = [];
 
-    this.images = this.add
+    this.container = this.add
       .container()
       .setPosition(Config.width / 2 - (width * this.pipeSize) / 2 + this.pipeSize / 2, Config.height / 4);
 
@@ -142,7 +161,8 @@ export class Pipes extends Scene {
           if (interactive) image.setInteractive();
           else image.setTint(0x666666);
 
-          this.images.add(image);
+          this.container.add(image);
+          this.images.push(image);
         });
       }
     }
@@ -154,7 +174,7 @@ export class Pipes extends Scene {
     // Update pipe rotation and check if puzzle solved
     this.pipes.forEach((row) => {
       row.forEach((pipe) => {
-        const sprite = this.images.getAt(pipe.x + pipe.y * level[0].length) as GameObjects.Sprite;
+        const sprite = this.images[pipe.x + pipe.y * level[0].length];
         sprite.setAngle(pipe.rotation);
       });
     });
@@ -170,7 +190,7 @@ export class Pipes extends Scene {
     const end = getColorObject(getColorNumber(Colors.Teal));
 
     for (let i = 0; i < total; i++) {
-      const sprite = this.images.getAt(i) as GameObjects.Sprite;
+      const sprite = this.images[i];
       const last = i === total - 1;
 
       tweenColor(this, start, end, (color) => sprite.setTint(color), {
@@ -179,33 +199,6 @@ export class Pipes extends Scene {
         hold: 1000,
         onComplete: last ? closeHandler : undefined,
       });
-    }
-  }
-
-  update(time: number, _delta: number): void {
-    if (this.initialized && time < this.nextUpdate) return;
-    let handled = true;
-
-    const keys = this.keys.keys;
-    if (keys[Key.Continue]) {
-      const pipe = this.pipes[this.position.y][this.position.x];
-      if (pipe.interactive) {
-        pipe.rotation = (pipe.rotation + 90) % 360;
-        this.updatePipes();
-      }
-    } else if (keys[Key.Left]) this.position.x = Math.max(1, this.position.x - 1);
-    else if (keys[Key.Right]) this.position.x = Math.min(width - 2, this.position.x + 1);
-    else if (keys[Key.Up]) this.position.y = Math.max(1, this.position.y - 1);
-    else if (keys[Key.Down]) this.position.y = Math.min(height - 2, this.position.y + 1);
-    else handled = false;
-
-    if (handled) {
-      this.nextUpdate = time + 170;
-      this.cursor.setVisible(true);
-      this.cursor.setPosition(
-        this.images.x + this.position.x * this.pipeSize,
-        this.images.y + this.position.y * this.pipeSize
-      );
     }
   }
 }

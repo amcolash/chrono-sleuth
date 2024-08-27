@@ -2,6 +2,7 @@ import { Display, Math as PhaserMath } from 'phaser';
 
 import { CenteredButton } from '../../classes/UI/Button';
 import { ButtonGroup } from '../../classes/UI/ButtonGroup';
+import { Cursor } from '../../classes/UI/Cursor';
 import { Config } from '../../config';
 import { Colors, getColorNumber, getColorObject } from '../../utils/colors';
 import { tweenColor } from '../../utils/util';
@@ -14,6 +15,7 @@ export class MemoryDialog extends Dialog {
   sequence: number[];
   pressed: number[];
   buttons: ButtonGroup;
+  cursor: Cursor;
 
   constructor() {
     super({ key: 'MemoryDialog', title: 'Figure out the secret code', gamepadVisible: false });
@@ -47,57 +49,86 @@ export class MemoryDialog extends Dialog {
     const size = Config.width / 13;
     const sizePadded = size * 1.3;
 
+    // make double nested array of buttons
+    const regions: PhaserMath.Vector2[][] = [];
+
     for (let i = 0; i < total; i++) {
+      const x = -sizePadded + (i % 3) * sizePadded;
+      const y = -sizePadded * 1.2 + Math.floor(i / 3) * sizePadded;
+
+      const yIndex = Math.floor(i / 3);
+
+      if (regions[yIndex] === undefined) regions.push([]);
+      regions[yIndex].push(new PhaserMath.Vector2(x, y));
+
       const button = new CenteredButton(
         this,
-        -sizePadded + (i % 3) * sizePadded,
-        -sizePadded * 1.2 + Math.floor(i / 3) * sizePadded,
+        x,
+        y,
         (i + 1).toString(),
-        (btn) => {
-          const index = this.pressed.length;
-          if (this.sequence[index] === i) {
-            this.pressed.push(i);
-            btn.disable();
-
-            const start = new Display.Color(255, 255, 255);
-            const end = getColorObject(getColorNumber(Colors.Success));
-
-            tweenColor(this, start, end, (color) => btn.setTint(color), {
-              duration: 250,
-              onComplete: () => {
-                const start = getColorObject(getColorNumber(Colors.Success));
-                const end = getColorObject(0x333333);
-
-                tweenColor(this, start, end, (color) => btn.setTint(color), {
-                  duration: 250,
-                  onComplete: () => {
-                    if (this.sequence.length === this.pressed.length) this.close(true);
-                  },
-                });
-              },
-            });
-          } else {
-            btn.disable();
-
-            const start = new Display.Color(255, 255, 255);
-            const end = getColorObject(getColorNumber(Colors.Warning));
-
-            tweenColor(this, start, end, (color) => btn.setTint(color), {
-              duration: 250,
-              yoyo: true,
-              onComplete: () => btn.enable(),
-            });
-
-            this.pressed = [];
-
-            this.buttons.each((b: CenteredButton) => b.enable());
-          }
-        },
+        (btn) => this.onButtonPress(btn, i),
         { fontSize: 56 },
         { x: size, y: size },
         { x: 0.5, y: 0.5 }
       );
       this.buttons.add(button);
+    }
+
+    this.cursor = new Cursor(
+      this,
+      {
+        regions,
+        size: sizePadded,
+        keyHandler: (pos) => {
+          const index = pos.y * 3 + pos.x;
+          const btn = this.buttons.getAt(index) as CenteredButton;
+
+          this.onButtonPress(btn, index);
+        },
+      },
+      this.keys
+    );
+    this.container.add(this.cursor);
+  }
+
+  onButtonPress(btn: CenteredButton, value: number) {
+    const index = this.pressed.length;
+    if (this.sequence[index] === value) {
+      this.pressed.push(value);
+      btn.disable();
+
+      const start = new Display.Color(255, 255, 255);
+      const end = getColorObject(getColorNumber(Colors.Success));
+
+      tweenColor(this, start, end, (color) => btn.setTint(color), {
+        duration: 250,
+        onComplete: () => {
+          const start = getColorObject(getColorNumber(Colors.Success));
+          const end = getColorObject(0x333333);
+
+          tweenColor(this, start, end, (color) => btn.setTint(color), {
+            duration: 250,
+            onComplete: () => {
+              if (this.sequence.length === this.pressed.length) this.close(true);
+            },
+          });
+        },
+      });
+    } else {
+      btn.disable();
+
+      const start = new Display.Color(255, 255, 255);
+      const end = getColorObject(getColorNumber(Colors.Warning));
+
+      tweenColor(this, start, end, (color) => btn.setTint(color), {
+        duration: 250,
+        yoyo: true,
+        onComplete: () => btn.enable(),
+      });
+
+      this.pressed = [];
+
+      this.buttons.each((b: CenteredButton) => b.enable());
     }
   }
 
