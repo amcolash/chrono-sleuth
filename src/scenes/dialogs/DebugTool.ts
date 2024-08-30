@@ -40,6 +40,8 @@ export class DebugTool extends Dialog {
   tabs: Button[] = [];
   tab: Tab = Tab.Items;
 
+  mainContainer: GameObjects.Container;
+
   textBox: TextBox;
   helperText: GameObjects.Text;
   stateContainer: GameObjects.Container;
@@ -60,9 +62,14 @@ export class DebugTool extends Dialog {
   create() {
     super.create();
 
-    this.add
-      .rectangle(sidebarWidth + 50, 100, Config.width * 0.65, Config.height * 0.75, getColorNumber('#112233'))
-      .setOrigin(0);
+    this.mainContainer = this.add.container(-Config.width / 2, -Config.height / 2);
+    this.container.add(this.mainContainer);
+
+    this.mainContainer.add(
+      this.add
+        .rectangle(sidebarWidth + 50, 100, Config.width * 0.65, Config.height * 0.75, getColorNumber('#112233'))
+        .setOrigin(0)
+    );
 
     const itemsTab = this.makeTab('Items', Tab.Items);
     const journalTab = this.makeTab('Journal', Tab.Journal);
@@ -71,11 +78,6 @@ export class DebugTool extends Dialog {
     const warpTab = this.makeTab('Warp', Tab.Warp);
     const saveTab = this.makeTab('Saves', Tab.Saves);
     const miscTab = this.makeTab('Misc', Tab.Misc);
-
-    this.helperText = this.add
-      .text(Config.zoomed ? Config.width * 0.94 : Config.width * 0.87, 110, '', { ...fontStyle, fontSize: 24 })
-      .setOrigin(1, 0)
-      .setDepth(1);
 
     this.textBox = new TextBox(
       this,
@@ -88,6 +90,13 @@ export class DebugTool extends Dialog {
       },
       (line) => this.handleLineClick(line)
     ).setBoxSize(Config.width * 0.65, Config.height * 0.75);
+    this.mainContainer.add(this.textBox);
+
+    this.helperText = this.add
+      .text(Config.zoomed ? Config.width * 0.94 : Config.width * 0.87, 110, '', { ...fontStyle, fontSize: 24 })
+      .setOrigin(1, 0)
+      .setDepth(1);
+    this.mainContainer.add(this.helperText);
 
     this.tabs = [itemsTab, journalTab, questsTab, stateTab, warpTab, saveTab, miscTab];
     this.container.add(this.tabs);
