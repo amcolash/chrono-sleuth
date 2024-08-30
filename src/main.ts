@@ -14,6 +14,7 @@ import { MemoryDialog } from './scenes/dialogs/MemoryDialog';
 import { Paused } from './scenes/dialogs/Paused';
 import { Pipes } from './scenes/dialogs/Pipes';
 import { PipesDialog } from './scenes/dialogs/PipesDialog';
+import { SliderDialog } from './scenes/dialogs/SliderDialog';
 import { TumblerDialog } from './scenes/dialogs/TumblerDialog';
 import { Colors, getColorNumber } from './utils/colors';
 
@@ -52,6 +53,8 @@ const config: Types.Core.GameConfig = {
     TumblerDialog,
 
     MemoryDialog,
+
+    SliderDialog,
   ],
   input: {
     gamepad: true,

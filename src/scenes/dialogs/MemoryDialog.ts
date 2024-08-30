@@ -1,4 +1,4 @@
-import { Display, Math as PhaserMath } from 'phaser';
+import { Display, Math as PhaserMath, Types } from 'phaser';
 
 import { CenteredButton } from '../../classes/UI/Button';
 import { ButtonGroup } from '../../classes/UI/ButtonGroup';
@@ -15,7 +15,6 @@ export class MemoryDialog extends Dialog {
   sequence: number[];
   pressed: number[];
   buttons: ButtonGroup;
-  cursor: Cursor;
 
   constructor() {
     super({ key: 'MemoryDialog', title: 'Figure out the secret code', gamepadVisible: false });
@@ -50,7 +49,7 @@ export class MemoryDialog extends Dialog {
     const sizePadded = size * 1.3;
 
     // make double nested array of buttons
-    const regions: PhaserMath.Vector2[][] = [];
+    const regions: Types.Math.Vector2Like[][] = [];
 
     for (let i = 0; i < total; i++) {
       const x = -sizePadded + (i % 3) * sizePadded;
@@ -59,7 +58,7 @@ export class MemoryDialog extends Dialog {
       const yIndex = Math.floor(i / 3);
 
       if (regions[yIndex] === undefined) regions.push([]);
-      regions[yIndex].push(new PhaserMath.Vector2(x, y));
+      regions[yIndex].push({ x, y });
 
       const button = new CenteredButton(
         this,
@@ -74,7 +73,7 @@ export class MemoryDialog extends Dialog {
       this.buttons.add(button);
     }
 
-    this.cursor = new Cursor(
+    const cursor = new Cursor(
       this,
       {
         regions,
@@ -88,7 +87,7 @@ export class MemoryDialog extends Dialog {
       },
       this.keys
     );
-    this.container.add(this.cursor);
+    this.container.add(cursor);
   }
 
   onButtonPress(btn: CenteredButton, value: number) {

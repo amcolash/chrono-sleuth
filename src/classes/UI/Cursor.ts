@@ -1,10 +1,10 @@
-import { GameObjects, Math as PhaserMath, Scene } from 'phaser';
+import { GameObjects, Math as PhaserMath, Scene, Types } from 'phaser';
 
 import { Colors, getColorNumber } from '../../utils/colors';
 import { InputManager, Key } from './InputManager';
 
 export interface CursorData {
-  regions: PhaserMath.Vector2[][];
+  regions: Types.Math.Vector2Like[][];
   size: number;
   keyHandler: (position: PhaserMath.Vector2) => void;
 }
@@ -25,7 +25,7 @@ export class Cursor extends GameObjects.Rectangle {
     this.cursorData = cursorData;
     this.keys = keys;
 
-    scene.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+    scene.input.on('pointerdown', (_pointer: Phaser.Input.Pointer) => {
       this.setVisible(false);
     });
   }

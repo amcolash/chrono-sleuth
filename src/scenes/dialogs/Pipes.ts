@@ -1,4 +1,4 @@
-import { Display, GameObjects, Math as PhaserMath, Scene } from 'phaser';
+import { Display, GameObjects, Math as PhaserMath, Scene, Types } from 'phaser';
 
 import { Cursor } from '../../classes/UI/Cursor';
 import { InputManager } from '../../classes/UI/InputManager';
@@ -14,8 +14,6 @@ const height = 8;
 export class Pipes extends Scene {
   parent: MazeDialog;
   graphics: GameObjects.Graphics;
-
-  cursor: Cursor;
 
   keys: InputManager;
   pipes: Pipe[][] = [];
@@ -74,15 +72,15 @@ export class Pipes extends Scene {
     this.container = this.add.container();
     this.createPipes();
 
-    const regions: PhaserMath.Vector2[][] = [];
+    const regions: Types.Math.Vector2Like[][] = [];
     for (let y = 0; y < height - 2; y++) {
       regions.push([]);
       for (let x = 0; x < width - 2; x++) {
-        regions[y].push(new PhaserMath.Vector2((x + 1) * this.pipeSize, (y + 1) * this.pipeSize));
+        regions[y].push({ x: (x + 1) * this.pipeSize, y: (y + 1) * this.pipeSize });
       }
     }
 
-    this.cursor = new Cursor(
+    const cursor = new Cursor(
       this,
       {
         regions,
@@ -97,7 +95,7 @@ export class Pipes extends Scene {
       },
       this.keys
     );
-    this.container.add(this.cursor);
+    this.container.add(cursor);
   }
 
   createPipes() {
@@ -138,7 +136,6 @@ export class Pipes extends Scene {
           const key = `pipe_${type}`;
           const image = this.add.image(x * this.pipeSize, y * this.pipeSize, key).on('pointerdown', () => {
             if (this.initialized) {
-              this.cursor.setVisible(false);
               this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
               this.updatePipes();
             }

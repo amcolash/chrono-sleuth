@@ -76,7 +76,7 @@ export abstract class Dialog extends Scene {
     this.tweens.add({
       targets: this.container,
       alpha: 0,
-      duration: 500,
+      duration: 250,
 
       onComplete: () => {
         this.scene.stop();
