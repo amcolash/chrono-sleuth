@@ -218,11 +218,9 @@ export class DebugTool extends Dialog {
     );
     this.miscContainer.add(debugMode);
 
-    this.miscContainer.add(
-      this.add.text(350, 10, 'Launch Scene', { ...fontStyle, align: 'center' }).setFixedSize(100, 100)
-    );
+    this.miscContainer.add(this.add.text(350, 10, 'Launch Scene', { ...fontStyle, align: 'center' }));
 
-    ['MainMenu', 'MazeDialog', 'PipesDialog', 'TumblerDialog', 'MemoryDialog'].forEach((d, i) => {
+    ['MainMenu', 'MazeDialog', 'PipesDialog', 'TumblerDialog', 'MemoryDialog', 'SliderDialog'].forEach((d, i) => {
       const scene = new CenteredButton(
         this,
         350,

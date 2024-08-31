@@ -1,19 +1,20 @@
 import { Types } from 'phaser';
 
 import { Cursor } from '../../classes/UI/Cursor';
-import { fontStyle } from '../../utils/fonts';
 import { Dialog } from './Dialog';
 
+export const cols = 3;
+
 const size = 80;
-const cols = 3;
 const topOffset = 30;
+const emptyTile = cols * cols - 1;
 
 export class SliderDialog extends Dialog {
   // generate array of 16 numbers in order
-  solution: number[] = Array.from({ length: cols * cols }, (_, i) => i + 1);
+  solution: number[] = Array.from({ length: cols * cols }, (_, i) => i);
   layout: number[] = [...this.solution];
 
-  tiles: Phaser.GameObjects.Text[] = [];
+  tiles: Phaser.GameObjects.Image[] = [];
 
   constructor() {
     super({
@@ -25,14 +26,12 @@ export class SliderDialog extends Dialog {
 
   create() {
     super.create();
-
-    // this.layout = Phaser.Utils.Array.Shuffle(this.layout);
-    this.solution[this.solution.length - 1] = 0;
-    this.layout[7] = 0;
-    this.layout[8] = 8;
     const regions: Types.Math.Vector2Like[][] = [];
 
-    this.layout.forEach((value, index) => {
+    this.layout[7] = 8;
+    this.layout[8] = 7;
+
+    this.layout.forEach((_value, index) => {
       const x = index % cols;
       const y = Math.floor(index / cols);
 
@@ -43,11 +42,9 @@ export class SliderDialog extends Dialog {
       regions[y].push({ x: xPos, y: yPos });
 
       const tile = this.add
-        .text(xPos, yPos, `${value > 0 ? value : ''}`, {
-          ...fontStyle,
-          fontSize: 64,
-        })
-        .setOrigin(0.5);
+        .image(xPos, yPos, 'puzzle', index)
+        .setOrigin(0.5)
+        .setDisplaySize(size * 0.95, size * 0.95);
 
       this.container.add(tile);
 
@@ -77,7 +74,7 @@ export class SliderDialog extends Dialog {
   }
 
   moveTile(index: number) {
-    const emptyIndex = this.layout.indexOf(0);
+    const emptyIndex = this.layout.indexOf(emptyTile);
     const emptyX = emptyIndex % cols;
     const emptyY = Math.floor(emptyIndex / cols);
 
@@ -86,7 +83,7 @@ export class SliderDialog extends Dialog {
 
     if (Math.abs(emptyX - x) + Math.abs(emptyY - y) === 1) {
       this.layout[emptyIndex] = this.layout[index];
-      this.layout[index] = 0;
+      this.layout[index] = emptyTile;
 
       this.updateLayout();
     }
@@ -98,13 +95,14 @@ export class SliderDialog extends Dialog {
 
   updateLayout() {
     this.layout.forEach((value, index) => {
-      this.tiles[index].setText(`${value > 0 ? value : ''}`);
+      this.tiles[index].setFrame(value);
+      this.tiles[index].setVisible(value != emptyTile);
     });
   }
 
   handleSuccess(success?: boolean): void {
     if (success) {
-      this.time.delayedCall(500, () => {
+      this.time.delayedCall(750, () => {
         this.close(true);
       });
     }

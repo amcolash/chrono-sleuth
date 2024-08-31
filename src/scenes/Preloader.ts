@@ -2,6 +2,7 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../config';
 import { fadeIn, fadeOut } from '../utils/util';
+import { cols } from './dialogs/SliderDialog';
 
 export class Preloader extends Scene {
   container: GameObjects.Container;
@@ -82,10 +83,14 @@ export class Preloader extends Scene {
     this.load.image('mansion_inside', 'maps/mansion_inside.jpg');
     this.load.image('alchemy_lab', 'maps/alchemy_lab.jpg');
 
+    const puzzleSize = Math.floor(1024 / cols);
+    this.load.spritesheet('puzzle', 'puzzle.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
+
     // interactive objects
-    this.load.image('ladder', 'ladder.png');
+    this.load.image('watch', 'items/watch.png');
+    this.load.image('ladder', 'props/ladder.png');
+
     this.load.image('warp', 'warp.png');
-    this.load.image('watch', 'watch.png');
     this.load.image('arrow', 'arrow.png');
 
     // items
