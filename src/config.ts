@@ -17,11 +17,11 @@ let rewindEnabled = false;
 let fastMode = false;
 fastMode = true;
 
-let prod = import.meta.env.PROD;
+let prod = localStorage.getItem('chrono-sleuth-prod') === 'true' || import.meta.env.PROD;
 // prod = true;
 
 let bootDialog;
-bootDialog = 'PipesDialog';
+// bootDialog = 'DebugTool';
 
 // TODO: Remove width/height overrides since they are always loaded
 const { width, height } = fullSize;

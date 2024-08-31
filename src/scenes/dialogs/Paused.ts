@@ -11,6 +11,7 @@ import { Game } from '../Game';
 
 export class Paused extends Scene {
   parent: Game;
+  debugCount: number;
 
   constructor() {
     super('Paused');
@@ -30,14 +31,28 @@ export class Paused extends Scene {
 
     this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
 
-    if (Config.prod) {
-      this.add
-        .text(width - 20, 20, `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}`, {
+    this.debugCount = 0;
+    this.add
+      .text(
+        width - 20,
+        20,
+        `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}\n${Config.prod ? '' : 'Debug Mode'}`,
+        {
           ...fontStyle,
           fontSize: 16,
-        })
-        .setOrigin(1, 0);
-    }
+          align: 'right',
+        }
+      )
+      .setOrigin(1, 0)
+      .setInteractive()
+      .on('pointerdown', () => {
+        this.debugCount++;
+        if (this.debugCount > 10) {
+          this.debugCount = 0;
+          localStorage.setItem('chrono-sleuth-prod', Config.prod ? 'false' : 'true');
+          window.location.reload();
+        }
+      });
 
     const large = !Config.zoomed;
     const spacing = large ? 100 : 80;
