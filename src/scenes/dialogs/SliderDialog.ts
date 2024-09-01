@@ -5,14 +5,13 @@ import { Dialog } from './Dialog';
 
 export const cols = 3;
 
-const size = 80;
+const size = 100;
 const topOffset = 30;
 const emptyTile = cols * cols - 1;
 
 export class SliderDialog extends Dialog {
-  // generate array of 16 numbers in order
-  solution: number[] = Array.from({ length: cols * cols }, (_, i) => i);
-  layout: number[] = [...this.solution];
+  solution: number[] = [];
+  layout: number[] = [];
 
   tiles: Phaser.GameObjects.Image[] = [];
 
@@ -27,6 +26,9 @@ export class SliderDialog extends Dialog {
   create() {
     super.create();
     const regions: Types.Math.Vector2Like[][] = [];
+
+    this.solution = Array.from({ length: cols * cols }, (_, i) => i);
+    this.layout = [...this.solution];
 
     this.layout[7] = 8;
     this.layout[8] = 7;
