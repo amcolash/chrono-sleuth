@@ -4,7 +4,7 @@ import { Player } from '../../classes/Player/Player';
 import { Button, CenteredButton } from '../../classes/UI/Button';
 import { TextBox } from '../../classes/UI/TextBox';
 import { Config } from '../../config';
-import { itemList, journalList, questList, warpList } from '../../data/arrays';
+import { itemList, journalList, questList, sceneList, warpList } from '../../data/arrays';
 import { SaveType, saves } from '../../data/saves';
 import { ItemType, JournalEntry, QuestType, WarpType } from '../../data/types';
 import { WarpData } from '../../data/warp';
@@ -207,7 +207,7 @@ export class DebugTool extends Dialog {
 
     const debugMode = new CenteredButton(
       this,
-      0,
+      350,
       10,
       'Debug Mode',
       () => {
@@ -217,33 +217,6 @@ export class DebugTool extends Dialog {
       { backgroundColor: '#111' }
     );
     this.miscContainer.add(debugMode);
-
-    this.miscContainer.add(this.add.text(350, 10, 'Launch Scene', { ...fontStyle, align: 'center' }));
-
-    ['MainMenu', 'MazeDialog', 'PipesDialog', 'TumblerDialog', 'MemoryDialog', 'SliderDialog'].forEach((d, i) => {
-      const scene = new CenteredButton(
-        this,
-        350,
-        50 + 60 * i,
-        d,
-        () => {
-          if (d === 'MainMenu') {
-            this.scene.sendToBack('Game');
-            this.scene.start(d);
-          } else {
-            this.scene.stop(this);
-            this.scene.resume('Game');
-            (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
-
-            openDialog(this.player.scene, d);
-          }
-        },
-        {
-          backgroundColor: '#111',
-        }
-      );
-      this.miscContainer.add(scene);
-    });
   }
 
   makeTab(title: string, index: number): Button {
@@ -293,6 +266,22 @@ export class DebugTool extends Dialog {
         this.player.setPosition(warpData.x, warpData.y);
         this.close();
         break;
+      case Tab.Misc:
+        if (line > 1) {
+          const scene = sceneList[line - 2];
+
+          if (scene === 'MainMenu') {
+            this.scene.sendToBack('Game');
+            this.scene.start(scene);
+          } else {
+            this.scene.stop(this);
+            this.scene.resume('Game');
+            (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
+
+            openDialog(this.player.scene, scene);
+          }
+        }
+        break;
     }
 
     this.updateTabs();
@@ -304,7 +293,11 @@ export class DebugTool extends Dialog {
     });
 
     const showTextBox =
-      this.tab === Tab.Items || this.tab === Tab.Journal || this.tab === Tab.Quests || this.tab === Tab.Warp;
+      this.tab === Tab.Items ||
+      this.tab === Tab.Journal ||
+      this.tab === Tab.Quests ||
+      this.tab === Tab.Warp ||
+      this.tab === Tab.Misc;
 
     const showHelper = this.tab === Tab.Items || this.tab === Tab.Quests;
 
@@ -342,6 +335,9 @@ export class DebugTool extends Dialog {
         break;
       case Tab.Warp:
         text = warpList.map((entry) => WarpType[entry]).join('\n');
+        break;
+      case Tab.Misc:
+        text = ['Scenes', '-----------------', ...sceneList].join('\n');
         break;
     }
 

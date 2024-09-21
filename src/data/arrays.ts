@@ -23,3 +23,5 @@ export const questList: QuestType[] = Object.keys(QuestType)
 export const warpList: WarpType[] = Object.keys(WarpType)
   .map((key: any) => WarpType[key])
   .filter((k) => typeof k === 'number');
+
+export const sceneList = ['MainMenu', 'MazeDialog', 'PipesDialog', 'TumblerDialog', 'MemoryDialog', 'SliderDialog'];
