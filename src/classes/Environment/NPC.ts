@@ -6,6 +6,7 @@ import { Layer } from '../../data/layers';
 import { Data, NPCData } from '../../data/npc';
 import { InteractResult, Interactive, LazyInitialize, NPCType } from '../../data/types';
 import { initializeObject } from '../../utils/interactionUtils';
+import { isDaytime } from '../../utils/lighting';
 import { shouldInitialize } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { ClockHands } from '../Environment/ClockHands';
@@ -46,10 +47,14 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
 
     const { x, y, light, particles, onCreate } = NPCData[this.npcType] as Data;
 
+    const intensity = light || 1;
+    const night = !isDaytime(this.scene);
     if (Config.debug) {
-      this.light = new DebugLight(this.scene, this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1);
+      this.light = new DebugLight(this.scene, this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, intensity);
+      this.light.light.setVisible(night);
     } else {
-      this.light = this.scene.lights.addLight(this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, light || 1);
+      this.light = this.scene.lights.addLight(this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, intensity);
+      this.light.setVisible(night);
     }
 
     if (particles) {

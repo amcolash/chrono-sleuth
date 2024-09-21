@@ -1,4 +1,4 @@
-import { Display, Scene } from 'phaser';
+import { Display, GameObjects, Scene } from 'phaser';
 
 import { Colors, fromRGB, getColorNumber } from './colors';
 import { tweenColor } from './util';
@@ -28,6 +28,12 @@ export function setDaytime(scene: Scene, tween: boolean = true) {
   if (currentlyChanging) return;
   fadeAmbient(scene, Colors.White, tween);
 
+  if (tween) {
+    scene.time.delayedCall(duration, () => updateDebugLights(scene, 0.5));
+  } else {
+    updateDebugLights(scene, 0.5);
+  }
+
   // On transition to day, slowly fade them off
   scene.lights.lights.forEach((light) => {
     const originalIntensity = light.intensity;
@@ -50,6 +56,8 @@ export function setDaytime(scene: Scene, tween: boolean = true) {
 export function setNighttime(scene: Scene, tween: boolean = true) {
   if (currentlyChanging) return;
   fadeAmbient(scene, Colors.Night, tween);
+
+  updateDebugLights(scene, 1);
 
   // On transition to night, turn off lights and slowly fade them on
   scene.lights.lights.forEach((light) => {
@@ -86,4 +94,9 @@ export function fadeAmbient(scene: Scene, target: string, tween: boolean) {
       currentlyChanging = false;
     },
   });
+}
+
+function updateDebugLights(scene: Scene, value: number) {
+  const debugGraphics = scene.children.getAll('name', 'DebugLightGraphics') as GameObjects.Graphics[];
+  debugGraphics.forEach((g) => g.setAlpha(value));
 }

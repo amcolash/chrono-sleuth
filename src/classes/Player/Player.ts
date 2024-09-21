@@ -60,10 +60,10 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
       .setPipeline('Light2D');
 
     if (Config.debug) {
-      this.light = new DebugLight(scene, this.x, this.y, 200, 0xffddbb, 1.2);
+      this.light = new DebugLight(scene, this.x, this.y, 200, 0xffddbb, 1);
       this.debug = scene.add.circle(this.x, this.y, 3, 0xff00ff).setDepth(Layer.Debug);
     } else {
-      this.light = scene.lights.addLight(this.x, this.y, 200, 0xffddbb, 1.2);
+      this.light = scene.lights.addLight(this.x, this.y, 200, 0xffddbb, 1);
     }
 
     createAnimation(this);
@@ -105,7 +105,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
       if (!ret && !this.message.visible) this.updateVelocity();
     }
 
-    this.light.setPosition(this.x, this.y);
+    this.light.setPosition(this.x, this.y - 20);
 
     // Update animations
     updateAnimation(this);
