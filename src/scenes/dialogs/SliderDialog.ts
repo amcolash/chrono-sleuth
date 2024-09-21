@@ -29,6 +29,7 @@ export class SliderDialog extends Dialog {
 
     this.solution = Array.from({ length: cols * cols }, (_, i) => i);
     this.layout = [...this.solution];
+    this.tiles = [];
 
     this.layout[7] = 8;
     this.layout[8] = 7;
