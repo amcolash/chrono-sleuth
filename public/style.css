@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   color: rgba(255, 255, 255, 0.87);
+  font-family: sans-serif;
   background-color: #000000;
 }
 
@@ -12,4 +13,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#initial-loader {
+  text-align: center;
 }

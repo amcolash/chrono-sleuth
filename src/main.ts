@@ -80,4 +80,7 @@ const config: Types.Core.GameConfig = {
   },
 };
 
+const loading = document.querySelector('#initial-loader');
+loading?.remove();
+
 new Game(config);
