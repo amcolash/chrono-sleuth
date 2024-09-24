@@ -1,6 +1,5 @@
-import { Display, Math as PhaserMath, Types } from 'phaser';
+import { Display, GameObjects, Math as PhaserMath, Types } from 'phaser';
 
-import { CenteredButton } from '../../classes/UI/Button';
 import { ButtonGroup } from '../../classes/UI/ButtonGroup';
 import { Cursor } from '../../classes/UI/Cursor';
 import { Config } from '../../config';
@@ -46,7 +45,7 @@ export class MemoryDialog extends Dialog {
     this.container.add(this.buttons);
 
     const size = Config.width / 13;
-    const sizePadded = size * 1.3;
+    const sizePadded = size * 1.2;
 
     // make double nested array of buttons
     const regions: Types.Math.Vector2Like[][] = [];
@@ -60,16 +59,9 @@ export class MemoryDialog extends Dialog {
       if (regions[yIndex] === undefined) regions.push([]);
       regions[yIndex].push({ x, y });
 
-      const button = new CenteredButton(
-        this,
-        x,
-        y,
-        (i + 1).toString(),
-        (btn) => this.onButtonPress(btn, i),
-        { fontSize: 56 },
-        { x: size, y: size },
-        { x: 0.5, y: 0.5 }
-      );
+      const button = this.add.image(x, y, `rune_${i + 1}`).setInteractive({ useHandCursor: true });
+      button.on('pointerdown', () => this.onButtonPress(button, i));
+
       this.buttons.add(button);
     }
 
@@ -80,7 +72,7 @@ export class MemoryDialog extends Dialog {
         size: sizePadded,
         keyHandler: (pos) => {
           const index = pos.y * 3 + pos.x;
-          const btn = this.buttons.getAt(index) as CenteredButton;
+          const btn = this.buttons.getAt(index) as GameObjects.Image;
 
           this.onButtonPress(btn, index);
         },
@@ -90,11 +82,11 @@ export class MemoryDialog extends Dialog {
     this.container.add(cursor);
   }
 
-  onButtonPress(btn: CenteredButton, value: number) {
+  onButtonPress(btn: GameObjects.Image, value: number) {
     const index = this.pressed.length;
     if (this.sequence[index] === value) {
       this.pressed.push(value);
-      btn.disable();
+      btn.disableInteractive();
 
       const start = new Display.Color(255, 255, 255);
       const end = getColorObject(getColorNumber(Colors.Success));
@@ -114,7 +106,7 @@ export class MemoryDialog extends Dialog {
         },
       });
     } else {
-      btn.disable();
+      btn.disableInteractive();
 
       const start = new Display.Color(255, 255, 255);
       const end = getColorObject(getColorNumber(Colors.Warning));
@@ -122,12 +114,15 @@ export class MemoryDialog extends Dialog {
       tweenColor(this, start, end, (color) => btn.setTint(color), {
         duration: 250,
         yoyo: true,
-        onComplete: () => btn.enable(),
+        onComplete: () => {
+          this.buttons.each((b: GameObjects.Image) => {
+            b.setInteractive();
+            b.setTint(0xffffff);
+          });
+        },
       });
 
       this.pressed = [];
-
-      this.buttons.each((b: CenteredButton) => b.enable());
     }
   }
 
@@ -138,7 +133,7 @@ export class MemoryDialog extends Dialog {
 
   completed(callback: () => void) {
     this.time.delayedCall(300, () => {
-      this.buttons.getAll<CenteredButton>().forEach((b, i) => {
+      this.buttons.getAll<GameObjects.Image>().forEach((b, i) => {
         const last = i === total - 1;
 
         const initialTint = b.tint;
@@ -146,7 +141,7 @@ export class MemoryDialog extends Dialog {
         const start = getColorObject(initialTint);
         const end = getColorObject(getColorNumber(Colors.Success));
 
-        b.disable();
+        b.disableInteractive();
         b.setTint(initialTint);
 
         tweenColor(this, start, end, (color) => b.setTint(color), {

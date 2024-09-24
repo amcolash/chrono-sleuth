@@ -9,10 +9,8 @@
 
 ## Mechanics
 
-- [ ] Lockpicking / Safe cracking minigame
-
+- [x] Lockpicking / Safe cracking minigame
   - Spin rings to click and match the lock
-
 - [ ] Determine how to handle the player's inventory between days
   - [ ] What happens to the player's inventory / talking points?
   - [ ] Possibly add evidence?

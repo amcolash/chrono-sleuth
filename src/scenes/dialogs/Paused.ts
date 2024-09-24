@@ -44,7 +44,7 @@ export class Paused extends Scene {
         }
       )
       .setOrigin(1, 0)
-      .setInteractive()
+      .setInteractive({ useHandCursor: false })
       .on('pointerdown', () => {
         this.debugCount++;
         if (this.debugCount > 10) {

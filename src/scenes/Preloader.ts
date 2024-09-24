@@ -133,6 +133,10 @@ export class Preloader extends Scene {
     this.load.image('alchemy_red', 'props/alchemy/alchemy_red.png');
     this.load.image('alchemy_blue', 'props/alchemy/alchemy_blue.png');
     this.load.image('alchemy_full', 'props/alchemy/alchemy_full.png');
+
+    for (let i = 1; i <= 12; i++) {
+      this.load.image(`rune_${i}`, `props/runes/Stone${i}.png`);
+    }
   }
 
   create() {
