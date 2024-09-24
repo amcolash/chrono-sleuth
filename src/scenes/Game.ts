@@ -172,24 +172,41 @@ export class Game extends Scene {
 
   createUI() {
     this.time.delayedCall(50, () => {
-      new IconButton(this, 31, 30, 'settings', () => {
+      let x = 31;
+      new IconButton(this, x, 30, 'settings', () => {
         this.scene.pause();
         this.scene.launch('Paused', { game: this });
       });
-      new IconButton(this, 81, 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
+      new IconButton(this, (x += 50), 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
         const prev = isDaytime(this);
         toggleLighting(this);
         button.img.setTexture(prev ? 'sun' : 'moon');
       });
-      new IconButton(this, 131, 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
+      new IconButton(this, (x += 50), 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
         const savedata = getCurrentSaveState(this);
         save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
 
         this.scene.restart();
       });
 
+      const fullscreenButton = new IconButton(this, (x += 50), 30, 'maximize', () => {
+        if (this.scale.isFullscreen) {
+          this.scale.stopFullscreen();
+        } else {
+          this.scale.startFullscreen();
+        }
+      });
+
+      this.scale.on(Phaser.Scale.Events.ENTER_FULLSCREEN, () => {
+        fullscreenButton.img.setTexture('minimize');
+      });
+
+      this.scale.on(Phaser.Scale.Events.LEAVE_FULLSCREEN, () => {
+        fullscreenButton.img.setTexture('maximize');
+      });
+
       if (!Config.prod) {
-        new IconButton(this, 181, 30, 'terminal', () => {
+        new IconButton(this, (x += 50), 30, 'terminal', () => {
           openDialog(this, 'DebugTool');
         });
       }
