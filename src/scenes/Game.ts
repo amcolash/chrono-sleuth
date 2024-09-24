@@ -90,7 +90,7 @@ export class Game extends Scene {
 
     // update items added to the group
     const updateables = this.add.group(
-      [this.player, this.gamepad, forestFireflies, lakeFireflies, ...slopes, walls, ...backgrounds],
+      [this.player, forestFireflies, lakeFireflies, ...slopes, walls, ...backgrounds],
       {
         runChildUpdate: true,
       }

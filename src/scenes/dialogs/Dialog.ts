@@ -20,6 +20,7 @@ export abstract class Dialog extends Scene {
   container: GameObjects.Container;
   keys: InputManager;
   title: GameObjects.Text;
+  additionalUI: GameObjects.Components.AlphaSingle[];
 
   constructor(data: DialogData) {
     super(data.key);
@@ -27,6 +28,7 @@ export abstract class Dialog extends Scene {
   }
 
   create() {
+    this.additionalUI = [];
     this.container = this.add.container(Config.width / 2, Config.height / 2);
 
     this.container.add(
@@ -65,16 +67,26 @@ export abstract class Dialog extends Scene {
     if (this.dialogData.childScene) this.scene.launch(this.dialogData.childScene, { parent: this });
 
     this.container.setAlpha(0);
-    this.tweens.add({
-      targets: this.container,
-      alpha: 1,
-      duration: 500,
+    this.fadeIn();
+  }
+
+  fadeIn() {
+    this.time.delayedCall(100, () => {
+      this.tweens.add({
+        targets: this.getTargets(),
+        alpha: 1,
+        duration: 500,
+      });
     });
+  }
+
+  getTargets() {
+    return [this.container, ...this.additionalUI];
   }
 
   close(success?: boolean) {
     this.tweens.add({
-      targets: this.container,
+      targets: this.getTargets(),
       alpha: 0,
       duration: 250,
 

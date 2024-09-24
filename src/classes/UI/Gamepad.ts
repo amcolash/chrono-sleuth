@@ -11,22 +11,22 @@ const deadzone = 0.1;
 
 export class Gamepad extends GameObjects.Container {
   buttons: GameObjects.Arc[] = [];
-  lastAxisKey?: string;
+  lastXAxisKey?: string;
+  lastYAxisKey?: string;
   minimal?: boolean;
 
   constructor(scene: Scene, minimal?: boolean) {
     super(scene, 100, Config.height - 100);
     this.minimal = minimal;
     this.setScrollFactor(0).setDepth(Layer.Overlay);
+
+    this.scene.add.group(this, { runChildUpdate: true });
+    this.createControllerListeners();
   }
 
   createUI() {
-    this.scene.add.existing(this);
-
     this.createDPad();
     if (!this.minimal) this.createButtons();
-
-    this.createControllerListeners();
   }
 
   setVisible(value: boolean): this {
@@ -39,27 +39,49 @@ export class Gamepad extends GameObjects.Container {
     const pad = this.scene.input.gamepad?.pad1;
     if (!pad) return;
 
-    const axis = pad.axes[0].getValue();
+    const xAxis = pad.axes[0].getValue();
+    const yAxis = pad.axes[1].getValue();
 
-    if (Math.abs(axis) <= deadzone && this.lastAxisKey) {
-      this.scene.input.keyboard?.emit('keyup-' + this.lastAxisKey);
-      this.lastAxisKey = undefined;
+    if (Math.abs(xAxis) <= deadzone && this.lastXAxisKey) {
+      this.scene.input.keyboard?.emit('keyup-' + this.lastXAxisKey);
+      this.lastXAxisKey = undefined;
       return;
     }
 
-    if (axis > deadzone) {
-      if (this.lastAxisKey === 'RIGHT') return;
-      else if (this.lastAxisKey === 'LEFT') this.scene.input.keyboard?.emit('keyup-LEFT');
+    if (xAxis > deadzone) {
+      if (this.lastXAxisKey === 'RIGHT') return;
+      else if (this.lastXAxisKey === 'LEFT') this.scene.input.keyboard?.emit('keyup-LEFT');
 
       this.scene.input.keyboard?.emit('keydown-RIGHT');
-      this.lastAxisKey = 'RIGHT';
+      this.lastXAxisKey = 'RIGHT';
     }
-    if (axis < -deadzone) {
-      if (this.lastAxisKey === 'LEFT') return;
-      else if (this.lastAxisKey === 'RIGHT') this.scene.input.keyboard?.emit('keyup-RIGHT');
+    if (xAxis < -deadzone) {
+      if (this.lastXAxisKey === 'LEFT') return;
+      else if (this.lastXAxisKey === 'RIGHT') this.scene.input.keyboard?.emit('keyup-RIGHT');
 
       this.scene.input.keyboard?.emit('keydown-LEFT');
-      this.lastAxisKey = 'LEFT';
+      this.lastXAxisKey = 'LEFT';
+    }
+
+    if (Math.abs(yAxis) <= deadzone && this.lastYAxisKey) {
+      this.scene.input.keyboard?.emit('keyup-' + this.lastYAxisKey);
+      this.lastYAxisKey = undefined;
+      return;
+    }
+
+    if (yAxis > deadzone) {
+      if (this.lastYAxisKey === 'DOWN') return;
+      else if (this.lastYAxisKey === 'UP') this.scene.input.keyboard?.emit('keyup-UP');
+
+      this.scene.input.keyboard?.emit('keydown-DOWN');
+      this.lastYAxisKey = 'DOWN';
+    }
+    if (yAxis < -deadzone) {
+      if (this.lastYAxisKey === 'UP') return;
+      else if (this.lastYAxisKey === 'DOWN') this.scene.input.keyboard?.emit('keyup-DOWN');
+
+      this.scene.input.keyboard?.emit('keydown-UP');
+      this.lastYAxisKey = 'UP';
     }
   }
 
@@ -109,15 +131,11 @@ export class Gamepad extends GameObjects.Container {
     this.scene.input.gamepad?.on('down', (_pad: typeof Input.Gamepad, button: Input.Gamepad.Button) => {
       const key = this.getKeyFromButton(button);
       if (key) this.scene.input.keyboard?.emit(`keydown-${key}`);
-
-      console.log('down', button);
     });
 
     this.scene.input.gamepad?.on('up', (_pad: typeof Input.Gamepad, button: Input.Gamepad.Button) => {
       const key = this.getKeyFromButton(button);
       if (key) this.scene.input.keyboard?.emit(`keyup-${key}`);
-
-      console.log('up', button);
     });
   }
 
@@ -137,6 +155,12 @@ export class Gamepad extends GameObjects.Container {
         } else {
           key = 'BACKSPACE';
         }
+        break;
+      case 3: // Left (X/Y)
+        key = 'SPACE';
+        break;
+      case 8: // Select
+        key = 'J';
         break;
       case 9: // Start
         key = 'ESC';
