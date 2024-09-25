@@ -1,10 +1,11 @@
-import { GameObjects, Input, Math as PhaserMath } from 'phaser';
+import { GameObjects, Math as PhaserMath } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
 import { Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
 import { openChest } from '../../data/cutscene';
 import { Colors, getColorNumber } from '../../utils/colors';
+import { fontStyle } from '../../utils/fonts';
 import { Dialog } from './Dialog';
 
 const rings = [
@@ -15,7 +16,6 @@ const rings = [
   [1, 1, 0, 0, 1],
 ];
 
-const offset = { x: 0, y: 30 };
 const radius = 36;
 
 const snapPoints = 16;
@@ -25,8 +25,7 @@ export class TumblerDialog extends Dialog {
   player: Player;
 
   angles: number[];
-  markers: GameObjects.Arc[];
-  markerContainer: GameObjects.Container;
+  circles: GameObjects.Image[] = [];
 
   active: number;
   nextUpdate: number;
@@ -45,22 +44,27 @@ export class TumblerDialog extends Dialog {
     super.create();
 
     this.angles = [];
-    this.markers = [];
+    this.circles = [];
 
     this.active = -1;
     this.nextUpdate = 0;
 
     this.disabled = false;
 
-    this.markerContainer = this.add.container(offset.x, offset.y);
-
     const line = this.add
-      .line(0, 0, radius, 0, radius * 5, 0, getColorNumber(Colors.Tan))
+      .line(0, 30, radius * 0.75, 0, radius * 6, 0, getColorNumber(Colors.Night))
       .setOrigin(0, 0)
       .setLineWidth(5);
-    this.markerContainer.add(line);
+    this.container.add(line);
 
-    const center = { x: Config.width / 2, y: Config.height / 2 };
+    this.container.add(
+      this.add.text(
+        -Config.width * 0.45,
+        Config.height * 0.2,
+        'Use [LEFT]/[RIGHT]\nto select a ring\n\nUse [UP]/[DOWN]\nto rotate a ring',
+        { ...fontStyle }
+      )
+    );
 
     for (let i = 0; i < rings.length; i++) {
       let angle = Math.floor(Math.random() * Math.PI * 2);
@@ -68,42 +72,24 @@ export class TumblerDialog extends Dialog {
       this.angles.push(angle);
 
       const index = rings.length - i - 1;
-
-      const circle = this.add
-        .circle(offset.x, offset.y, radius + radius * index)
-        .setStrokeStyle(4, getColorNumber(Colors.Night));
-
-      this.container.add(circle);
-
-      const marker = this.add
-        .circle(0, 0, 8)
-        .setStrokeStyle(4, getColorNumber(Colors.Tan))
-        .setInteractive({ draggable: true })
-        .on('drag', (pointer: Input.Pointer) => {
-          this.active = -1;
-          if (pointer.isDown) {
-            const angle = PhaserMath.Angle.Between(center.x, center.y, pointer.x, pointer.y);
-            this.handleMove(i, angle);
-          }
-        })
-        .on('dragstart', (pointer: Input.Pointer) => {
-          this.active = -1;
-          if (pointer.isDown) {
-            const angle = PhaserMath.Angle.Between(center.x, center.y, pointer.x, pointer.y);
-            this.handleMove(i, angle);
-          }
-        })
-        .on('dragend', () => {
-          this.active = -1;
-          this.updateMarkers(true);
-        });
-      this.markers.push(marker);
-
-      this.markerContainer.add(marker);
+      this.circle(index);
     }
 
-    this.container.add(this.markerContainer);
     this.updateMarkers();
+  }
+
+  circle(index: number) {
+    const ring = this.add
+      .image(Config.width / 2, Config.height / 2 + 30, `ring_${index + 1}`)
+      .setScale(1.5)
+      .setVisible(false);
+    const metal = this.add.image(Config.width / 2, Config.height / 2 + 30, 'metal').setScale(1.5);
+    metal.setMask(new Phaser.Display.Masks.BitmapMask(this, ring));
+
+    this.container.add(metal);
+
+    this.circles.push(metal);
+    this.circles.push(ring);
   }
 
   handleMove(index: number, angle: number, checkComplete?: boolean) {
@@ -123,18 +109,14 @@ export class TumblerDialog extends Dialog {
     let complete = true;
 
     this.angles.forEach((a, i) => {
-      const distance = radius + radius * i;
-
       const angle = PhaserMath.Snap.To(a, snapThreshold);
 
       if (!(Math.abs(angle - 0) < snapThreshold * 0.6 || Math.abs(angle - Math.PI * 2) < snapThreshold * 0.6)) {
         complete = false;
       }
 
-      const x = Math.cos(angle) * distance;
-      const y = Math.sin(angle) * distance;
-
-      this.markers[i].setPosition(x, y);
+      this.circles[i * 2].setAngle(PhaserMath.RadToDeg(angle + i * 30));
+      this.circles[i * 2 + 1].setAngle(PhaserMath.RadToDeg(angle));
     });
 
     if (complete && checkComplete) {
@@ -148,10 +130,14 @@ export class TumblerDialog extends Dialog {
 
     this.disabled = true;
     this.active = -1;
-    this.markers.forEach((m) => m.setStrokeStyle(4, getColorNumber(Colors.Tan)));
+
+    const masks = [];
+    for (let i = 0; i < 5; i++) {
+      masks.push(this.circles[i * 2 + 1]);
+    }
 
     this.tweens.add({
-      targets: this.markerContainer,
+      targets: masks,
       rotation: Math.PI * 2,
       delay: 500,
       duration: 1500,
@@ -166,16 +152,19 @@ export class TumblerDialog extends Dialog {
 
     if (!this.disabled) {
       const keys = this.keys.keys;
-      if (keys[Key.Left]) this.active = PhaserMath.Clamp(this.active - 1, 0, this.angles.length - 1);
-      else if (keys[Key.Right]) this.active = PhaserMath.Clamp(this.active + 1, 0, this.angles.length - 1);
-      else if (keys[Key.Up]) this.handleMove(this.active, this.angles[this.active] - snapThreshold, true);
+      if (keys[Key.Left]) {
+        this.nextUpdate = time + 300;
+        this.active = PhaserMath.Clamp(this.active - 1, 0, this.angles.length - 1);
+      } else if (keys[Key.Right]) {
+        this.nextUpdate = time + 300;
+        this.active = PhaserMath.Clamp(this.active + 1, 0, this.angles.length - 1);
+      } else if (keys[Key.Up]) this.handleMove(this.active, this.angles[this.active] - snapThreshold, true);
       else if (keys[Key.Down]) this.handleMove(this.active, this.angles[this.active] + snapThreshold, true);
     }
 
-    this.markers.forEach((m, i) => {
-      m.setFillStyle(i === this.active ? getColorNumber(Colors.Peach) : undefined);
-      m.setScale(i === this.active ? 1.3 : 1);
-    });
+    for (let i = 0; i < 5; i++) {
+      this.circles[i * 2].setTint(this.active === i ? getColorNumber('C49B7C') : undefined);
+    }
   }
 
   close(success?: boolean): void {

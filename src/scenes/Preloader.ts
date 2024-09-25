@@ -136,9 +136,15 @@ export class Preloader extends Scene {
     this.load.image('alchemy_blue', 'props/alchemy/alchemy_blue.png');
     this.load.image('alchemy_full', 'props/alchemy/alchemy_full.png');
 
+    // puzzles
     for (let i = 1; i <= 12; i++) {
-      this.load.image(`rune_${i}`, `props/runes/Stone${i}.png`);
+      this.load.image(`rune_${i}`, `puzzles/runes/Stone${i}.png`);
     }
+
+    for (let i = 1; i <= 5; i++) {
+      this.load.svg(`ring_${i}`, `puzzles/tumbler/ring${i}.svg`);
+    }
+    this.load.image('metal', 'puzzles/tumbler/metal.png');
   }
 
   create() {
