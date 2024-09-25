@@ -2,6 +2,8 @@ import { Scene } from 'phaser';
 
 import { Button } from '../classes/UI/Button';
 import { ButtonGroup } from '../classes/UI/ButtonGroup';
+import { FullscreenButton } from '../classes/UI/FullscreenButton';
+import { Gamepad } from '../classes/UI/Gamepad';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
 import { fadeIn } from '../utils/util';
@@ -18,7 +20,12 @@ export class MainMenu extends Scene {
       .setOrigin(0, 1)
       .setScale(0.25);
 
+    new Gamepad(this, true).setVisible(false);
+
     const buttonGroup = new ButtonGroup(this);
+
+    const fullscreenButton = new FullscreenButton(this, Config.width - 30, 30);
+    buttonGroup.addButton(fullscreenButton);
 
     if (localStorage.getItem(saveKey)) {
       buttonGroup.addButton(
@@ -46,6 +53,8 @@ export class MainMenu extends Scene {
         { align: 'center' }
       ).setFixedSize(200, 70)
     );
+
+    buttonGroup.setActiveButton(1);
 
     fadeIn(this, 300);
   }

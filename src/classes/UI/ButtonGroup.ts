@@ -2,9 +2,10 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Colors, getColorNumber } from '../../utils/colors';
 import { Button } from './Button';
+import { IconButton } from './IconButton';
 
 export class ButtonGroup extends GameObjects.Container {
-  buttons: Button[] = [];
+  buttons: (Button | IconButton)[] = [];
   activeIndex = -1;
 
   constructor(scene: Scene, x?: number, y?: number) {
@@ -20,11 +21,12 @@ export class ButtonGroup extends GameObjects.Container {
     });
 
     scene.input.keyboard?.on('keydown-ENTER', () => {
+      // @ts-ignore
       this.buttons[this.activeIndex]?.onClick(this.buttons[this.activeIndex]);
     });
   }
 
-  addButton(button: Button) {
+  addButton(button: Button | IconButton) {
     this.add(button);
     this.buttons.push(button);
 

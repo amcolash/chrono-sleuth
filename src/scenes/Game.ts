@@ -12,6 +12,7 @@ import { Slope } from '../classes/Environment/Slope';
 import { Walls } from '../classes/Environment/Walls';
 import { Warp } from '../classes/Environment/Warp';
 import { Player } from '../classes/Player/Player';
+import { FullscreenButton } from '../classes/UI/FullscreenButton';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
 import { Notification } from '../classes/UI/Notification';
@@ -189,21 +190,7 @@ export class Game extends Scene {
         this.scene.restart();
       });
 
-      const fullscreenButton = new IconButton(this, (x += 50), 30, 'maximize', () => {
-        if (this.scale.isFullscreen) {
-          this.scale.stopFullscreen();
-        } else {
-          this.scale.startFullscreen();
-        }
-      });
-
-      this.scale.on(Phaser.Scale.Events.ENTER_FULLSCREEN, () => {
-        fullscreenButton.img.setTexture('minimize');
-      });
-
-      this.scale.on(Phaser.Scale.Events.LEAVE_FULLSCREEN, () => {
-        fullscreenButton.img.setTexture('maximize');
-      });
+      new FullscreenButton(this, (x += 50), 30);
 
       if (!Config.prod) {
         new IconButton(this, (x += 50), 30, 'terminal', () => {

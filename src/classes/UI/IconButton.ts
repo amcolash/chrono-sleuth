@@ -4,6 +4,7 @@ import { Layer } from '../../data/layers';
 import { Colors, getColorNumber } from '../../utils/colors';
 
 export class IconButton extends GameObjects.Container {
+  onClick: (button: IconButton) => void;
   img: GameObjects.Image;
   rect: GameObjects.Rectangle;
 
@@ -21,6 +22,7 @@ export class IconButton extends GameObjects.Container {
     this.add(this.img);
 
     this.rect.setInteractive({ useHandCursor: true }).on('pointerdown', () => callback(this));
+    this.onClick = callback;
 
     this.rect.on('pointerover', () => {
       this.rect.setScale(1.1);
@@ -30,5 +32,9 @@ export class IconButton extends GameObjects.Container {
       this.rect.setScale(1);
       this.img.setDisplaySize(32, 32);
     });
+  }
+
+  setTint(tint: number) {
+    this.img.setTint(tint);
   }
 }

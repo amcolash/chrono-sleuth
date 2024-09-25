@@ -21,6 +21,9 @@ export class Boot extends Scene {
     this.load.image('logo', 'logo.png');
     this.load.image('splash', 'splash.png');
     this.load.font('m6x11', '../m6x11.ttf');
+
+    this.load.svg('maximize', 'icons/maximize.svg', { width: 64, height: 64 });
+    this.load.svg('minimize', 'icons/minimize.svg', { width: 64, height: 64 });
   }
 
   create() {
