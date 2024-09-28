@@ -2,7 +2,6 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../config';
 import { fadeIn, fadeOut } from '../utils/util';
-import { cols } from './dialogs/SliderDialog';
 
 export class Preloader extends Scene {
   container: GameObjects.Container;
@@ -69,6 +68,7 @@ export class Preloader extends Scene {
     this.load.svg('zoom-in', 'icons/zoom-in.svg', { width: 64, height: 64 });
     this.load.svg('zoom-out', 'icons/zoom-out.svg', { width: 64, height: 64 });
     this.load.svg('terminal', 'icons/terminal.svg', { width: 64, height: 64 });
+    this.load.svg('award', 'icons/award.svg', { width: 64, height: 64 });
 
     // backgrounds
     this.load.image('town', 'maps/town.jpg');
@@ -131,17 +131,6 @@ export class Preloader extends Scene {
 
     // puzzles
     this.load.image('arrow', 'puzzles/arrow.png');
-
-    const puzzleSize = Math.floor(1024 / cols);
-    this.load.spritesheet('puzzle', 'puzzles/puzzle.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
-
-    for (let i = 1; i <= 12; i++) {
-      this.load.image(`rune_${i}`, `puzzles/runes/Stone${i}.png`);
-    }
-
-    for (let i = 1; i <= 5; i++) {
-      this.load.image(`ring_${i}`, `puzzles/tumbler/ring${i}.png`);
-    }
   }
 
   create() {

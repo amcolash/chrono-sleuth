@@ -24,6 +24,13 @@ export class SliderDialog extends Dialog {
     });
   }
 
+  preload() {
+    this.load.setPath('assets');
+
+    const puzzleSize = Math.floor(1024 / cols);
+    this.load.spritesheet('puzzle', 'puzzles/puzzle.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
+  }
+
   create() {
     super.create();
     const regions: Types.Math.Vector2Like[][] = [];

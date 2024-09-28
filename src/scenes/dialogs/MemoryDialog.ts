@@ -19,6 +19,14 @@ export class MemoryDialog extends Dialog {
     super({ key: 'MemoryDialog', title: 'Figure out the secret code', gamepadVisible: false });
   }
 
+  preload() {
+    this.load.setPath('assets');
+
+    for (let i = 1; i <= 12; i++) {
+      this.load.image(`rune_${i}`, `puzzles/runes/Stone${i}.png`);
+    }
+  }
+
   create(): void {
     super.create();
 

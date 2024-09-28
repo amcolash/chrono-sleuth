@@ -2,6 +2,7 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Button } from '../../classes/UI/Button';
 import { Gamepad } from '../../classes/UI/Gamepad';
+import { IconButton } from '../../classes/UI/IconButton';
 import { InputManager } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
 import { Colors, getColorNumber } from '../../utils/colors';
@@ -41,6 +42,12 @@ export abstract class Dialog extends Scene {
         backgroundColor: `#${Colors.Warning}`,
       })
     );
+
+    if (!Config.prod) {
+      this.container.add(
+        new IconButton(this, Config.width * 0.38, Config.height * -0.4, 'award', () => this.close(true))
+      );
+    }
 
     this.title = this.add
       .text(0, Config.height * -0.4, this.dialogData.title, { ...fontStyle, fontSize: 48 })

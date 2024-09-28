@@ -2,6 +2,7 @@ import { DataProps } from './types';
 
 export type Data = DataProps & {
   image: string;
+  scale?: number; // only allow uniform scaling
 };
 
 export const BackgroundData: Data[] = [

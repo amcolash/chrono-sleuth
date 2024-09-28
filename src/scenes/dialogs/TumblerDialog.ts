@@ -40,6 +40,14 @@ export class TumblerDialog extends Dialog {
     this.player = data.player;
   }
 
+  preload() {
+    this.load.setPath('assets');
+
+    for (let i = 1; i <= 5; i++) {
+      this.load.image(`ring_${i}`, `puzzles/tumbler/ring${i}.png`);
+    }
+  }
+
   create(): void {
     super.create();
 
