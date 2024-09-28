@@ -216,6 +216,21 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Mayor]: [
     {
       messages: [
+        'I’ve been hearing strange reports from the townsfolk. It’s as if time is slipping. Have you felt it?',
+        'The clock is still missing a gear. It must be somewhere nearby.',
+      ],
+      conditions: {
+        journalEntry: JournalEntry.ClockSecondGear,
+      },
+    },
+    {
+      messages: ['The second gear has been found? That’s incredible news!'],
+      conditions: {
+        completedQuest: QuestType.InvestigateTownWest,
+      },
+    },
+    {
+      messages: [
         'Herbs? I haven’t the faintest idea where to being looking. Start at the source - there are bound to be a few ingredients in the lab you found.',
       ],
       conditions: {
