@@ -149,15 +149,18 @@ export class Gamepad extends GameObjects.Container {
           key = 'ENTER';
         }
         break;
-      case 1: // Right (A/B)
+      case 1: // Right (B/A)
         if (button.pad.id.toLowerCase().includes('nintendo')) {
           key = 'ENTER';
         } else {
           key = 'BACKSPACE';
         }
         break;
-      case 3: // Left (X/Y)
-        key = 'SPACE';
+      case 2: // Top (X/Y)
+        key = 'BACK_SLASH';
+        break;
+      case 3: // Left (Y/X)
+        key = 'SHIFT';
         break;
       case 8: // Select
         key = 'J';

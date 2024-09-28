@@ -22,8 +22,8 @@ import { LightData } from '../data/lights';
 import { SlopeData } from '../data/slope';
 import { Interactive, ItemType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
-import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
-import { getCurrentSaveState, load, loadConfig, save } from '../utils/save';
+import { setDaytime } from '../utils/lighting';
+import { load, loadConfig } from '../utils/save';
 import { fadeIn, openDialog } from '../utils/util';
 
 export class Game extends Scene {
@@ -179,17 +179,18 @@ export class Game extends Scene {
       });
 
       if (!Config.prod) {
-        new IconButton(this, (x += 50), 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
-          const prev = isDaytime(this);
-          toggleLighting(this);
-          button.img.setTexture(prev ? 'sun' : 'moon');
-        });
-        new IconButton(this, (x += 50), 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
-          const savedata = getCurrentSaveState(this);
-          save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
+        // new IconButton(this, (x += 50), 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
+        //   const prev = isDaytime(this);
+        //   toggleLighting(this);
+        //   button.img.setTexture(prev ? 'sun' : 'moon');
+        // });
+        // new IconButton(this, (x += 50), 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
+        //   const savedata = getCurrentSaveState(this);
+        //   save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
 
-          this.scene.restart();
-        });
+        //   this.scene.restart();
+        // });
+
         new IconButton(this, (x += 50), 30, 'terminal', () => {
           openDialog(this, 'DebugTool');
         });
