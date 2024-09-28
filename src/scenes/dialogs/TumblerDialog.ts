@@ -1,4 +1,4 @@
-import { GameObjects, Math as PhaserMath } from 'phaser';
+import { GameObjects, Input, Math as PhaserMath } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
 import { Key } from '../../classes/UI/InputManager';
@@ -25,7 +25,7 @@ export class TumblerDialog extends Dialog {
   player: Player;
 
   angles: number[];
-  circles: GameObjects.Image[] = [];
+  rings: GameObjects.Image[] = [];
 
   active: number;
   nextUpdate: number;
@@ -44,7 +44,7 @@ export class TumblerDialog extends Dialog {
     super.create();
 
     this.angles = [];
-    this.circles = [];
+    this.rings = [];
 
     this.active = -1;
     this.nextUpdate = 0;
@@ -61,7 +61,7 @@ export class TumblerDialog extends Dialog {
       this.add.text(
         -Config.width * 0.45,
         Config.height * 0.2,
-        'Use [LEFT]/[RIGHT]\nto select a ring\n\nUse [UP]/[DOWN]\nto rotate a ring',
+        'Use [Left]/[Right]\nto select a ring\n\nUse [Up]/[Down]\nto rotate a ring',
         { ...fontStyle }
       )
     );
@@ -69,27 +69,51 @@ export class TumblerDialog extends Dialog {
     for (let i = 0; i < rings.length; i++) {
       let angle = Math.floor(Math.random() * Math.PI * 2);
       angle = PhaserMath.Snap.To(angle, snapThreshold);
+      angle = (i / 5) * Math.PI * 2;
       this.angles.push(angle);
 
-      const index = rings.length - i - 1;
-      this.circle(index);
+      this.circle(i);
     }
 
     this.updateMarkers();
   }
 
   circle(index: number) {
+    const center = { x: Config.width / 2, y: Config.height / 2 };
+
     const ring = this.add
-      .image(Config.width / 2, Config.height / 2 + 30, `ring_${index + 1}`)
-      .setScale(1.5)
-      .setVisible(false);
-    const metal = this.add.image(Config.width / 2, Config.height / 2 + 30, 'metal').setScale(1.5);
-    metal.setMask(new Phaser.Display.Masks.BitmapMask(this, ring));
+      .image(0, 30, `ring_${index + 1}`)
+      .setScale(0.8)
+      .setInteractive({
+        draggable: true,
+        useHandCursor: true,
+        pixelPerfect: true,
+      })
+      .on('drag', (pointer: Input.Pointer) => {
+        this.active = -1;
+        if (pointer.isDown) {
+          this.active = index;
+          const angle = PhaserMath.Angle.Between(center.x, center.y, pointer.x, pointer.y);
+          this.handleMove(index, angle);
+        }
+      })
+      .on('dragstart', (pointer: Input.Pointer) => {
+        this.active = -1;
+        if (pointer.isDown) {
+          this.active = index;
+          const angle = PhaserMath.Angle.Between(center.x, center.y, pointer.x, pointer.y);
+          this.handleMove(index, angle);
+        }
+      })
+      .on('dragend', () => {
+        this.active = -1;
+        this.updateMarkers(true);
+      });
 
-    this.container.add(metal);
+    this.input.enableDebug(ring);
 
-    this.circles.push(metal);
-    this.circles.push(ring);
+    this.container.add(ring);
+    this.rings.push(ring);
   }
 
   handleMove(index: number, angle: number, checkComplete?: boolean) {
@@ -115,8 +139,7 @@ export class TumblerDialog extends Dialog {
         complete = false;
       }
 
-      this.circles[i * 2].setAngle(PhaserMath.RadToDeg(angle + i * 30));
-      this.circles[i * 2 + 1].setAngle(PhaserMath.RadToDeg(angle));
+      this.rings[i]?.setAngle(PhaserMath.RadToDeg(angle));
     });
 
     if (complete && checkComplete) {
@@ -125,24 +148,26 @@ export class TumblerDialog extends Dialog {
   }
 
   completed(closeHandler?: () => void) {
-    this.angles = [0, 0, 0, 0, 0];
-    this.updateMarkers();
-
-    this.disabled = true;
-    this.active = -1;
-
-    const masks = [];
-    for (let i = 0; i < 5; i++) {
-      masks.push(this.circles[i * 2 + 1]);
-    }
-
     this.tweens.add({
-      targets: masks,
-      rotation: Math.PI * 2,
-      delay: 500,
-      duration: 1500,
-      hold: 1000,
-      onComplete: closeHandler,
+      targets: this.rings,
+      rotation: 0,
+      duration: 500,
+      onComplete: () => {
+        this.angles = [0, 0, 0, 0, 0];
+        this.updateMarkers();
+
+        this.disabled = true;
+        this.active = -1;
+
+        this.tweens.add({
+          targets: this.rings,
+          rotation: Math.PI * 2,
+          delay: 500,
+          duration: 1500,
+          hold: 1000,
+          onComplete: closeHandler,
+        });
+      },
     });
   }
 
@@ -163,7 +188,7 @@ export class TumblerDialog extends Dialog {
     }
 
     for (let i = 0; i < 5; i++) {
-      this.circles[i * 2].setTint(this.active === i ? getColorNumber('C49B7C') : undefined);
+      this.rings[i]?.setTint(this.active === i ? getColorNumber('C49B7C') : undefined);
     }
   }
 

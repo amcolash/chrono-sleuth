@@ -1,11 +1,12 @@
 import { Types } from 'phaser';
 
 import { Cursor } from '../../classes/UI/Cursor';
+import { Config } from '../../config';
 import { Dialog } from './Dialog';
 
 export const cols = 3;
 
-const size = 100;
+const size = Config.height / (Config.zoomed ? 4 : 5.5);
 const topOffset = 30;
 const emptyTile = cols * cols - 1;
 
@@ -31,8 +32,11 @@ export class SliderDialog extends Dialog {
     this.layout = [...this.solution];
     this.tiles = [];
 
-    this.layout[7] = 8;
-    this.layout[8] = 7;
+    // shuffle the layout
+    for (let i = this.layout.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.layout[i], this.layout[j]] = [this.layout[j], this.layout[i]];
+    }
 
     this.layout.forEach((_value, index) => {
       const x = index % cols;
@@ -101,6 +105,26 @@ export class SliderDialog extends Dialog {
       this.tiles[index].setFrame(value);
       this.tiles[index].setVisible(value != emptyTile);
     });
+  }
+
+  completed(closeHandler: () => void): void {
+    for (let i = 0; i < this.layout.length + 1; i++) {
+      this.time.delayedCall(i * 150, () => {
+        if (i < this.layout.length) {
+          this.tiles[i].setFrame(i);
+          this.tiles[i].setVisible(i != emptyTile);
+        }
+
+        if (i > 0) this.tiles[i - 1].setTint(0x666666);
+      });
+    }
+
+    this.time.delayedCall(2000, closeHandler);
+  }
+
+  close(success?: boolean): void {
+    if (success) this.completed(() => super.close(success));
+    else super.close(success);
   }
 
   handleSuccess(success?: boolean): void {
