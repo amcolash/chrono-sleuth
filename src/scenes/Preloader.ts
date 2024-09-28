@@ -50,7 +50,7 @@ export class Preloader extends Scene {
     }
 
     const gear = document.createElement('img');
-    gear.src = 'assets/icons/settings.svg';
+    gear.src = 'assets/icons/settings.svg?2'; // weird phaser issue
     gear.id = 'loading';
 
     this.add.dom(0, 0, gear);

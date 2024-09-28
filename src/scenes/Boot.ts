@@ -3,14 +3,18 @@ import { Scene } from 'phaser';
 import { Config } from '../config';
 
 export class Boot extends Scene {
-  gear: HTMLImageElement;
-
   constructor() {
     super('Boot');
   }
 
   init() {
-    this.add.text(Config.width - 20, Config.height - 20, 'Loading...').setOrigin(1, 1);
+    this.add.text(Config.width - 100, Config.height - 40, 'Loading...').setOrigin(1, 1);
+
+    const gear = document.createElement('img');
+    gear.src = 'assets/icons/settings.svg?1'; // weird phaser issue
+    gear.id = 'loading';
+
+    this.add.dom(0, 0, gear);
   }
 
   preload() {
