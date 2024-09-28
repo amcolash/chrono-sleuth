@@ -140,9 +140,8 @@ export class Preloader extends Scene {
     }
 
     for (let i = 1; i <= 5; i++) {
-      this.load.svg(`ring_${i}`, `puzzles/tumbler/ring${i}.svg`);
+      this.load.image(`ring_${i}`, `puzzles/tumbler/ring${i}.png`);
     }
-    this.load.image('metal', 'puzzles/tumbler/metal.png');
   }
 
   create() {
