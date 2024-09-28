@@ -16,12 +16,12 @@ export const PropData: Record<PropType, Data> = {
     y: 640,
   },
   [PropType.LabBook]: {
-    x: 300,
+    x: -700,
     y: 1630,
     image: 'book',
   },
   [PropType.AlchemySet]: {
-    x: -1650,
+    x: -2650,
     y: 1600,
     image: 'alchemy_empty',
     skipLighting: true,
@@ -36,19 +36,19 @@ export const PropData: Record<PropType, Data> = {
     },
   },
   [PropType.LabBookshelf1]: {
-    x: -1025,
+    x: -2025,
     y: 1700,
   },
   [PropType.LabBookshelf2]: {
-    x: -290,
+    x: -1290,
     y: 1700,
   },
   [PropType.LabBookshelf3]: {
-    x: -115,
+    x: -1115,
     y: 1700,
   },
   [PropType.LabPotionShelf1]: {
-    x: -790,
+    x: -1790,
     y: 1700,
   },
   [PropType.MansionPicture]: {

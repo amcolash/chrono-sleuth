@@ -19,7 +19,7 @@ export const SlopeData: Data[] = [
   { x: -1300, y: -415, width: 90, height: 35 },
 
   // Alchemy Lab
-  { x: -710, y: 1577, width: 280, height: 190, upwards: true },
-  { x: -20, y: 1697, width: 200, height: 70 },
-  { x: -1570, y: 1728, width: 200, height: 40, flip: true },
+  { x: -1710, y: 1577, width: 280, height: 190, upwards: true },
+  { x: -1020, y: 1697, width: 200, height: 70 },
+  { x: -2570, y: 1728, width: 200, height: 40, flip: true },
 ];
