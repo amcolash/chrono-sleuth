@@ -3,6 +3,7 @@ import { Scene } from 'phaser';
 
 import { Button } from '../../classes/UI/Button';
 import { ButtonGroup } from '../../classes/UI/ButtonGroup';
+import { FullscreenButton } from '../../classes/UI/FullscreenButton';
 import { Gamepad } from '../../classes/UI/Gamepad';
 import { Config } from '../../config';
 import { fontStyle } from '../../utils/fonts';
@@ -35,7 +36,7 @@ export class Paused extends Scene {
     this.add
       .text(
         width - 20,
-        20,
+        height - (Config.prod ? 20 : 40),
         `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}\n${Config.prod ? '' : 'Debug Mode'}`,
         {
           ...fontStyle,
@@ -60,6 +61,9 @@ export class Paused extends Scene {
     const start = large ? 220 : 180;
 
     const buttonGroup = new ButtonGroup(this);
+
+    const fullscreenButton = new FullscreenButton(this, Config.width - 30, 30);
+    buttonGroup.addButton(fullscreenButton);
 
     buttonGroup.addButton(new Button(this, width / 2, start, 'Resume', () => this.resume(), { fontSize }));
 
@@ -119,6 +123,8 @@ export class Paused extends Scene {
           { fontSize }
         )
       );
+
+    buttonGroup.setActiveButton(1);
 
     // Keyboard interactions
     this.input.keyboard?.on('keydown-ESC', () => this.resume());

@@ -12,7 +12,6 @@ import { Slope } from '../classes/Environment/Slope';
 import { Walls } from '../classes/Environment/Walls';
 import { Warp } from '../classes/Environment/Warp';
 import { Player } from '../classes/Player/Player';
-import { FullscreenButton } from '../classes/UI/FullscreenButton';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
 import { Notification } from '../classes/UI/Notification';
@@ -24,7 +23,7 @@ import { SlopeData } from '../data/slope';
 import { Interactive, ItemType } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isDaytime, setDaytime, toggleLighting } from '../utils/lighting';
-import { getCurrentSaveState, load, loadConfig, save } from '../utils/save';
+import { load, loadConfig } from '../utils/save';
 import { fadeIn, openDialog } from '../utils/util';
 
 export class Game extends Scene {
@@ -183,14 +182,12 @@ export class Game extends Scene {
         toggleLighting(this);
         button.img.setTexture(prev ? 'sun' : 'moon');
       });
-      new IconButton(this, (x += 50), 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
-        const savedata = getCurrentSaveState(this);
-        save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
+      // new IconButton(this, (x += 50), 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
+      //   const savedata = getCurrentSaveState(this);
+      //   save(this, { ...savedata, settings: { ...savedata.settings, zoomed: !Config.zoomed } });
 
-        this.scene.restart();
-      });
-
-      new FullscreenButton(this, (x += 50), 30);
+      //   this.scene.restart();
+      // });
 
       if (!Config.prod) {
         new IconButton(this, (x += 50), 30, 'terminal', () => {

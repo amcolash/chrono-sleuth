@@ -21,7 +21,7 @@ let prod = localStorage.getItem('chrono-sleuth-prod') === 'true' || import.meta.
 // prod = true;
 
 let bootDialog;
-// bootDialog = 'MemoryDialog';
+// bootDialog = 'SliderDialog';
 
 // TODO: Remove width/height overrides since they are always loaded
 const { width, height } = fullSize;

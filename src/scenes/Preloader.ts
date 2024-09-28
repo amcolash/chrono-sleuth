@@ -83,15 +83,10 @@ export class Preloader extends Scene {
     this.load.image('mansion_inside', 'maps/mansion_inside.jpg');
     this.load.image('alchemy_lab', 'maps/alchemy_lab.jpg');
 
-    const puzzleSize = Math.floor(1024 / cols);
-    this.load.spritesheet('puzzle', 'puzzle.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
-
     // interactive objects
     this.load.image('watch', 'items/watch.png');
     this.load.image('ladder', 'props/ladder.png');
-
-    this.load.image('warp', 'warp.png');
-    this.load.image('arrow', 'arrow.png');
+    this.load.image('warp', 'props/warp.png');
 
     // items
     this.load.image('gear', 'items/gear.png');
@@ -135,6 +130,11 @@ export class Preloader extends Scene {
     this.load.image('alchemy_full', 'props/alchemy/alchemy_full.png');
 
     // puzzles
+    this.load.image('arrow', 'puzzles/arrow.png');
+
+    const puzzleSize = Math.floor(1024 / cols);
+    this.load.spritesheet('puzzle', 'puzzles/puzzle.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
+
     for (let i = 1; i <= 12; i++) {
       this.load.image(`rune_${i}`, `puzzles/runes/Stone${i}.png`);
     }
