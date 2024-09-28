@@ -14,4 +14,5 @@ export const BackgroundData: Data[] = [
   { x: -2200, y: -170, image: 'mansion_outside' },
   { x: -2000, y: -1320, image: 'mansion_inside', skipLighting: true },
   { x: -3200, y: 1300, image: 'alchemy_lab', scale: 0.9, skipLighting: true },
+  { x: 1500, y: -700, image: 'library', skipLighting: true },
 ];

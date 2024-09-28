@@ -83,6 +83,8 @@ export class Preloader extends Scene {
     this.load.image('mansion_inside', 'maps/mansion_inside.jpg');
     this.load.image('alchemy_lab', 'maps/alchemy_lab.jpg');
 
+    this.load.image('library', 'maps/library.jpg');
+
     // interactive objects
     this.load.image('watch', 'items/watch.png');
     this.load.image('ladder', 'props/ladder.png');

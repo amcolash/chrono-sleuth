@@ -26,6 +26,13 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
 
     const img = scene.textures.get(image)?.getSourceImage();
     this.center = new PhaserMath.Vector2(x + (img.width * (scale || 1)) / 2, y + img.height * ((scale || 1) / 2));
+
+    if (Config.debug) {
+      scene.add
+        .rectangle(this.center.x, this.center.y, img.width, img.height)
+        .setStrokeStyle(10, 0x006666)
+        .setOrigin(0.5);
+    }
   }
 
   lazyInit(forceInit?: boolean) {
