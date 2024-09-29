@@ -36,7 +36,7 @@ export class Paused extends Scene {
     this.add
       .text(
         width - 20,
-        height - (Config.prod ? 40 : 60),
+        height - 40,
         `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}\n${Config.prod ? '' : 'Debug Mode'}`,
         {
           ...fontStyle,
@@ -44,7 +44,7 @@ export class Paused extends Scene {
           align: 'right',
         }
       )
-      .setOrigin(1, 0)
+      .setOrigin(1, 1)
       .setInteractive({ useHandCursor: false })
       .on('pointerdown', () => {
         this.debugCount++;

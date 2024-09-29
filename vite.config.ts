@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite';
+import generateFile from 'vite-plugin-generate-file';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
+
+const buildTime = new Date();
 
 const manifest: Partial<ManifestOptions> = {
   theme_color: '#b5c1b9',
@@ -48,7 +51,7 @@ export default defineConfig({
     },
   },
   define: {
-    __BUILD_TIME__: new Date(),
+    __BUILD_TIME__: buildTime,
     __TAURI__: process.env.TAURI_PLATFORM !== undefined,
   },
   plugins: [
@@ -82,6 +85,13 @@ export default defineConfig({
           // enabled: true,
         },
       }),
+      generateFile([
+        {
+          type: 'json',
+          output: './build.json',
+          data: { buildTime },
+        },
+      ]),
     ],
     ViteImageOptimizer({
       png: {

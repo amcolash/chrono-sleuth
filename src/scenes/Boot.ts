@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 
 import { Config } from '../config';
+import { fontStyle } from '../utils/fonts';
 
 export class Boot extends Scene {
   constructor() {
@@ -8,7 +9,7 @@ export class Boot extends Scene {
   }
 
   init() {
-    this.add.text(Config.width - 100, Config.height - 40, 'Loading...').setOrigin(1, 1);
+    this.add.text(Config.width - 100, Config.height - 40, 'Loading...', fontStyle).setOrigin(1, 1);
 
     const gear = document.createElement('img');
     gear.src = 'assets/icons/settings.svg?1'; // weird phaser issue
@@ -28,9 +29,27 @@ export class Boot extends Scene {
 
     this.load.svg('maximize', 'icons/maximize.svg', { width: 64, height: 64 });
     this.load.svg('minimize', 'icons/minimize.svg', { width: 64, height: 64 });
+
+    if (import.meta.env.PROD) {
+      this.load.json('build', '../build.json');
+    }
   }
 
   create() {
+    if (import.meta.env.PROD) {
+      const build = this.cache.json.get('build');
+      if (build !== __BUILD_TIME__) {
+        this.add
+          .text(Config.width / 2, Config.height / 2, 'New version available!\nUpdating Game...', {
+            ...fontStyle,
+            align: 'center',
+            fontSize: 48,
+          })
+          .setOrigin(0.5);
+        return;
+      }
+    }
+
     if (!Config.prod) this.scene.start('Preloader');
     else this.scene.start('MainMenu');
   }
