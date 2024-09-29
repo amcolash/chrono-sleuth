@@ -38,7 +38,7 @@ export class Boot extends Scene {
   create() {
     if (import.meta.env.PROD) {
       const build = this.cache.json.get('build')?.buildTime;
-      if (build !== __BUILD_TIME__) {
+      if (build && build !== __BUILD_TIME__) {
         this.add
           .text(Config.width / 2, Config.height / 2, 'New version available!\nUpdating Game...', {
             ...fontStyle,
