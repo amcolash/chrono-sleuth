@@ -17,7 +17,10 @@ let rewindEnabled = false;
 let fastMode = false;
 fastMode = true;
 
-let prod = localStorage.getItem('chrono-sleuth-prod') === 'true' || import.meta.env.PROD;
+let prod = import.meta.env.PROD;
+// If local storage exists, always use that value instead
+const localProd = localStorage.getItem('chrono-sleuth-prod');
+if (localProd !== null) prod = localProd === 'true';
 // prod = true;
 
 let bootDialog;
