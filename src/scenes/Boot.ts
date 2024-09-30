@@ -31,22 +31,26 @@ export class Boot extends Scene {
     this.load.svg('minimize', 'icons/minimize.svg', { width: 64, height: 64 });
 
     if (import.meta.env.PROD) {
-      this.load.json('build', '../build.json');
+      this.load.json('build', `../build.json?cacheBust=${Date.now()}`);
     }
   }
 
   create() {
     if (import.meta.env.PROD) {
-      const build = this.cache.json.get('build')?.buildTime;
-      if (build && build !== __BUILD_TIME__) {
-        this.add
-          .text(Config.width / 2, Config.height / 2, 'New version available!\nUpdating Game...', {
-            ...fontStyle,
-            align: 'center',
-            fontSize: 48,
-          })
-          .setOrigin(0.5);
-        return;
+      try {
+        const build = this.cache.json.get('build')?.buildTime;
+        if (build && build !== __BUILD_TIME__) {
+          this.add
+            .text(Config.width / 2, Config.height / 2, 'New version available!\nUpdating Game...', {
+              ...fontStyle,
+              align: 'center',
+              fontSize: 48,
+            })
+            .setOrigin(0.5);
+          return;
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
 
