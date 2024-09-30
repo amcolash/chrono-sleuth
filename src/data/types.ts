@@ -77,6 +77,9 @@ export enum WarpType {
 
   LabEntrance,
   LabExit,
+
+  LibraryEntrance,
+  LibraryExit,
 }
 
 export enum ItemType {

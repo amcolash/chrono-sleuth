@@ -162,4 +162,19 @@ export const WarpData: Record<WarpType, Data> = {
     range: 15,
     skipLighting: true,
   },
+
+  [WarpType.LibraryEntrance]: {
+    x: 1420,
+    y: 650,
+    key: Key.Up,
+    warpTo: WarpType.LibraryExit,
+    visual: WarpVisual.WarpHidden,
+  },
+  [WarpType.LibraryExit]: {
+    x: 1730,
+    y: -120,
+    key: Key.Left,
+    warpTo: WarpType.LibraryEntrance,
+    visual: WarpVisual.Warp,
+  },
 };

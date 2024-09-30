@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "chrono-sleuth",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "tauri": {
     "allowlist": {
@@ -20,7 +20,7 @@
       "appimage": {
         "bundleMediaFramework": false
       },
-      "category": "DeveloperTool",
+      "category": "Game",
       "copyright": "",
       "deb": {},
       "externalBin": [],
