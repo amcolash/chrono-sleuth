@@ -14,6 +14,7 @@ type DialogData = {
   title: string;
   gamepadVisible: boolean;
   childScene?: string;
+  hideCloseSuccess?: boolean;
 };
 
 export abstract class Dialog extends Scene {
@@ -43,7 +44,7 @@ export abstract class Dialog extends Scene {
       })
     );
 
-    if (!Config.prod) {
+    if (!Config.prod && !this.dialogData.hideCloseSuccess) {
       this.container.add(
         new IconButton(this, Config.width * 0.38, Config.height * -0.4, 'award', () => this.close(true))
       );

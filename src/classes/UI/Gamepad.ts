@@ -140,27 +140,24 @@ export class Gamepad extends GameObjects.Container {
   }
 
   getKeyFromButton(button: Input.Gamepad.Button): string | undefined {
+    const nintendo = button.pad.id.toLowerCase().includes('nintendo');
     let key;
     switch (button.index) {
       case 0: // Bottom (A/B)
-        if (button.pad.id.toLowerCase().includes('nintendo')) {
-          key = 'BACKSPACE';
-        } else {
-          key = 'ENTER';
-        }
+        if (nintendo) key = 'BACKSPACE';
+        else key = 'ENTER';
         break;
       case 1: // Right (B/A)
-        if (button.pad.id.toLowerCase().includes('nintendo')) {
-          key = 'ENTER';
-        } else {
-          key = 'BACKSPACE';
-        }
+        if (nintendo) key = 'ENTER';
+        else key = 'BACKSPACE';
         break;
       case 2: // Top (X/Y)
-        key = 'BACK_SLASH';
+        if (nintendo) key = 'SHIFT';
+        else key = 'BACK_SLASH';
         break;
       case 3: // Left (Y/X)
-        key = 'SHIFT';
+        if (nintendo) key = 'BACK_SLASH';
+        else key = 'SHIFT';
         break;
       case 8: // Select
         key = 'J';

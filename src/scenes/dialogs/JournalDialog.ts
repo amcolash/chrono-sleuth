@@ -8,7 +8,7 @@ export class JournalDialog extends Dialog {
   player: Player;
 
   constructor() {
-    super({ key: 'JournalDialog', title: 'Journal', gamepadVisible: false });
+    super({ key: 'JournalDialog', title: 'Journal', gamepadVisible: false, hideCloseSuccess: true });
   }
 
   init(data: { player: Player }) {

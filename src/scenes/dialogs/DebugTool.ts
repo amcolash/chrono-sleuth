@@ -49,7 +49,7 @@ export class DebugTool extends Dialog {
   miscContainer: GameObjects.Container;
 
   constructor() {
-    super({ key: 'DebugTool', title: 'Debug Tool', gamepadVisible: false });
+    super({ key: 'DebugTool', title: 'Debug Tool', gamepadVisible: false, hideCloseSuccess: true });
 
     const lastTab = localStorage.getItem(lastDebugKey);
     if (lastTab) this.tab = Number(lastTab);
