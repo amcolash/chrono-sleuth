@@ -36,7 +36,7 @@ export class Paused extends Scene {
     this.add
       .text(
         width - 20,
-        height - 40,
+        height - 20,
         `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}\n${Config.prod ? '' : 'Debug Mode'}`,
         {
           ...fontStyle,
@@ -49,7 +49,6 @@ export class Paused extends Scene {
       .on('pointerdown', () => {
         this.debugCount++;
         if (this.debugCount > 10) {
-          this.debugCount = 0;
           localStorage.setItem('chrono-sleuth-prod', Config.prod ? 'false' : 'true');
           window.location.reload();
         }
