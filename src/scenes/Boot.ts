@@ -47,6 +47,9 @@ export class Boot extends Scene {
               fontSize: 48,
             })
             .setOrigin(0.5);
+
+          setTimeout(() => window.location.reload(), 20000); // fallback in case the game doesn't reload
+
           return;
         }
       } catch (e) {
