@@ -29,7 +29,8 @@ let bootDialog;
 // TODO: Remove width/height overrides since they are always loaded
 const { width, height } = fullSize;
 
-if (import.meta.env.PROD) {
+// TODO: Remove overrides long-term
+if (prod) {
   debug = false;
   fastMode = false;
   prod = true;
