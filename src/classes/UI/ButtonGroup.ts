@@ -1,6 +1,5 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { Colors, getColorNumber } from '../../utils/colors';
 import { Button } from './Button';
 import { IconButton } from './IconButton';
 
@@ -40,9 +39,9 @@ export class ButtonGroup extends GameObjects.Container {
   }
 
   setActiveButton(index: number) {
-    this.buttons[this.activeIndex]?.setTint(0xffffff);
+    this.buttons[this.activeIndex]?.setSelected(false);
     this.activeIndex = index;
-    this.buttons[this.activeIndex]?.setTint(getColorNumber(Colors.ButtonActive));
+    this.buttons[this.activeIndex]?.setSelected(true);
   }
 
   clearButtons() {

@@ -7,6 +7,7 @@ import { IconButton } from './IconButton';
 export class ButtonGrid extends GameObjects.Container {
   buttons: (Button | IconButton | undefined)[][] = [];
   activeIndex = new PhaserMath.Vector2();
+  cursor: GameObjects.Rectangle;
 
   constructor(scene: Scene, x?: number, y?: number) {
     super(scene, x, y);
@@ -14,6 +15,11 @@ export class ButtonGrid extends GameObjects.Container {
     scene.add.existing(this).setScrollFactor(0);
 
     this.activeIndex.set(-1, -1);
+    this.cursor = scene.add
+      .rectangle(0, 0, 60, 80)
+      .setStrokeStyle(2, getColorNumber(Colors.Tan), 0.75)
+      .setVisible(false)
+      .setDepth(1);
 
     scene.input.keyboard?.on('keydown-UP', () => {
       this.setActiveButton({ x: 0, y: -1 });
@@ -41,6 +47,20 @@ export class ButtonGrid extends GameObjects.Container {
   setButtons(buttons: (Button | IconButton | undefined)[][]) {
     this.buttons = buttons;
     this.activeIndex.set(-1, -1);
+
+    let dims = new PhaserMath.Vector2();
+
+    for (const row of buttons) {
+      for (const b of row) {
+        if (b !== undefined) {
+          const bounds = b.getBounds();
+          dims.set(Math.max(dims.x, bounds.width), Math.max(dims.y, bounds.height));
+        }
+      }
+    }
+
+    const offset = 1.2;
+    this.cursor.setSize(dims.x * offset, dims.y * offset);
   }
 
   getActiveButton(): Button | IconButton | undefined {
@@ -78,13 +98,11 @@ export class ButtonGrid extends GameObjects.Container {
       if (!btn) return;
     }
 
-    const oldActive = this.getActiveButton();
-    const newActive = this.buttons[y]?.[x];
+    const active = this.buttons[y]?.[x];
 
-    if (newActive) {
+    if (active) {
+      this.cursor.setPosition(active.x, active.y).setVisible(true);
       this.activeIndex.set(x, y);
-      oldActive?.setTint(0xffffff);
-      newActive?.setTint(getColorNumber(Colors.ButtonActive));
     }
   }
 }
