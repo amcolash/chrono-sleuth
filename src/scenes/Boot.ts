@@ -48,7 +48,7 @@ export class Boot extends Scene {
             })
             .setOrigin(0.5);
 
-          setTimeout(() => window.location.reload(), 20000); // fallback in case the game doesn't reload
+          setTimeout(() => window.location.reload(), 15000); // fallback in case the game doesn't reload
 
           return;
         }

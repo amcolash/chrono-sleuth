@@ -6,6 +6,7 @@ import { Boot } from './scenes/Boot';
 import { Game as MainGame } from './scenes/Game';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
+import { UITest } from './scenes/UITest';
 import { DebugTool } from './scenes/dialogs/DebugTool';
 import { JournalDialog } from './scenes/dialogs/JournalDialog';
 import { Maze } from './scenes/dialogs/Maze';
@@ -55,6 +56,8 @@ const config: Types.Core.GameConfig = {
     MemoryDialog,
 
     SliderDialog,
+
+    UITest,
   ],
   input: {
     gamepad: true,
