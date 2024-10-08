@@ -1,11 +1,12 @@
 import { GameObjects, Scene, Types } from 'phaser';
 
-import { Colors } from '../../utils/colors';
+import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 
 export class Button extends GameObjects.Text {
   onClick: (button: Button) => void;
   disabled: boolean;
+  selected: boolean;
 
   constructor(
     scene: Scene,
@@ -28,31 +29,42 @@ export class Button extends GameObjects.Text {
 
     this.onClick = onClick;
     this.disabled = false;
+    this.selected = false;
 
     // Button interactions
     this.setInteractive({ useHandCursor: true }).setScrollFactor(0);
 
     this.on('pointerdown', () => {
-      if (!this.disabled) onClick(this);
+      if (!this.disabled) {
+        this.setSelected(false);
+        onClick(this);
+      }
     });
     this.on('pointerover', () => {
-      if (!this.disabled) this.setTint(0xbbbbbb);
+      if (!this.disabled && !this.selected) this.setTint(0xbbbbbb);
     });
     this.on('pointerout', () => {
-      if (!this.disabled) this.setTint(0xffffff);
+      if (!this.disabled && !this.selected) this.setTint(0xffffff);
     });
   }
 
   disable() {
     this.disabled = true;
+    this.selected = false;
     this.disableInteractive();
     this.setTint(0x666666);
   }
 
   enable() {
     this.disabled = false;
+    this.selected = false;
     this.setInteractive();
     this.setTint(0xffffff);
+  }
+
+  setSelected(selected: boolean) {
+    this.selected = selected;
+    this.setTint(selected ? getColorNumber(Colors.ButtonActive) : 0xffffff);
   }
 }
 

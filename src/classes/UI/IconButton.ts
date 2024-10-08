@@ -7,6 +7,7 @@ export class IconButton extends GameObjects.Container {
   onClick: (button: IconButton) => void;
   img: GameObjects.Image;
   rect: GameObjects.Rectangle;
+  selected: boolean;
 
   constructor(scene: Scene, x: number, y: number, texture: string, callback: (button: IconButton) => void) {
     super(scene, x, y);
@@ -24,6 +25,8 @@ export class IconButton extends GameObjects.Container {
     this.rect.setInteractive({ useHandCursor: true }).on('pointerdown', () => callback(this));
     this.onClick = callback;
 
+    this.selected = false;
+
     this.rect.on('pointerover', () => {
       this.rect.setScale(1.1);
       this.img.setDisplaySize(36, 36);
@@ -36,5 +39,10 @@ export class IconButton extends GameObjects.Container {
 
   setTint(tint: number) {
     this.img.setTint(tint);
+  }
+
+  setSelected(selected: boolean) {
+    this.selected = selected;
+    this.setTint(selected ? getColorNumber(Colors.ButtonActive) : 0xffffff);
   }
 }
