@@ -1,30 +1,37 @@
-import { Scene } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Button } from '../classes/UI/Button';
 import { ButtonGrid } from '../classes/UI/ButtonGrid';
 
+const pattern = [
+  [1, 1, 1, 1],
+  [1, 0, 1, 1],
+  [1, 1, 1, 1],
+  [0, 0, 0, 1],
+  [0, 0, 0, 1],
+  [0, 0, 0, 1],
+  [0, 0, 0, 1],
+  [0, 0, 0, 1],
+];
+
+const answer = [
+  [0, 1, 2],
+  [3, ' ', 4],
+  [5, 6, 7],
+];
+
 export class UITest extends Scene {
+  selected?: Button;
+  cursor: GameObjects.Rectangle;
+
   constructor() {
     super('UITest');
+    this.selected = undefined;
   }
 
   create() {
-    this.createButtonGrid();
-  }
-
-  createButtonGrid() {
     const grid = new ButtonGrid(this);
     const buttons = [];
-
-    const pattern = [
-      [1, 1, 1, 1],
-      [1, 0, 1, 1],
-      [1, 1, 1, 1],
-      [0, 0, 0, 1],
-      [0, 0, 0, 1],
-      [0, 0, 0, 1],
-      [0, 0, 0, 1],
-    ];
 
     for (let y = 0; y < pattern.length; y++) {
       const row = [];
@@ -39,6 +46,24 @@ export class UITest extends Scene {
   }
 
   btn(x: number, y: number): Button {
-    return new Button(this, 50 + x * 100, 50 + y * 100, (x + y * 5).toString(), (b) => console.log(b));
+    let xOffset = x < 3 ? 0 : 100;
+    return new Button(this, 50 + x * 60 + xOffset, 50 + y * 85, x < 3 ? ' ' : y.toString(), (b) =>
+      this.selectButton(b)
+    );
+  }
+
+  selectButton(b: Button) {
+    if (this.selected === undefined) {
+      this.selected = b;
+      b.setSelected(true);
+    } else {
+      const old = this.selected.text;
+
+      this.selected.setSelected(false);
+      this.selected.text = b.text;
+      b.text = old;
+
+      this.selected = undefined;
+    }
   }
 }
