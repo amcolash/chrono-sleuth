@@ -34,7 +34,7 @@ export class Cursor extends GameObjects.Rectangle {
     if (time < this.nextUpdate) return;
     let moved = true;
 
-    const width = this.cursorData.regions[0].length;
+    const width = this.cursorData.regions[0]?.length;
     const height = this.cursorData.regions.length;
 
     const keys = this.keys.keys;
@@ -56,6 +56,5 @@ export class Cursor extends GameObjects.Rectangle {
         this.cursorData.regions[this.position.y][this.position.x].y
       );
     }
-    // }
   }
 }
