@@ -57,6 +57,10 @@ export class Boot extends Scene {
       }
     }
 
+    this.scene.start('UITest');
+    // this.scene.start('MainMenu');
+    return;
+
     if (!Config.prod) this.scene.start('Preloader');
     else this.scene.start('MainMenu');
   }
