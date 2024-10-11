@@ -3,52 +3,50 @@
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm start",
-    "devPath": "http://localhost:5173",
-    "distDir": "../dist"
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173"
   },
-  "package": {
-    "productName": "chrono-sleuth",
-    "version": "0.2.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "process": { "exit": true }
-    },
-    "bundle": {
-      "active": true,
+  "bundle": {
+    "active": true,
+    "linux": {
+      "deb": {},
       "appimage": {
         "bundleMediaFramework": false
-      },
-      "category": "Game",
-      "copyright": "",
-      "deb": {},
-      "externalBin": [],
-      "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
-      "identifier": "com.amcolash.chrono-sleuth",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
       }
     },
-    "security": {
-      "csp": null
+    "category": "Game",
+    "copyright": "",
+    "targets": "all",
+    "externalBin": [],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
     },
-    "updater": {
-      "active": false
+    "longDescription": "",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
     },
+    "resources": [],
+    "shortDescription": ""
+  },
+  "productName": "chrono-sleuth",
+  "mainBinaryName": "chrono-sleuth",
+  "version": "0.2.0",
+  "identifier": "com.amcolash.chrono-sleuth",
+  "plugins": {},
+  "app": {
     "windows": [
       {
         "fullscreen": false,
@@ -57,6 +55,9 @@
         "title": "chrono-sleuth",
         "width": 960
       }
-    ]
+    ],
+    "security": {
+      "csp": null
+    }
   }
 }

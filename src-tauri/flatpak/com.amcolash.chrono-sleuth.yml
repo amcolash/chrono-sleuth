@@ -9,6 +9,7 @@ finish-args:
   - --socket=wayland # Permission needed to show the window
   - --socket=fallback-x11 # Permission needed to show the window
   - --device=dri # OpenGL, not necessary for all projects
+  - --socket=pulseaudio" # audio output
   - --share=ipc
 
 modules:
@@ -24,8 +25,9 @@ modules:
     build-commands:
       - ar -x *.deb
       - tar -xf data.tar.gz
-      - 'install -Dm755 usr/bin/chrono-sleuth /app/bin/chrono-sleuth'
+      - install -Dm755 usr/bin/chrono-sleuth /app/bin/chrono-sleuth
       - install -Dm644 usr/share/applications/chrono-sleuth.desktop /app/share/applications/com.amcolash.chrono-sleuth.desktop
       - install -Dm644 usr/share/icons/hicolor/128x128/apps/chrono-sleuth.png /app/share/icons/hicolor/128x128/apps/com.amcolash.chrono-sleuth.png
       - install -Dm644 usr/share/icons/hicolor/32x32/apps/chrono-sleuth.png /app/share/icons/hicolor/32x32/apps/com.amcolash.chrono-sleuth.png
       - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/chrono-sleuth.png /app/share/icons/hicolor/256x256@2/apps/com.amcolash.chrono-sleuth.png
+      - install -Dm644 com.amcolash.chrono-sleuth.metainfo.xml /app/share/metainfo/org.your.id.rosary.metainfo.xml

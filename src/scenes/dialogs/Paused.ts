@@ -1,4 +1,4 @@
-import { exit } from '@tauri-apps/api/process';
+import { exit } from '@tauri-apps/plugin-process';
 import { Scene } from 'phaser';
 
 import { Button } from '../../classes/UI/Button';
