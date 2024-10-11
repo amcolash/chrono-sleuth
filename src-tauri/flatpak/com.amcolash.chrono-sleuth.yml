@@ -8,17 +8,17 @@ command: chrono-sleuth
 finish-args:
   - --socket=wayland # Permission needed to show the window
   - --socket=fallback-x11 # Permission needed to show the window
-  - --device=dri # OpenGL, not necessary for all projects
-  - --socket=pulseaudio" # audio output
   - --share=ipc
+  - --socket=pulseaudio # Enable Audio Output
+  - --device=dri # Enable OpenGL
 
 modules:
   - name: binary
     buildsystem: simple
     sources:
       - type: file
-        url: https://github.com/amcolash/chrono-sleuth/releases/download/app-v0.1.0/chrono-sleuth_0.1.0_amd64.deb
-        sha256: c5651ed35d876eb1921cc10dfbec6329c0e8b45d3f427771a83961e774e08404 # This is required if you are using a remote source
+        url: https://github.com/amcolash/chrono-sleuth/releases/download/app-v0.2.0/chrono-sleuth_0.2.0_amd64.deb
+        sha256: 337ba53df8a305829e2e5716502f23fcfc912df7181cd24c684cfe06df261946
         only-arches: [x86_64] #This source is only used on x86_64 Computers
         # This path points to the binary file which was created in the .deb bundle.
         # Tauri also creates a folder which corresponds to the content of the unpacked .deb.
@@ -30,4 +30,3 @@ modules:
       - install -Dm644 usr/share/icons/hicolor/128x128/apps/chrono-sleuth.png /app/share/icons/hicolor/128x128/apps/com.amcolash.chrono-sleuth.png
       - install -Dm644 usr/share/icons/hicolor/32x32/apps/chrono-sleuth.png /app/share/icons/hicolor/32x32/apps/com.amcolash.chrono-sleuth.png
       - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/chrono-sleuth.png /app/share/icons/hicolor/256x256@2/apps/com.amcolash.chrono-sleuth.png
-      - install -Dm644 com.amcolash.chrono-sleuth.metainfo.xml /app/share/metainfo/org.your.id.rosary.metainfo.xml

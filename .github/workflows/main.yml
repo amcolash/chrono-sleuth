@@ -80,9 +80,7 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
-        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -114,3 +112,28 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+  publish-flatpak:
+    name: Publish Flatpak
+    needs: publish-tauri
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder
+          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Build Flatpak
+        run: src-tauri/flatpak/build.sh
+      - name: Upload release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            src-tauri/flatpak/*.flatpak
