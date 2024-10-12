@@ -133,8 +133,12 @@ jobs:
       - name: Build Flatpak
         run: src-tauri/flatpak/build.sh
 
-      - name: Upload release
-        uses: AButler/upload-release-assets@v3.0
+      # - name: Upload release
+      #   uses: AButler/upload-release-assets@v3.0
+      #   with:
+      #     files: 'src-tauri/flatpak/*.flatpak'
+      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload flatpak as asset (for now)
+        uses: actions/upload-artifact@v4
         with:
-          files: 'src-tauri/flatpak/*.flatpak'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./src-tauri/flatpak/*.flatpak
