@@ -17,7 +17,7 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../../utils/interactionUtils';
-import { getCurrentSaveState, save } from '../../utils/save';
+import { convertSaveData, getCurrentSaveState, save } from '../../utils/save';
 import { openDialog } from '../../utils/util';
 import { Game } from '../Game';
 import { Dialog } from './Dialog';
@@ -195,7 +195,8 @@ export class DebugTool extends Dialog {
       'Dump Save',
       () => {
         const data = getCurrentSaveState(this.player.scene);
-        console.log(data);
+        const converted = convertSaveData(data);
+        console.log(converted);
       },
       { backgroundColor: '#111' }
     );

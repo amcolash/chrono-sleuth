@@ -2,6 +2,7 @@ import { Cameras, Display, Math as PhaserMath, Scene, Tweens, Types } from 'phas
 
 import { Player } from '../classes/Player/Player';
 import { Config, fullSize, zoomedSize } from '../config';
+import { ItemType, JournalEntry, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { Colors, colorToNumber, getColorNumber, getColorObject } from './colors';
 
@@ -94,4 +95,17 @@ export function tweenColor(
     },
     ...config,
   });
+}
+
+const enumsToTransform = { JournalEntry, ItemType, QuestType };
+
+/** Transform enum values to strings (used for stringifying save data) */
+export function transformEnumValue(value: any): any {
+  // Dynamically check each enum in the enums object
+  for (const [enumName, enumObj] of Object.entries(enumsToTransform)) {
+    if (value in enumObj) {
+      return `${enumName}.${enumObj[value as keyof typeof enumObj]}`;
+    }
+  }
+  return value; // Non-enum values are returned as-is
 }

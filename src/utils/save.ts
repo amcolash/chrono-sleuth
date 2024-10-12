@@ -5,9 +5,9 @@ import { Config } from '../config';
 import { SaveData, SaveType, saveKey, saves } from '../data/saves';
 import { Game } from '../scenes/Game';
 import { Colors } from './colors';
-import { setZoomed } from './util';
+import { setZoomed, transformEnumValue } from './util';
 
-// Get the current state of the game before saving
+/** Get the current state of the game before saving */
 export function getCurrentSaveState(scene: Game): SaveData {
   const save: SaveData = {
     player: {
@@ -29,7 +29,7 @@ export function getCurrentSaveState(scene: Game): SaveData {
   return save;
 }
 
-// Get the saved data from local storage, default back to defaultSave if none exists or error parsing
+/** Get the saved data from local storage, default back to defaultSave if none exists or error parsing */
 function getSavedData(): { save: SaveData; error: unknown } {
   const data = localStorage.getItem(saveKey);
   let parsed: SaveData | undefined = undefined;
@@ -42,6 +42,22 @@ function getSavedData(): { save: SaveData; error: unknown } {
   }
 
   return { save: parsed || saves[SaveType.New], error };
+}
+
+/** Convert save data so that is has proper enums, instead of numbers */
+export function convertSaveData(save: SaveData): string {
+  return JSON.stringify(
+    save,
+    (_key, value) => {
+      // Handle array values to ensure they retain array structure
+      if (Array.isArray(value)) {
+        return value.map((item) => transformEnumValue(item));
+      }
+      // Transform non-array values
+      return transformEnumValue(value);
+    },
+    2
+  );
 }
 
 function checkConfig(savedata: SaveData, scene: Game): boolean {
@@ -63,7 +79,7 @@ function checkConfig(savedata: SaveData, scene: Game): boolean {
   return false;
 }
 
-// Only load the config to check if the scene needs to be restarted
+/** Only load the config to check if the scene needs to be restarted */
 export function loadConfig(scene: Game): boolean {
   const { save: savedata } = getSavedData();
 
