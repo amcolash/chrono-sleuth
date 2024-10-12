@@ -2,7 +2,7 @@
 
 # move to script dir
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-pushd $SCRIPT_DIR > /dev/null
+pushd $SCRIPT_DIR >/dev/null
 
 # get version from tauri.conf.json, don't use jq
 VERSION=$(grep -oP '"version": "\K(.*)(?=")' ../tauri.conf.json)
@@ -19,8 +19,8 @@ SHA256=$(curl -sL $URL | sha256sum | cut -d ' ' -f 1)
 sed -i "s/chrono-sleuth_.*_amd64.deb/chrono-sleuth_${VERSION}_amd64.deb/g" com.amcolash.chrono-sleuth.yml
 sed -i "s/sha256: .*/sha256: $SHA256/g" com.amcolash.chrono-sleuth.yml
 
-# build the flatpak
-flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo dist com.amcolash.chrono-sleuth.yml
+# build the flatpak (explicitly hardcode flathub)
+flatpak-builder --force-clean --user --install-deps-from=https://flathub.org/repo/flathub.flatpakrepo --repo=repo dist com.amcolash.chrono-sleuth.yml
 flatpak build-bundle repo chrono-sleuth_${VERSION}_amd64.flatpak com.amcolash.chrono-sleuth --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
 # display info
@@ -31,4 +31,4 @@ artifact_name=$(echo "$artifact_info" | awk '{print $9}')
 echo "Flatpak built: $artifact_name ($artifact_size)"
 
 # go back to previous dir
-popd > /dev/null
+popd >/dev/null
