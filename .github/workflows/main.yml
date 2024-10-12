@@ -141,4 +141,5 @@ jobs:
       - name: Upload flatpak as asset (for now)
         uses: actions/upload-artifact@v4
         with:
+          name: flatpak
           path: ./src-tauri/flatpak/*.flatpak
