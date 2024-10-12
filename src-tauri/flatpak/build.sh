@@ -20,7 +20,8 @@ sed -i "s/chrono-sleuth_.*_amd64.deb/chrono-sleuth_${VERSION}_amd64.deb/g" com.a
 sed -i "s/sha256: .*/sha256: $SHA256/g" com.amcolash.chrono-sleuth.yml
 
 # build the flatpak (explicitly hardcode flathub)
-flatpak-builder --force-clean --user --install-deps-from=https://flathub.org/repo/flathub.flatpakrepo --repo=repo dist com.amcolash.chrono-sleuth.yml
+flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo dist com.amcolash.chrono-sleuth.yml
 flatpak build-bundle repo chrono-sleuth_${VERSION}_amd64.flatpak com.amcolash.chrono-sleuth --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
 # display info
