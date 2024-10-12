@@ -50,6 +50,11 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    watch: {
+      ignored: ['**/src-tauri/**'],
+    },
+  },
   define: {
     __BUILD_TIME__: buildTime,
     __TAURI__: process.env.TAURI_PLATFORM !== undefined,

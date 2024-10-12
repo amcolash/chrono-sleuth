@@ -82,10 +82,10 @@ export class UITest extends Scene {
       b.text = old;
 
       this.selected = undefined;
-    }
 
-    const valid = this.checkValid();
-    if (valid) console.log('You Won!');
+      const valid = this.checkValid();
+      if (valid) console.log('You Won!');
+    }
   }
 
   checkValid(): boolean {
@@ -96,7 +96,6 @@ export class UITest extends Scene {
         if (!button) continue;
         if ((button as Button).text !== answer[y][x]) {
           valid = false;
-          console.log('Failing on button', answer[y][x]);
         }
       }
     }

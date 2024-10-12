@@ -23,6 +23,7 @@ const localProd = localStorage.getItem('chrono-sleuth-prod');
 if (localProd !== null) prod = localProd === 'true';
 // prod = true;
 
+// Dialog to show after booting game (assets are loaded)
 let bootDialog;
 // bootDialog = 'SliderDialog';
 

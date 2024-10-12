@@ -3,6 +3,10 @@ import { Scene } from 'phaser';
 import { Config } from '../config';
 import { fontStyle } from '../utils/fonts';
 
+// scene to load immediately w/o fully initialized game
+let bootScene: string | undefined;
+// bootScene = 'UITest';
+
 export class Boot extends Scene {
   constructor() {
     super('Boot');
@@ -57,9 +61,10 @@ export class Boot extends Scene {
       }
     }
 
-    this.scene.start('UITest');
-    // this.scene.start('MainMenu');
-    return;
+    if (bootScene && !import.meta.env.PROD) {
+      this.scene.start(bootScene);
+      return;
+    }
 
     if (!Config.prod) this.scene.start('Preloader');
     else this.scene.start('MainMenu');

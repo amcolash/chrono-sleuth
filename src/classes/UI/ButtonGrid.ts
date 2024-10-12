@@ -15,11 +15,6 @@ export class ButtonGrid extends GameObjects.Container {
     scene.add.existing(this).setScrollFactor(0);
 
     this.activeIndex.set(-1, -1);
-    this.cursor = scene.add
-      .rectangle(0, 0, 60, 80)
-      .setStrokeStyle(2, getColorNumber(Colors.Tan), 0.75)
-      .setVisible(false)
-      .setDepth(1);
 
     scene.input.keyboard?.on('keydown-UP', () => {
       this.setActiveButton({ x: 0, y: -1 });
@@ -42,11 +37,25 @@ export class ButtonGrid extends GameObjects.Container {
       // @ts-ignore
       if (button) button.onClick(button);
     });
+
+    scene.input.on('pointermove', () => {
+      this.cursor.setVisible(false);
+    });
   }
 
   setButtons(buttons: (Button | IconButton | undefined)[][]) {
     this.buttons = buttons;
     this.activeIndex.set(-1, -1);
+
+    this.removeAll(true);
+
+    this.cursor = this.scene.add
+      .rectangle(0, 0, 60, 80)
+      .setStrokeStyle(2, getColorNumber(Colors.Tan), 0.75)
+      .setVisible(false)
+      .setDepth(1);
+
+    this.add(this.cursor);
 
     let dims = new PhaserMath.Vector2();
 
@@ -55,6 +64,8 @@ export class ButtonGrid extends GameObjects.Container {
         if (b !== undefined) {
           const bounds = b.getBounds();
           dims.set(Math.max(dims.x, bounds.width), Math.max(dims.y, bounds.height));
+
+          this.add(b);
         }
       }
     }
