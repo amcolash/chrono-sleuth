@@ -46,6 +46,12 @@ const sphinxRiddle: Dialog<NPC> = {
 export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [
     {
+      messages: ['There still is one more gear missing.', 'Something tells me there is a great evil near the lake.'],
+      conditions: {
+        journalEntry: JournalEntry.ClockSecondGear,
+      },
+    },
+    {
       messages: ['Ah, the second gear. You should take it to the clock tower.'],
       conditions: {
         hasItem: ItemType.Gear2,
@@ -111,6 +117,12 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
     },
   ],
   [NPCType.Stranger]: [
+    {
+      messages: ['I am worried about the secrets hidden near the lake.', 'Long ago I saw a great evil lurking there.'],
+      conditions: {
+        journalEntry: JournalEntry.ClockSecondGear,
+      },
+    },
     {
       messages: ['Another gear? The mayor probably wants that put back in the clock tower.'],
       conditions: {
@@ -364,6 +376,12 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     },
   ],
   [PropType.LabBook]: [
+    {
+      messages: [],
+      conditions: {
+        journalEntry: JournalEntry.ClockSecondGear,
+      },
+    },
     {
       messages: [
         'How could I have missed this? The potion is called the "Keyless Exlixir".',

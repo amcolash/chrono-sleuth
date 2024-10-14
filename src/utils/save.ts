@@ -3,6 +3,7 @@ import deepEqual from 'deep-equal';
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
 import { SaveData, SaveType, saveKey, saves } from '../data/saves';
+import { ItemType, JournalEntry, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { Colors } from './colors';
 import { setZoomed, transformEnumValue } from './util';
@@ -44,20 +45,39 @@ function getSavedData(): { save: SaveData; error: unknown } {
   return { save: parsed || saves[SaveType.New], error };
 }
 
-/** Convert save data so that is has proper enums, instead of numbers */
+// Mapping of keys to their respective enums
+const enumMapping: Record<string, { enumObj: any; enumName: string }> = {
+  journal: { enumObj: JournalEntry, enumName: 'JournalEntry' },
+  inventory: { enumObj: ItemType, enumName: 'ItemType' },
+  type: { enumObj: ItemType, enumName: 'ItemType' },
+  quests: { enumObj: QuestType, enumName: 'QuestType' },
+  id: { enumObj: QuestType, enumName: 'QuestType' },
+};
+
+/** Convert save data so that is has proper enums, instead of numbers, thanks GPT */
 export function convertSaveData(save: SaveData): string {
-  return JSON.stringify(
+  const jsonString = JSON.stringify(
     save,
-    (_key, value) => {
-      // Handle array values to ensure they retain array structure
-      if (Array.isArray(value)) {
-        return value.map((item) => transformEnumValue(item));
+    (key, value) => {
+      const enumInfo = enumMapping[key];
+
+      // Handle arrays with specific enum transformations for array elements
+      if (Array.isArray(value) && enumInfo) {
+        return value.map((item) => transformEnumValue(item, enumInfo.enumObj, enumInfo.enumName));
       }
-      // Transform non-array values
-      return transformEnumValue(value);
+
+      // Apply transformation for non-array values using mapped enums
+      if (enumInfo) {
+        return transformEnumValue(value, enumInfo.enumObj, enumInfo.enumName);
+      }
+
+      return value; // For non-enum and non-mapped values, return as-is
     },
     2
   );
+
+  // Use regex to remove quotes around enum-like strings in dot notation
+  return jsonString.replace(/"(\w+\.\w+)"/g, '$1');
 }
 
 function checkConfig(savedata: SaveData, scene: Game): boolean {

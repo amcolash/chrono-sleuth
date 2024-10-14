@@ -55,7 +55,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
       const dialogs = PropDialogs[this.propType] || [];
       const dialog = getDialog<Prop>(dialogs, this.player, this);
 
-      if (dialog) {
+      if (dialog && dialog?.messages.length > 0) {
         this.player.message.setDialog<Prop>(dialog, this, PropData[this.propType].portrait || 'player_portrait');
         return InteractResult.Prop;
       }
@@ -81,7 +81,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     const dialogs = PropDialogs[this.propType] || [];
     const dialog = getDialog<Prop>(dialogs, this.player, this);
 
-    return dialog ? [`Inspect ${PropType[this.propType]}`, 'Press [CONTINUE]'] : '';
+    return dialog && dialog?.messages.length > 0 ? [`Inspect ${PropType[this.propType]}`, 'Press [CONTINUE]'] : '';
   }
 
   update() {
