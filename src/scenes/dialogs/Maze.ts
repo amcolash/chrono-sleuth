@@ -37,6 +37,9 @@ export class Maze extends Scene {
 
     this.cameras.main.startFollow(this.mazePlayer);
     this.keys = this.parent.keys;
+
+    this.parent.addTarget(this.graphics);
+    this.parent.addTarget(this.mazePlayer);
   }
 
   getMazeSeed() {

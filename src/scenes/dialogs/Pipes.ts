@@ -163,7 +163,7 @@ export class Pipes extends Scene {
       }
     }
 
-    this.parent.additionalUI.push(this.container);
+    this.parent.addTarget(this.container);
   }
 
   updatePipes() {

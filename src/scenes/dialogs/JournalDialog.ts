@@ -26,7 +26,7 @@ export class JournalDialog extends Dialog {
     textBox.setAlpha(0);
 
     // Add the text box to the additional UI so it fades in and out with the dialog
-    this.additionalUI.push(textBox);
+    this.addTarget(textBox);
 
     this.input.keyboard?.on('keydown-J', () => {
       this.close();
