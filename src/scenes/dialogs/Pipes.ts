@@ -3,6 +3,7 @@ import { Display, GameObjects, Math as PhaserMath, Scene, Types } from 'phaser';
 import { Cursor } from '../../classes/UI/Cursor';
 import { InputManager } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
+import { pipeList } from '../../data/arrays';
 import { Colors, getColorNumber, getColorObject } from '../../utils/colors';
 import { Pipe, PipeShapes, PipeType, getConnectedPipes, level, startPipe } from '../../utils/pipes';
 import { tweenColor } from '../../utils/util';
@@ -13,7 +14,6 @@ const height = 8;
 
 export class Pipes extends Scene {
   parent: MazeDialog;
-  graphics: GameObjects.Graphics;
 
   keys: InputManager;
   pipes: Pipe[][] = [];
@@ -43,7 +43,7 @@ export class Pipes extends Scene {
   }
 
   prerenderPipes() {
-    for (const type of Object.values(PipeType).filter((value) => typeof value !== 'number')) {
+    for (const type of pipeList) {
       const shape = PipeShapes[type as PipeType];
       const key = `pipe_${type}`;
 
@@ -67,7 +67,6 @@ export class Pipes extends Scene {
   }
 
   create() {
-    this.graphics = this.add.graphics();
     this.keys = this.parent.keys;
     this.container = this.add.container();
     this.createPipes();
@@ -163,6 +162,8 @@ export class Pipes extends Scene {
         });
       }
     }
+
+    this.parent.additionalUI.push(this.container);
   }
 
   updatePipes() {
@@ -177,7 +178,7 @@ export class Pipes extends Scene {
     });
 
     if (connected.length === this.totalPipes) {
-      this.completed(() => this.parent.close(true));
+      this.parent.close(true);
     }
   }
 
