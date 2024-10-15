@@ -104,3 +104,7 @@ export function transformEnumValue(value: any, enumType?: any, enumName?: string
   }
   return value; // Non-enum values are returned as-is
 }
+
+export function splitTitleCase(text: string): string {
+  return text.replace(/([A-Z]+|[0-9]+)/g, ' $1').trim();
+}

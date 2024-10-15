@@ -9,7 +9,7 @@ import { WarpData, WarpVisual } from '../../data/warp';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { initializeObject } from '../../utils/interactionUtils';
-import { openDialog, shouldInitialize } from '../../utils/util';
+import { openDialog, shouldInitialize, splitTitleCase } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
@@ -215,7 +215,10 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (key === Key.Left) prompt = '[Left]';
     if (key === Key.Right) prompt = '[Right]';
 
-    return [`Travel to ${WarpType[WarpData[this.warpType].warpTo]}`, 'Press ' + prompt];
+    let location = WarpType[WarpData[this.warpType].warpTo];
+    location = splitTitleCase(location);
+
+    return [`Travel to ${location}`, 'Press ' + prompt];
   }
 
   setPosition(x?: number, y?: number, z?: number, w?: number): this {

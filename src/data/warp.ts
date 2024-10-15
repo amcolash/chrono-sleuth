@@ -120,10 +120,10 @@ export const WarpData: Record<WarpType, Data> = {
     x: 90,
     y: 650,
     key: Key.Left,
-    warpTo: WarpType.MansionOutside,
+    warpTo: WarpType.MansionGrounds,
     visual: WarpVisual.WarpHidden,
   },
-  [WarpType.MansionOutside]: {
+  [WarpType.MansionGrounds]: {
     x: -620,
     y: 640,
     key: Key.Right,
@@ -135,10 +135,10 @@ export const WarpData: Record<WarpType, Data> = {
     x: -1290,
     y: 640,
     key: Key.Up,
-    warpTo: WarpType.MansionExit,
+    warpTo: WarpType.Mansion,
     visual: WarpVisual.Warp,
   },
-  [WarpType.MansionExit]: {
+  [WarpType.Mansion]: {
     x: -1405,
     y: -420,
     key: Key.Down,
@@ -146,18 +146,18 @@ export const WarpData: Record<WarpType, Data> = {
     visual: WarpVisual.Invisible,
   },
 
-  [WarpType.LabEntrance]: {
+  [WarpType.LabHatch]: {
     x: -1920,
     y: 640,
     key: Key.Down,
-    warpTo: WarpType.LabExit,
+    warpTo: WarpType.Lab,
     visual: WarpVisual.InvisibleHidden,
   },
-  [WarpType.LabExit]: {
+  [WarpType.Lab]: {
     x: -1380,
     y: 1545,
     key: Key.Right,
-    warpTo: WarpType.LabEntrance,
+    warpTo: WarpType.LabHatch,
     visual: WarpVisual.Invisible,
     range: 15,
     skipLighting: true,
@@ -167,10 +167,10 @@ export const WarpData: Record<WarpType, Data> = {
     x: 1420,
     y: 650,
     key: Key.Up,
-    warpTo: WarpType.LibraryExit,
+    warpTo: WarpType.Library,
     visual: WarpVisual.WarpHidden,
   },
-  [WarpType.LibraryExit]: {
+  [WarpType.Library]: {
     x: 1730,
     y: -120,
     key: Key.Left,

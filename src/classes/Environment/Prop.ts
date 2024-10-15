@@ -6,7 +6,7 @@ import { Layer } from '../../data/layers';
 import { PropData } from '../../data/prop';
 import { InteractResult, Interactive, ItemType, JournalEntry, LazyInitialize, PropType } from '../../data/types';
 import { hasItem, hasJournalEntry, initializeObject } from '../../utils/interactionUtils';
-import { shouldInitialize } from '../../utils/util';
+import { shouldInitialize, splitTitleCase } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
@@ -81,7 +81,10 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     const dialogs = PropDialogs[this.propType] || [];
     const dialog = getDialog<Prop>(dialogs, this.player, this);
 
-    return dialog && dialog?.messages.length > 0 ? [`Inspect ${PropType[this.propType]}`, 'Press [CONTINUE]'] : '';
+    let prop = PropType[this.propType];
+    prop = splitTitleCase(prop);
+
+    return dialog && dialog?.messages.length > 0 ? [`Inspect ${prop}`, 'Press [CONTINUE]'] : '';
   }
 
   update() {

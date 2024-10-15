@@ -21,7 +21,7 @@ export const JournalData: Record<JournalEntry, Data> = {
   },
   [JournalEntry.AlchemyLabFound]: {
     description: 'I found a secret alchemy lab. I wonder what the previous alchemist was brewing up.',
-    warpAdd: WarpType.LabEntrance,
+    warpAdd: WarpType.LabHatch,
   },
   [JournalEntry.AlchemySetFixed]: {
     description: 'With the alchemy set fixed, I can now attempt to create the brew mentioned in the old journal.',
