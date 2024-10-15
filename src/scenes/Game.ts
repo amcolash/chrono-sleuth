@@ -51,7 +51,7 @@ export class Game extends Scene {
     const startTime = performance.now();
 
     // fade in on start
-    fadeIn(this, 500);
+    fadeIn(this, Config.bootDialog ? 150 : 500);
 
     // game objects
     this.player = new Player(this);
