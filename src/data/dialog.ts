@@ -43,10 +43,17 @@ const sphinxRiddle: Dialog<NPC> = {
   onSelected: handleSphinxAnswer,
 };
 
+export const PipesCompletionDialog: Dialog<Prop> = {
+  messages: ['There. It looks like the alchemy set has been properly fit back together.'],
+  onCompleted: (player) => {
+    player.journal.addEntry(JournalEntry.AlchemySetFixed);
+  },
+};
+
 export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [
     {
-      messages: ['There still is one more gear missing.', 'Something tells me there is a great evil near the lake.'],
+      messages: ['There is still one more gear missing.', 'Something tells me there is a great evil near the lake.'],
       conditions: {
         journalEntry: JournalEntry.ClockSecondGear,
       },
@@ -349,7 +356,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         custom: (player) => !hasItem(player, ItemType.Gear1) && getItem(player.scene, ItemType.Gear1) === undefined,
       },
       onCompleted: (player) => {
-        openDialog(player.scene, 'TumblerDialog', { player });
+        openDialog(player.scene, 'TumblerDialog');
       },
     },
   ],
@@ -495,9 +502,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         activeQuest: QuestType.ExploreLab,
       },
       onCompleted: (player) => {
-        const scene = player.scene;
-
-        openDialog(scene, 'PipesDialog', { gamepadVisible: scene.gamepad.visible });
+        openDialog(player.scene, 'PipesDialog');
       },
     },
     {

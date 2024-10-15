@@ -88,25 +88,29 @@ export abstract class Dialog extends Scene {
     });
   }
 
+  fadeOut(onComplete: () => void) {
+    this.tweens.add({
+      targets: this.getTargets(),
+      alpha: 0,
+      duration: 250,
+      hold: 250,
+      onComplete,
+    });
+  }
+
   getTargets() {
     return [this.container, ...this.additionalUI];
   }
 
   close(success?: boolean) {
-    this.tweens.add({
-      targets: this.getTargets(),
-      alpha: 0,
-      duration: 250,
+    this.fadeOut(() => {
+      this.scene.stop();
+      if (this.dialogData.childScene) this.scene.stop(this.dialogData.childScene);
 
-      onComplete: () => {
-        this.scene.stop();
-        if (this.dialogData.childScene) this.scene.stop(this.dialogData.childScene);
+      this.scene.resume('Game');
+      (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
 
-        this.scene.resume('Game');
-        (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
-
-        this.handleSuccess(success);
-      },
+      this.handleSuccess(success);
     });
   }
 

@@ -1,6 +1,7 @@
 import { Prop } from '../../classes/Environment/Prop';
 import { Player } from '../../classes/Player/Player';
-import { JournalEntry, PropType } from '../../data/types';
+import { PipesCompletionDialog } from '../../data/dialog';
+import { PropType } from '../../data/types';
 import { getProp } from '../../utils/interactionUtils';
 import { Dialog } from './Dialog';
 import { Pipes } from './Pipes';
@@ -17,7 +18,7 @@ export class PipesDialog extends Dialog {
     });
   }
 
-  init(data: { player: Player; level: number }) {
+  init(data: { player: Player }) {
     this.player = data.player;
   }
 
@@ -40,11 +41,10 @@ export class PipesDialog extends Dialog {
   handleSuccess(success?: boolean): void {
     if (success) {
       this.player.message.setDialog<Prop>(
-        { messages: ['There. It looks like the alchemy set is properly fit back together.'] },
+        PipesCompletionDialog,
         getProp(this.player.scene, PropType.AlchemySet),
         'player_portrait'
       );
-      this.player.journal.addEntry(JournalEntry.AlchemySetFixed);
     }
   }
 }
