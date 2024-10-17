@@ -27,6 +27,9 @@ if (localProd !== null) prod = localProd === 'true';
 let bootDialog;
 // bootDialog = 'SliderDialog';
 
+let useShader = prod;
+useShader = true;
+
 // TODO: Remove width/height overrides since they are always loaded
 const { width, height } = fullSize;
 
@@ -36,12 +39,14 @@ if (prod) {
   fastMode = false;
   prod = true;
   bootDialog = undefined;
+  useShader = true;
 }
 
 export const Config = {
   debug,
   prod,
   bootDialog,
+  useShader,
 
   width,
   height,

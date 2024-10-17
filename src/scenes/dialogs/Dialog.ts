@@ -28,11 +28,11 @@ export abstract class Dialog extends Scene {
   constructor(data: DialogData) {
     super(data.key);
     this.dialogData = data;
-    this.closing = false;
   }
 
   create() {
     this.additionalUI = [];
+    this.closing = false;
     this.container = this.add.container(Config.width / 2, Config.height / 2);
 
     this.container.add(

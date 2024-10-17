@@ -1,5 +1,5 @@
 import { exit } from '@tauri-apps/plugin-process';
-import { Scene } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Button } from '../../classes/UI/Button';
 import { ButtonGroup } from '../../classes/UI/ButtonGroup';
@@ -13,6 +13,7 @@ import { Game } from '../Game';
 export class Paused extends Scene {
   parent: Game;
   debugCount: number;
+  container: GameObjects.Container;
 
   constructor() {
     super('Paused');
@@ -25,34 +26,40 @@ export class Paused extends Scene {
   create() {
     const { width, height } = Config;
 
-    this.add
-      .rectangle(width / 2, height / 2, width, height, 0x000000, 0.75)
-      .setInteractive()
-      .on('pointerdown', () => this.resume());
+    this.container = this.add.container(0, 0);
 
-    this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5);
+    this.container.add(
+      this.add
+        .rectangle(width / 2, height / 2, width, height, 0x000000, 0.75)
+        .setInteractive()
+        .on('pointerdown', () => this.resume())
+    );
+
+    this.container.add(this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5));
 
     this.debugCount = 0;
-    this.add
-      .text(
-        width - 20,
-        height - 20,
-        `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}\n${Config.prod ? '' : 'Debug Mode'}`,
-        {
-          ...fontStyle,
-          fontSize: 16,
-          align: 'right',
-        }
-      )
-      .setOrigin(1, 1)
-      .setInteractive({ useHandCursor: false })
-      .on('pointerdown', () => {
-        this.debugCount++;
-        if (this.debugCount > 10) {
-          localStorage.setItem('chrono-sleuth-prod', Config.prod ? 'false' : 'true');
-          window.location.reload();
-        }
-      });
+    this.container.add(
+      this.add
+        .text(
+          width - 20,
+          height - 20,
+          `Build Time: ${new Date(__BUILD_TIME__).toLocaleString()}\n${Config.prod ? '' : 'Debug Mode'}`,
+          {
+            ...fontStyle,
+            fontSize: 16,
+            align: 'right',
+          }
+        )
+        .setOrigin(1, 1)
+        .setInteractive({ useHandCursor: false })
+        .on('pointerdown', () => {
+          this.debugCount++;
+          if (this.debugCount > 10) {
+            localStorage.setItem('chrono-sleuth-prod', Config.prod ? 'false' : 'true');
+            window.location.reload();
+          }
+        })
+    );
 
     const large = !Config.zoomed;
     const spacing = large ? 100 : 80;
@@ -60,6 +67,7 @@ export class Paused extends Scene {
     const start = large ? 220 : 180;
 
     const buttonGroup = new ButtonGroup(this);
+    this.container.add(buttonGroup);
 
     const fullscreenButton = new FullscreenButton(this, Config.width - 30, 30);
     buttonGroup.addButton(fullscreenButton);
@@ -129,10 +137,23 @@ export class Paused extends Scene {
     this.input.keyboard?.on('keydown-ESC', () => this.resume());
 
     new Gamepad(this).setVisible(false);
+
+    this.tweens.add({
+      targets: this.container,
+      alpha: { start: 0, to: 1 },
+      duration: 250,
+    });
   }
 
   resume() {
-    this.scene.stop();
-    this.scene.resume('Game');
+    this.tweens.add({
+      targets: this.container,
+      alpha: { start: 1, to: 0 },
+      duration: 250,
+      onComplete: () => {
+        this.scene.stop();
+        this.scene.resume('Game');
+      },
+    });
   }
 }
