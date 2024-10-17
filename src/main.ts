@@ -18,7 +18,7 @@ import { PipesDialog } from './scenes/dialogs/PipesDialog';
 import { SliderDialog } from './scenes/dialogs/SliderDialog';
 import { TumblerDialog } from './scenes/dialogs/TumblerDialog';
 import { Colors, getColorNumber } from './utils/colors';
-import { CRTPipeline, PipelinePlugin } from './utils/shaders';
+import { CRTPipeline, PipelinePlugin, XRayPipeline } from './utils/shaders';
 
 // SW injection is done build-time in vite config
 
@@ -60,7 +60,7 @@ const config: Types.Core.GameConfig = {
 
     UITest,
   ],
-  pipeline: { CRTPipeline },
+  pipeline: { CRTPipeline, XRayPipeline },
   input: {
     gamepad: true,
   },

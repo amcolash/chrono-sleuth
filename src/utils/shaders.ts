@@ -2,7 +2,7 @@ import { Renderer, Scene } from 'phaser';
 
 import { Config } from '../config';
 
-export const crtFragmentShader = `
+const crtFragmentShader = `
 precision mediump float;
 
 uniform float     uAlpha;
@@ -50,6 +50,25 @@ void main(void)
 }
 `;
 
+const xrayShader = `
+precision mediump float;
+
+uniform float     uAlpha;
+uniform vec2      uResolution;
+uniform sampler2D uMainSampler;
+
+void main(void)
+{
+  vec2 uv = gl_FragCoord.xy / uResolution.xy;
+  vec4 baseColor = vec4(texture2D(uMainSampler, uv).rgba);
+  vec4 newColor = baseColor;
+  newColor.r *= 5.5;
+  newColor.b *= 4.5;
+
+  gl_FragColor = mix(baseColor, newColor, uAlpha);
+}
+`;
+
 export class CRTPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
   alpha: number;
 
@@ -58,6 +77,24 @@ export class CRTPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline 
       game,
       renderTarget: true,
       fragShader: crtFragmentShader,
+    });
+
+    this.alpha = 1;
+  }
+
+  onDraw(target: Renderer.WebGL.RenderTarget) {
+    this.set1f('uAlpha', this.alpha);
+    this.bindAndDraw(target);
+  }
+}
+
+export class XRayPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
+  alpha: number;
+
+  constructor(game: any) {
+    super({
+      game,
+      fragShader: xrayShader,
     });
 
     this.alpha = 1;

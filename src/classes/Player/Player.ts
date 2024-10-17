@@ -57,7 +57,8 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
       .setOrigin(0.5, 0.65)
       .setDepth(Layer.Player)
       .setScale(size)
-      .setPipeline('Light2D');
+      .setPipeline('Light2D')
+      .setPostPipeline('XRayPipeline');
 
     if (Config.debug) {
       this.light = new DebugLight(scene, this.x, this.y, 200, 0xffddbb, 1);

@@ -87,12 +87,14 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
         .image(this.x, this.y - 60, 'ladder')
         .setScale(0.6)
         .setDepth(Layer.Warpers)
-        .setPipeline('Light2D');
+        .setPipeline('Light2D')
+        .setPostPipeline('XRayPipeline');
       this.scene.add
         .image(this.x, this.y - 105, 'ladder')
         .setScale(0.6)
         .setDepth(Layer.Warpers)
-        .setPipeline('Light2D');
+        .setPipeline('Light2D')
+        .setPostPipeline('XRayPipeline');
     }
 
     this.initialized = true;

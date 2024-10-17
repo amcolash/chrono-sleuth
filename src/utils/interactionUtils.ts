@@ -99,8 +99,10 @@ export function initializeObject(obj: Physics.Arcade.Image & LazyInitialize, con
   if (alpha) obj.setAlpha(alpha);
   if (angle) obj.setAngle(angle);
   if (depth) obj.setDepth(depth);
-  if (!skipLighting) obj.setPipeline('Light2D');
   if (origin) obj.setOrigin(origin.x, origin.y);
+
+  if (!skipLighting) obj.setPipeline('Light2D');
+  obj.setPostPipeline('XRayPipeline');
 
   if (initializeOnStart) obj.lazyInit(true);
 }
