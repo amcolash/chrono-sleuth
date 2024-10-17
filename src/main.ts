@@ -18,13 +18,14 @@ import { PipesDialog } from './scenes/dialogs/PipesDialog';
 import { SliderDialog } from './scenes/dialogs/SliderDialog';
 import { TumblerDialog } from './scenes/dialogs/TumblerDialog';
 import { Colors, getColorNumber } from './utils/colors';
+import { CRTPipeline, PipelinePlugin } from './utils/shaders';
 
 // SW injection is done build-time in vite config
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   width: Config.width,
   height: Config.height,
   parent: 'game-container',
@@ -59,9 +60,11 @@ const config: Types.Core.GameConfig = {
 
     UITest,
   ],
+  pipeline: { CRTPipeline },
   input: {
     gamepad: true,
   },
+  disableContextMenu: Config.prod,
   physics: {
     default: 'arcade',
   },
@@ -80,6 +83,9 @@ const config: Types.Core.GameConfig = {
         start: true,
       },
     ],
+
+    // Inject CRT pipeline into every scene created
+    scene: [{ key: 'PipelinePlugin', plugin: PipelinePlugin, mapping: 'pipelinePlugin' }],
   },
 };
 
