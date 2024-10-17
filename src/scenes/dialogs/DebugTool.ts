@@ -106,10 +106,15 @@ export class DebugTool extends Dialog {
     this.createMiscContainer();
 
     this.updateTabs();
+
+    this.input.keyboard?.on('keydown-CLOSED_BRACKET', () => {
+      this.close();
+    });
   }
 
   createStateContainer() {
     this.stateContainer = this.add.container(sidebarWidth + 60, 100);
+    this.mainContainer.add(this.stateContainer);
 
     const data = this.player.gameState.data;
 
@@ -172,6 +177,8 @@ export class DebugTool extends Dialog {
 
   createSaveContainer() {
     this.saveContainer = this.add.container(sidebarWidth + 60, 100);
+    this.mainContainer.add(this.saveContainer);
+
     Object.entries(saves).forEach((s, i) => {
       const [key, data] = s;
       const button = new CenteredButton(
@@ -205,6 +212,7 @@ export class DebugTool extends Dialog {
 
   createMiscContainer() {
     this.miscContainer = this.add.container(sidebarWidth + 60, 100);
+    this.mainContainer.add(this.miscContainer);
 
     const debugMode = new CenteredButton(
       this,
