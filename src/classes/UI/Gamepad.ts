@@ -20,7 +20,9 @@ export class Gamepad extends GameObjects.Container {
     this.minimal = minimal;
     this.setScrollFactor(0).setDepth(Layer.Overlay);
 
-    this.scene.add.group(this, { runChildUpdate: true });
+    scene.add.group(this, { runChildUpdate: true });
+    scene.add.existing(this);
+
     this.createControllerListeners();
   }
 
@@ -86,6 +88,8 @@ export class Gamepad extends GameObjects.Container {
   }
 
   createDPad() {
+    console.log('createDPad');
+
     // D-pad
     const dpadContainer = this.scene.add.container(10, -10);
     this.add(dpadContainer);

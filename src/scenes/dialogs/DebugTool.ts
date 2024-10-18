@@ -203,6 +203,8 @@ export class DebugTool extends Dialog {
       () => {
         const data = getCurrentSaveState(this.player.scene);
         const converted = convertSaveData(data);
+        navigator.clipboard.writeText(converted).catch((err) => console.error(err));
+        console.warn('save copied to clipboard!');
         console.log(converted);
       },
       { backgroundColor: '#111' }
