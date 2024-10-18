@@ -50,25 +50,6 @@ void main(void)
 }
 `;
 
-const xrayShader = `
-precision mediump float;
-
-uniform float     uAlpha;
-uniform vec2      uResolution;
-uniform sampler2D uMainSampler;
-
-void main(void)
-{
-  vec2 uv = gl_FragCoord.xy / uResolution.xy;
-  vec4 baseColor = vec4(texture2D(uMainSampler, uv).rgba);
-  vec4 newColor = baseColor;
-  newColor.r *= 5.5;
-  newColor.b *= 4.5;
-
-  gl_FragColor = mix(baseColor, newColor, uAlpha);
-}
-`;
-
 export class CRTPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
   alpha: number;
 
@@ -77,24 +58,6 @@ export class CRTPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline 
       game,
       renderTarget: true,
       fragShader: crtFragmentShader,
-    });
-
-    this.alpha = 1;
-  }
-
-  onDraw(target: Renderer.WebGL.RenderTarget) {
-    this.set1f('uAlpha', this.alpha);
-    this.bindAndDraw(target);
-  }
-}
-
-export class XRayPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
-  alpha: number;
-
-  constructor(game: any) {
-    super({
-      game,
-      fragShader: xrayShader,
     });
 
     this.alpha = 1;
@@ -118,5 +81,49 @@ export class PipelinePlugin extends Phaser.Plugins.ScenePlugin {
 
 export function setCRTAlpha(scene: Scene, alpha: number) {
   const pipeline = scene.cameras.main.getPostPipeline(CRTPipeline) as CRTPipeline;
+  if (pipeline) pipeline.alpha = alpha;
+}
+
+/******************************************************************************/
+
+const xrayShader = `
+precision mediump float;
+
+uniform float     uAlpha;
+uniform vec2      uResolution;
+uniform sampler2D uMainSampler;
+
+void main(void)
+{
+  vec2 uv = gl_FragCoord.xy / uResolution.xy;
+  vec4 baseColor = vec4(texture2D(uMainSampler, uv).rgba);
+  vec4 newColor = baseColor;
+  newColor.r *= 5.5;
+  newColor.b *= 4.5;
+
+  gl_FragColor = mix(baseColor, newColor, uAlpha);
+}
+`;
+
+export class XRayPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
+  alpha: number;
+
+  constructor(game: any) {
+    super({
+      game,
+      fragShader: xrayShader,
+    });
+
+    this.alpha = 0;
+  }
+
+  onDraw(target: Renderer.WebGL.RenderTarget) {
+    this.set1f('uAlpha', this.alpha);
+    this.bindAndDraw(target);
+  }
+}
+
+export function setXRayAlpha(scene: Scene, alpha: number) {
+  const pipeline = scene.cameras.main.getPostPipeline(XRayPipeline) as XRayPipeline;
   if (pipeline) pipeline.alpha = alpha;
 }

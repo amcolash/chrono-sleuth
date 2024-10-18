@@ -1,4 +1,4 @@
-import { BlendModes, Cameras, GameObjects, Physics, Scene, Types } from 'phaser';
+import { Cameras, GameObjects, Physics, Scene, Types } from 'phaser';
 
 import { Config } from '../../config';
 import { JournalData } from '../../data/journal';
@@ -7,7 +7,6 @@ import { QuestData } from '../../data/quest';
 import { InteractResult, Interactive, LazyInitialize, WarpType } from '../../data/types';
 import { WarpData, WarpVisual } from '../../data/warp';
 import { Game } from '../../scenes/Game';
-import { Colors, getColorNumber } from '../../utils/colors';
 import { initializeObject } from '../../utils/interactionUtils';
 import { openDialog, shouldInitialize, splitTitleCase } from '../../utils/util';
 import { Player } from '../Player/Player';
@@ -31,9 +30,10 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   warpType: WarpType;
   player: Player;
 
-  particles1: GameObjects.Particles.ParticleEmitter;
-  particles2: GameObjects.Particles.ParticleEmitter;
   graphics: GameObjects.Graphics;
+
+  portal1: GameObjects.Sprite;
+  portal2: GameObjects.Sprite;
 
   range: number;
   initialized: boolean = false;
@@ -104,44 +104,33 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   createParticles() {
     const { visual, skipLighting } = WarpData[this.warpType];
     if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
-      this.particles1 = this.scene.add
-        .particles(this.x, this.y - warpYOffset, 'warp', {
-          x: { min: -3, max: 3 },
-          y: { min: -3, max: 3 },
-          speed: { random: [-40, 40] },
-          scale: { min: 0.35, max: 0.5 },
-          alpha: { start: 0.2, end: 0 },
-          angle: { min: 0, max: 360 },
-          color: [getColorNumber(Colors.Teal), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
-          colorEase: 'Linear',
-          radial: true,
-          blendMode: BlendModes.OVERLAY,
-        })
-        .setScale(1, 2)
-        .setDepth(Layer.Warpers);
-      this.particles1.viewBounds = this.particles1.getBounds(30, 500);
+      this.setAlpha(0.1);
 
-      this.particles2 = this.scene.add
-        .particles(this.x, this.y - warpYOffset, 'warp', {
-          x: { min: -30, max: 30 },
-          y: { min: -50, max: 50 },
-          speed: { random: [-5, 5] },
-          scale: { min: 0.05, max: 0.15 },
-          alpha: { values: [0, 0.2, 0] },
-          angle: { min: 0, max: 360 },
-          lifespan: { min: 1000, max: 1400 },
-          color: [getColorNumber(Colors.Peach), getColorNumber(Colors.White), getColorNumber(Colors.Tan)],
-          colorEase: 'Linear',
-          radial: true,
-          maxAliveParticles: 20,
-        })
-        .setDepth(Layer.Warpers);
-      this.particles2.viewBounds = this.particles2.getBounds(30, 500);
+      if (!this.scene.anims.exists('portal')) {
+        this.scene.anims.create({
+          key: 'portal',
+          frames: this.scene.anims.generateFrameNumbers('portal', { start: 0, end: 63 }),
+          frameRate: 10,
+          repeat: -1,
+        });
+      }
+
+      this.portal1 = this.scene.add.sprite(this.x, this.y, 'portal_0').setScale(0.45, 1).setAlpha(0.9).play('portal');
+      this.portal1.postFX.addPixelate(1);
+      this.portal1.postFX.addShadow(0, 0, 0.1, 1, 0x3333aa, 6, 0.5);
+
+      this.portal2 = this.scene.add.sprite(this.x, this.y, 'portal_0').setScale(0.35, 1).setAlpha(0.65).setFlipX(true);
+      this.portal2.postFX.addPixelate(1);
+      this.portal2.play('portal');
+      this.portal2.setFrame(Math.floor(Math.random() * 30));
 
       if (!skipLighting) {
-        this.particles1.setPipeline('Light2D');
-        this.particles2.setPipeline('Light2D');
+        this.portal1.setPipeline('Light2D');
+        this.portal2.setPipeline('Light2D');
       }
+
+      this.portal1.setPostPipeline('XRayPipeline');
+      this.portal2.setPostPipeline('XRayPipeline');
     }
   }
 
@@ -226,14 +215,9 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   setPosition(x?: number, y?: number, z?: number, w?: number): this {
     super.setPosition(x, y, z, w);
 
-    if (this.particles1 && this.particles2) {
-      this.particles1.setPosition(x, (y || 0) - warpYOffset);
-      this.particles2.setPosition(x, (y || 0) - warpYOffset);
-    }
-
-    if (this.graphics) {
-      this.graphics.setPosition(x, y);
-    }
+    this.portal1?.setPosition(x, y);
+    this.portal2?.setPosition(x, y);
+    this.graphics?.setPosition(x, y);
 
     return this;
   }
@@ -241,20 +225,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   setVisible(value: boolean): this {
     super.setVisible(value);
 
-    // console.log('setting warp visibility', WarpType[this.warpType], value);
-
-    if (this.particles1 && this.particles2) {
-      if (value) {
-        this.particles1.start();
-        this.particles2.start();
-      } else {
-        this.particles1.stop();
-        this.particles1.killAll();
-
-        this.particles2.stop();
-        this.particles2.killAll();
-      }
-    }
+    this.portal1?.setVisible(value);
+    this.portal2?.setVisible(value);
 
     return this;
   }
@@ -264,10 +236,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   }
 
   destroy(fromScene?: boolean): void {
-    if (this.particles1 && this.particles2) {
-      this.particles1.destroy();
-      this.particles2.destroy();
-    }
+    this.portal1?.destroy(fromScene);
+    this.portal2?.destroy(fromScene);
 
     super.destroy(fromScene);
   }

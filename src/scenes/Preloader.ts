@@ -89,6 +89,7 @@ export class Preloader extends Scene {
     this.load.image('watch', 'items/watch.png');
     this.load.image('ladder', 'props/ladder.png');
     this.load.image('warp', 'props/warp.png');
+    this.load.spritesheet('portal', 'props/portal.png', { frameWidth: 140, frameHeight: 120 });
 
     // items
     this.load.image('gear', 'items/gear.png');
