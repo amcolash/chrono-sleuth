@@ -64,13 +64,17 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   onInteract(keys: Record<Key, boolean>): InteractResult {
     if (keys[Key.Continue]) {
-      this.player.inventory.addItem({ type: this.itemType, used: false });
       this.destroy();
 
-      // Optionally show dialog if there is any when item has been picked up
-      const dialogs = ItemDialogs[this.itemType] || [];
-      const dialog = getDialog<Item>(dialogs, this.player, this);
-      if (dialog && dialog?.messages.length > 0) this.player.message.setDialog<Item>(dialog, this, 'player_portrait');
+      // Delay adding + dialog to prevent double destroy
+      this.scene.time.delayedCall(0, () => {
+        this.player.inventory.addItem({ type: this.itemType, used: false });
+
+        // Optionally show dialog if there is any when item has been picked up
+        const dialogs = ItemDialogs[this.itemType] || [];
+        const dialog = getDialog<Item>(dialogs, this.player, this);
+        if (dialog && dialog?.messages.length > 0) this.player.message.setDialog<Item>(dialog, this, 'player_portrait');
+      });
 
       return InteractResult.Item;
     }
