@@ -1,6 +1,6 @@
-import { Scene } from 'phaser';
-
 import { Config } from '../config';
+
+export let crtAlpha = 1;
 
 const crtFragmentShader = `
 precision mediump float;
@@ -14,7 +14,7 @@ uniform sampler2D uMainSampler;
 
 // original shader from: https://www.shadertoy.com/view/WsVSzV
 
-float warp = 0.3;     // simulate curvature of CRT monitor
+float warp = 0.35;     // simulate curvature of CRT monitor (larger number = more curvature)
 float scan = 0.75;    // simulate darkness between scanlines
 float scanSize = 0.75; // size of scanlines [0.0 - 2.0] (smaller number = taller scanlines)
 
@@ -29,6 +29,13 @@ void mainImage(out vec4 fragColor,in vec2 fragCoord)
   uv.x -= 0.5; uv.x *= 1.0+(dc.y*(0.3*warp)); uv.x += 0.5;
   uv.y -= 0.5; uv.y *= 1.0+(dc.x*(0.4*warp)); uv.y += 0.5;
 
+  vec4 color = texture2D(uMainSampler,uv);
+
+  if (uAlpha <= 0.0) {
+    fragColor = color;
+    return;
+  }
+
   // sample inside boundaries, otherwise set to black
   if (uv.y > 1.0 || uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0) {
       fragColor = vec4(0.0);
@@ -39,8 +46,7 @@ void mainImage(out vec4 fragColor,in vec2 fragCoord)
     apply = uAlpha * apply;
 
     // sample the texture
-    float alpha = texture2D(uMainSampler,uv).a;
-    fragColor = vec4(mix(texture2D(uMainSampler,uv).rgb,vec3(0.0), apply), alpha);
+    fragColor = vec4(mix(color.rgb,vec3(0.0), apply), color.a);
   }
 }
 
@@ -51,20 +57,16 @@ void main(void)
 `;
 
 export class CRTPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
-  alpha: number;
-
   constructor(game: any) {
     super({
       game,
       renderTarget: true,
       fragShader: crtFragmentShader,
     });
-
-    this.alpha = 1;
   }
 
   onPreRender(): void {
-    this.set1f('uAlpha', this.alpha);
+    this.set1f('uAlpha', crtAlpha);
   }
 }
 
@@ -82,12 +84,18 @@ export class PipelinePlugin extends Phaser.Plugins.ScenePlugin {
   }
 }
 
-export function setCRTAlpha(scene: Scene, alpha: number) {
-  const pipeline = scene.cameras.main.getPostPipeline(CRTPipeline) as CRTPipeline;
-  if (pipeline) pipeline.alpha = alpha;
+export function setCrtAlpha(alpha: number) {
+  crtAlpha = alpha;
+}
+
+export function toggleCrt() {
+  Config.useShader = !Config.useShader;
+  crtAlpha = Config.useShader ? 1 : 0;
 }
 
 /******************************************************************************/
+
+export let xrayAlpha = 0;
 
 const xrayShader = `
 precision mediump float;
@@ -109,23 +117,18 @@ void main(void)
 `;
 
 export class XRayPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
-  alpha: number;
-
   constructor(game: any) {
     super({
       game,
       fragShader: xrayShader,
     });
-
-    this.alpha = 0;
   }
 
   onPreRender(): void {
-    this.set1f('uAlpha', this.alpha);
+    this.set1f('uAlpha', xrayAlpha);
   }
 }
 
-export function setXRayAlpha(scene: Scene, alpha: number) {
-  const pipeline = scene.cameras.main.getPostPipeline(XRayPipeline) as XRayPipeline;
-  if (pipeline) pipeline.alpha = alpha;
+export function setXrayAlpha(alpha: number) {
+  xrayAlpha = alpha;
 }

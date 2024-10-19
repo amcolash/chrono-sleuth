@@ -11,6 +11,7 @@ export type Settings = {
   gamepad: boolean;
   debug: boolean;
   zoomed: boolean;
+  useShader: boolean;
 };
 
 export type SaveData = {
@@ -38,6 +39,7 @@ const debugSettings: Settings = {
   gamepad: false,
   debug: false,
   zoomed: true,
+  useShader: true,
 };
 
 const defaultSave: SaveData = {
@@ -54,6 +56,7 @@ const defaultSave: SaveData = {
     gamepad: isMobile(),
     debug: false,
     zoomed: true,
+    useShader: true,
   },
 };
 

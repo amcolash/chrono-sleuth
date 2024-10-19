@@ -39,7 +39,6 @@ if (prod) {
   fastMode = false;
   prod = true;
   bootDialog = undefined;
-  useShader = true;
 }
 
 export const Config = {

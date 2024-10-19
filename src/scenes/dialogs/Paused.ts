@@ -1,13 +1,14 @@
-import { exit } from '@tauri-apps/plugin-process';
 import { GameObjects, Scene } from 'phaser';
 
 import { Button } from '../../classes/UI/Button';
-import { ButtonGroup } from '../../classes/UI/ButtonGroup';
+import { ButtonGrid } from '../../classes/UI/ButtonGrid';
 import { FullscreenButton } from '../../classes/UI/FullscreenButton';
 import { Gamepad } from '../../classes/UI/Gamepad';
+import { IconButton } from '../../classes/UI/IconButton';
 import { Config } from '../../config';
 import { fontStyle } from '../../utils/fonts';
 import { save } from '../../utils/save';
+import { toggleCrt } from '../../utils/shaders';
 import { Game } from '../Game';
 
 export class Paused extends Scene {
@@ -66,72 +67,67 @@ export class Paused extends Scene {
     const fontSize = large ? 48 : 36;
     const start = large ? 220 : 180;
 
-    const buttonGroup = new ButtonGroup(this);
-    this.container.add(buttonGroup);
+    const buttonGrid = new ButtonGrid(this);
+    this.container.add(buttonGrid);
 
+    const gamepadButton = new IconButton(this, Config.width - 90, 30, 'gamepad', () => {
+      this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
+    });
+    const shaderButton = new IconButton(this, Config.width - 150, 30, 'tv', () => {
+      toggleCrt();
+    });
     const fullscreenButton = new FullscreenButton(this, Config.width - 30, 30);
-    buttonGroup.addButton(fullscreenButton);
 
-    buttonGroup.addButton(new Button(this, width / 2, start, 'Resume', () => this.resume(), { fontSize }));
+    const resumeButton = new Button(this, width / 2, start, 'Resume', () => this.resume(), { fontSize });
 
-    buttonGroup.addButton(
-      new Button(
-        this,
-        width / 2,
-        start + spacing,
-        'Save',
-        () => {
-          this.resume();
-          save(this.parent);
-        },
-        { fontSize }
-      )
+    const saveButton = new Button(
+      this,
+      width / 2,
+      start + spacing,
+      'Save',
+      () => {
+        this.resume();
+        save(this.parent);
+      },
+      { fontSize }
     );
 
-    buttonGroup.addButton(
-      new Button(
-        this,
-        width / 2,
-        start + spacing * 2,
-        'Load',
-        () => {
-          this.resume();
-          this.parent.scene.restart();
-        },
-        { fontSize }
-      )
+    const loadButton = new Button(
+      this,
+      width / 2,
+      start + spacing * 2,
+      'Load',
+      () => {
+        this.resume();
+        this.parent.scene.restart();
+      },
+      { fontSize }
     );
 
-    buttonGroup.addButton(
-      new Button(
-        this,
-        width / 2,
-        start + spacing * 3,
-        'Toggle Gamepad',
-        () => {
-          this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
-        },
-        { fontSize }
-      )
-    );
+    buttonGrid.setButtons([
+      [gamepadButton, shaderButton, fullscreenButton],
+      [undefined, resumeButton, undefined],
+      [undefined, saveButton, undefined],
+      [undefined, loadButton, undefined],
+    ]);
 
-    __TAURI__ &&
-      buttonGroup.addButton(
-        new Button(
-          this,
-          width / 2,
-          start + spacing * 4,
-          'Exit',
-          () => {
-            exit(0)
-              .then(() => console.log('Exited'))
-              .catch((e) => console.error(e));
-          },
-          { fontSize }
-        )
-      );
+    // __TAURI__ &&
+    //   buttonGrid.addButton(
+    //     new Button(
+    //       this,
+    //       width / 2,
+    //       start + spacing * 4,
+    //       'Exit',
+    //       () => {
+    //         exit(0)
+    //           .then(() => console.log('Exited'))
+    //           .catch((e) => console.error(e));
+    //       },
+    //       { fontSize }
+    //     )
+    //   );
 
-    buttonGroup.setActiveButton(1);
+    // buttonGrid.setActiveButton(1);
 
     // Keyboard interactions
     this.input.keyboard?.on('keydown-ESC', () => this.resume());

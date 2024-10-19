@@ -69,6 +69,8 @@ export class Preloader extends Scene {
     this.load.svg('zoom-out', 'icons/zoom-out.svg', { width: 64, height: 64 });
     this.load.svg('terminal', 'icons/terminal.svg', { width: 64, height: 64 });
     this.load.svg('award', 'icons/award.svg', { width: 64, height: 64 });
+    this.load.svg('tv', 'icons/tv.svg', { width: 64, height: 64 });
+    this.load.svg('gamepad', 'icons/gamepad-solid.svg', { width: 64, height: 64 });
 
     // backgrounds
     this.load.image('town', 'maps/town.jpg');
