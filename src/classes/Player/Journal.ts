@@ -8,6 +8,7 @@ import { JournalEntry, NPCType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { getNPC, updateWarpVisibility } from '../../utils/interactionUtils';
+import { toggleXRay } from '../../utils/shaders';
 import { openDialog } from '../../utils/util';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
@@ -89,6 +90,10 @@ export class Journal extends GameObjects.Image {
     if (entry === JournalEntry.ClockFirstGear || entry === JournalEntry.ClockSecondGear) {
       const clock = getNPC(this.scene, NPCType.ClockTower);
       if (clock?.clock) clock.clock.updateHands();
+    }
+
+    if (entry === JournalEntry.ExtraPotionInformation && !this.journal.includes(JournalEntry.SafeDiscovered)) {
+      toggleXRay(this.scene, true);
     }
 
     if (entry === JournalEntry.SafeDiscovered) {

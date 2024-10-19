@@ -127,8 +127,8 @@ export enum JournalEntry {
   ClockFirstGear,
   AlchemyLabFound,
   AlchemySetFixed,
-  SafeDiscovered,
   ExtraPotionInformation,
+  SafeDiscovered,
   ClockSecondGear,
 }
 

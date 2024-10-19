@@ -6,7 +6,7 @@ import { SaveData, SaveType, saveKey, saves } from '../data/saves';
 import { ItemType, JournalEntry, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { Colors } from './colors';
-import { setCrtAlpha } from './shaders';
+import { toggleCrt } from './shaders';
 import { setZoomed, transformEnumValue } from './util';
 
 /** Get the current state of the game before saving */
@@ -89,7 +89,7 @@ function checkConfig(savedata: SaveData, scene: Game): boolean {
   Config.zoomed = savedata.settings.zoomed;
   Config.useShader = savedata.settings.useShader;
 
-  setCrtAlpha(Config.useShader ? 1 : 0);
+  toggleCrt(Config.useShader);
 
   if (Config.zoomed !== originalConfig.zoomed) {
     setZoomed(scene, Config.zoomed);

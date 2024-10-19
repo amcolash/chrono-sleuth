@@ -1,3 +1,5 @@
+import { Scene } from 'phaser';
+
 import { Config } from '../config';
 
 export let crtAlpha = 1;
@@ -84,12 +86,10 @@ export class PipelinePlugin extends Phaser.Plugins.ScenePlugin {
   }
 }
 
-export function setCrtAlpha(alpha: number) {
-  crtAlpha = alpha;
-}
+export function toggleCrt(enabled?: boolean) {
+  if (enabled !== undefined) Config.useShader = enabled;
+  else Config.useShader = !Config.useShader;
 
-export function toggleCrt() {
-  Config.useShader = !Config.useShader;
   crtAlpha = Config.useShader ? 1 : 0;
 }
 
@@ -109,8 +109,9 @@ void main(void)
   vec2 uv = gl_FragCoord.xy / uResolution.xy;
   vec4 baseColor = vec4(texture2D(uMainSampler, uv).rgba);
   vec4 newColor = baseColor;
-  newColor.r *= 5.5;
-  newColor.b *= 4.5;
+  newColor.g *= 1.25;
+  newColor.r *= 2.5;
+  newColor.b *= 3.;
 
   gl_FragColor = mix(baseColor, newColor, uAlpha);
 }
@@ -129,6 +130,14 @@ export class XRayPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline
   }
 }
 
-export function setXrayAlpha(alpha: number) {
-  xrayAlpha = alpha;
+export function toggleXRay(scene: Scene, enabled: boolean) {
+  scene.tweens.addCounter({
+    from: xrayAlpha,
+    to: enabled ? 0.85 : 0,
+    onUpdate: (tween) => {
+      xrayAlpha = tween.getValue();
+    },
+    duration: 2500,
+    ease: 'Bounce',
+  });
 }
