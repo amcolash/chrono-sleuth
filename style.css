@@ -3,7 +3,7 @@ body {
   padding: 0;
   color: rgba(255, 255, 255, 0.87);
   font-family: sans-serif;
-  background-color: #000000;
+  background-color: #0e0e0e;
 }
 
 #app {
@@ -17,4 +17,9 @@ body {
 
 #initial-loader {
   text-align: center;
+}
+
+#initial-loader img {
+  width: 40vw;
+  max-width: 450px;
 }
