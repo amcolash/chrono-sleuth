@@ -351,12 +351,12 @@ export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
 export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.Chest]: [
     {
-      messages: ['The chest seems to be locked.', 'It appears to have a puzzle around the latch'],
+      messages: ['The chest seems to be locked.', 'It appears to have many symbols above the latch'],
       conditions: {
         custom: (player) => !hasItem(player, ItemType.Gear1) && getItem(player.scene, ItemType.Gear1) === undefined,
       },
       onCompleted: (player) => {
-        openDialog(player.scene, 'TumblerDialog');
+        openDialog(player.scene, 'MemoryDialog');
       },
     },
   ],
@@ -391,20 +391,25 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     },
     {
       messages: [
-        'How could I have missed this? The potion is called the "Keyless Exlixir".',
-        'This must be the key to the safe.',
+        'How could I have missed this? The potion is called the "Elixir of Sight".',
+        'This must be related to one of the gears in the clock tower.',
+        'Well, bottoms up, I suppose!',
       ],
       conditions: {
-        journalEntry: JournalEntry.SafeDiscovered,
+        hasItem: ItemType.Potion,
       },
       onCompleted: (player) => {
         player.journal.addEntry(JournalEntry.ExtraPotionInformation);
-      },
-    },
-    {
-      messages: ['I should speak to the mysterious stranger about this lab and the potion I brewed.'],
-      conditions: {
-        hasItem: ItemType.Potion,
+        player.inventory.removeItem(ItemType.Potion);
+
+        player.scene.time.delayedCall(3500, () => {
+          player.message.setDialog({
+            messages: [
+              'I feel... different.',
+              'I should retrace my steps to see if there is anything new in the area.',
+            ],
+          });
+        });
       },
     },
     {
@@ -459,7 +464,9 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       conditions: {
         hasUsedItem: ItemType.HerbBlue,
       },
-      onCompleted: makePotion,
+      onCompleted: (player, target) => {
+        makePotion(player, target);
+      },
     },
     {
       messages: ['The Blue Plumed Frond is last.'],
@@ -567,42 +574,21 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   ],
   [PropType.MansionPicture]: [
     {
-      messages: ['You pour the potion into the safe keyhole.', '[CLUNK]', 'The safe clicks open.', 'Huh, what’s that?'],
+      messages: [],
       conditions: {
-        journalEntry: JournalEntry.ExtraPotionInformation,
-        hasUnusedItem: ItemType.Potion,
-      },
-      onCompleted: (player, target) => {
-        player.inventory.removeItem(ItemType.Potion);
-
-        const scene = player.scene;
-        const gear = new Item(player.scene, ItemType.Gear2, player);
-        scene.interactiveObjects.add(gear);
-
-        if (!target) return;
-
-        gear.disabled = true;
-        gear.setPosition(target.x, target.y + 20);
-
-        scene.tweens.add({
-          targets: gear,
-          x: target.x - 10,
-          y: target.y + 120,
-          duration: 1000,
-          onComplete: () => {
-            gear.disabled = false;
-          },
-          ease: 'Bounce.easeOut',
-        });
+        hasItem: ItemType.Gear2,
       },
     },
     {
       messages: [
         'A sturdy looking safe was hidden behind the picture.',
-        'It looks like it requires a special key to open.',
+        'There are large rusty rings to the side, as if it they were meant to be moved.',
       ],
       conditions: {
         journalEntry: JournalEntry.SafeDiscovered,
+      },
+      onCompleted: (player) => {
+        openDialog(player.scene, 'TumblerDialog');
       },
     },
     {
@@ -611,7 +597,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         player.journal.addEntry(JournalEntry.SafeDiscovered);
       },
       conditions: {
-        hasItem: ItemType.Potion,
+        hasUsedItem: ItemType.Potion,
       },
     },
     {
