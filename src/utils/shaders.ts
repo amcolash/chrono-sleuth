@@ -31,7 +31,7 @@ void mainImage(out vec4 fragColor,in vec2 fragCoord)
 
   // sample inside boundaries, otherwise set to black
   if (uv.y > 1.0 || uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0) {
-      fragColor = vec4(0.0,0.0,0.0,0.0);
+      fragColor = vec4(0.0);
   } else {
     // determine if we are drawing in a scanline
     float apply = abs(sin(fragCoord.y * scanSize)*0.5*scan);
