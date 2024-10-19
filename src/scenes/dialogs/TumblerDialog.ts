@@ -1,4 +1,4 @@
-import { GameObjects, Input, Math as PhaserMath } from 'phaser';
+import { FX, GameObjects, Input, Math as PhaserMath } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
 import { Key } from '../../classes/UI/InputManager';
@@ -25,7 +25,9 @@ export class TumblerDialog extends Dialog {
   player: Player;
 
   angles: number[];
-  rings: GameObjects.Image[] = [];
+  rings: GameObjects.Image[];
+  line: GameObjects.Line;
+  fx: FX.Glow[];
 
   active: number;
   nextUpdate: number;
@@ -53,17 +55,18 @@ export class TumblerDialog extends Dialog {
 
     this.angles = [];
     this.rings = [];
+    this.fx = [];
 
     this.active = -1;
     this.nextUpdate = 0;
 
     this.disabled = false;
 
-    const line = this.add
+    this.line = this.add
       .line(0, 30, radius * 0.75, 0, radius * 6, 0, getColorNumber(Colors.Night))
       .setOrigin(0, 0)
       .setLineWidth(5);
-    this.container.add(line);
+    this.container.add(this.line);
 
     this.container.add(
       this.add.text(
@@ -118,6 +121,8 @@ export class TumblerDialog extends Dialog {
         this.updateMarkers(true);
       });
 
+    this.fx.push(ring.postFX.addGlow(getColorNumber(Colors.Night), 2, 0));
+
     this.input.enableDebug(ring);
 
     this.container.add(ring);
@@ -168,7 +173,7 @@ export class TumblerDialog extends Dialog {
         this.active = -1;
 
         this.tweens.add({
-          targets: this.rings,
+          targets: [...this.rings, this.line],
           rotation: Math.PI * 2,
           delay: 500,
           duration: 1500,
@@ -197,6 +202,10 @@ export class TumblerDialog extends Dialog {
 
     for (let i = 0; i < 5; i++) {
       this.rings[i]?.setTint(this.active === i ? getColorNumber('C49B7C') : undefined);
+
+      // if (this.active === i) this.rings[i]?.postFX.addGlow(getColorNumber('C49B7C'), 0, 0);
+      // else this.rings[i]?.postFX.list?.forEach((fx) => fx.destroy());
+      this.fx[i].color = getColorNumber(this.active === i ? 'C49B7C' : Colors.Night);
     }
   }
 
