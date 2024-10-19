@@ -8,8 +8,9 @@ const crtFragmentShader = `
 precision mediump float;
 
 uniform float     uAlpha;
-uniform vec2      uResolution;
 uniform sampler2D uMainSampler;
+
+varying vec2 outTexCoord;
 
 // slight modifications made to original shader
 // use alpha channel for fragColor + changed uniform names
@@ -23,7 +24,7 @@ float scanSize = 0.75; // size of scanlines [0.0 - 2.0] (smaller number = taller
 void mainImage(out vec4 fragColor,in vec2 fragCoord)
 {
   // squared distance from center
-  vec2 uv = fragCoord/uResolution.xy;
+  vec2 uv = outTexCoord;
   vec2 dc = abs(0.5-uv);
   dc *= dc;
 
@@ -101,13 +102,13 @@ const xrayShader = `
 precision mediump float;
 
 uniform float     uAlpha;
-uniform vec2      uResolution;
 uniform sampler2D uMainSampler;
+
+varying vec2 outTexCoord;
 
 void main(void)
 {
-  vec2 uv = gl_FragCoord.xy / uResolution.xy;
-  vec4 baseColor = vec4(texture2D(uMainSampler, uv).rgba);
+  vec4 baseColor = vec4(texture2D(uMainSampler, outTexCoord).rgba);
   vec4 newColor = baseColor;
   newColor.g *= 1.25;
   newColor.r *= 2.5;
