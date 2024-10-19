@@ -1,6 +1,7 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
+import { updateAlchemySet } from '../../data/cutscene';
 import { Layer } from '../../data/layers';
 import { QuestData } from '../../data/quest';
 import { ItemType, Quest, QuestType } from '../../data/types';
@@ -114,6 +115,10 @@ export class Quests extends GameObjects.Container {
 
       scene.interactiveObjects.add(new Item(scene, ItemType.HerbGreen, this.player));
       scene.interactiveObjects.add(new Item(scene, ItemType.HerbBlue, this.player));
+    }
+
+    if (type === QuestType.ExploreLab && !completed) {
+      updateAlchemySet(this.player);
     }
   }
 

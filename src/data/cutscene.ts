@@ -3,7 +3,8 @@ import { Physics, Scene } from 'phaser';
 import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
-import { getNPC, getProp, getWall, updateWarpVisibility } from '../utils/interactionUtils';
+import { getNPC, getProp, getWall, hasUsedItem, updateWarpVisibility } from '../utils/interactionUtils';
+import { toggleXRay } from '../utils/shaders';
 import { fadeIn, fadeOut } from '../utils/util';
 import { NPCData } from './npc';
 import { PropData } from './prop';
@@ -57,6 +58,77 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
     duration: !complete || instant ? 0 : 450,
     ease: 'Power1',
   });
+}
+
+export function openChest(player: Player) {
+  const scene = player.scene;
+  const gear = new Item(scene, ItemType.Gear1, player);
+  scene.interactiveObjects.add(gear);
+
+  const target = getProp(scene, PropType.Chest);
+  if (!target) return;
+
+  player.setX(target.x - 100);
+
+  target.setTexture('chest_open');
+
+  target.disabled = true;
+  gear.disabled = true;
+  gear.setPosition(target.x, target.y - 20);
+  gear.setScale(0.15);
+
+  scene.tweens.add({
+    targets: gear,
+    scale: 0.35,
+    y: target.y + 20,
+    duration: 700,
+    onComplete: () => {
+      target.disabled = false;
+      gear.disabled = false;
+    },
+    ease: 'Bounce.easeOut',
+  });
+}
+
+const herbData = {
+  [ItemType.HerbRed]: { texture: 'alchemy_red', tint: 0xaa0000, x: -20 },
+  [ItemType.HerbGreen]: { texture: 'alchemy_green', tint: 0x00aa00, x: -35 },
+  [ItemType.HerbBlue]: { texture: 'alchemy_blue', tint: 0x0000aa, x: -5 },
+};
+
+export function addHerb(
+  player: Player,
+  target: Prop | undefined,
+  type: ItemType.HerbRed | ItemType.HerbGreen | ItemType.HerbBlue
+) {
+  player.inventory.removeItem(type);
+  player.setActive(false);
+
+  if (!target || !target.particles) return;
+
+  updateAlchemySet(player);
+  target.disabled = true;
+  target.particles
+    .setConfig({ ...PropData[PropType.AlchemySet].particles, tint: herbData[type].tint, x: herbData[type].x })
+    .start()
+    .on('complete', () => {
+      target.disabled = false;
+      player.setActive(true);
+    });
+}
+
+export function updateAlchemySet(player: Player) {
+  const alchemySet = getProp(player.scene, PropType.AlchemySet);
+  if (!alchemySet) return;
+  alchemySet.setTexture('alchemy_empty');
+
+  if (hasUsedItem(player, ItemType.HerbBlue)) {
+    alchemySet.setTexture(herbData[ItemType.HerbBlue].texture);
+  } else if (hasUsedItem(player, ItemType.HerbRed)) {
+    alchemySet.setTexture(herbData[ItemType.HerbRed].texture);
+  } else if (hasUsedItem(player, ItemType.HerbGreen)) {
+    alchemySet.setTexture(herbData[ItemType.HerbGreen].texture);
+  }
 }
 
 export function makePotion(player: Player, target?: Prop) {
@@ -121,58 +193,37 @@ export function revealSafe(player: Player, silent: boolean) {
   });
 }
 
-export function openChest(player: Player) {
+export function openSafe(player: Player) {
+  player.inventory.removeItem(ItemType.Potion);
+
   const scene = player.scene;
-  const gear = new Item(scene, ItemType.Gear1, player);
+  const gear = new Item(player.scene, ItemType.Gear2, player);
   scene.interactiveObjects.add(gear);
 
-  const target = getProp(scene, PropType.Chest);
-  if (!target) return;
+  const safe = getProp(scene, PropType.MansionPicture);
+  if (!safe) return;
 
-  player.setX(target.x - 100);
-
-  target.setTexture('chest_open');
-
-  target.disabled = true;
   gear.disabled = true;
-  gear.setPosition(target.x, target.y - 20);
-  gear.setScale(0.15);
+  gear.setPosition(safe.x, safe.y + 20);
 
   scene.tweens.add({
     targets: gear,
-    scale: 0.35,
-    y: target.y + 20,
-    duration: 700,
+    x: safe.x - 10,
+    y: safe.y + 120,
+    duration: 1000,
     onComplete: () => {
-      target.disabled = false;
-      gear.disabled = false;
+      player.message.setDialog(
+        {
+          messages: ['Wow, that was a trip', 'I should be more careful next time', 'At least I found the gear!'],
+          onCompleted: () => {
+            toggleXRay(scene, false);
+            scene.time.delayedCall(1000, () => (gear.disabled = false));
+          },
+        },
+        safe,
+        'player_portrait'
+      );
     },
     ease: 'Bounce.easeOut',
   });
-}
-
-const herbData = {
-  [ItemType.HerbRed]: { texture: 'alchemy_red', tint: 0xaa0000, x: -20 },
-  [ItemType.HerbGreen]: { texture: 'alchemy_green', tint: 0x00aa00, x: -35 },
-  [ItemType.HerbBlue]: { texture: 'alchemy_blue', tint: 0x0000aa, x: -5 },
-};
-
-export function addHerb(
-  player: Player,
-  target: Prop | undefined,
-  type: ItemType.HerbRed | ItemType.HerbGreen | ItemType.HerbBlue
-) {
-  player.inventory.removeItem(type);
-  player.setActive(false);
-
-  if (!target || !target.particles) return;
-  target.disabled = true;
-  target.setTexture(herbData[type].texture);
-  target.particles
-    .setConfig({ ...PropData[PropType.AlchemySet].particles, tint: herbData[type].tint, x: herbData[type].x })
-    .start()
-    .on('complete', () => {
-      target.disabled = false;
-      player.setActive(true);
-    });
 }

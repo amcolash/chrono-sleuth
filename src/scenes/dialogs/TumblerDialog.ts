@@ -3,7 +3,7 @@ import { GameObjects, Input, Math as PhaserMath } from 'phaser';
 import { Player } from '../../classes/Player/Player';
 import { Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
-import { openChest } from '../../data/cutscene';
+import { openSafe } from '../../data/cutscene';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { Dialog } from './Dialog';
@@ -206,6 +206,6 @@ export class TumblerDialog extends Dialog {
   }
 
   handleSuccess(success: boolean): void {
-    if (success) openChest(this.player);
+    if (success) openSafe(this.player);
   }
 }

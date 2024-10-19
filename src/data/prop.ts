@@ -24,6 +24,7 @@ export const PropData: Record<PropType, Data> = {
     x: -2650,
     y: 1600,
     image: 'alchemy_empty',
+    initializeOnStart: true,
     skipLighting: true,
     particles: {
       scale: { min: 0.05, max: 0.15 },

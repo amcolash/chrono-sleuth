@@ -1,8 +1,10 @@
 import { Display, GameObjects, Math as PhaserMath, Types } from 'phaser';
 
+import { Player } from '../../classes/Player/Player';
 import { ButtonGroup } from '../../classes/UI/ButtonGroup';
 import { Cursor } from '../../classes/UI/Cursor';
 import { Config } from '../../config';
+import { openChest } from '../../data/cutscene';
 import { Colors, getColorNumber, getColorObject } from '../../utils/colors';
 import { tweenColor } from '../../utils/util';
 import { Dialog } from './Dialog';
@@ -14,9 +16,14 @@ export class MemoryDialog extends Dialog {
   sequence: number[];
   pressed: number[];
   buttons: ButtonGroup;
+  player: Player;
 
   constructor() {
     super({ key: 'MemoryDialog', title: 'Figure out the secret code', gamepadVisible: false });
+  }
+
+  init(data: { player: Player }) {
+    this.player = data.player;
   }
 
   preload() {
@@ -162,5 +169,7 @@ export class MemoryDialog extends Dialog {
     });
   }
 
-  handleSuccess(success?: boolean): void {}
+  handleSuccess(success?: boolean): void {
+    if (success) openChest(this.player);
+  }
 }
