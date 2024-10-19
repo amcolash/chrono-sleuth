@@ -18,3 +18,8 @@ body {
 #initial-loader {
   text-align: center;
 }
+
+#initial-loader img {
+  width: 40vw;
+  max-width: 450px;
+}

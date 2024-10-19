@@ -34,6 +34,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
+  loader: { imageLoadType: 'HTMLImageElement' },
   scene: [
     Boot,
     MainMenu,

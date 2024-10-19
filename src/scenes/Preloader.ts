@@ -1,7 +1,7 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../config';
-import { fadeIn, fadeOut } from '../utils/util';
+import { fadeOut } from '../utils/util';
 
 export class Preloader extends Scene {
   container: GameObjects.Container;
@@ -10,7 +10,7 @@ export class Preloader extends Scene {
     super('Preloader');
   }
 
-  init(data: { skipFade: boolean }) {
+  init() {
     this.add.image(0, 0, 'splash').setOrigin(0).setDisplaySize(Config.width, Config.height);
     this.add
       .image(30, Config.height - 15, 'logo')
@@ -48,13 +48,14 @@ export class Preloader extends Scene {
       });
     }
 
-    const gear = document.createElement('img');
-    gear.src = 'assets/icons/settings.svg?2'; // weird phaser issue
-    gear.id = 'loading';
-
-    this.add.dom(0, 0, gear);
-
-    if (!data?.skipFade) fadeIn(this, 300);
+    const gear = this.add.image(Config.width - 50, Config.height - 50, 'settings').setScale(0.75);
+    this.tweens.add({
+      targets: gear,
+      angle: 360,
+      duration: 2000,
+      delay: 500,
+      repeat: -1,
+    });
   }
 
   preload() {
@@ -64,7 +65,6 @@ export class Preloader extends Scene {
     // icons
     this.load.svg('sun', 'icons/sun.svg', { width: 64, height: 64 });
     this.load.svg('moon', 'icons/moon.svg', { width: 64, height: 64 });
-    this.load.svg('settings', 'icons/settings.svg', { width: 64, height: 64 });
     this.load.svg('zoom-in', 'icons/zoom-in.svg', { width: 64, height: 64 });
     this.load.svg('zoom-out', 'icons/zoom-out.svg', { width: 64, height: 64 });
     this.load.svg('terminal', 'icons/terminal.svg', { width: 64, height: 64 });

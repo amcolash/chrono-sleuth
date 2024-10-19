@@ -1,4 +1,4 @@
-import { Renderer, Scene } from 'phaser';
+import { Scene } from 'phaser';
 
 import { Config } from '../config';
 
@@ -63,19 +63,22 @@ export class CRTPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline 
     this.alpha = 1;
   }
 
-  onDraw(target: Renderer.WebGL.RenderTarget) {
+  onPreRender(): void {
     this.set1f('uAlpha', this.alpha);
-    this.bindAndDraw(target);
   }
 }
 
 export class PipelinePlugin extends Phaser.Plugins.ScenePlugin {
   boot() {
-    if (Config.useShader) this.systems?.events.on('create', this.applyPipeline, this);
+    if (Config.useShader) this.systems?.events.on('start', this.applyPipeline, this);
   }
 
   applyPipeline() {
     this.scene?.cameras.main.setPostPipeline('CRTPipeline');
+
+    // Prevent 1 frame issue where the shader doesn't apply
+    const pipeline = this.scene?.cameras.main.getPostPipeline(CRTPipeline) as CRTPipeline;
+    pipeline.bootFX();
   }
 }
 
@@ -117,9 +120,8 @@ export class XRayPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline
     this.alpha = 0;
   }
 
-  onDraw(target: Renderer.WebGL.RenderTarget) {
+  onPreRender(): void {
     this.set1f('uAlpha', this.alpha);
-    this.bindAndDraw(target);
   }
 }
 
