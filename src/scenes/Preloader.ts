@@ -127,6 +127,7 @@ export class Preloader extends Scene {
     this.load.image('chest_open', 'props/chest_open.png');
     this.load.image('book', 'props/book.png');
     this.load.image('picture', 'props/picture.png');
+    this.load.image('safe', 'props/safe.png');
 
     this.load.image('alchemy_empty', 'props/alchemy/alchemy_empty.png');
     this.load.image('alchemy_green', 'props/alchemy/alchemy_green.png');

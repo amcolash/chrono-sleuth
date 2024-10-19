@@ -21,6 +21,7 @@ let prod = import.meta.env.PROD;
 // If local storage exists, always use that value instead
 const localProd = localStorage.getItem('chrono-sleuth-prod');
 if (localProd !== null) prod = localProd === 'true';
+
 // prod = true;
 
 // Dialog to show after booting game (assets are loaded)

@@ -29,6 +29,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (!image && !Config.debug) this.setAlpha(0);
 
     initializeObject(this, PropData[type]);
+    if (type === PropType.MansionPicture) this.resetPostPipeline();
   }
 
   lazyInit(forceInit?: boolean) {
@@ -44,6 +45,9 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (particles) {
       this.particles = this.scene.add.particles(this.x, this.y, 'warp', particles).setDepth(Layer.Items);
     }
+
+    if (this.propType === PropType.MansionPicture)
+      this.scene.add.image(this.x, this.y, 'safe').setOrigin(0, 0).setScale(0.9);
 
     this.initialized = true;
   }
@@ -83,6 +87,9 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
 
     let prop = PropType[this.propType];
     prop = splitTitleCase(prop);
+
+    if (this.propType === PropType.MansionPicture && hasJournalEntry(this.player, JournalEntry.SafeDiscovered))
+      prop = 'Safe';
 
     return dialog && dialog?.messages.length > 0 ? [`Inspect ${prop}`, 'Press [CONTINUE]'] : '';
   }
