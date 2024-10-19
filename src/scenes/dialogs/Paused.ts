@@ -1,3 +1,4 @@
+import { exit } from '@tauri-apps/plugin-process';
 import { GameObjects, Scene } from 'phaser';
 
 import { Button } from '../../classes/UI/Button';
@@ -104,30 +105,30 @@ export class Paused extends Scene {
       { fontSize }
     );
 
+    let exitButton;
+    if (__TAURI__)
+      exitButton = new Button(
+        this,
+        width / 2,
+        start + spacing * 3,
+        'Exit',
+        () => {
+          exit(0)
+            .then(() => console.log('Exited'))
+            .catch((e) => console.error(e));
+        },
+        { fontSize }
+      );
+
     buttonGrid.setButtons([
-      [gamepadButton, shaderButton, fullscreenButton],
-      [undefined, resumeButton, undefined],
-      [undefined, saveButton, undefined],
-      [undefined, loadButton, undefined],
+      [shaderButton, gamepadButton, fullscreenButton],
+      [resumeButton, undefined, undefined],
+      [saveButton, undefined, undefined],
+      [loadButton, undefined, undefined],
+      [exitButton, undefined, undefined],
     ]);
 
-    // __TAURI__ &&
-    //   buttonGrid.addButton(
-    //     new Button(
-    //       this,
-    //       width / 2,
-    //       start + spacing * 4,
-    //       'Exit',
-    //       () => {
-    //         exit(0)
-    //           .then(() => console.log('Exited'))
-    //           .catch((e) => console.error(e));
-    //       },
-    //       { fontSize }
-    //     )
-    //   );
-
-    // buttonGrid.setActiveButton(1);
+    buttonGrid.activeIndex.set(0, 1);
 
     // Keyboard interactions
     this.input.keyboard?.on('keydown-ESC', () => this.resume());

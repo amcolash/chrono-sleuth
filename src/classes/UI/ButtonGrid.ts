@@ -57,21 +57,13 @@ export class ButtonGrid extends GameObjects.Container {
 
     this.add(this.cursor);
 
-    let dims = new PhaserMath.Vector2();
-
     for (const row of buttons) {
       for (const b of row) {
         if (b !== undefined) {
-          const bounds = b.getBounds();
-          dims.set(Math.max(dims.x, bounds.width), Math.max(dims.y, bounds.height));
-
           this.add(b);
         }
       }
     }
-
-    const offset = 1.2;
-    this.cursor.setSize(dims.x * offset, dims.y * offset);
   }
 
   getActiveButton(): Button | IconButton | undefined {
@@ -80,6 +72,19 @@ export class ButtonGrid extends GameObjects.Container {
 
   setActiveButton(direction: Types.Math.Vector2Like) {
     let { x, y } = this.activeIndex;
+
+    if (this.cursor.visible === false) {
+      const active = this.buttons[y]?.[x];
+
+      if (active) {
+        this.updateButtonSize(active);
+        this.cursor.setPosition(active.x, active.y).setVisible(true);
+        this.cursor.setVisible(true);
+      }
+
+      return;
+    }
+
     const rows = this.buttons.length;
     y = PhaserMath.Clamp(y, 0, rows - 1);
     x = PhaserMath.Clamp(x, 0, (this.buttons[y]?.length || 0) - 1);
@@ -112,8 +117,17 @@ export class ButtonGrid extends GameObjects.Container {
     const active = this.buttons[y]?.[x];
 
     if (active) {
+      this.updateButtonSize(active);
       this.cursor.setPosition(active.x, active.y).setVisible(true);
       this.activeIndex.set(x, y);
     }
+  }
+
+  updateButtonSize(button: Button | IconButton | undefined) {
+    const offset = 1.2;
+
+    if (button instanceof Button) this.cursor.setSize(button.displayWidth * offset, button.displayHeight * offset);
+    if (button instanceof IconButton)
+      this.cursor.setSize(button.rect.displayWidth * offset, button.rect.displayHeight * offset);
   }
 }
