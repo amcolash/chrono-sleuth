@@ -19,6 +19,7 @@ import { SliderDialog } from './scenes/dialogs/SliderDialog';
 import { TumblerDialog } from './scenes/dialogs/TumblerDialog';
 import { Colors, getColorNumber } from './utils/colors';
 import { CRTPipeline, PipelinePlugin, XRayPipeline } from './utils/shaders';
+import { setupCursorHiding } from './utils/util';
 
 // SW injection is done build-time in vite config
 
@@ -89,6 +90,8 @@ const config: Types.Core.GameConfig = {
     scene: [{ key: 'PipelinePlugin', plugin: PipelinePlugin, mapping: 'pipelinePlugin' }],
   },
 };
+
+setupCursorHiding();
 
 const loading = document.querySelector('#initial-loader');
 loading?.remove();

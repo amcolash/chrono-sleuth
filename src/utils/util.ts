@@ -109,3 +109,20 @@ export function transformEnumValue(value: any, enumType?: any, enumName?: string
 export function splitTitleCase(text: string): string {
   return text.replace(/([A-Z]+|[0-9]+)/g, ' $1').trim();
 }
+
+// code based on: https://supernapie.com/blog/hiding-the-mouse-in-a-ux-friendly-way/
+let cursorTimeout: NodeJS.Timeout;
+const page = document.documentElement;
+
+function cursorMoveHandler() {
+  page.style.cursor = 'default';
+  clearTimeout(cursorTimeout);
+
+  cursorTimeout = setTimeout(() => {
+    page.style.cursor = 'none';
+  }, 2500);
+}
+
+export function setupCursorHiding() {
+  page.addEventListener('mousemove', cursorMoveHandler);
+}
