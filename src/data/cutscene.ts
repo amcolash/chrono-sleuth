@@ -65,25 +65,25 @@ export function openChest(player: Player) {
   const gear = new Item(scene, ItemType.Gear1, player);
   scene.interactiveObjects.add(gear);
 
-  const target = getProp(scene, PropType.Chest);
-  if (!target) return;
+  const chest = getProp(scene, PropType.Chest);
+  if (!chest) return;
 
-  player.setX(target.x - 100);
+  player.setX(chest.x - 100);
 
-  target.setTexture('chest_open');
+  chest.setTexture('chest_open');
 
-  target.disabled = true;
+  chest.disabled = true;
   gear.disabled = true;
-  gear.setPosition(target.x, target.y - 20);
+  gear.setPosition(chest.x, chest.y - 20);
   gear.setScale(0.15);
 
   scene.tweens.add({
     targets: gear,
     scale: 0.35,
-    y: target.y + 20,
+    y: chest.y + 20,
     duration: 700,
     onComplete: () => {
-      target.disabled = false;
+      chest.disabled = false;
       gear.disabled = false;
     },
     ease: 'Bounce.easeOut',

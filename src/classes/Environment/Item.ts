@@ -45,13 +45,15 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
     this.scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
 
-    this.particles = this.scene.add.particles(this.x, this.y, 'warp', {
-      scale: { start: 0, end: 0.9 },
-      alpha: { start: 0.8, end: 0 },
-      delay: 500,
-      lifespan: 1500,
-      maxAliveParticles: 1,
-    });
+    this.particles = this.scene.add
+      .particles(this.x, this.y, 'warp', {
+        scale: { start: 0, end: 0.9 },
+        alpha: { start: 0.7, end: 0 },
+        delay: 500,
+        lifespan: 1500,
+        maxAliveParticles: 1,
+      })
+      .setDepth(Layer.Items);
 
     if (Config.debug) {
       this.light = new DebugLight(this.scene, this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, 2);
