@@ -25,9 +25,9 @@ export class MainMenu extends Scene {
 
     container.add(
       this.add
-        .image(30, Config.height - 15, 'logo')
+        .image(35, Config.height - 30, 'logo')
         .setOrigin(0, 1)
-        .setScale(0.25)
+        .setScale(0.4)
     );
 
     new Gamepad(this, true).setVisible(false);

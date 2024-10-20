@@ -26,6 +26,7 @@ export function getCurrentSaveState(scene: Game): SaveData {
       debug: Config.debug,
       zoomed: Config.zoomed,
       useShader: Config.useShader,
+      time: Date.now(),
     },
   };
 
@@ -192,5 +193,15 @@ export function save(scene: Game, override?: SaveData, silent?: boolean): void {
   const save = getCurrentSaveState(scene);
   localStorage.setItem(saveKey, JSON.stringify(override || save));
 
-  if (!silent) new Notification(scene, 'Game Saved');
+  if (!silent) {
+    // new Notification(scene, 'Game Saved');
+
+    scene.tweens.add({
+      targets: scene.saveIcon,
+      alpha: 0.7,
+      scale: 0.5,
+      duration: 500,
+      yoyo: true,
+    });
+  }
 }

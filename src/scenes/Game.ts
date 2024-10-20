@@ -18,6 +18,7 @@ import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
 import { npcList, propList, warpList } from '../data/arrays';
 import { BackgroundData } from '../data/background';
+import { Layer } from '../data/layers';
 import { LightData } from '../data/lights';
 import { SlopeData } from '../data/slope';
 import { Interactive, ItemType } from '../data/types';
@@ -31,6 +32,7 @@ export class Game extends Scene {
   interactiveObjects: GameObjects.Group;
   clock: Clock;
   gamepad: Gamepad;
+  saveIcon: GameObjects.Image;
 
   shouldInit: boolean = true;
 
@@ -195,6 +197,13 @@ export class Game extends Scene {
           openDialog(this, 'DebugTool');
         });
       }
+
+      this.saveIcon = this.add
+        .image((x += 50), 30, 'save')
+        .setScale(0.4)
+        .setDepth(Layer.Ui)
+        .setScrollFactor(0)
+        .setAlpha(0);
     });
 
     this.gamepad = new Gamepad(this);

@@ -13,14 +13,14 @@ export class Preloader extends Scene {
   init() {
     this.add.image(0, 0, 'splash').setOrigin(0).setDisplaySize(Config.width, Config.height);
     this.add
-      .image(30, Config.height - 15, 'logo')
+      .image(35, Config.height - 30, 'logo')
       .setOrigin(0, 1)
-      .setScale(0.25);
+      .setScale(0.4);
 
     const width = Config.width * 0.68;
     const height = 26;
     const margin = 3;
-    const container = this.add.container(Config.width * 0.23, Config.height * 0.91);
+    const container = this.add.container(Config.width * 0.23, Config.height * 0.9);
     this.container = container;
 
     //  A simple progress bar. This is the outline of the bar.
@@ -48,12 +48,12 @@ export class Preloader extends Scene {
       });
     }
 
-    const gear = this.add.image(Config.width - 50, Config.height - 50, 'settings').setScale(0.75);
+    const gear = this.add.image(Config.width - 50, Config.height - 60, 'settings').setScale(0.75);
     this.tweens.add({
       targets: gear,
       angle: 360,
       duration: 2000,
-      delay: 500,
+      delay: 100,
       repeat: -1,
     });
   }
@@ -70,6 +70,9 @@ export class Preloader extends Scene {
     this.load.svg('terminal', 'icons/terminal.svg', { width: 64, height: 64 });
     this.load.svg('award', 'icons/award.svg', { width: 64, height: 64 });
     this.load.svg('tv', 'icons/tv.svg', { width: 64, height: 64 });
+    this.load.svg('save', 'icons/save.svg', { width: 64, height: 64 });
+
+    // fontawesome icons
     this.load.svg('gamepad', 'icons/gamepad-solid.svg', { width: 64, height: 64 });
 
     // backgrounds
