@@ -6,12 +6,12 @@ import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
 const buildTime = new Date();
 
 const manifest: Partial<ManifestOptions> = {
-  theme_color: '#b5c1b9',
-  background_color: '#3e424e',
+  theme_color: '#eebbff',
+  background_color: '#111111',
   display: 'fullscreen',
   orientation: 'landscape',
   start_url: '/chrono-sleuth/',
-  id: 'com.amcolash.chrono',
+  id: 'com.amcolash.chrono-sleuth',
   name: 'Chrono Sleuth',
   short_name: 'Chrono Sleuth',
   description: 'Chrono Sleuth is a detective game set in a mysterious town.',
