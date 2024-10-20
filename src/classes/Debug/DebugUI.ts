@@ -7,7 +7,7 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { toggleLighting } from '../../utils/lighting';
-import { save } from '../../utils/save';
+import { autosave, save } from '../../utils/save';
 import { openDialog } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
@@ -63,8 +63,7 @@ export class DebugUI extends GameObjects.Container {
     });
 
     this.scene.input.keyboard?.on('keydown-M', () => {
-      save(this.scene, saves[SaveType.Act2]);
-      this.scene.scene.restart();
+      autosave(this.scene);
     });
 
     this.scene.input.keyboard?.on('keydown-N', () => {

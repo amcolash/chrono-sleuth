@@ -53,7 +53,7 @@ export class Preloader extends Scene {
       targets: gear,
       angle: 360,
       duration: 2000,
-      delay: 500,
+      delay: 100,
       repeat: -1,
     });
   }
@@ -70,6 +70,9 @@ export class Preloader extends Scene {
     this.load.svg('terminal', 'icons/terminal.svg', { width: 64, height: 64 });
     this.load.svg('award', 'icons/award.svg', { width: 64, height: 64 });
     this.load.svg('tv', 'icons/tv.svg', { width: 64, height: 64 });
+    this.load.svg('save', 'icons/save.svg', { width: 64, height: 64 });
+
+    // fontawesome icons
     this.load.svg('gamepad', 'icons/gamepad-solid.svg', { width: 64, height: 64 });
 
     // backgrounds

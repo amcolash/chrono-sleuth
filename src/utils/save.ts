@@ -2,7 +2,7 @@ import deepEqual from 'deep-equal';
 
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
-import { SaveData, SaveType, saveKey, saves } from '../data/saves';
+import { SaveData, SaveType, autosaveKey, saveKey, saves } from '../data/saves';
 import { ItemType, JournalEntry, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { Colors } from './colors';
@@ -26,6 +26,7 @@ export function getCurrentSaveState(scene: Game): SaveData {
       debug: Config.debug,
       zoomed: Config.zoomed,
       useShader: Config.useShader,
+      time: Date.now(),
     },
   };
 
@@ -33,8 +34,8 @@ export function getCurrentSaveState(scene: Game): SaveData {
 }
 
 /** Get the saved data from local storage, default back to defaultSave if none exists or error parsing */
-function getSavedData(): { save: SaveData; error: unknown } {
-  const data = localStorage.getItem(saveKey);
+function getSavedData(key?: string): { save: SaveData; error: unknown } {
+  const data = localStorage.getItem(key || saveKey);
   let parsed: SaveData | undefined = undefined;
   let error;
   try {
@@ -106,8 +107,8 @@ function checkConfig(savedata: SaveData, scene: Game): boolean {
 }
 
 /** Only load the config to check if the scene needs to be restarted */
-export function loadConfig(scene: Game): boolean {
-  const { save: savedata } = getSavedData();
+export function loadConfig(scene: Game, key?: string): boolean {
+  const { save: savedata } = getSavedData(key);
 
   try {
     return checkConfig(savedata, scene);
@@ -118,8 +119,8 @@ export function loadConfig(scene: Game): boolean {
   return false;
 }
 
-export function load(scene: Game) {
-  const { save: savedata, error } = getSavedData();
+export function load(scene: Game, key?: string) {
+  const { save: savedata, error } = getSavedData(key);
   if (error) {
     new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
   }
@@ -188,9 +189,45 @@ export function load(scene: Game) {
   }
 }
 
-export function save(scene: Game, override?: SaveData, silent?: boolean): void {
+export function save(scene: Game, override?: SaveData, silent?: boolean, key?: string): void {
   const save = getCurrentSaveState(scene);
-  localStorage.setItem(saveKey, JSON.stringify(override || save));
+  localStorage.setItem(key || saveKey, JSON.stringify(override || save));
 
   if (!silent) new Notification(scene, 'Game Saved');
+}
+
+export function continueGame(scene: Game) {
+  const saveData = localStorage.getItem(saveKey);
+  const autosaveData = localStorage.getItem(autosaveKey);
+
+  if (saveData || autosaveData) {
+    let key = saveKey;
+    if (autosaveData) key = autosaveKey;
+
+    if (saveData && autosaveData) {
+      try {
+        const parsedSave = JSON.parse(saveData || '');
+        const parsedAutosave = JSON.parse(autosaveData || '');
+
+        key = parsedAutosave.settings.time > parsedSave.settings.time ? autosaveKey : saveKey;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    load(scene, key);
+  }
+}
+
+export function autosave(scene: Game) {
+  console.log('Autosaving...');
+  save(scene, undefined, true, autosaveKey);
+
+  scene.tweens.add({
+    targets: scene.saveIcon,
+    alpha: 0.7,
+    scale: 0.5,
+    duration: 500,
+    yoyo: true,
+  });
 }

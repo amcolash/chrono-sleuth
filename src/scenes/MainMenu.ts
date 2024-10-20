@@ -5,7 +5,7 @@ import { ButtonGroup } from '../classes/UI/ButtonGroup';
 import { FullscreenButton } from '../classes/UI/FullscreenButton';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { Config } from '../config';
-import { saveKey } from '../data/saves';
+import { autosaveKey, saveKey } from '../data/saves';
 
 export class MainMenu extends Scene {
   constructor() {
@@ -38,7 +38,7 @@ export class MainMenu extends Scene {
     const fullscreenButton = new FullscreenButton(this, Config.width - 30, 30);
     buttonGroup.addButton(fullscreenButton);
 
-    if (localStorage.getItem(saveKey)) {
+    if (localStorage.getItem(autosaveKey) || localStorage.getItem(saveKey)) {
       buttonGroup.addButton(
         new Button(
           this,

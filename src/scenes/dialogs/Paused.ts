@@ -8,7 +8,6 @@ import { Gamepad } from '../../classes/UI/Gamepad';
 import { IconButton } from '../../classes/UI/IconButton';
 import { Config } from '../../config';
 import { fontStyle } from '../../utils/fonts';
-import { save } from '../../utils/save';
 import { toggleCrt } from '../../utils/shaders';
 import { Game } from '../Game';
 
@@ -37,7 +36,9 @@ export class Paused extends Scene {
         .on('pointerdown', () => this.resume())
     );
 
-    this.container.add(this.add.text(width / 2, 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5));
+    this.container.add(
+      this.add.text(width / 2, Config.height / 2 - 100, 'Game Paused', { ...fontStyle, fontSize: 72 }).setOrigin(0.5)
+    );
 
     this.debugCount = 0;
     this.container.add(
@@ -79,31 +80,31 @@ export class Paused extends Scene {
     });
     const fullscreenButton = new FullscreenButton(this, Config.width - 30, 30);
 
-    const resumeButton = new Button(this, width / 2, start, 'Resume', () => this.resume(), { fontSize });
+    const resumeButton = new Button(this, width / 2, Config.height / 2, 'Resume', () => this.resume(), { fontSize });
 
-    const saveButton = new Button(
-      this,
-      width / 2,
-      start + spacing,
-      'Save',
-      () => {
-        this.resume();
-        save(this.parent);
-      },
-      { fontSize }
-    );
+    // const saveButton = new Button(
+    //   this,
+    //   width / 2,
+    //   start + spacing,
+    //   'Save',
+    //   () => {
+    //     this.resume();
+    //     save(this.parent);
+    //   },
+    //   { fontSize }
+    // );
 
-    const loadButton = new Button(
-      this,
-      width / 2,
-      start + spacing * 2,
-      'Load',
-      () => {
-        this.resume();
-        this.parent.scene.restart();
-      },
-      { fontSize }
-    );
+    // const loadButton = new Button(
+    //   this,
+    //   width / 2,
+    //   start + spacing * 2,
+    //   'Load',
+    //   () => {
+    //     this.resume();
+    //     this.parent.scene.restart();
+    //   },
+    //   { fontSize }
+    // );
 
     let exitButton;
     if (__TAURI__)
@@ -123,8 +124,8 @@ export class Paused extends Scene {
     buttonGrid.setButtons([
       [shaderButton, gamepadButton, fullscreenButton],
       [resumeButton, undefined, undefined],
-      [saveButton, undefined, undefined],
-      [loadButton, undefined, undefined],
+      // [saveButton, undefined, undefined],
+      // [loadButton, undefined, undefined],
       [exitButton, undefined, undefined],
     ]);
 

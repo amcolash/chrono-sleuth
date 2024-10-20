@@ -5,6 +5,7 @@ import { isMobile } from '../utils/util';
 import { ItemType, JournalEntry, Quest, QuestType } from './types';
 
 export const saveKey = 'chrono-sleuth-save';
+export const autosaveKey = 'chrono-sleuth-autosave';
 
 // TODO: Add settings
 export type Settings = {
@@ -12,6 +13,7 @@ export type Settings = {
   debug: boolean;
   zoomed: boolean;
   useShader: boolean;
+  time: number;
 };
 
 export type SaveData = {
@@ -35,13 +37,6 @@ export enum SaveType {
   Act3,
 }
 
-const debugSettings: Settings = {
-  gamepad: false,
-  debug: false,
-  zoomed: true,
-  useShader: true,
-};
-
 const defaultSave: SaveData = {
   player: {
     x: playerStart.x,
@@ -57,7 +52,13 @@ const defaultSave: SaveData = {
     debug: false,
     zoomed: true,
     useShader: true,
+    time: Date.now(),
   },
+};
+
+const debugSettings: Settings = {
+  ...defaultSave.settings,
+  gamepad: false,
 };
 
 const act1: SaveData = {
