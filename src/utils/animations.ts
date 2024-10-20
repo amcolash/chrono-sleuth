@@ -1,10 +1,11 @@
 import { Player } from '../classes/Player/Player';
+import { Config } from '../config';
 
 export function createAnimation(player: Player) {
   player.anims.create({
     key: 'walk',
     frames: player.anims.generateFrameNumbers('character', { start: 0, end: 5 }),
-    frameRate: 4,
+    frameRate: Config.prod ? 6 : 9,
     repeat: -1,
   });
 
