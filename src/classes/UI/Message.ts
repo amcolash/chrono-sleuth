@@ -205,6 +205,8 @@ export class Message extends GameObjects.Container {
       }
       this.dialog = undefined;
       this.setVisible(false);
+
+      (this.scene as Game).gamepad.resetButtons();
     } else {
       this.showMessage();
     }

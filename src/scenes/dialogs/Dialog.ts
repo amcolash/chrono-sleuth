@@ -128,6 +128,7 @@ export abstract class Dialog extends Scene {
 
       this.scene.resume('Game');
       (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
+      (this.scene.get('Game') as Game)?.gamepad?.resetButtons();
 
       this.handleSuccess(success);
     });

@@ -218,4 +218,8 @@ export class Gamepad extends GameObjects.Container {
       this.setPosition(100, Config.height - 100);
     }
   }
+
+  resetButtons() {
+    this.buttons.forEach((b) => b.setFillStyle(getColorNumber(Colors.White), buttonAlpha));
+  }
 }
