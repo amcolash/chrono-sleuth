@@ -64,8 +64,6 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   onInteract(keys: Record<Key, boolean>): InteractResult {
     if (keys[Key.Continue]) {
-      this.destroy();
-
       // Delay adding + dialog to prevent double destroy
       this.scene.time.delayedCall(0, () => {
         this.player.inventory.addItem({ type: this.itemType, used: false });
@@ -75,6 +73,8 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
         const dialog = getDialog<Item>(dialogs, this.player, this);
         if (dialog && dialog?.messages.length > 0) this.player.message.setDialog<Item>(dialog, this, 'player_portrait');
       });
+
+      this.destroy();
 
       return InteractResult.Item;
     }
