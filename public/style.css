@@ -17,6 +17,7 @@ body {
 
 #initial-loader {
   text-align: center;
+  user-select: none;
 }
 
 #initial-loader img {

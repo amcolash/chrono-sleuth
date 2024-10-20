@@ -21,7 +21,7 @@ import { BackgroundData } from '../data/background';
 import { Layer } from '../data/layers';
 import { LightData } from '../data/lights';
 import { SlopeData } from '../data/slope';
-import { Interactive, ItemType } from '../data/types';
+import { Interactive } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { setDaytime } from '../utils/lighting';
 import { load, loadConfig } from '../utils/save';
@@ -161,7 +161,8 @@ export class Game extends Scene {
   }
 
   createItems(): Item[] {
-    return [ItemType.Key].map((item) => new Item(this, item, this.player));
+    // Only some items are created on start
+    return [].map((item) => new Item(this, item, this.player));
   }
 
   createSlopes(): Slope[] {

@@ -8,7 +8,6 @@ import {
   hasCompletedQuest,
   hasItem,
   hasJournalEntry,
-  hasQuest,
   hasUnusedItem,
   hasUsedItem,
 } from '../utils/interactionUtils';
@@ -186,7 +185,6 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       ],
       conditions: {
         hasItem: ItemType.Wrench,
-        custom: (player) => !hasQuest(player, QuestType.ForestGear),
       },
       onCompleted: (player) => {
         player.quests.addQuest({
@@ -605,6 +603,16 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     },
   ],
   [PropType.MansionHole]: [
+    {
+      messages: ['Literally a hole in the wall.', "Huh, there is something here. It's a key!"],
+      conditions: {
+        hasItem: ItemType.Key,
+        invert: true,
+      },
+      onCompleted: (player) => {
+        player.inventory.addItem({ type: ItemType.Key, used: false });
+      },
+    },
     {
       messages: ['Literally a hole in the wall.'],
     },
