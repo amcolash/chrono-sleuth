@@ -17,9 +17,15 @@ body {
 
 #initial-loader {
   text-align: center;
+  user-select: none;
 }
 
 #initial-loader img {
   width: 40vw;
   max-width: 450px;
+}
+
+#game-container {
+  max-width: calc(100% - 20px);
+  max-height: calc(100% - 20px);
 }
