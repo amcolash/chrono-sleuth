@@ -1,5 +1,5 @@
 import { PipeType } from '../utils/pipes';
-import { ItemType, JournalEntry, NPCType, PropType, QuestType, WarpType } from './types';
+import { HelperTextType, ItemType, JournalEntry, NPCType, PropType, QuestType, WarpType } from './types';
 
 export const itemList: ItemType[] = Object.keys(ItemType)
   .map((key: any) => ItemType[key])
@@ -23,6 +23,10 @@ export const questList: QuestType[] = Object.keys(QuestType)
 
 export const warpList: WarpType[] = Object.keys(WarpType)
   .map((key: any) => WarpType[key])
+  .filter((k) => typeof k === 'number');
+
+export const helperTextList: HelperTextType[] = Object.keys(HelperTextType)
+  .map((key: any) => HelperTextType[key])
   .filter((k) => typeof k === 'number');
 
 export const pipeList: PipeType[] = Object.values(PipeType).filter((value) => typeof value !== 'number');

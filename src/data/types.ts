@@ -144,3 +144,7 @@ export enum PropType {
   MansionPicture,
   MansionHole,
 }
+
+export enum HelperTextType {
+  LabStairs,
+}

@@ -5,6 +5,7 @@ import { DebugUI } from '../classes/Debug/DebugUI';
 import { Background } from '../classes/Environment/Background';
 import { Clock } from '../classes/Environment/Clock';
 import { Fireflies, FireflyPositions } from '../classes/Environment/Fireflies';
+import { HelperText } from '../classes/Environment/HelperText';
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
@@ -16,7 +17,7 @@ import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
-import { npcList, propList, warpList } from '../data/arrays';
+import { helperTextList, npcList, propList, warpList } from '../data/arrays';
 import { BackgroundData } from '../data/background';
 import { Layer } from '../data/layers';
 import { LightData } from '../data/lights';
@@ -64,6 +65,7 @@ export class Game extends Scene {
     const walls = new Walls(this, this.player);
     const warpers = this.createWarpers();
     const slopes = this.createSlopes();
+    const helperTexts = this.createHelperText();
 
     // objects with side effects
     const npcs = this.createNpcs();
@@ -86,7 +88,7 @@ export class Game extends Scene {
     }
 
     // interactive objects
-    this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items, ...props], {
+    this.interactiveObjects = this.add.group([...warpers, ...npcs, ...items, ...props, ...helperTexts], {
       runChildUpdate: true,
     });
 
@@ -171,6 +173,10 @@ export class Game extends Scene {
 
   createProps(): Prop[] {
     return propList.map((prop) => new Prop(this, prop, this.player));
+  }
+
+  createHelperText() {
+    return helperTextList.map((text) => new HelperText(this, text, this.player));
   }
 
   createUI() {
