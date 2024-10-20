@@ -205,3 +205,9 @@ export function save(scene: Game, override?: SaveData, silent?: boolean): void {
     });
   }
 }
+
+export function autosave(scene: Game) {
+  if (!Config.prod) {
+    save(scene);
+  }
+}

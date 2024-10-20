@@ -4,9 +4,11 @@ import { Config } from '../../config';
 import { ItemData } from '../../data/item';
 import { Layer } from '../../data/layers';
 import { ItemType } from '../../data/types';
+import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { getItem } from '../../utils/interactionUtils';
+import { autosave } from '../../utils/save';
 import { Notification } from '../UI/Notification';
 
 export interface InventoryData {
@@ -59,7 +61,10 @@ export class Inventory extends GameObjects.Container {
     const worldItem = getItem(this.scene, item.type);
     worldItem?.destroy();
 
-    if (!silent) new Notification(this.scene, `New item added: ${ItemData[item.type].name}`);
+    if (!silent) {
+      new Notification(this.scene, `New item added: ${ItemData[item.type].name}`);
+      autosave(this.scene as Game);
+    }
   }
 
   removeItem(item: ItemType) {

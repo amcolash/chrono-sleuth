@@ -9,6 +9,7 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { updateWarpVisibility } from '../../utils/interactionUtils';
+import { autosave } from '../../utils/save';
 import { Item } from '../Environment/Item';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
@@ -57,7 +58,7 @@ export class Quests extends GameObjects.Container {
 
     if (!silent) new Notification(this.scene, `New quest added: ${QuestData[quest.id].description}`);
 
-    this.handleSideEffects(quest.id, quest.completed);
+    this.handleSideEffects(quest.id, quest.completed, silent);
   }
 
   updateExistingQuest(quest: QuestType, completed: boolean) {
@@ -105,7 +106,7 @@ export class Quests extends GameObjects.Container {
     this.questRectangle.setSize(newWidth, 50 + 30 * activeQuests.length);
   }
 
-  handleSideEffects(type: QuestType, completed: boolean) {
+  handleSideEffects(type: QuestType, completed: boolean, silent?: boolean) {
     const { warpAdd, warpComplete } = QuestData[type];
     if (warpAdd) updateWarpVisibility(this.scene as Game, warpAdd, true);
     if (completed && warpComplete) updateWarpVisibility(this.scene as Game, warpComplete, true);
@@ -120,6 +121,8 @@ export class Quests extends GameObjects.Container {
     if (type === QuestType.ExploreLab && !completed) {
       updateAlchemySet(this.player);
     }
+
+    if (!silent) autosave(this.scene as Game);
   }
 
   reset() {
