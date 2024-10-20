@@ -27,7 +27,6 @@ export class Boot extends Scene {
     this.load.setPath('assets');
 
     this.load.image('logo', 'logo.jpg');
-    this.load.image('splash', 'splash.jpg');
     this.load.font('m6x11', '../m6x11.ttf');
 
     this.load.svg('maximize', 'icons/maximize.svg', { width: 64, height: 64 });
@@ -44,13 +43,14 @@ export class Boot extends Scene {
       try {
         const build = this.cache.json.get('build')?.buildTime;
         if (build && build !== __BUILD_TIME__) {
-          this.add
+          const text = this.add
             .text(Config.width / 2, Config.height / 2, 'New version available!\nUpdating Game...', {
               ...fontStyle,
               align: 'center',
               fontSize: 48,
             })
             .setOrigin(0.5);
+          text.postFX.addGlow(0x000000, 10);
 
           setTimeout(() => window.location.reload(), 15000); // fallback in case the game doesn't reload
 

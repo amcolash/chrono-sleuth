@@ -43,7 +43,7 @@ export class Preloader extends Scene {
         this.tweens.add({
           targets: bar,
           width: width - margin * 2,
-          duration: 2400,
+          duration: 2000,
         });
       });
     }
@@ -147,7 +147,7 @@ export class Preloader extends Scene {
     //  For example, you can define global animations here, so we can use them in other scenes.
     //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
 
-    this.time.delayedCall(Config.prod ? 3000 : 0, () => {
+    this.time.delayedCall(Config.prod ? 2500 : 0, () => {
       fadeOut(this, 300, () => {
         this.scene.start('Game');
       });
