@@ -6,6 +6,8 @@ import { fadeIn } from '../utils/util';
 
 // Export the preload function (so it can be used in the main Preloader)
 export function preloadIntro(scene: Scene) {
+  scene.load.setPath('assets');
+
   scene.load.image('train', 'maps/intro/train.png');
 
   scene.load.image('layer1', 'maps/intro/layer1.png');
@@ -13,6 +15,11 @@ export function preloadIntro(scene: Scene) {
   scene.load.image('layer3', 'maps/intro/layer3.png');
   scene.load.image('layer4', 'maps/intro/layer4.png');
   scene.load.image('layer5', 'maps/intro/layer5.png');
+
+  scene.load.spritesheet('character', 'characters/player.png', { frameWidth: 128, frameHeight: 80 });
+  scene.load.image('player_portrait', 'characters/player_portrait.png');
+
+  scene.load.svg('chevron-down', 'icons/chevron-down.svg', { width: 64, height: 64 });
 }
 
 export class Intro extends Scene {
@@ -28,6 +35,20 @@ export class Intro extends Scene {
 
   preload() {
     preloadIntro(this);
+  }
+
+  init() {
+    if (!Config.prod) {
+      this.input.keyboard?.on('keydown-BACK_SLASH', () => {
+        fadeOut(this, 500, () => {
+          this.scene.start('Game');
+        });
+      });
+
+      this.input.keyboard?.on('keydown-R', () => {
+        this.scene.restart();
+      });
+    }
   }
 
   create() {
