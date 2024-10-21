@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 
 import { Config } from '../config';
+import { saveKey } from '../data/saves';
 import { fontStyle } from '../utils/fonts';
 
 // scene to load immediately w/o fully initialized game
@@ -66,7 +67,8 @@ export class Boot extends Scene {
       return;
     }
 
-    if (!Config.prod) this.scene.start('Preloader');
+    // Skip menu if there is no save
+    if (!Config.prod || !localStorage.getItem(saveKey)) this.scene.start('Preloader');
     else this.scene.start('MainMenu');
   }
 }

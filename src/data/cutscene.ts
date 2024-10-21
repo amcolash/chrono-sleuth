@@ -1,8 +1,10 @@
-import { Physics, Scene } from 'phaser';
+import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
+import { Message } from '../classes/UI/Message';
+import { rotationCorrection } from '../utils/animations';
 import { getNPC, getProp, getWall, hasUsedItem, updateWarpVisibility } from '../utils/interactionUtils';
 import { toggleXRay } from '../utils/shaders';
 import { fadeIn, fadeOut } from '../utils/util';
@@ -10,6 +12,106 @@ import { NPCData } from './npc';
 import { PropData } from './prop';
 import { ItemType, NPCType, PropType, QuestType, WallType, WarpType } from './types';
 import { WallData } from './wall';
+
+export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
+  const message = new Message(scene);
+
+  player.setAngle(rotationCorrection);
+
+  const timeline3 = scene.add.timeline([
+    {
+      at: 1500,
+      tween: { targets: player, x: 850, duration: 2500, onComplete: () => player.anims.pause() },
+      run: () => player.anims.resume(),
+    },
+    {
+      at: 6000,
+      run: () => {
+        fadeOut(scene, 500, () => {
+          scene.scene.start('Game');
+        });
+      },
+    },
+  ]);
+
+  const timeline2 = scene.add.timeline([
+    {
+      at: 1500,
+      tween: {
+        targets: player,
+        x: 1200,
+        duration: 2500,
+        onComplete: () => player.anims.pause(),
+      },
+      run: () => player.anims.resume(),
+    },
+    {
+      at: 5500,
+      run: () => {
+        player.setFlipX(true);
+        player.setAngle(-rotationCorrection);
+      },
+    },
+
+    {
+      at: 6500,
+      run: () => {
+        message.setDialog(
+          {
+            messages: [
+              'No doubt about it, this will be a strange journey.',
+              'Whatever awaits me in this town, it’s certain that nothing will ever be the same again.',
+            ],
+            onCompleted: () => timeline3.play(),
+          },
+          undefined,
+          'player_portrait'
+        );
+      },
+    },
+  ]);
+
+  const timeline1 = scene.add.timeline([
+    {
+      at: 2500,
+      tween: { targets: player, x: 850, duration: 3000, onComplete: () => player.anims.pause() },
+      run: () => player.anims.resume(),
+    },
+    {
+      at: 7000,
+      run: () => {
+        player.setFlipX(true);
+        player.setAngle(-rotationCorrection);
+      },
+    },
+    {
+      at: 8000,
+      run: () => {
+        player.setFlipX(false);
+        player.setAngle(rotationCorrection);
+      },
+    },
+    {
+      at: 9000,
+      run: () => {
+        message.setDialog(
+          {
+            messages: [
+              'What a beautiful mountain-scape. I almost forgot where I am headed.',
+              'It’s been three days since the letter arrived... It has been many years since I last visited that sleepy old town.',
+              'Rumors swirl of strange occurrences. People disappearing, clocks that never strike the hour, and a darkness that lingers beneath the surface.',
+            ],
+            onCompleted: () => timeline2.play(),
+          },
+          undefined,
+          'player_portrait'
+        );
+      },
+    },
+  ]);
+
+  timeline1.play();
+}
 
 export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {
   const sphinx = getNPC(scene, NPCType.Sphinx);

@@ -4,6 +4,7 @@ import { FontPlugin } from 'phaser-font-plugin';
 import { Config } from './config';
 import { Boot } from './scenes/Boot';
 import { Game as MainGame } from './scenes/Game';
+import { Intro } from './scenes/Intro';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
 import { UITest } from './scenes/UITest';
@@ -41,6 +42,7 @@ const config: Types.Core.GameConfig = {
     MainMenu,
     Preloader,
 
+    Intro,
     MainGame,
 
     Paused,

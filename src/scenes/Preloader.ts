@@ -1,6 +1,7 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../config';
+import { saveKey } from '../data/saves';
 import { fadeOut } from '../utils/util';
 
 export class Preloader extends Scene {
@@ -149,7 +150,11 @@ export class Preloader extends Scene {
 
     this.time.delayedCall(Config.prod ? 2500 : 0, () => {
       fadeOut(this, 300, () => {
-        this.scene.start('Game');
+        if (localStorage.getItem(saveKey)) {
+          this.scene.start('Game');
+        } else {
+          this.scene.start('Intro');
+        }
       });
     });
   }
