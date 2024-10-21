@@ -5,7 +5,7 @@ import { Button, CenteredButton } from '../../classes/UI/Button';
 import { TextBox } from '../../classes/UI/TextBox';
 import { Config } from '../../config';
 import { itemList, journalList, questList, sceneList, warpList } from '../../data/arrays';
-import { SaveType, saves } from '../../data/saves';
+import { SaveType, saveKey, saves } from '../../data/saves';
 import { ItemType, JournalEntry, QuestType, WarpType } from '../../data/types';
 import { WarpData } from '../../data/warp';
 import { getColorNumber } from '../../utils/colors';
@@ -187,8 +187,13 @@ export class DebugTool extends Dialog {
         10 + 60 * i,
         SaveType[Number(key)],
         () => {
-          save(this.player.scene, data);
-          this.close(true);
+          if (Number(key) === SaveType.New) {
+            localStorage.removeItem(saveKey);
+            window.location.reload();
+          } else {
+            save(this.player.scene, data);
+            this.close(true);
+          }
         },
         { backgroundColor: '#111' }
       );

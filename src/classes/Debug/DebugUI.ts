@@ -2,7 +2,7 @@ import { GameObjects, Input, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
-import { SaveType, saves } from '../../data/saves';
+import { SaveType, saveKey, saves } from '../../data/saves';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
@@ -68,8 +68,8 @@ export class DebugUI extends GameObjects.Container {
     });
 
     this.scene.input.keyboard?.on('keydown-N', () => {
-      save(this.scene, saves[SaveType.New]);
-      this.scene.scene.restart();
+      localStorage.removeItem(saveKey);
+      this.scene.scene.start('Preloader');
     });
 
     this.scene.input.keyboard?.on('keydown-Z', () => {
