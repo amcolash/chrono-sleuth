@@ -2,7 +2,7 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../config';
 import { trainIntro } from '../data/cutscene';
-import { fadeIn } from '../utils/util';
+import { fadeIn, fadeOut } from '../utils/util';
 
 // Export the preload function (so it can be used in the main Preloader)
 export function preloadIntro(scene: Scene) {
@@ -41,7 +41,11 @@ export class Intro extends Scene {
     if (!Config.prod) {
       this.input.keyboard?.on('keydown-BACK_SLASH', () => {
         fadeOut(this, 500, () => {
-          this.scene.start('Game');
+          if (this.textures.exists('warp')) {
+            this.scene.start('Game');
+          } else {
+            this.scene.start('Preloader');
+          }
         });
       });
 
@@ -52,15 +56,17 @@ export class Intro extends Scene {
   }
 
   create() {
+    const scale = Config.zoomed ? 0.75 : 1;
+
     fadeIn(this, 350);
 
-    this.add.image(Config.width, Config.height, 'layer5').setScale(5);
+    this.add.image(Config.width, Config.height, 'layer5').setScale(5 * scale);
 
-    const layer4_1 = this.add.image(0, Config.height, 'layer4').setScale(5);
-    const layer4_2 = this.add.image(0, Config.height, 'layer4').setScale(5);
+    const layer4_1 = this.add.image(0, Config.height, 'layer4').setScale(5 * scale);
+    const layer4_2 = this.add.image(0, Config.height, 'layer4').setScale(5 * scale);
 
-    const layer3 = this.add.image(0, 350, 'layer3').setScale(2);
-    const layer2 = this.add.image(0, Config.height * 0.7, 'layer2').setScale(5);
+    const layer3 = this.add.image(0, 350 * scale, 'layer3').setScale(2 * scale);
+    const layer2 = this.add.image(0, Config.height * 0.7, 'layer2').setScale(5 * scale);
 
     const movement = Config.width;
     let duration = 15000;
@@ -82,7 +88,7 @@ export class Intro extends Scene {
 
     this.tweens.add({
       targets: layer3,
-      x: { from: -2000, to: movement * 2.75 },
+      x: { from: -movement * 2, to: movement * 2.75 },
       duration: duration * 4,
       hold: duration * 6,
       repeat: -1,
@@ -96,9 +102,9 @@ export class Intro extends Scene {
       repeat: -1,
     });
 
-    const trainContainer = this.add.container(0, 0);
+    const trainContainer = this.add.container(0, Config.zoomed ? -35 : 0);
 
-    this.player = this.add.sprite(560, Config.height - 250, 'character', 0).setScale(2.5);
+    this.player = this.add.sprite(560 * scale, Config.height - 250 * scale, 'character', 0).setScale(2.5 * scale);
     this.player.anims.create({
       key: 'walk',
       frames: this.player.anims.generateFrameNumbers('character', { start: 0, end: 5 }),
@@ -112,7 +118,7 @@ export class Intro extends Scene {
     trainContainer.add(this.player);
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1, 0, 120);
 
-    const train = this.add.image(Config.width / 2, Config.height / 2, 'train').setScale(2);
+    const train = this.add.image(Config.width / 2, Config.height / 2, 'train').setScale(2 * scale);
     trainContainer.add(train);
 
     this.tweens.add({
@@ -126,11 +132,11 @@ export class Intro extends Scene {
     });
 
     const bridge = this.add
-      .rectangle(-Config.width / 2, Config.height - 35, Config.width * 2, 35, 0x444040)
+      .rectangle(-Config.width / 2, Config.height - (Config.zoomed ? 60 : 35), Config.width * 2, 35, 0x444040)
       .setOrigin(0);
     bridge.postFX?.addShadow(0, 0, 0.5, 1);
 
-    // this.cameras.main.zoom = 0.5;
+    // this.cameras.main.zoom = 0.75;
     // this.add.rectangle(0, 0, Config.width, Config.height).setOrigin(0).setStrokeStyle(10, 0x00ff00);
 
     trainIntro(this, this.player);

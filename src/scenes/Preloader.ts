@@ -19,10 +19,10 @@ export class Preloader extends Scene {
       .setOrigin(0, 1)
       .setScale(0.4);
 
-    const width = Config.width * 0.68;
-    const height = 26;
+    const width = Config.width * 0.66;
+    const height = Config.height * 0.05;
     const margin = 3;
-    const container = this.add.container(Config.width * 0.23, Config.height * 0.9);
+    const container = this.add.container(Config.width * 0.24, Config.height * 0.86);
     this.container = container;
 
     //  A simple progress bar. This is the outline of the bar.

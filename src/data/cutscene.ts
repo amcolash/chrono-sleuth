@@ -4,6 +4,7 @@ import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
 import { Message } from '../classes/UI/Message';
+import { Config } from '../config';
 import { rotationCorrection } from '../utils/animations';
 import { getNPC, getProp, getWall, hasUsedItem, updateWarpVisibility } from '../utils/interactionUtils';
 import { toggleXRay } from '../utils/shaders';
@@ -14,6 +15,8 @@ import { ItemType, NPCType, PropType, QuestType, WallType, WarpType } from './ty
 import { WallData } from './wall';
 
 export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
+  const scale = Config.zoomed ? 0.75 : 1;
+
   const message = new Message(scene);
 
   player.setAngle(rotationCorrection);
@@ -21,14 +24,18 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
   const timeline3 = scene.add.timeline([
     {
       at: 1500,
-      tween: { targets: player, x: 850, duration: 2500, onComplete: () => player.anims.pause() },
+      tween: { targets: player, x: 850 * scale, duration: 2500, onComplete: () => player.anims.pause() },
       run: () => player.anims.resume(),
     },
     {
       at: 6000,
       run: () => {
         fadeOut(scene, 500, () => {
-          scene.scene.start('Game');
+          if (scene.textures.exists('warp')) {
+            scene.scene.start('Game');
+          } else {
+            scene.scene.start('Preloader');
+          }
         });
       },
     },
@@ -39,7 +46,7 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
       at: 1500,
       tween: {
         targets: player,
-        x: 1200,
+        x: 1200 * scale,
         duration: 2500,
         onComplete: () => player.anims.pause(),
       },
@@ -74,7 +81,7 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
   const timeline1 = scene.add.timeline([
     {
       at: 2500,
-      tween: { targets: player, x: 850, duration: 3000, onComplete: () => player.anims.pause() },
+      tween: { targets: player, x: 850 * scale, duration: 3000, onComplete: () => player.anims.pause() },
       run: () => player.anims.resume(),
     },
     {

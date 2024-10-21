@@ -32,7 +32,7 @@ let useShader = prod;
 useShader = true;
 
 // TODO: Remove width/height overrides since they are always loaded
-const { width, height } = fullSize;
+const { width, height } = zoomedSize;
 
 // TODO: Remove overrides long-term
 if (prod) {
@@ -51,7 +51,7 @@ export const Config = {
   width,
   height,
   cameraOffset: height / 3,
-  zoomed: false,
+  zoomed: true,
 
   dayMinutes: 0.25,
   rewindEnabled,
