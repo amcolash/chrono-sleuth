@@ -4,6 +4,17 @@ import { Config } from '../config';
 import { trainIntro } from '../data/cutscene';
 import { fadeIn } from '../utils/util';
 
+// Export the preload function (so it can be used in the main Preloader)
+export function preloadIntro(scene: Scene) {
+  scene.load.image('train', 'maps/intro/train.png');
+
+  scene.load.image('layer1', 'maps/intro/layer1.png');
+  scene.load.image('layer2', 'maps/intro/layer2.png');
+  scene.load.image('layer3', 'maps/intro/layer3.png');
+  scene.load.image('layer4', 'maps/intro/layer4.png');
+  scene.load.image('layer5', 'maps/intro/layer5.png');
+}
+
 export class Intro extends Scene {
   player: GameObjects.Sprite;
 
@@ -16,18 +27,7 @@ export class Intro extends Scene {
   }
 
   preload() {
-    this.load.setPath('assets');
-
-    this.load.image('train', 'maps/intro/train.png');
-
-    this.load.image('layer1', 'maps/intro/layer1.png');
-    this.load.image('layer2', 'maps/intro/layer2.png');
-    this.load.image('layer3', 'maps/intro/layer3.png');
-    this.load.image('layer4', 'maps/intro/layer4.png');
-    this.load.image('layer5', 'maps/intro/layer5.png');
-
-    this.load.spritesheet('character', 'characters/player.png', { frameWidth: 128, frameHeight: 80 });
-    this.load.image('player_portrait', 'characters/player_portrait.png');
+    preloadIntro(this);
   }
 
   create() {
@@ -114,7 +114,4 @@ export class Intro extends Scene {
 
     trainIntro(this, this.player);
   }
-
-  // update(time: number, delta: number): void {
-  // }
 }

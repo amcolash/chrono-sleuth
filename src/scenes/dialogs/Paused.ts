@@ -55,7 +55,7 @@ export class Paused extends Scene {
           }
         )
         .setOrigin(1, 1)
-        .setInteractive({ useHandCursor: false })
+        .setInteractive({ useHandCursor: !import.meta.env.PROD })
         .on('pointerdown', () => {
           this.debugCount++;
           if (this.debugCount > 10) {

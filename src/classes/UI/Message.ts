@@ -19,6 +19,7 @@ const nameOffset = 40;
 const maxLines = 5;
 
 const timeout = 350;
+const fadeDuration = 125;
 
 export class Message extends GameObjects.Container {
   textWidth: number;
@@ -28,7 +29,6 @@ export class Message extends GameObjects.Container {
   target?: any;
   npcName: GameObjects.Text;
   text: GameObjects.Text;
-  box: GameObjects.Rectangle;
   portrait: GameObjects.Image;
 
   options?: string[];
@@ -51,6 +51,7 @@ export class Message extends GameObjects.Container {
     this.setScrollFactor(0);
     this.setPosition(padding, height - padding - boxHeight);
     this.setDepth(Layer.Overlay);
+    this.setAlpha(0);
     this.setVisible(false);
 
     // Player is not necessary to show basic dialog, but might crash on complex dialogs
@@ -73,42 +74,57 @@ export class Message extends GameObjects.Container {
       color: '#' + Colors.Tan,
     });
 
-    this.text = new GameObjects.Text(this.scene, padding + portraitOffset, padding + nameOffset, '', fontStyle);
+    this.text = this.scene.add.text(padding + portraitOffset, padding + nameOffset, '', fontStyle);
     this.text.width = this.textWidth;
     this.text.height = this.textHeight;
 
     this.text.setOrigin(0).setMaxLines(maxLines);
 
-    this.portrait = new GameObjects.Image(this.scene, padding, padding, '').setOrigin(0).setScale(1.5);
+    this.portrait = this.scene.add.image(padding, padding, '').setOrigin(0).setScale(1.5);
 
-    this.box = new GameObjects.Rectangle(
-      this.scene,
-      0,
-      0,
-      Config.width - padding * 2,
-      boxHeight,
-      getColorNumber(Colors.Black),
-      0.8
-    );
-    this.box.setStrokeStyle(2, getColorNumber(Colors.Tan), 1);
-    this.box.setOrigin(0, 0);
+    const box = this.scene.add
+      .rectangle(0, 0, Config.width - padding * 2, boxHeight, getColorNumber(Colors.Black), 0.8)
+      .setStrokeStyle(2, getColorNumber(Colors.Tan), 1)
+      .setOrigin(0, 0)
+      .setScrollFactor(0)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', () => {
+        if (!this.options) this.updateDialog();
+      });
 
     this.optionsContainer = new ButtonGroup(this.scene).setDepth(Layer.Overlay);
 
-    this.add([this.box, this.npcName, this.text, this.portrait]);
+    const arrow = this.scene.add.image(Config.width - padding * 2 - 20, boxHeight - 16, 'chevron-down').setScale(0.5);
+    this.scene.tweens.add({
+      targets: arrow,
+      y: boxHeight - 22,
+      scale: 0.4,
+      duration: 1000,
+      ease: 'Sine.easeInOut',
+      yoyo: true,
+      repeat: -1,
+    });
+
+    this.add([box, this.npcName, this.text, this.portrait, arrow]);
   }
 
   setDialog<T>(dialog?: Dialog<T>, target?: T, portrait?: string) {
     if (!this.npcName) this.createUI();
 
-    this.setVisible(dialog !== undefined);
+    this.setVisible(true);
+    this.scene.tweens.add({
+      targets: this,
+      alpha: dialog !== undefined ? 1 : 0,
+      duration: fadeDuration,
+      onComplete: () => this.setVisible(dialog !== undefined),
+    });
 
     this.target = target;
     this.messageIndex = 0;
     this.dialog = dialog;
     this.interactionTimeout = Date.now() + timeout;
 
-    (this.scene as Game).gamepad?.offsetButtons(this.dialog !== undefined);
+    (this.scene as Game).gamepad?.setVisible(this.dialog === undefined);
 
     if (!dialog) {
       return;
@@ -147,7 +163,20 @@ export class Message extends GameObjects.Container {
     const message = messages && messages[this.messageIndex];
 
     if (message) {
-      this.text.setText(message);
+      this.scene.tweens.add({
+        targets: this.text,
+        alpha: 0,
+        duration: fadeDuration,
+        onComplete: () => {
+          this.text.setText(message);
+          this.scene.tweens.add({
+            targets: this.text,
+            alpha: 1,
+            duration: fadeDuration,
+          });
+        },
+      });
+
       if (this.text.getWrappedText().length > maxLines) console.error('Message too long!', message);
     }
 
@@ -205,14 +234,20 @@ export class Message extends GameObjects.Container {
         this.dialog.onCompleted(this.player, this.target);
       }
       this.dialog = undefined;
-      this.setVisible(false);
+
+      this.scene.tweens.add({
+        targets: this,
+        alpha: 0,
+        duration: fadeDuration,
+        onComplete: () => this.setVisible(false),
+      });
 
       (this.scene as Game).gamepad?.resetButtons();
     } else {
       this.showMessage();
     }
 
-    (this.scene as Game).gamepad?.offsetButtons(this.dialog !== undefined);
+    (this.scene as Game).gamepad?.setVisible(this.dialog === undefined);
 
     this.interactionTimeout = Date.now() + timeout;
   }

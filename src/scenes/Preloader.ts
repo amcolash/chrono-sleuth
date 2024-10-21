@@ -3,6 +3,7 @@ import { GameObjects, Scene } from 'phaser';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
 import { fadeOut } from '../utils/util';
+import { preloadIntro } from './Intro';
 
 export class Preloader extends Scene {
   container: GameObjects.Container;
@@ -72,6 +73,7 @@ export class Preloader extends Scene {
     this.load.svg('award', 'icons/award.svg', { width: 64, height: 64 });
     this.load.svg('tv', 'icons/tv.svg', { width: 64, height: 64 });
     this.load.svg('save', 'icons/save.svg', { width: 64, height: 64 });
+    this.load.svg('chevron-down', 'icons/chevron-down.svg', { width: 64, height: 64 });
 
     // fontawesome icons
     this.load.svg('gamepad', 'icons/gamepad-solid.svg', { width: 64, height: 64 });
@@ -141,6 +143,11 @@ export class Preloader extends Scene {
 
     // puzzles
     this.load.image('arrow', 'puzzles/arrow.png');
+
+    // optionally preload intro
+    if (!localStorage.getItem(saveKey)) {
+      preloadIntro(this);
+    }
   }
 
   create() {
