@@ -12,7 +12,7 @@ export function createAnimation(player: Player) {
   player.anims.play('walk');
 }
 
-const rotationCorrection = 5;
+export const rotationCorrection = 5;
 export function updateAnimation(player: Player) {
   const v = player.body?.velocity.x || 0;
   const flipped = v < 0;

@@ -5,7 +5,7 @@
 - [x] Add npc portraits to dialog
 - [x] Add npc names to dialog
 - [x] Main menu
-- [ ] Tap build 10 times to turn on/off dev mode - instead of PROD? Store in local storage
+- [x] Tap build 10 times to turn on/off dev mode - instead of PROD? Store in local storage
 
 ## Mechanics
 

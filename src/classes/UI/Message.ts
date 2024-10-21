@@ -40,7 +40,7 @@ export class Message extends GameObjects.Container {
 
   initialized: boolean = false;
 
-  constructor(scene: Scene, player: Player) {
+  constructor(scene: Scene, player?: Player) {
     super(scene);
 
     // Pull these values into constructor, so they are always up to date
@@ -53,7 +53,8 @@ export class Message extends GameObjects.Container {
     this.setDepth(Layer.Overlay);
     this.setVisible(false);
 
-    this.player = player;
+    // Player is not necessary to show basic dialog, but might crash on complex dialogs
+    if (player) this.player = player;
 
     this.scene.input.keyboard?.on('keydown-ENTER', () => {
       if (!this.options) this.updateDialog();
@@ -107,7 +108,7 @@ export class Message extends GameObjects.Container {
     this.dialog = dialog;
     this.interactionTimeout = Date.now() + timeout;
 
-    (this.scene as Game).gamepad.offsetButtons(this.dialog !== undefined);
+    (this.scene as Game).gamepad?.offsetButtons(this.dialog !== undefined);
 
     if (!dialog) {
       return;
@@ -206,12 +207,12 @@ export class Message extends GameObjects.Container {
       this.dialog = undefined;
       this.setVisible(false);
 
-      (this.scene as Game).gamepad.resetButtons();
+      (this.scene as Game).gamepad?.resetButtons();
     } else {
       this.showMessage();
     }
 
-    (this.scene as Game).gamepad.offsetButtons(this.dialog !== undefined);
+    (this.scene as Game).gamepad?.offsetButtons(this.dialog !== undefined);
 
     this.interactionTimeout = Date.now() + timeout;
   }

@@ -167,9 +167,11 @@ export function load(scene: Game) {
 
     const loadType = deepEqual(savedata, saves[SaveType.New]) ? '[New]' : '[Storage]';
 
-    scene.time.delayedCall(200, () => {
-      new Notification(scene, `Game Loaded ${Config.prod ? '' : loadType}`);
-    });
+    if (!Config.prod) {
+      scene.time.delayedCall(200, () => {
+        new Notification(scene, `Game Loaded ${Config.prod ? '' : loadType}`);
+      });
+    }
 
     // If new game, save now
     if (deepEqual(savedata, saves[SaveType.New])) {
