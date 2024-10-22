@@ -132,6 +132,9 @@ export class XRayPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline
 }
 
 export function toggleXRay(scene: Scene, enabled: boolean) {
+  const newValue = enabled ? 0.85 : 0;
+  if (xrayAlpha === newValue) return;
+
   scene.tweens.addCounter({
     from: xrayAlpha,
     to: enabled ? 0.85 : 0,
