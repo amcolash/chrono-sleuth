@@ -1,7 +1,6 @@
 import { Display, GameObjects, Scene } from 'phaser';
 
-import { Colors, fromRGB, getColorNumber } from './colors';
-import { tweenColor } from './util';
+import { Colors, fromRGB, getColorNumber, tweenColor } from './colors';
 
 const duration = 1200;
 let currentlyChanging = false;

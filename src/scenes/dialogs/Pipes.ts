@@ -4,9 +4,8 @@ import { Cursor } from '../../classes/UI/Cursor';
 import { InputManager } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
 import { pipeList } from '../../data/arrays';
-import { Colors, getColorNumber, getColorObject } from '../../utils/colors';
+import { Colors, getColorNumber, getColorObject, tweenColor } from '../../utils/colors';
 import { Pipe, PipeShapes, PipeType, getConnectedPipes, level, startPipe } from '../../utils/pipes';
-import { tweenColor } from '../../utils/util';
 import { MazeDialog } from './MazeDialog';
 
 const width = 16;

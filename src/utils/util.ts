@@ -1,9 +1,9 @@
-import { Cameras, Display, GameObjects, Math as PhaserMath, Scene, Tweens, Types } from 'phaser';
+import { Cameras, Math as PhaserMath, Scene, Types } from 'phaser';
 
 import { Player } from '../classes/Player/Player';
 import { Config, fullSize, zoomedSize } from '../config';
 import { Game } from '../scenes/Game';
-import { Colors, colorToNumber, getColorNumber, getColorObject } from './colors';
+import { Colors, getColorNumber, getColorObject } from './colors';
 
 export function isMobile() {
   const toMatch = [/Android/i, /webOS/i, /iPhone/i, /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
@@ -11,10 +11,6 @@ export function isMobile() {
   return toMatch.some((toMatchItem) => {
     return navigator.userAgent.match(toMatchItem);
   });
-}
-
-export function expDecay(a: number, b: number, decay: number, delta: number) {
-  return b + (a - b) * Math.exp(-delta * decay);
 }
 
 export function setZoomed(scene: Game, zoomed: boolean) {
@@ -77,26 +73,6 @@ export function openDialog(scene: Game, dialog: string, opts?: any) {
   scene.scene.launch(dialog, { player: scene.player, ...opts });
 }
 
-export function tweenColor(
-  scene: Scene,
-  start: Display.Color,
-  end: Display.Color,
-  onChange: (color: number) => void,
-  config: Types.Tweens.NumberTweenBuilderConfig
-): Tweens.Tween {
-  const frames = (config.duration || 100) * 0.3;
-
-  return scene.tweens.addCounter({
-    from: 0,
-    to: frames,
-    onUpdate: (tween) => {
-      const tweenedColor = Display.Color.Interpolate.ColorWithColor(start, end, frames, tween.getValue());
-      onChange(colorToNumber(tweenedColor));
-    },
-    ...config,
-  });
-}
-
 /** Transform enum values to strings (used for stringifying save data), thanks GPT */
 export function transformEnumValue(value: any, enumType?: any, enumName?: string): any {
   if (enumType && Object.values(enumType).includes(value)) {
@@ -126,54 +102,4 @@ function cursorMoveHandler() {
 export function setupCursorHiding() {
   page.style.cursor = 'none';
   page.addEventListener('mousemove', cursorMoveHandler);
-}
-
-/**
- * Create typewriter animation for text.
- * Code mostly from: https://dev.to/joelnet/creating-a-typewriter-effect-in-phaserjs-v3-4e66
- * @param {Phaser.GameObjects.Text} target
- * @param {number} [speedInMs=25]
- * @returns {Promise<void>}
- */
-export function animateText(target: GameObjects.Text, speedInMs = 15) {
-  // store original text
-  const message = target.text;
-  const invisibleMessage = message.replace(/[^ ]/g, ' ');
-
-  // clear text on screen
-  target.text = '';
-
-  // mutable state for visible text
-  let visibleText = '';
-
-  const timer = target.scene.time.addEvent({
-    delay: speedInMs,
-    loop: true,
-  });
-
-  // use a Promise to wait for the animation to complete
-  return {
-    promise: new Promise<void>((resolve) => {
-      timer.callback = () => {
-        // if all characters are visible, stop the timer
-        if (target.text === message) {
-          timer.destroy();
-          return resolve();
-        }
-
-        // add next character to visible text
-        visibleText += message[visibleText.length];
-
-        // right pad with invisibleText
-        const invisibleText = invisibleMessage.substring(visibleText.length);
-
-        // update text on screen
-        target.text = visibleText + invisibleText;
-      };
-    }),
-    skip: () => {
-      timer.destroy();
-      target.text = message;
-    },
-  };
 }

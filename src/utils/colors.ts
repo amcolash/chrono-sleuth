@@ -1,4 +1,4 @@
-import { Display, Types } from 'phaser';
+import { Display, Scene, Tweens, Types } from 'phaser';
 
 export const Colors = {
   White: 'fcfee9',
@@ -33,4 +33,24 @@ export function colorToNumber(color: Types.Display.ColorObject): number {
 export function getColorObject(color: number): Display.Color {
   const rgba = Display.Color.ColorToRGBA(color);
   return new Display.Color(rgba.r, rgba.g, rgba.b, rgba.a);
+}
+
+export function tweenColor(
+  scene: Scene,
+  start: Display.Color,
+  end: Display.Color,
+  onChange: (color: number) => void,
+  config: Types.Tweens.NumberTweenBuilderConfig
+): Tweens.Tween {
+  const frames = (config.duration || 100) * 0.3;
+
+  return scene.tweens.addCounter({
+    from: 0,
+    to: frames,
+    onUpdate: (tween) => {
+      const tweenedColor = Display.Color.Interpolate.ColorWithColor(start, end, frames, tween.getValue());
+      onChange(colorToNumber(tweenedColor));
+    },
+    ...config,
+  });
 }

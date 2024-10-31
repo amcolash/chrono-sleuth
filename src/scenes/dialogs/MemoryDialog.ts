@@ -5,8 +5,7 @@ import { ButtonGroup } from '../../classes/UI/ButtonGroup';
 import { Cursor } from '../../classes/UI/Cursor';
 import { Config } from '../../config';
 import { openChest } from '../../data/cutscene';
-import { Colors, getColorNumber, getColorObject } from '../../utils/colors';
-import { tweenColor } from '../../utils/util';
+import { Colors, getColorNumber, getColorObject, tweenColor } from '../../utils/colors';
 import { Dialog } from './Dialog';
 
 const digits = 6;
