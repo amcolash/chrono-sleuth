@@ -7,6 +7,7 @@ import { NPCData } from '../../data/npc';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
+import { animateText } from '../../utils/util';
 import { NPC } from '../Environment/NPC';
 import { Player } from '../Player/Player';
 import { Button } from './Button';
@@ -40,6 +41,9 @@ export class Message extends GameObjects.Container {
 
   gamepadVisible: boolean = false;
   initialized: boolean = false;
+
+  animating: boolean = false;
+  skip?: () => void;
 
   constructor(scene: Scene, player?: Player) {
     super(scene);
@@ -165,18 +169,14 @@ export class Message extends GameObjects.Container {
     const message = messages && messages[this.messageIndex];
 
     if (message) {
-      this.scene.tweens.add({
-        targets: this.text,
-        alpha: 0,
-        duration: fadeDuration,
-        onComplete: () => {
-          this.text.setText(message);
-          this.scene.tweens.add({
-            targets: this.text,
-            alpha: 1,
-            duration: fadeDuration,
-          });
-        },
+      this.text.setText(message);
+      const { promise, skip } = animateText(this.text);
+      this.animating = true;
+      this.skip = skip;
+
+      promise.then(() => {
+        this.animating = false;
+        this.skip = undefined;
       });
 
       if (this.text.getWrappedText().length > maxLines) console.error('Message too long!', message);
@@ -227,6 +227,12 @@ export class Message extends GameObjects.Container {
 
     const messages = this.getMessages();
     if (!this.dialog || !messages) {
+      return;
+    }
+
+    if (this.animating) {
+      this.skip?.();
+      this.animating = false;
       return;
     }
 

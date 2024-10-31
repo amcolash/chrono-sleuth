@@ -1,4 +1,4 @@
-import { Cameras, Display, Math as PhaserMath, Scene, Tweens, Types } from 'phaser';
+import { Cameras, Display, GameObjects, Math as PhaserMath, Scene, Tweens, Types } from 'phaser';
 
 import { Player } from '../classes/Player/Player';
 import { Config, fullSize, zoomedSize } from '../config';
@@ -125,4 +125,54 @@ function cursorMoveHandler() {
 
 export function setupCursorHiding() {
   page.addEventListener('mousemove', cursorMoveHandler);
+}
+
+/**
+ * Create typewriter animation for text.
+ * Code mostly from: https://dev.to/joelnet/creating-a-typewriter-effect-in-phaserjs-v3-4e66
+ * @param {Phaser.GameObjects.Text} target
+ * @param {number} [speedInMs=25]
+ * @returns {Promise<void>}
+ */
+export function animateText(target: GameObjects.Text, speedInMs = 15) {
+  // store original text
+  const message = target.text;
+  const invisibleMessage = message.replace(/[^ ]/g, ' ');
+
+  // clear text on screen
+  target.text = '';
+
+  // mutable state for visible text
+  let visibleText = '';
+
+  const timer = target.scene.time.addEvent({
+    delay: speedInMs,
+    loop: true,
+  });
+
+  // use a Promise to wait for the animation to complete
+  return {
+    promise: new Promise<void>((resolve) => {
+      timer.callback = () => {
+        // if all characters are visible, stop the timer
+        if (target.text === message) {
+          timer.destroy();
+          return resolve();
+        }
+
+        // add next character to visible text
+        visibleText += message[visibleText.length];
+
+        // right pad with invisibleText
+        const invisibleText = invisibleMessage.substring(visibleText.length);
+
+        // update text on screen
+        target.text = visibleText + invisibleText;
+      };
+    }),
+    skip: () => {
+      timer.destroy();
+      target.text = message;
+    },
+  };
 }
