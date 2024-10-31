@@ -9,6 +9,7 @@ import { IconButton } from '../../classes/UI/IconButton';
 import { Config } from '../../config';
 import { fontStyle } from '../../utils/fonts';
 import { toggleCrt } from '../../utils/shaders';
+import { openDialog } from '../../utils/util';
 import { Game } from '../Game';
 
 export class Paused extends Scene {
@@ -83,6 +84,16 @@ export class Paused extends Scene {
 
     const resumeButton = new Button(this, width / 2, Config.height / 2, 'Resume', () => this.resume(), { fontSize });
 
+    let debugButton;
+    if (!Config.prod) {
+      debugButton = new IconButton(this, 30, 30, 'terminal', () => {
+        this.resume();
+        this.parent.time.delayedCall(200, () => {
+          openDialog(this.parent as Game, 'DebugTool');
+        });
+      });
+    }
+
     let exitButton;
     if (__TAURI__)
       exitButton = new Button(
@@ -99,12 +110,12 @@ export class Paused extends Scene {
       );
 
     buttonGrid.setButtons([
-      [shaderButton, gamepadButton, fullscreenButton],
-      [resumeButton, undefined, undefined],
-      [exitButton, undefined, undefined],
+      [debugButton, shaderButton, gamepadButton, fullscreenButton],
+      [undefined, resumeButton, undefined, undefined],
+      [undefined, exitButton, undefined, undefined],
     ]);
 
-    buttonGrid.activeIndex.set(0, 1);
+    buttonGrid.activeIndex.set(1, 1);
 
     // Keyboard interactions
     this.input.keyboard?.on('keydown-ESC', () => this.resume());

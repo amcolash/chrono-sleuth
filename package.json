@@ -14,7 +14,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.0.2",
+    "@tauri-apps/api": "^2.0.3",
     "@tauri-apps/plugin-process": "^2.0.0",
     "@tauri-apps/plugin-window-state": "^2.0.0",
     "deep-equal": "^2.2.3",
@@ -23,16 +23,16 @@
     "phaser-font-plugin": "^0.1.1"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.0.3",
+    "@tauri-apps/cli": "^2.0.4",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/deep-equal": "^1.0.4",
-    "@types/node": "^22.7.7",
+    "@types/node": "^22.8.4",
     "prettier": "^3.3.3",
     "sharp": "^0.33.5",
     "svgo": "^3.3.2",
     "terser": "^5.36.0",
     "typescript": "^5.6.3",
-    "vite": "^5.4.9",
+    "vite": "^5.4.10",
     "vite-plugin-generate-file": "^0.2.0",
     "vite-plugin-image-optimizer": "^1.1.8",
     "vite-plugin-pwa": "^0.20.5"
