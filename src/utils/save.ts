@@ -144,7 +144,10 @@ export function load(scene: Game) {
           .forEach((item) => scene.player.inventory.addItem(item, true));
 
         // Journals are second, quests third. Both have side-effects, but quests always happen last
-        savedata.journal.sort().forEach((entry) => scene.player.journal.addEntry(entry, true));
+        savedata.journal
+          .sort()
+          .reverse()
+          .forEach((entry) => scene.player.journal.addEntry(entry, true));
         savedata.quests.sort((a, b) => a.id - b.id).forEach((quest) => scene.player.quests.addQuest(quest, true));
 
         // Side effects of data are always last

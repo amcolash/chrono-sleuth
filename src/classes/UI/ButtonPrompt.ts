@@ -13,7 +13,7 @@ export class ButtonPrompt extends GameObjects.Text {
       .setBackgroundColor('#' + Colors.Black)
       .setPadding(10, 5)
       .setAlign('center')
-      .setAlpha(0.9)
+      .setAlpha(0.8)
       .setScrollFactor(0)
       .setDepth(Layer.Overlay)
       .setVisible(false);

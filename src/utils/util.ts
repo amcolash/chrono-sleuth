@@ -124,6 +124,7 @@ function cursorMoveHandler() {
 }
 
 export function setupCursorHiding() {
+  page.style.cursor = 'none';
   page.addEventListener('mousemove', cursorMoveHandler);
 }
 
