@@ -7,7 +7,7 @@ import { NPCData } from '../../data/npc';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
-import { animateText } from '../../utils/util';
+import { animateText, playMessageAudio } from '../../utils/message';
 import { NPC } from '../Environment/NPC';
 import { Player } from '../Player/Player';
 import { Button } from './Button';
@@ -43,7 +43,8 @@ export class Message extends GameObjects.Container {
   initialized: boolean = false;
 
   animating: boolean = false;
-  skip?: () => void;
+  stopAnimation?: () => void;
+  stopAudio?: () => void;
 
   constructor(scene: Scene, player?: Player) {
     super(scene);
@@ -170,13 +171,18 @@ export class Message extends GameObjects.Container {
 
     if (message) {
       this.text.setText(message);
-      const { promise, skip } = animateText(this.text);
-      this.animating = true;
-      this.skip = skip;
 
-      promise.then(() => {
+      const { promise: audioPromise, stop: stopAudio } = playMessageAudio(message);
+      const { promise: textPromise, stop: stopAnimation } = animateText(this.text);
+
+      this.animating = true;
+      this.stopAudio = stopAudio;
+      this.stopAnimation = stopAnimation;
+
+      Promise.all([audioPromise, textPromise]).then(() => {
         this.animating = false;
-        this.skip = undefined;
+        this.stopAudio = undefined;
+        this.stopAnimation = undefined;
       });
 
       if (this.text.getWrappedText().length > maxLines) console.error('Message too long!', message);
@@ -231,7 +237,8 @@ export class Message extends GameObjects.Container {
     }
 
     if (this.animating) {
-      this.skip?.();
+      this.stopAudio?.();
+      this.stopAnimation?.();
       this.animating = false;
       return;
     }
