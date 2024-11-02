@@ -1,5 +1,7 @@
 import { GameObjects } from 'phaser';
 
+import { Voice } from '../data/voices';
+
 /**
  * Create typewriter animation for text.
  * Code mostly from: https://dev.to/joelnet/creating-a-typewriter-effect-in-phaserjs-v3-4e66
@@ -81,17 +83,17 @@ function getPitch(note: Note, octave: number) {
 
 export function playMessageAudio(
   text: string,
-  speed: number = 1,
-  octave: number = 3.5,
-  volume: number = 1
+  voice: Voice,
+  gameVolume: number
 ): { promise: Promise<void>; stop?: () => void } {
-  if (volume === 0) return { promise: Promise.resolve() };
+  const { speed, octave, type } = voice;
+  if (gameVolume === 0) return { promise: Promise.resolve() };
 
   const context = new AudioContext();
   const oscillator = context.createOscillator();
   const gainNode = context.createGain();
 
-  oscillator.type = 'sine';
+  oscillator.type = type || 'sine';
   oscillator.connect(gainNode);
   gainNode.connect(context.destination);
 
@@ -129,7 +131,7 @@ export function playMessageAudio(
     const holdTime = (0.05 + random() * 0.035 * noteLength) * speed;
     const fadeOutTime = index >= totalLength ? 0.2 : 0.005;
 
-    const noteVolume = (willPlay ? 1 : 0) * volume * (0.6 + random() * 0.2);
+    const noteVolume = (willPlay ? 1 : 0) * gameVolume * (0.6 + random() * 0.2);
 
     // Randomize frequency
     const frequency = getPitch(NOTES[Math.floor(random() * 12)], octave);

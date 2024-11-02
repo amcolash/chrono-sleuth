@@ -4,6 +4,7 @@ import { Config } from '../../config';
 import { Dialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { NPCData } from '../../data/npc';
+import { DefaultVoice, VoiceData } from '../../data/voices';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
@@ -172,7 +173,13 @@ export class Message extends GameObjects.Container {
     if (message) {
       this.text.setText(message);
 
-      const { promise: audioPromise, stop: stopAudio } = playMessageAudio(message);
+      const npc = this.target instanceof NPC ? (this.target as NPC).npcType : undefined;
+      let voice =
+        this.portrait?.texture.key === 'player_portrait' ? VoiceData.player : npc ? VoiceData[npc] : DefaultVoice;
+
+      console.log('Voice:', voice);
+
+      const { promise: audioPromise, stop: stopAudio } = playMessageAudio(message, voice, this.scene.sound.volume);
       const { promise: textPromise, stop: stopAnimation } = animateText(this.text);
 
       this.animating = true;
