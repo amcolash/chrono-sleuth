@@ -7,6 +7,7 @@ import { Config } from '../../config';
 import { itemList, journalList, questList, sceneList, warpList } from '../../data/arrays';
 import { SaveType, saveKey, saves } from '../../data/saves';
 import { ItemType, JournalEntry, QuestType, WarpType } from '../../data/types';
+import { Voice } from '../../data/voices';
 import { WarpData } from '../../data/warp';
 import { getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
@@ -17,6 +18,7 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../../utils/interactionUtils';
+import { playMessageAudio } from '../../utils/message';
 import { convertSaveData, getCurrentSaveState, save } from '../../utils/save';
 import { openDialog } from '../../utils/util';
 import { Game } from '../Game';
@@ -47,6 +49,12 @@ export class DebugTool extends Dialog {
   stateContainer: GameObjects.Container;
   saveContainer: GameObjects.Container;
   miscContainer: GameObjects.Container;
+
+  testVoice: Voice = {
+    octave: 3.5,
+    speed: 1,
+    type: 'sine',
+  };
 
   constructor() {
     super({ key: 'DebugTool', title: 'Debug Tool', gamepadVisible: false, hideCloseSuccess: true });
@@ -233,6 +241,45 @@ export class DebugTool extends Dialog {
       { backgroundColor: '#111' }
     );
     this.miscContainer.add(debugMode);
+
+    const play = new CenteredButton(this, 350, 320, 'Play', () =>
+      playMessageAudio(
+        'This is a test message. It has some pauses and other things to make sure that things are working.',
+        this.testVoice,
+        1
+      )
+    ).setDepth(1);
+
+    const voiceType = new CenteredButton(this, 350, 170, `Type: ${this.testVoice.type}`, () => {
+      const types: OscillatorType[] = ['sine', 'square', 'triangle', 'sawtooth'];
+      const index = types.indexOf(this.testVoice.type!);
+
+      this.testVoice.type = types[(index + 1) % 4];
+
+      voiceType.text = `Type: ${this.testVoice.type}`;
+    });
+
+    const speedText = this.add.text(350, 240, `Speed: ${this.testVoice.speed}`, { ...fontStyle });
+    const speedMinus = this.smallButton(470, 240, '-', () => {
+      this.testVoice.speed -= 0.1;
+      speedText.text = `Speed: ${this.testVoice.speed.toFixed(1)}`;
+    });
+    const speedPlus = this.smallButton(510, 240, '+', () => {
+      this.testVoice.speed += 0.1;
+      speedText.text = `Speed: ${this.testVoice.speed.toFixed(1)}`;
+    });
+
+    const octaveText = this.add.text(350, 280, `Octave: ${this.testVoice.octave}`, { ...fontStyle });
+    const octaveMinus = this.smallButton(470, 280, '-', () => {
+      this.testVoice.octave -= 0.1;
+      octaveText.text = `Octave: ${this.testVoice.octave.toFixed(1)}`;
+    });
+    const octavePlus = this.smallButton(510, 280, '+', () => {
+      this.testVoice.octave += 0.1;
+      octaveText.text = `Octave: ${this.testVoice.octave.toFixed(1)}`;
+    });
+
+    this.miscContainer.add([play, voiceType, speedText, speedMinus, speedPlus, octaveText, octaveMinus, octavePlus]);
   }
 
   makeTab(title: string, index: number): Button {
