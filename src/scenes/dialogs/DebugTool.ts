@@ -18,7 +18,7 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../../utils/interactionUtils';
-import { playMessageAudio } from '../../utils/message';
+import { generateRandomString, playMessageAudio } from '../../utils/message';
 import { convertSaveData, getCurrentSaveState, save } from '../../utils/save';
 import { openDialog } from '../../utils/util';
 import { Game } from '../Game';
@@ -53,6 +53,7 @@ export class DebugTool extends Dialog {
   testVoice: Voice = {
     octave: 3.5,
     speed: 1,
+    volume: 1,
     type: 'sine',
   };
 
@@ -93,11 +94,11 @@ export class DebugTool extends Dialog {
       100,
       '',
       {
-        backgroundColor: '#123',
+        // backgroundColor: '#123',
         fontSize: 32,
       },
       (line) => this.handleLineClick(line)
-    ).setBoxSize(Config.width * 0.65, Config.height * 0.75);
+    ).setBoxSize(Config.width * 0.38, Config.height * 0.75);
     this.mainContainer.add(this.textBox);
 
     this.helperText = this.add
@@ -243,14 +244,10 @@ export class DebugTool extends Dialog {
     this.miscContainer.add(debugMode);
 
     const play = new CenteredButton(this, 350, 320, 'Play', () =>
-      playMessageAudio(
-        'This is a test message. It has some pauses and other things to make sure that things are working.',
-        this.testVoice,
-        1
-      )
+      playMessageAudio(generateRandomString(), this.testVoice, 1)
     ).setDepth(1);
 
-    const voiceType = new CenteredButton(this, 350, 170, `Type: ${this.testVoice.type}`, () => {
+    const voiceType = new CenteredButton(this, 350, 130, `Type: ${this.testVoice.type}`, () => {
       const types: OscillatorType[] = ['sine', 'square', 'triangle', 'sawtooth'];
       const index = types.indexOf(this.testVoice.type!);
 
@@ -259,27 +256,29 @@ export class DebugTool extends Dialog {
       voiceType.text = `Type: ${this.testVoice.type}`;
     });
 
-    const speedText = this.add.text(350, 240, `Speed: ${this.testVoice.speed}`, { ...fontStyle });
-    const speedMinus = this.smallButton(470, 240, '-', () => {
-      this.testVoice.speed -= 0.1;
-      speedText.text = `Speed: ${this.testVoice.speed.toFixed(1)}`;
-    });
-    const speedPlus = this.smallButton(510, 240, '+', () => {
-      this.testVoice.speed += 0.1;
-      speedText.text = `Speed: ${this.testVoice.speed.toFixed(1)}`;
-    });
+    const speed = this.rangeInput(
+      350,
+      200,
+      () => this.testVoice.speed,
+      (value) => (this.testVoice.speed = value),
+      'Speed'
+    );
+    const octave = this.rangeInput(
+      350,
+      240,
+      () => this.testVoice.octave,
+      (value) => (this.testVoice.octave = value),
+      'Octave'
+    );
+    const volume = this.rangeInput(
+      350,
+      280,
+      () => this.testVoice.volume!,
+      (value) => (this.testVoice.volume = value),
+      'Volume'
+    );
 
-    const octaveText = this.add.text(350, 280, `Octave: ${this.testVoice.octave}`, { ...fontStyle });
-    const octaveMinus = this.smallButton(470, 280, '-', () => {
-      this.testVoice.octave -= 0.1;
-      octaveText.text = `Octave: ${this.testVoice.octave.toFixed(1)}`;
-    });
-    const octavePlus = this.smallButton(510, 280, '+', () => {
-      this.testVoice.octave += 0.1;
-      octaveText.text = `Octave: ${this.testVoice.octave.toFixed(1)}`;
-    });
-
-    this.miscContainer.add([play, voiceType, speedText, speedMinus, speedPlus, octaveText, octaveMinus, octavePlus]);
+    this.miscContainer.add([play, voiceType, ...speed, ...octave, ...volume]);
   }
 
   makeTab(title: string, index: number): Button {
@@ -288,6 +287,20 @@ export class DebugTool extends Dialog {
       localStorage.setItem(lastDebugKey, String(index));
       this.updateTabs();
     });
+  }
+
+  rangeInput(x: number, y: number, value: () => number, setValue: (value: number) => void, label: string) {
+    const text = this.add.text(x, y, `${label}: ${value().toFixed(1)}`, { ...fontStyle });
+    const minus = this.smallButton(x + 130, y, '-', () => {
+      setValue(value() - 0.1);
+      text.text = `${label}: ${value().toFixed(1)}`;
+    });
+    const plus = this.smallButton(x + 170, y, '+', () => {
+      setValue(value() + 0.1);
+      text.text = `${label}: ${value().toFixed(1)}`;
+    });
+
+    return [text, minus, plus];
   }
 
   handleLineClick(line: number): void {

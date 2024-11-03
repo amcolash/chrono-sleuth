@@ -59,8 +59,8 @@ function createSeededRandom(seed: number) {
   };
 }
 
-function generateSeed(text: string, speed: number, octave: number) {
-  const str = `${text}-${speed}-${octave}`;
+function generateSeed(text: string) {
+  const str = text;
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
@@ -86,7 +86,7 @@ export function playMessageAudio(
   voice: Voice,
   gameVolume: number
 ): { promise: Promise<void>; stop?: () => void } {
-  const { speed, octave, type } = voice;
+  const { speed, octave, volume, type } = voice;
   if (gameVolume === 0) return { promise: Promise.resolve() };
 
   const context = new AudioContext();
@@ -103,13 +103,15 @@ export function playMessageAudio(
   oscillator.start();
 
   // Generate a seed based on input parameters
-  const seed = generateSeed(text, speed, octave);
+  const seed = generateSeed(text);
   const random = createSeededRandom(seed);
 
   let time = context.currentTime;
   let index = 0;
 
   const totalLength = Math.floor((1 / speed) * text.length);
+
+  console.log(text, text.length);
 
   while (index < totalLength) {
     const startIndex = index;
@@ -131,11 +133,12 @@ export function playMessageAudio(
     const holdTime = (0.05 + random() * 0.035 * noteLength) * speed;
     const fadeOutTime = index >= totalLength ? 0.2 : 0.005;
 
-    const noteVolume = (willPlay ? 1 : 0) * gameVolume * (0.6 + random() * 0.2);
-
     // Randomize frequency
     const frequency = getPitch(NOTES[Math.floor(random() * 12)], octave);
     oscillator.frequency.setValueAtTime(frequency, time + startDelay);
+
+    // Adjust volume based on frequency
+    const noteVolume = (willPlay ? 1 : 0) * gameVolume * (0.6 + random() * 0.2) * (volume || 1);
 
     // Fade in
     gainNode.gain.setValueAtTime(silent, time + startDelay);
@@ -185,4 +188,31 @@ export function playMessageAudio(
   });
 
   return { promise, stop };
+}
+
+export function generateRandomString() {
+  // Define the possible characters for the string
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+  // Generate a random length between 50 and 90
+  const length = Math.floor(Math.random() * 41) + 50;
+
+  // Start with a basic random string of the chosen length
+  let result = Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+
+  // Add 1-3 commas at random positions
+  const commaCount = Math.floor(Math.random() * 3) + 1;
+  for (let i = 0; i < commaCount; i++) {
+    const commaPosition = Math.floor(Math.random() * result.length);
+    result = result.substring(0, commaPosition) + ',' + result.substring(commaPosition);
+  }
+
+  // Add spaces at random positions, making sure they are not at the start or end
+  const spaceCount = Math.floor(Math.random() * (length / 10));
+  for (let i = 0; i < spaceCount; i++) {
+    const spacePosition = Math.floor(Math.random() * (result.length - 2)) + 1;
+    result = result.substring(0, spacePosition) + ' ' + result.substring(spacePosition);
+  }
+
+  return result;
 }

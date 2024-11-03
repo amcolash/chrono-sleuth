@@ -26,7 +26,7 @@ if (localProd !== null) prod = localProd === 'true';
 
 // Dialog to show after booting game (assets are loaded)
 let bootDialog;
-// bootDialog = 'SliderDialog';
+// bootDialog = 'DebugTool';
 
 let useShader = prod;
 useShader = true;
