@@ -2,6 +2,7 @@ import deepEqual from 'deep-equal';
 
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
+import { townIntro } from '../data/cutscene';
 import { SaveData, SaveType, saveKey, saves } from '../data/saves';
 import { ItemType, JournalEntry, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
@@ -35,7 +36,7 @@ export function getCurrentSaveState(scene: Game): SaveData {
 }
 
 /** Get the saved data from local storage, default back to defaultSave if none exists or error parsing */
-function getSavedData(): { save: SaveData; error: unknown } {
+function getSavedData(): { save: SaveData; error: unknown; newGame: boolean } {
   const data = localStorage.getItem(saveKey);
   let parsed: SaveData | undefined = undefined;
   let error;
@@ -46,7 +47,7 @@ function getSavedData(): { save: SaveData; error: unknown } {
     error = err;
   }
 
-  return { save: parsed || saves[SaveType.New], error };
+  return { save: parsed || saves[SaveType.New], error, newGame: !parsed };
 }
 
 // Mapping of keys to their respective enums
@@ -121,7 +122,7 @@ export function loadConfig(scene: Game): boolean {
 }
 
 export function load(scene: Game) {
-  const { save: savedata, error } = getSavedData();
+  const { save: savedata, error, newGame } = getSavedData();
   if (error) {
     new Notification(scene, 'Unfortunately, it looks like this save is corrupted.\nFailed to Load Game', 10000);
   }
@@ -140,6 +141,8 @@ export function load(scene: Game) {
         scene.player.inventory.createUI();
         scene.player.quests.createUI();
         scene.player.journal.createUI();
+
+        if (newGame) townIntro(scene);
 
         savedata.inventory
           .sort((a, b) => a.type - b.type)
