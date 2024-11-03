@@ -74,6 +74,8 @@ export class Preloader extends Scene {
     this.load.svg('tv', 'icons/tv.svg', { width: 64, height: 64 });
     this.load.svg('save', 'icons/save.svg', { width: 64, height: 64 });
     this.load.svg('chevron-down', 'icons/chevron-down.svg', { width: 64, height: 64 });
+    this.load.svg('volume', 'icons/volume-2.svg', { width: 64, height: 64 });
+    this.load.svg('volume-mute', 'icons/volume-x.svg', { width: 64, height: 64 });
 
     // fontawesome icons
     this.load.svg('gamepad', 'icons/gamepad-solid.svg', { width: 64, height: 64 });

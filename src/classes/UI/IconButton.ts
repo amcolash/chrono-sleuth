@@ -45,4 +45,8 @@ export class IconButton extends GameObjects.Container {
     this.selected = selected;
     this.setTint(selected ? getColorNumber(Colors.ButtonActive) : 0xffffff);
   }
+
+  setIcon(texture: string) {
+    this.img.setTexture(texture).setDisplaySize(32, 32);
+  }
 }

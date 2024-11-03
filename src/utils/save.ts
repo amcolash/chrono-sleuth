@@ -27,6 +27,7 @@ export function getCurrentSaveState(scene: Game): SaveData {
       zoomed: Config.zoomed,
       useShader: Config.useShader,
       time: Date.now(),
+      muted: scene.sound.mute,
     },
   };
 
@@ -128,6 +129,7 @@ export function load(scene: Game) {
   try {
     checkConfig(savedata, scene);
 
+    scene.sound.mute = savedata.settings.muted;
     scene.player.setX(savedata.player.x);
     scene.player.setY(savedata.player.y);
     scene.player.setFlipX(savedata.player.flip);

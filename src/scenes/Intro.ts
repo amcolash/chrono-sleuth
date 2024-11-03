@@ -2,6 +2,7 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../config';
 import { trainIntro } from '../data/cutscene';
+import { SaveType, saves } from '../data/saves';
 import { fadeIn, fadeOut } from '../utils/util';
 
 // Export the preload function (so it can be used in the main Preloader)
@@ -38,6 +39,8 @@ export class Intro extends Scene {
   }
 
   init() {
+    this.sound.mute = saves[SaveType.New].settings.muted;
+
     if (!Config.prod) {
       this.input.keyboard?.on('keydown-BACK_SLASH', () => {
         fadeOut(this, 500, () => {
