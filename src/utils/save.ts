@@ -36,7 +36,7 @@ export function getCurrentSaveState(scene: Game): SaveData {
 }
 
 /** Get the saved data from local storage, default back to defaultSave if none exists or error parsing */
-function getSavedData(): { save: SaveData; error: unknown; newGame: boolean } {
+export function getSavedData(): { save: SaveData; error: unknown; newGame: boolean } {
   const data = localStorage.getItem(saveKey);
   let parsed: SaveData | undefined = undefined;
   let error;
@@ -209,7 +209,7 @@ export function save(scene: Game, override?: SaveData, silent?: boolean): void {
     scene.tweens.add({
       targets: scene.saveIcon,
       alpha: 0.7,
-      scale: 0.5,
+      scale: 0.6,
       duration: 500,
       yoyo: true,
     });

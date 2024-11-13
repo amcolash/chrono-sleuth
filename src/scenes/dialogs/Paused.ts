@@ -81,7 +81,6 @@ export class Paused extends Scene {
       this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
     });
 
-    console.log('on start', this.parent.sound.mute);
     const muteButton = new IconButton(
       this,
       Config.width - 90,
