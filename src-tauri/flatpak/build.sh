@@ -16,6 +16,7 @@ URL=https://github.com/amcolash/chrono-sleuth/releases/download/app-v${VERSION}/
 SHA256=$(curl -sL $URL | sha256sum | cut -d ' ' -f 1)
 
 # update the flatpak manifest
+sed -i "s/app-v.*\//app-v$VERSION\//g" com.amcolash.chrono-sleuth.yml
 sed -i "s/chrono-sleuth_.*_amd64.deb/chrono-sleuth_${VERSION}_amd64.deb/g" com.amcolash.chrono-sleuth.yml
 sed -i "s/sha256: .*/sha256: $SHA256/g" com.amcolash.chrono-sleuth.yml
 

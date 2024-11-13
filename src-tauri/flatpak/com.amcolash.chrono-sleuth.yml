@@ -17,8 +17,8 @@ modules:
     buildsystem: simple
     sources:
       - type: file
-        url: https://github.com/amcolash/chrono-sleuth/releases/download/app-v0.2.0/chrono-sleuth_0.2.0_amd64.deb
-        sha256: 551ec6430511ccfe83b0f4b67095108de784b95231e6877694e7bc4716404d12
+        url: https://github.com/amcolash/chrono-sleuth/releases/download/app-v0.3.0/chrono-sleuth_0.3.0_amd64.deb
+        sha256: 0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5
         only-arches: [x86_64] #This source is only used on x86_64 Computers
         # This path points to the binary file which was created in the .deb bundle.
         # Tauri also creates a folder which corresponds to the content of the unpacked .deb.
