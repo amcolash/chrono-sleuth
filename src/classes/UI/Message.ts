@@ -177,9 +177,11 @@ export class Message extends GameObjects.Container {
       let voice =
         this.portrait?.texture.key === 'player_portrait' ? VoiceData.player : npc ? VoiceData[npc] : DefaultVoice;
 
-      console.log('Voice:', voice);
-
-      const { promise: audioPromise, stop: stopAudio } = playMessageAudio(message, voice, this.scene.sound.volume);
+      const { promise: audioPromise, stop: stopAudio } = playMessageAudio(
+        message,
+        voice,
+        this.scene.sound.mute ? 0 : this.scene.sound.volume
+      );
       const { promise: textPromise, stop: stopAnimation } = animateText(this.text);
 
       this.animating = true;

@@ -74,12 +74,25 @@ export class Paused extends Scene {
     const buttonGrid = new ButtonGrid(this);
     this.container.add(buttonGrid);
 
-    const gamepadButton = new IconButton(this, Config.width - 90, 30, 'gamepad', () => {
-      this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
-    });
-    const shaderButton = new IconButton(this, Config.width - 150, 30, 'tv', () => {
+    const shaderButton = new IconButton(this, Config.width - 210, 30, 'tv', () => {
       toggleCrt();
     });
+    const gamepadButton = new IconButton(this, Config.width - 150, 30, 'gamepad', () => {
+      this.parent.gamepad.setVisible(!this.parent.gamepad.visible);
+    });
+
+    const muteButton = new IconButton(
+      this,
+      Config.width - 90,
+      30,
+      this.parent.sound.mute ? 'volume-mute' : 'volume',
+      () => {
+        // save the current state, since it doesn't seem to toggle instantly
+        const current = this.parent.sound.mute;
+        this.parent.sound.mute = !current;
+        muteButton.setIcon(!current ? 'volume-mute' : 'volume');
+      }
+    );
     const fullscreenButton = new FullscreenButton(this, Config.width - 30, 30);
 
     const resumeButton = new Button(this, width / 2, Config.height / 2, 'Resume', () => this.resume(), { fontSize });
@@ -110,9 +123,9 @@ export class Paused extends Scene {
       );
 
     buttonGrid.setButtons([
-      [debugButton, shaderButton, gamepadButton, fullscreenButton],
-      [undefined, resumeButton, undefined, undefined],
-      [undefined, exitButton, undefined, undefined],
+      [debugButton, shaderButton, gamepadButton, muteButton, fullscreenButton],
+      [undefined, resumeButton, undefined, undefined, undefined],
+      [undefined, exitButton, undefined, undefined, undefined],
     ]);
 
     buttonGrid.activeIndex.set(1, 1);

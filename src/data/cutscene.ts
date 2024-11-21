@@ -5,6 +5,7 @@ import { Prop } from '../classes/Environment/Prop';
 import { Player } from '../classes/Player/Player';
 import { Message } from '../classes/UI/Message';
 import { Config } from '../config';
+import { Game } from '../scenes/Game';
 import { rotationCorrection } from '../utils/animations';
 import { getNPC, getProp, getWall, hasUsedItem, updateWarpVisibility } from '../utils/interactionUtils';
 import { toggleXRay } from '../utils/shaders';
@@ -118,6 +119,21 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
   ]);
 
   timeline1.play();
+}
+
+export function townIntro(scene: Game) {
+  const message = scene.player.message;
+
+  message.setDialog(
+    {
+      messages: [
+        'Now that I have arrived in town, I should talk to the townsfolk about the strange occurrences.',
+        'Maybe someone has seen something that could help me start my investigation.',
+      ],
+    },
+    undefined,
+    'player_portrait'
+  );
 }
 
 export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {

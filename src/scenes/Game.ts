@@ -211,6 +211,8 @@ export class Game extends Scene {
         .setDepth(Layer.Ui)
         .setScrollFactor(0)
         .setAlpha(0);
+
+      this.saveIcon.postFX.addGlow(0x000000, 1.5);
     });
 
     this.gamepad = new Gamepad(this);

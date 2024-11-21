@@ -13,6 +13,7 @@ export type Settings = {
   zoomed: boolean;
   useShader: boolean;
   time: number;
+  muted: boolean;
 };
 
 export type SaveData = {
@@ -52,6 +53,7 @@ const defaultSave: SaveData = {
     zoomed: true,
     useShader: true,
     time: Date.now(),
+    muted: true,
   },
 };
 
