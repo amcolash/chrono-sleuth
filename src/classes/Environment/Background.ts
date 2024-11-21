@@ -50,5 +50,8 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
 
   update() {
     this.lazyInit();
+
+    // TODO: Implement better visibility check
+    // this.visible = shouldInitialize(this.center, this.player, 2000);
   }
 }

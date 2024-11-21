@@ -5,7 +5,6 @@ import { Layer } from '../../data/layers';
 import { SaveType, saveKey, saves } from '../../data/saves';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { fontStyle } from '../../utils/fonts';
 import { toggleLighting } from '../../utils/lighting';
 import { save } from '../../utils/save';
 import { openDialog } from '../../utils/util';
@@ -13,7 +12,8 @@ import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
 
 export class DebugUI extends GameObjects.Container {
-  text: GameObjects.Text;
+  text: GameObjects.BitmapText;
+  rect: GameObjects.Rectangle;
   player: Player;
   activeElement?: GameObjects.GameObject;
   outline: GameObjects.Rectangle;
@@ -41,12 +41,17 @@ export class DebugUI extends GameObjects.Container {
     this.setScrollFactor(0).setDepth(Layer.Debug).setAlpha(0.8);
     this.scene.add.existing(this);
 
-    this.text = scene.add.text(20, 90, '', {
-      ...fontStyle,
-      fontSize: Config.zoomed ? 24 : 32,
-      backgroundColor: `#${Colors.Black}`,
-      padding: { x: 5, y: 5 },
-    });
+    // this.text = scene.add.text(20, 90, '', {
+    //   ...fontStyle,
+    //   fontSize: Config.zoomed ? 24 : 32,
+    //   backgroundColor: `#${Colors.Black}`,
+    //   padding: { x: 5, y: 5 },
+    // });
+
+    this.rect = scene.add.rectangle(0, 0, 0, 0, getColorNumber(Colors.Black)).setOrigin(0).setDepth(Layer.Debug);
+    this.add(this.rect);
+
+    this.text = scene.add.bitmapText(20, 90, 'm6x11-24', '');
     this.add(this.text);
 
     this.outline = scene.add.rectangle(0, 0, 0, 0).setStrokeStyle(2, 0x00ff00).setScale(1.1).setDepth(Layer.Debug);
@@ -163,6 +168,9 @@ export class DebugUI extends GameObjects.Container {
     }
 
     this.text.setText(lines);
+    this.rect
+      .setPosition(this.text.x - 10, this.text.y - 10)
+      .setSize(this.text.displayWidth + 20, this.text.displayHeight + 20);
 
     if (this.activeElement) {
       // @ts-ignore
