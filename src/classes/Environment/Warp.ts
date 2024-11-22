@@ -270,7 +270,7 @@ export function warpTo(location: WarpType, player: Player, offset?: Types.Math.V
     delay: 100,
     ease: 'Power1',
     onComplete: () => {
-      scene.cameras.main.startFollow(player);
+      scene.cameras.main.startFollow(player, true);
       scene.cameras.main.setFollowOffset(0, Config.cameraOffset);
     },
   });
