@@ -31,6 +31,10 @@ let bootDialog;
 let useShader = prod;
 useShader = true;
 
+// Test stutters walking back and forth
+let perfTest = false;
+if (prod) perfTest = false;
+
 // TODO: Remove width/height overrides since they are always loaded
 const { width, height } = zoomedSize;
 
@@ -57,4 +61,5 @@ export const Config = {
   rewindEnabled,
 
   fastMode,
+  perfTest,
 };

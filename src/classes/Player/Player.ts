@@ -76,6 +76,17 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     this.quests = new Quests(scene, this);
     this.journal = new Journal(scene, this);
     this.gameState = new GameState(scene, this);
+
+    if (Config.perfTest) {
+      scene.time.delayedCall(1000, () => {
+        this.setVelocityX(speed);
+        scene.time.addEvent({
+          delay: 1000,
+          callback: () => this.setVelocityX(this.body ? -this.body.velocity.x : 0),
+          loop: true,
+        });
+      });
+    }
   }
 
   update(_time: number, delta: number) {
@@ -91,19 +102,21 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     this.buttonPrompt?.setVisible(visible);
 
     // Update player
-    this.setVelocity(0);
+    if (!Config.perfTest) {
+      this.setVelocity(0);
 
-    // Handle rewinding, interactions, and velocity
-    if (this.rewinding) {
-      if (this.counter + delta > rewindInterval / rewindSpeed) {
-        this.rewind();
-        this.counter = 0;
+      // Handle rewinding, interactions, and velocity
+      if (this.rewinding) {
+        if (this.counter + delta > rewindInterval / rewindSpeed) {
+          this.rewind();
+          this.counter = 0;
+        } else {
+          this.counter += delta;
+        }
       } else {
-        this.counter += delta;
+        let ret: InteractResult | undefined = this.checkInteraction();
+        if (!ret && !this.message.visible) this.updateVelocity();
       }
-    } else {
-      let ret: InteractResult | undefined = this.checkInteraction();
-      if (!ret && !this.message.visible) this.updateVelocity();
     }
 
     this.light.setPosition(this.x, this.y - 20);
