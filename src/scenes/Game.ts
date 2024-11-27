@@ -181,7 +181,7 @@ export class Game extends Scene {
 
   createUI() {
     this.time.delayedCall(50, () => {
-      let x = 31;
+      let x = 30;
       new IconButton(this, x, 30, 'settings', () => {
         this.scene.pause();
         this.scene.launch('Paused', { game: this });
@@ -206,13 +206,14 @@ export class Game extends Scene {
       }
 
       this.saveIcon = this.add
-        .image((x += 50), 30, 'save')
+        .image(30, Config.height - 30, 'save')
         .setScale(0.4)
         .setDepth(Layer.Ui)
         .setScrollFactor(0)
         .setAlpha(0);
 
-      this.saveIcon.postFX.addGlow(0x000000, 1.5);
+      this.saveIcon.postFX.addGlow(0x000000, 2);
+      // this.saveIcon.postFX.addGlow(0x000000, 1);
     });
 
     this.gamepad = new Gamepad(this);

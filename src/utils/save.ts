@@ -211,6 +211,7 @@ export function save(scene: Game, override?: SaveData, silent?: boolean): void {
       alpha: 0.7,
       scale: 0.6,
       duration: 500,
+      hold: 250,
       yoyo: true,
     });
   }
