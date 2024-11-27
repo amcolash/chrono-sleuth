@@ -11,6 +11,9 @@ export const zoomedSize = {
 let debug = false;
 // debug = true;
 
+let phaserInspector = false;
+// phaserInspector = true;
+
 let rewindEnabled = false;
 // rewindEnabled = true;
 
@@ -44,10 +47,12 @@ if (prod) {
   fastMode = false;
   prod = true;
   bootDialog = undefined;
+  phaserInspector = false;
 }
 
 export const Config = {
   debug,
+  phaserInspector,
   prod,
   bootDialog,
   useShader,

@@ -39,13 +39,16 @@ export class Boot extends Scene {
       this.load.json('build', `../build.json?cacheBust=${Date.now()}`);
     }
 
-    this.load.scripts('inspector', [
-      'https://cdn.jsdelivr.net/npm/tweakpane@3.1.10/dist/tweakpane.js',
-      'https://cdn.jsdelivr.net/npm/phaser-plugin-inspector@2.5.0/dist/phaser-plugin-inspector.umd.js',
-    ]);
-    this.load.once('complete', () => {
-      PhaserPluginInspector.Install(this.plugins);
-    });
+    if (Config.phaserInspector) {
+      this.load.scripts('inspector', [
+        'https://cdn.jsdelivr.net/npm/tweakpane@3.1.10/dist/tweakpane.js',
+        'https://cdn.jsdelivr.net/npm/phaser-plugin-inspector@2.5.0/dist/phaser-plugin-inspector.umd.js',
+      ]);
+      this.load.once('complete', () => {
+        // @ts-ignore
+        PhaserPluginInspector.Install(this.plugins);
+      });
+    }
   }
 
   create() {
