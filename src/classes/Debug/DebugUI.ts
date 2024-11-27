@@ -11,6 +11,8 @@ import { openDialog } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
 
+const alwaysShowInfo = false;
+
 export class DebugUI extends GameObjects.Container {
   text: GameObjects.BitmapText;
   rect: GameObjects.Rectangle;
@@ -36,7 +38,7 @@ export class DebugUI extends GameObjects.Container {
 
     this.createEventListeners();
 
-    if (!Config.debug) return;
+    if (!Config.debug && !alwaysShowInfo) return;
 
     this.setScrollFactor(0).setDepth(Layer.Debug).setAlpha(0.8);
     this.scene.add.existing(this);
@@ -144,7 +146,7 @@ export class DebugUI extends GameObjects.Container {
   }
 
   update() {
-    if (!Config.debug) return;
+    if (!Config.debug && !alwaysShowInfo) return;
     const pointer = this.scene.input.activePointer;
 
     const lines = [
