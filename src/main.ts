@@ -1,5 +1,4 @@
 import { Game, Types } from 'phaser';
-import { FontPlugin } from 'phaser-font-plugin';
 
 import { Config } from './config';
 import { Boot } from './scenes/Boot';
@@ -83,14 +82,6 @@ const config: Types.Core.GameConfig = {
     createContainer: true,
   },
   plugins: {
-    global: [
-      {
-        key: 'FontPlugin',
-        plugin: FontPlugin,
-        start: true,
-      },
-    ],
-
     // Inject CRT pipeline into every scene created
     scene: [{ key: 'PipelinePlugin', plugin: PipelinePlugin, mapping: 'pipelinePlugin' }],
   },
