@@ -20,10 +20,9 @@ export function updateAnimation(player: Player) {
   const moved = Math.abs(diffX) > 0.01 || Math.abs(diffY) > 0.01;
   const flipped = diffX < 0;
 
-  if (moved) {
-    player.anims.resume();
-    player.flipX = player.rewinding ? !flipped : flipped;
-  } else player.anims.pause();
+  if (moved) player.anims.resume();
+  else player.anims.pause();
 
+  if (Math.abs(diffX) > 0) player.flipX = player.rewinding ? !flipped : flipped;
   player.setAngle(player.flipX ? -rotationCorrection : rotationCorrection);
 }

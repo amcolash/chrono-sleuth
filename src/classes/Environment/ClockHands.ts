@@ -47,12 +47,17 @@ export class ClockHands extends GameObjects.Graphics {
 
     this.clear();
 
-    this.lineStyle(6, getColorNumber(Colors.Night));
-    this.lineBetween(0, 0, Math.cos(this.angle1) * radius1, Math.sin(this.angle1) * radius1);
-    this.lineBetween(0, 0, Math.cos(this.angle2) * radius2, Math.sin(this.angle2) * radius2);
-    this.lineBetween(0, 0, Math.cos(this.angle3) * radius3, Math.sin(this.angle3) * radius3);
+    this.fillStyle(getColorNumber('#224477'));
+    this.fillCircle(0, 0, 6);
 
-    this.lineStyle(4, getColorNumber(Colors.Black));
+    [8, 6].forEach((width) => {
+      this.lineStyle(width, getColorNumber(width === 6 ? '#224477' : Colors.Black));
+      this.lineBetween(0, 0, Math.cos(this.angle1) * radius1, Math.sin(this.angle1) * radius1);
+      this.lineBetween(0, 0, Math.cos(this.angle2) * radius2, Math.sin(this.angle2) * radius2);
+      this.lineBetween(0, 0, Math.cos(this.angle3) * radius3, Math.sin(this.angle3) * radius3);
+    });
+
+    this.lineStyle(5, getColorNumber(Colors.Black));
     for (let i = 0; i < 12; i++) {
       const angle = PI2 * (i / 12);
       const x = Math.cos(angle) * radius1;
