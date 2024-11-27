@@ -43,7 +43,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
 
   counter: number = 0;
   history: Math.Vector3[] = [];
-  rewinding = false;
+  rewinding: boolean = false;
 
   constructor(scene: Game) {
     super(scene, playerStart.x, playerStart.y, 'character', 0);
@@ -99,10 +99,10 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     }
 
     // Update UI
-    const visible = (this.interactive && !this.message.visible && this.buttonPrompt?.text?.length > 0) || false;
-    if (visible && !this.buttonPrompt) this.buttonPrompt = new ButtonPrompt(this.scene);
+    const promptVisible = (this.interactive && !this.message.visible && this.buttonPrompt?.text?.length > 0) || false;
+    if (promptVisible && !this.buttonPrompt) this.buttonPrompt = new ButtonPrompt(this.scene);
 
-    this.buttonPrompt?.setVisible(visible);
+    this.buttonPrompt?.setVisible(promptVisible);
 
     // Update player
     if (!Config.perfTest) {
@@ -137,7 +137,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
       ret = this.interactive.onInteract(this.keys.keys);
 
       if (ret !== InteractResult.None) {
-        this.interactionTimeout = Date.now() + (this.interactive.interactionTimeout || 500);
+        this.interactionTimeout = Date.now() + (this.interactive?.interactionTimeout || 500);
         this.keys.resetKeys();
 
         if (ret === InteractResult.Teleported) this.interactive = undefined;

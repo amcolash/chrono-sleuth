@@ -290,6 +290,7 @@ export function warpTo(location: WarpType, player: Player, offset?: Types.Math.V
 
   // fade player out and then in again
   player.setActive(false);
+  player.buttonPrompt.setVisible(false);
   scene.tweens.add({
     targets: player,
     alpha: 0,
