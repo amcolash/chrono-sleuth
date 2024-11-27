@@ -30,6 +30,11 @@ float blueOffset  = -0.003 * chromaticAberration;
 
 void mainImage(out vec4 fragColor,in vec2 fragCoord)
 {
+  if (uAlpha <= 0.0) {
+    fragColor = texture2D(uMainSampler, outTexCoord);
+    return;
+  }
+
   // squared distance from center
   vec2 uv = outTexCoord;
   vec2 dc = abs(0.5-uv);
@@ -46,11 +51,6 @@ void mainImage(out vec4 fragColor,in vec2 fragCoord)
   color.g = texture2D(uMainSampler,uv + vec2(greenOffset * chromaticOffset)).g;
   color.b = texture2D(uMainSampler,uv + vec2(blueOffset * chromaticOffset)).b;
   color.a = texture2D(uMainSampler,uv).a;
-
-  if (uAlpha <= 0.0) {
-    fragColor = color;
-    return;
-  }
 
   // sample inside boundaries, otherwise set to black
   if (uv.y > 1.0 || uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0) {
