@@ -43,6 +43,13 @@ export class ClockHands extends GameObjects.Graphics {
   }
 
   update(time: number): void {
+    if (this.scene.cameras.main.worldView.contains(this.x, this.y)) {
+      this.setVisible(false);
+      return;
+    }
+
+    this.setVisible(true);
+
     if (this.update1) this.angle1 = PI2 * (time / sec) * speed;
     if (this.update2) this.angle2 = PI2 * (time / min) * speed;
     if (this.update3) this.angle3 = PI2 * (time / hour) * speed;

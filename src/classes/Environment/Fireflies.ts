@@ -92,7 +92,10 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
     this.lazyInit();
 
     const near = Math.abs(this.scene.player.x - this.center.x) <= this.bounds[0];
-    if (!near) return;
+    if (!near) {
+      this.lights.forEach((light) => (light.visible = false));
+      return;
+    }
 
     const speed = 0.025;
     const t = (time / 1000) * speed;
@@ -103,6 +106,7 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
       const b = this.biases[i];
       const cos2 = Math.cos(t * 70 + b[10]);
 
+      light.visible = true;
       light.intensity = Math.min(0.05 + Math.abs(b[4] * cos2 + b[3] * cos + b[4] * cos) / 50, 0.4);
 
       light.x = cos * b[0] + sin * b[1] + cos * b[2] + sin * b[3] + cos * b[4] + this.centers[i].x;
