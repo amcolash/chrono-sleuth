@@ -30,6 +30,8 @@ export class ClockHands extends GameObjects.Graphics {
 
   constructor(scene: Scene, player: Player) {
     super(scene);
+    this.name = 'ClockHands';
+
     scene.add.existing(this);
 
     this.player = player;

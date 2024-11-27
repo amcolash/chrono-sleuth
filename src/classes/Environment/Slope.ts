@@ -27,6 +27,7 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
     upwards: boolean = false
   ) {
     super(scene, x, y, '');
+    this.name = `Slope-${x}-${y}`;
     this.scene = scene;
 
     this.width = width;

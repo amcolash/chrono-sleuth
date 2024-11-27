@@ -24,6 +24,7 @@ export class Walls extends Physics.Arcade.StaticGroup {
 
   createWall(data: WallInfo, index: number) {
     const wall = this.scene.add.rectangle(data.x, data.y, width, height).setOrigin(0).setVisible(Config.debug);
+    wall.name = `Wall-${data.id || index}-${data.x}-${data.y}`;
     if (data.id !== undefined) wall.setData('WallType', data.id);
 
     if (Config.debug) wall.setInteractive({ draggable: true });

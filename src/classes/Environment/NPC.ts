@@ -29,6 +29,8 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     const { x, y, image } = NPCData[npcType] as Data;
 
     super(scene, x, y, image);
+    this.name = `NPC-${npcType}`;
+
     this.npcType = npcType;
     this.player = player;
 
@@ -58,7 +60,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     }
 
     if (particles) {
-      this.particles = this.scene.add.particles(x, y, '', particles);
+      this.particles = this.scene.add.particles(x, y, '', particles).setName(`NPC-${this.npcType}-Particles`);
     }
 
     // TODO: Clock tower should likely be a Prop instead of an NPC

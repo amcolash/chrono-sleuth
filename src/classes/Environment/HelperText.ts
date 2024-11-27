@@ -16,6 +16,7 @@ export class HelperText extends GameObjects.Image implements Interactive, LazyIn
   constructor(scene: Scene, type: HelperTextType, player: Player) {
     const { x, y } = HelperTextData[type];
     super(scene, x, y, '');
+    this.name = `HelperText-${type}`;
 
     this.player = player;
   }

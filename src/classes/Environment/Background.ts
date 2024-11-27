@@ -17,6 +17,7 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
   constructor(scene: Scene, info: BackgroundInfo, player: Player) {
     const { x, y, image, scale } = info;
     super(scene, x, y, image);
+    this.name = `Background-${info.image}`;
 
     this.info = info;
     this.player = player;
@@ -50,8 +51,5 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
 
   update() {
     this.lazyInit();
-
-    // TODO: Implement better visibility check
-    // this.visible = shouldInitialize(this.center, this.player, 2000);
   }
 }

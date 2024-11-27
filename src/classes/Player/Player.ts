@@ -47,6 +47,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
 
   constructor(scene: Game) {
     super(scene, playerStart.x, playerStart.y, 'character', 0);
+    this.name = 'Player';
 
     this.scene = scene;
 

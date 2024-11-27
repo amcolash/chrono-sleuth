@@ -43,6 +43,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
 
     super(scene, x, y, texture);
+    this.name = `Warp-${warpType}`;
     this.warpType = warpType;
     this.player = player;
     this.range = range || defaultRange;
@@ -88,13 +89,15 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
         .setScale(0.6)
         .setDepth(Layer.Warpers)
         .setPipeline('Light2D')
-        .setPostPipeline('XRayPipeline');
+        .setPostPipeline('XRayPipeline')
+        .setName('Ladder1');
       this.scene.add
         .image(this.x, this.y - 105, 'ladder')
         .setScale(0.6)
         .setDepth(Layer.Warpers)
         .setPipeline('Light2D')
-        .setPostPipeline('XRayPipeline');
+        .setPostPipeline('XRayPipeline')
+        .setName('Ladder2');
     }
 
     this.initialized = true;
@@ -115,11 +118,21 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
         });
       }
 
-      this.portal1 = this.scene.add.sprite(this.x, this.y, 'portal_0').setScale(0.45, 1).setAlpha(0.9).play('portal');
+      this.portal1 = this.scene.add
+        .sprite(this.x, this.y, 'portal_0')
+        .setScale(0.45, 1)
+        .setAlpha(0.9)
+        .play('portal')
+        .setName(`${this.name}-1`);
       this.portal1.postFX.addPixelate(1);
       this.portal1.postFX.addShadow(0, 0, 0.1, 1, 0x3333aa, 6, 0.5);
 
-      this.portal2 = this.scene.add.sprite(this.x, this.y, 'portal_0').setScale(0.35, 1).setAlpha(0.65).setFlipX(true);
+      this.portal2 = this.scene.add
+        .sprite(this.x, this.y, 'portal_0')
+        .setScale(0.35, 1)
+        .setAlpha(0.65)
+        .setFlipX(true)
+        .setName(`${this.name}-2`);
       this.portal2.postFX.addPixelate(1);
       this.portal2.play('portal');
       this.portal2.setFrame(Math.floor(Math.random() * 30));

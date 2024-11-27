@@ -24,6 +24,7 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
     const { x, y, image } = ItemData[type];
 
     super(scene, x, y, image);
+    this.name = `Item-${type}`;
 
     this.itemType = type;
     this.player = player;
@@ -53,7 +54,8 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
         lifespan: 1500,
         maxAliveParticles: 1,
       })
-      .setDepth(Layer.Items);
+      .setDepth(Layer.Items)
+      .setName(`Item-${this.itemType}-Particles`);
 
     if (Config.debug) {
       this.light = new DebugLight(this.scene, this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, 2);

@@ -26,6 +26,8 @@ export class Clock extends GameObjects.Container {
 
   constructor(scene: Scene, rewindable: Rewindable[], player: Player) {
     super(scene, 40, Config.height - 60);
+    this.name = 'Clock';
+
     this.setVisible(Config.rewindEnabled).setDepth(Layer.Ui).setScrollFactor(0);
     this.scene.add.existing(this);
 
