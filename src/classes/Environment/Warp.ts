@@ -286,6 +286,7 @@ export function warpTo(location: WarpType, player: Player, offset?: Types.Math.V
     repeat: 0,
     onYoyo: () => {
       player.setPosition(x, y);
+      player.previousPosition.set(x, y);
     },
     onComplete: () => {
       player.alpha = 1;

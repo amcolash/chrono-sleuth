@@ -72,6 +72,9 @@ const config: Types.Core.GameConfig = {
   physics: {
     default: 'arcade',
   },
+  fps: {
+    limit: 60,
+  },
   render: {
     pixelArt: true,
     antialias: false,

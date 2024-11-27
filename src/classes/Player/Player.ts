@@ -39,6 +39,8 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   journal: Journal;
   gameState: GameState;
 
+  previousPosition: Math.Vector2 = new Math.Vector2();
+
   counter: number = 0;
   history: Math.Vector3[] = [];
   rewinding = false;
@@ -123,6 +125,8 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
 
     // Update animations
     updateAnimation(this);
+
+    this.previousPosition.set(this.x, this.y);
   }
 
   checkInteraction(): InteractResult | undefined {

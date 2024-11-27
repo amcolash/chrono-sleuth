@@ -95,7 +95,6 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
       // if up key pressed and player is close to the slope, move up
       if (this.upwards && keys[Key.Up] && Math.abs(player.y - newY) < 70) {
         player.setVelocityX(this.flipped ? -speed : speed);
-        player.setFlipX(this.flipped);
         player.setY(newY);
         return;
       }
