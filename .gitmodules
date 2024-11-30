@@ -1,0 +1,3 @@
+[submodule "public/assets/private"]
+	path = public/assets/private
+	url = git@github.com:amcolash/chrono-sleuth-assets.git
