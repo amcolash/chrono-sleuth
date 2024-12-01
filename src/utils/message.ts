@@ -1,4 +1,4 @@
-import { GameObjects } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Voice } from '../data/voices';
 
@@ -82,6 +82,58 @@ function getPitch(note: Note, octave: number) {
 }
 
 export function playMessageAudio(
+  text: string,
+  voice: Voice,
+  gameVolume: number,
+  scene: Scene
+): { promise: Promise<void>; stop?: () => void } {
+  // const { speed, octave, volume, type } = voice;
+  if (gameVolume === 0) return { promise: Promise.resolve() };
+
+  scene.sound.unlock();
+
+  const playAudioSequentially = (text: string, scene: Phaser.Scene) => {
+    let stopRequested = false;
+
+    const stop = () => {
+      stopRequested = true;
+    };
+
+    const playAudio = (key: string): Promise<void> => {
+      return new Promise((resolve) => {
+        const sound = scene.sound.add(key);
+        sound.on('complete', () => {
+          sound.destroy(); // Clean up after playback
+          resolve();
+        });
+        sound.play({ rate: 8, detune: (voice.octave - 4) * 300 });
+      });
+    };
+
+    const promise = new Promise<void>(async (resolve) => {
+      const letters = text.toLowerCase().split('');
+
+      // Only play a letter every so often to match with message timing
+      const letterSkip = 3.5;
+
+      for (let i = 0; i < letters.length; i += letterSkip) {
+        if (stopRequested) break;
+
+        const letter = letters[Math.floor(i)];
+        if (letter.charCodeAt(0) >= 97 && letter.charCodeAt(0) <= 122) {
+          await playAudio(letter);
+        }
+      }
+      resolve(); // Resolve the promise once all playback is complete
+    });
+
+    return { promise, stop };
+  };
+
+  return playAudioSequentially(text, scene);
+}
+
+export function playMessageAudio_Old(
   text: string,
   voice: Voice,
   gameVolume: number

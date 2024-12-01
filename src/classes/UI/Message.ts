@@ -180,7 +180,8 @@ export class Message extends GameObjects.Container {
       const { promise: audioPromise, stop: stopAudio } = playMessageAudio(
         message,
         voice,
-        this.scene.sound.mute ? 0 : this.scene.sound.volume
+        this.scene.sound.mute ? 0 : this.scene.sound.volume,
+        this.scene
       );
       const { promise: textPromise, stop: stopAnimation } = animateText(this.text);
 

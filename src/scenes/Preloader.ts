@@ -146,6 +146,11 @@ export class Preloader extends Scene {
     // puzzles
     this.load.image('arrow', 'puzzles/arrow.png');
 
+    // letters
+    Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i)).forEach((l) =>
+      this.load.audio(l, `sounds/letters/${l}.mp3`)
+    );
+
     // optionally preload intro
     if (!localStorage.getItem(saveKey)) {
       preloadIntro(this);
