@@ -1,4 +1,4 @@
-import { GameObjects, Geom, Scene, Types } from 'phaser';
+import { GameObjects, Scene, Types } from 'phaser';
 
 import { DebugLight } from '../classes/Debug/DebugLight';
 import { DebugUI } from '../classes/Debug/DebugUI';
@@ -148,44 +148,6 @@ export class Game extends Scene {
         this.player.setInteractiveObject(undefined);
       }
     }
-
-    this.frustumCullObjects(this.children.list);
-  }
-
-  cullingCache: GameObjects.GameObject[] = [];
-  cullingTimer: number = 0;
-  frustumCullObjects(objects: GameObjects.GameObject[]) {
-    if (this.cullingCache.length === 0 || this.cullingTimer > 60) {
-      this.cullingCache = objects.filter((object) => {
-        if (
-          object instanceof GameObjects.Image ||
-          object instanceof GameObjects.Sprite ||
-          object instanceof GameObjects.Particles.ParticleEmitter ||
-          object instanceof GameObjects.Graphics
-        ) {
-          return !(
-            object instanceof Slope ||
-            object instanceof Warp || // TODO: Get frustum culling working for warps
-            object.depth >= Layer.Ui ||
-            object.name === undefined
-          );
-        }
-
-        return false;
-      });
-      this.cullingTimer = 0;
-    }
-
-    const camera = this.cameras.main;
-    for (const object of this.cullingCache) {
-      // @ts-ignore
-      if (object.getBounds === undefined) continue;
-
-      // @ts-ignore
-      object.visible = Geom.Intersects.RectangleToRectangle(object.getBounds(), camera.worldView);
-    }
-
-    this.cullingTimer++;
   }
 
   createBackgrounds() {

@@ -37,6 +37,5 @@
 ## Perf
 
 - [ ] Custom phaser build
-- [ ] Get frustum culling working for `Warp`
 
 ## Bugs
