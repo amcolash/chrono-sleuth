@@ -8,6 +8,7 @@ import { Fireflies, FireflyPositions } from '../classes/Environment/Fireflies';
 import { HelperText } from '../classes/Environment/HelperText';
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
+import { ParallaxBackground } from '../classes/Environment/ParallaxBackground';
 import { Prop } from '../classes/Environment/Prop';
 import { Slope } from '../classes/Environment/Slope';
 import { Walls } from '../classes/Environment/Walls';
@@ -21,6 +22,7 @@ import { helperTextList, npcList, propList, warpList } from '../data/arrays';
 import { BackgroundData } from '../data/background';
 import { Layer } from '../data/layers';
 import { LightData } from '../data/lights';
+import { ParallaxBackgroundData } from '../data/parallaxBackground';
 import { SlopeData } from '../data/slope';
 import { Interactive } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
@@ -60,6 +62,7 @@ export class Game extends Scene {
     this.player = new Player(this);
 
     const backgrounds = this.createBackgrounds();
+    const parallaxBackgrounds = this.createParallaxBackgrounds();
 
     // objects without side effects
     const walls = new Walls(this, this.player);
@@ -94,7 +97,7 @@ export class Game extends Scene {
 
     // update items added to the group
     const updateables = this.add.group(
-      [this.player, forestFireflies, lakeFireflies, ...slopes, walls, ...backgrounds],
+      [this.player, forestFireflies, lakeFireflies, ...slopes, walls, ...backgrounds, ...parallaxBackgrounds],
       {
         runChildUpdate: true,
       }
@@ -152,6 +155,10 @@ export class Game extends Scene {
 
   createBackgrounds() {
     return BackgroundData.map((b) => new Background(this, b, this.player));
+  }
+
+  createParallaxBackgrounds() {
+    return ParallaxBackgroundData.map((b) => new ParallaxBackground(this, b));
   }
 
   createWarpers(): Warp[] {

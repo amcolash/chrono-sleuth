@@ -11,7 +11,6 @@ export function preloadIntro(scene: Scene) {
 
   scene.load.image('train', 'maps/intro/train.png');
 
-  scene.load.image('layer1', 'maps/intro/layer1.png');
   scene.load.image('layer2', 'maps/intro/layer2.png');
   scene.load.image('layer3', 'maps/intro/layer3.png');
   scene.load.image('layer4', 'maps/intro/layer4.png');
