@@ -150,7 +150,8 @@ export class DebugUI extends GameObjects.Container {
     const pointer = this.scene.input.activePointer;
 
     const lines = [
-      `FPS: ${this.scene.game.loop.actualFps.toFixed(1)}`,
+      `FPS (now): ${(1000 / this.scene.game.loop.delta).toFixed(1)}`,
+      `FPS (avg): ${this.scene.game.loop.actualFps.toFixed(1)}`,
       `Frame Time: ${this.scene.game.loop.delta.toFixed(2)}`,
       `Zoom: ${this.scene.cameras.main.zoom.toFixed(2)}`,
       '',

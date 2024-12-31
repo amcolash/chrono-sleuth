@@ -14,6 +14,7 @@ import { Slope } from '../classes/Environment/Slope';
 import { Walls } from '../classes/Environment/Walls';
 import { Warp } from '../classes/Environment/Warp';
 import { Player } from '../classes/Player/Player';
+import { FPS } from '../classes/UI/FPS';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
 import { Notification } from '../classes/UI/Notification';
@@ -118,11 +119,11 @@ export class Game extends Scene {
     // load save, or start new game
     load(this);
 
-    const endTime = performance.now();
-    const duration = endTime - startTime;
-    const message = `Game.create() took ${duration.toFixed(1)}ms to initialize`;
-
     if (!Config.prod) {
+      const endTime = performance.now();
+      const duration = endTime - startTime;
+      const message = `Game.create() took ${duration.toFixed(1)}ms to initialize`;
+
       if (Config.debug && duration > 300) new Notification(this, message, undefined, Colors.Warning);
       else if (!Config.debug && duration > 150) new Notification(this, message, undefined, Colors.Warning);
       else new Notification(this, message);
@@ -228,7 +229,15 @@ export class Game extends Scene {
     // debug
     if (!Config.prod) {
       this.time.delayedCall(500, () => {
+        const updated = [];
         const debugUI = new DebugUI(this, this.player);
+        updated.push(debugUI);
+
+        if (Config.debug) {
+          const fpsMeter = new FPS(this, 130, 10);
+          updated.push(fpsMeter);
+        }
+
         this.add.group(debugUI, { runChildUpdate: true });
       });
 
