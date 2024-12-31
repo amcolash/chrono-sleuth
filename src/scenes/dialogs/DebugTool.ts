@@ -49,6 +49,8 @@ export class DebugTool extends Dialog {
   saveContainer: GameObjects.Container;
   miscContainer: GameObjects.Container;
 
+  preSave: string;
+
   testVoice: Voice = {
     octave: 3.5,
     speed: 1,
@@ -65,6 +67,10 @@ export class DebugTool extends Dialog {
 
   init(data: { player: Player }) {
     this.player = data.player;
+
+    const preSave = getCurrentSaveState(this.player.scene);
+    preSave.settings.time = 0;
+    this.preSave = JSON.stringify(preSave);
   }
 
   create() {
@@ -383,6 +389,11 @@ export class DebugTool extends Dialog {
   }
 
   handleSuccess(success: boolean): void {
+    // Check if the scene should restart (only if data changed)
+    const postSave = getCurrentSaveState(this.player.scene);
+    postSave.settings.time = 0;
+    if (this.preSave === JSON.stringify(postSave)) return;
+
     if (!success) save(this.player.scene);
     this.player.scene.scene.restart();
   }
