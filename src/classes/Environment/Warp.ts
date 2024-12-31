@@ -202,7 +202,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
 
     if (shouldWarp) {
-      warpTo(WarpData[this.warpType].warpTo, this.player);
+      warpTo(WarpData[this.warpType].warpTo, this.player, undefined, this);
       return InteractResult.Teleported;
     }
 
@@ -256,7 +256,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   }
 }
 
-export function warpTo(location: WarpType, player: Player, offset?: Types.Math.Vector2Like) {
+export function warpTo(location: WarpType, player: Player, offset?: Types.Math.Vector2Like, sourceWarp?: Warp) {
   let { x, y, onWarp } = WarpData[location];
   if (offset) {
     x += offset.x;
@@ -269,6 +269,18 @@ export function warpTo(location: WarpType, player: Player, offset?: Types.Math.V
   const targetScrollY = y - scene.cameras.main.height / 2;
 
   if (onWarp) onWarp(player);
+
+  let sound = 'warp';
+
+  if (sourceWarp) {
+    const data = WarpData[sourceWarp.warpType];
+    if (data.visual === WarpVisual.Ladder) sound = 'ladder';
+    if (data.visual === WarpVisual.Invisible || data.visual === WarpVisual.InvisibleHidden) sound = 'door';
+
+    if (data.sound) sound = data.sound;
+  }
+
+  scene.sound.play(sound);
 
   scene.cameras.main.fadeOut(200, 0, 0, 0, (_camera: Cameras.Scene2D.Camera, progress: number) => {
     if (progress >= 1) scene.cameras.main.fadeIn(1000, 0, 0, 0);

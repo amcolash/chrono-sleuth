@@ -12,12 +12,19 @@ export enum WarpVisual {
   InvisibleHidden,
 }
 
+export enum WarpSound {
+  Warp = 'warp',
+  Ladder = 'ladder',
+  Door = 'door',
+}
+
 type Data = DataProps & {
   range?: number;
   key: Key;
   warpTo: WarpType;
   visual: WarpVisual;
   onWarp?: (player: Player) => void;
+  sound?: WarpSound;
 };
 
 export const WarpData: Record<WarpType, Data> = {
@@ -137,6 +144,7 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Up,
     warpTo: WarpType.Mansion,
     visual: WarpVisual.Warp,
+    sound: WarpSound.Door,
   },
   [WarpType.Mansion]: {
     x: -1405,

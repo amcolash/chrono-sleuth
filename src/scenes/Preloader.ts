@@ -151,6 +151,11 @@ export class Preloader extends Scene {
       this.load.audio(l, `sounds/letters/${l}.mp3`)
     );
 
+    // sound effects
+    this.load.audio('warp', 'sounds/warp.mp3');
+    this.load.audio('ladder', 'sounds/ladder.mp3');
+    this.load.audio('door', 'sounds/door.mp3');
+
     // optionally preload intro
     if (!localStorage.getItem(saveKey)) {
       preloadIntro(this);
