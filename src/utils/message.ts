@@ -74,20 +74,20 @@ export function playMessageAudio(
           sound.destroy(); // Clean up after playback
           resolve();
         });
-        sound.play({ rate: 8, detune: (voice.octave - 4) * 300 });
+        sound.play({ rate: 3, detune: (voice.octave - 4) * 300 });
       });
     };
 
     const promise = new Promise<void>(async (resolve) => {
-      const letters = text.toLowerCase().split('');
+      const words = text.toLowerCase().split(' ');
 
       // Only play a letter every so often to match with message timing
-      const letterSkip = 3.5;
+      const wordSkip = 3;
 
-      for (let i = 0; i < letters.length; i += letterSkip) {
+      for (let i = 0; i < words.length; i += wordSkip) {
         if (stopRequested) break;
 
-        const letter = letters[Math.floor(i)];
+        const letter = words[i][0];
         if (letter.charCodeAt(0) >= 97 && letter.charCodeAt(0) <= 122) {
           await playAudio(letter);
         }

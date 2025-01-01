@@ -146,9 +146,9 @@ export class Preloader extends Scene {
     // puzzles
     this.load.image('arrow', 'puzzles/arrow.png');
 
-    // letters
+    // words (named by letter)
     Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i)).forEach((l) =>
-      this.load.audio(l, `sounds/letters/${l}.mp3`)
+      this.load.audio(l, `sounds/words/${l}.mp3`)
     );
 
     // sound effects
