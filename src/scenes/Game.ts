@@ -14,7 +14,6 @@ import { Slope } from '../classes/Environment/Slope';
 import { Walls } from '../classes/Environment/Walls';
 import { Warp } from '../classes/Environment/Warp';
 import { Player } from '../classes/Player/Player';
-import { FPS } from '../classes/UI/FPS';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
 import { Notification } from '../classes/UI/Notification';
@@ -232,11 +231,6 @@ export class Game extends Scene {
         const updated = [];
         const debugUI = new DebugUI(this, this.player);
         updated.push(debugUI);
-
-        if (Config.debug) {
-          const fpsMeter = new FPS(this, 130, 10);
-          updated.push(fpsMeter);
-        }
 
         this.add.group(debugUI, { runChildUpdate: true });
       });

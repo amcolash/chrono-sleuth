@@ -19,6 +19,7 @@ import { SliderDialog } from './scenes/dialogs/SliderDialog';
 import { TumblerDialog } from './scenes/dialogs/TumblerDialog';
 import { Colors, getColorNumber } from './utils/colors';
 import { CRTPipeline, PipelinePlugin, XRayPipeline } from './utils/shaders';
+import { createStats } from './utils/stats';
 import { setupCursorHiding } from './utils/util';
 
 // SW injection is done build-time in vite config
@@ -72,6 +73,7 @@ const config: Types.Core.GameConfig = {
     default: 'arcade',
   },
   fps: {
+    // limit: 65,
     panicMax: 120,
     smoothStep: true,
   },
@@ -93,4 +95,7 @@ setupCursorHiding();
 const loading = document.querySelector('#initial-loader');
 loading?.remove();
 
-new Game(config);
+const game = new Game(config);
+
+// Only create stats in dev mode
+if (!Config.prod) createStats(game);
