@@ -36,7 +36,7 @@ export class ParallaxBackground extends GameObjects.Container implements LazyIni
   }
 
   lazyInit(forceInit?: boolean) {
-    if (!forceInit && (this.initialized || !shouldInitialize(this.center, this.player, 2000))) return;
+    if (!forceInit && (this.initialized || !shouldInitialize(this.center, this.player, this.info.size.x))) return;
 
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
