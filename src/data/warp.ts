@@ -97,6 +97,7 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Right,
     warpTo: WarpType.ClockTop,
     visual: WarpVisual.Invisible,
+    sound: WarpSound.Ladder,
   },
   [WarpType.ClockTop]: {
     x: 780,
@@ -105,6 +106,7 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Left,
     warpTo: WarpType.ClockStairs,
     visual: WarpVisual.Invisible,
+    sound: WarpSound.Ladder,
   },
 
   [WarpType.ForestEast]: {

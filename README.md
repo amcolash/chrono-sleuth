@@ -18,3 +18,8 @@ Portal Images were cropped + resized using these commands (for helpful reference
 
 - `mogrify -crop 280x240+0+0 -gravity center -extent 280x240 -background none -alpha background -resize 50% *.png`
 - `montage *.png -tile 8x8 -geometry 140x120+0+0 -background none spritesheet.png`
+
+Some sound effects https://mixkit.co/
+
+- footsteps
+- door open
