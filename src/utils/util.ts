@@ -103,3 +103,12 @@ export function setupCursorHiding() {
   page.style.cursor = 'none';
   page.addEventListener('mousemove', cursorMoveHandler);
 }
+
+const logTimes: { [key: string]: number } = {};
+
+export function logEvery(key: string, time: number, ...data: any) {
+  if (!logTimes[key] || Date.now() - logTimes[key] > time) {
+    console.log(key, ...data);
+    logTimes[key] = Date.now();
+  }
+}

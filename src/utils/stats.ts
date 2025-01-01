@@ -1,43 +1,35 @@
-// @ts-nocheck
-
 /**
  * stats.js (modified)
  * @linkcode github https://github.com/mrdoob/stats.js
  * @author mrdoob / http://mrdoob.com/
  */
 
-var Stats = function () {
-  var mode = 0;
+type StatsType = {
+  REVISION: number;
+  dom: HTMLDivElement;
+  addPanel: (panel: PanelType) => PanelType;
+  showPanel: (id: number) => void;
+};
 
-  var container = document.createElement('div');
+type PanelType = {
+  dom: HTMLCanvasElement;
+  update: (value: number) => void;
+};
+
+const Stats = (): StatsType => {
+  const container = document.createElement('div');
   container.style.cssText = 'position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000';
-  // container.addEventListener(
-  //   'click',
-  //   function (event) {
-  //     event.preventDefault();
-  //     showPanel(++mode % container.children.length);
-  //   },
-  //   false
-  // );
 
-  //
-
-  function addPanel(panel) {
+  function addPanel(panel: PanelType) {
     container.appendChild(panel.dom);
     return panel;
   }
 
-  function showPanel(id) {
-    for (var i = 0; i < container.children.length; i++) {
+  function showPanel(id: number) {
+    for (let i = 0; i < container.children.length; i++) {
       container.children[i].style.display = i === id ? 'block' : 'none';
     }
-
-    mode = id;
   }
-
-  //
-
-  // showPanel(0);
 
   return {
     REVISION: 16,
@@ -46,21 +38,16 @@ var Stats = function () {
 
     addPanel: addPanel,
     showPanel: showPanel,
-
-    // Backwards Compatibility
-
-    domElement: container,
-    setMode: showPanel,
   };
 };
 
-Stats.Panel = function (name, fg, bg) {
+const Panel = (name: string, fg: string, bg: string): PanelType => {
   var min = Infinity,
     max = 0,
     round = Math.round;
-  var PR = round(window.devicePixelRatio || 1);
+  const PR = round(window.devicePixelRatio || 1);
 
-  var WIDTH = 90 * PR,
+  const WIDTH = 90 * PR,
     HEIGHT = 52 * PR,
     TEXT_X = 3 * PR,
     TEXT_Y = 2 * PR,
@@ -69,12 +56,12 @@ Stats.Panel = function (name, fg, bg) {
     GRAPH_WIDTH = 84 * PR,
     GRAPH_HEIGHT = 27 * PR;
 
-  var canvas = document.createElement('canvas');
+  const canvas = document.createElement('canvas');
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
   canvas.style.cssText = 'width:80px;height:48px';
 
-  var context = canvas.getContext('2d');
+  const context = canvas.getContext('2d')!;
   context.font = 'bold ' + 9 * PR + 'px Helvetica,Arial,sans-serif';
   context.textBaseline = 'top';
 
@@ -89,9 +76,9 @@ Stats.Panel = function (name, fg, bg) {
   context.globalAlpha = 0.9;
   context.fillRect(GRAPH_X, GRAPH_Y, GRAPH_WIDTH, GRAPH_HEIGHT);
 
-  var lastUpdate = 0;
-  var index = 0;
-  var data = [];
+  let lastUpdate = 0;
+  let index = 0;
+  let data = [];
 
   return {
     dom: canvas,
@@ -110,7 +97,7 @@ Stats.Panel = function (name, fg, bg) {
       context.fillRect(0, 0, WIDTH, GRAPH_Y);
       context.fillStyle = fg;
 
-      context.fillText(`${name}: ${round(value)}`, TEXT_X, TEXT_Y);
+      context.fillText(`${name}: ${value.toFixed(1)}`, TEXT_X, TEXT_Y);
       context.fillText(`[${round(min)} - ${round(max)}]`, TEXT_X, TEXT_Y + 10);
 
       context.drawImage(
@@ -141,13 +128,15 @@ Stats.Panel = function (name, fg, bg) {
   };
 };
 
+let globalStats: StatsType;
+
 // New helper function for phaser
 function createStats(game: Phaser.Game) {
-  const stats = new Stats();
+  globalStats = Stats();
 
-  document.body.appendChild(stats.dom);
+  document.body.appendChild(globalStats.dom);
 
-  const style = stats.dom.style;
+  const style = globalStats.dom.style;
   style.display = 'flex';
   style.justifyContent = 'center';
   style.gap = '6px';
@@ -157,11 +146,11 @@ function createStats(game: Phaser.Game) {
   style.bottom = '10px';
   style.opacity = '0.7';
 
-  const fpsPanel = stats.addPanel(new Stats.Panel('FPS', '#9ad8e4', '#064b62'));
-  const framePanel = stats.addPanel(new Stats.Panel('Frame', '#f3b0c3', '#6b1e3d'));
-  const memoryPanel = stats.addPanel(new Stats.Panel('Memory', '#ffd59a', '#6b3e06'));
-  const renderPanel = stats.addPanel(new Stats.Panel('Render', '#e9f3a3', '#4c6b1a'));
-  const stepPanel = stats.addPanel(new Stats.Panel('Step', '#c3c3f3', '#1d1d6b'));
+  const fpsPanel = globalStats.addPanel(Panel('FPS', '#9ad8e4', '#064b62'));
+  const framePanel = globalStats.addPanel(Panel('Frame', '#f3b0c3', '#6b1e3d'));
+  const memoryPanel = globalStats.addPanel(Panel('Memory', '#ffd59a', '#6b3e06'));
+  const renderPanel = globalStats.addPanel(Panel('Render', '#e9f3a3', '#4c6b1a'));
+  const stepPanel = globalStats.addPanel(Panel('Step', '#c3c3f3', '#1d1d6b'));
 
   let last = 0;
   let preStep = 0;
@@ -175,10 +164,13 @@ function createStats(game: Phaser.Game) {
     renderPanel.update(performance.now() - preRender);
     fpsPanel.update(1000 / game.loop.delta);
     framePanel.update(performance.now() - preStep);
-    memoryPanel.update(performance.memory.usedJSHeapSize / 1048576);
+
+    // This might not work in all browsers
+    if (performance.memory) memoryPanel.update(performance.memory.usedJSHeapSize / 1048576);
 
     last = performance.now();
   });
 }
 
-export { createStats, Stats };
+export { createStats, globalStats, Panel, Stats };
+export type { PanelType, StatsType };
