@@ -8,7 +8,7 @@ import { ItemType, Quest, QuestType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
-import { updateWarpVisibility } from '../../utils/interactionUtils';
+import { updateWarpLocked } from '../../utils/interactionUtils';
 import { autosave } from '../../utils/save';
 import { Item } from '../Environment/Item';
 import { Notification } from '../UI/Notification';
@@ -108,8 +108,8 @@ export class Quests extends GameObjects.Container {
 
   handleSideEffects(type: QuestType, completed: boolean, silent?: boolean) {
     const { warpAdd, warpComplete } = QuestData[type];
-    if (warpAdd) updateWarpVisibility(this.scene as Game, warpAdd, true);
-    if (completed && warpComplete) updateWarpVisibility(this.scene as Game, warpComplete, true);
+    if (warpAdd) updateWarpLocked(this.scene as Game, warpAdd, true);
+    if (completed && warpComplete) updateWarpLocked(this.scene as Game, warpComplete, true);
 
     if (type === QuestType.FindPotionIngredients && !completed) {
       const scene = this.player.scene;

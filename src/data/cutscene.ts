@@ -7,7 +7,7 @@ import { Message } from '../classes/UI/Message';
 import { Config } from '../config';
 import { Game } from '../scenes/Game';
 import { rotationCorrection } from '../utils/animations';
-import { getNPC, getProp, getWall, hasUsedItem, updateWarpVisibility } from '../utils/interactionUtils';
+import { getNPC, getProp, getWall, hasUsedItem, updateWarpLocked } from '../utils/interactionUtils';
 import { toggleXRay } from '../utils/shaders';
 import { fadeIn, fadeOut } from '../utils/util';
 import { NPCData } from './npc';
@@ -154,7 +154,7 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
     (wall.body as Physics.Arcade.Body)?.updateFromGameObject();
   }
 
-  updateWarpVisibility(scene, WarpType.ForestEast, complete || false);
+  updateWarpLocked(scene, WarpType.ForestEast, complete || false);
 
   const { x, y } = NPCData[NPCType.Sphinx];
   const newX = complete ? x + 200 : x;

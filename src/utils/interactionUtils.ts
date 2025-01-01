@@ -54,10 +54,10 @@ export function getGameObjects<T extends GameObjects.GameObject>(
 }
 
 /** In general, this function should NOT be used. It is used by the Journal and Quest systems when warps are unlocked. */
-export function updateWarpVisibility(scene: Scene, warpType: WarpType, visible: boolean) {
+export function updateWarpLocked(scene: Scene, warpType: WarpType, locked: boolean) {
   const warp = getWarper(scene, warpType);
   if (warp) {
-    warp.setVisible(visible);
+    warp.setLocked(locked);
   }
 }
 

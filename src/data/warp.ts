@@ -3,13 +3,20 @@ import { Key } from '../classes/UI/InputManager';
 import { DataProps, WarpType } from './types';
 
 export enum WarpVisual {
+  /** Show a ladder, instead of standard warp */
   Ladder,
+
+  /** Default warp visual with particles */
   Warp,
+
+  /** Warp is visually never shown (ex: for a door) */
   Invisible,
 
-  // Not shown until unlocked
-  WarpHidden,
-  InvisibleHidden,
+  /** Warp is locked, but later visually shown */
+  WarpLocked,
+
+  /** Warp is locked, but never visually shown */
+  InvisibleLocked,
 }
 
 export enum WarpSound {
@@ -48,7 +55,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Right,
     warpTo: WarpType.Forest,
-    visual: WarpVisual.WarpHidden,
+    visual: WarpVisual.WarpLocked,
   },
   [WarpType.Forest]: {
     x: 2650,
@@ -63,7 +70,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Up,
     warpTo: WarpType.ClockSquare,
-    visual: WarpVisual.WarpHidden,
+    visual: WarpVisual.WarpLocked,
   },
   [WarpType.ClockSquare]: {
     x: 610,
@@ -78,7 +85,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -330,
     key: Key.Up,
     warpTo: WarpType.ClockEntrance,
-    visual: WarpVisual.WarpHidden,
+    visual: WarpVisual.WarpLocked,
   },
   [WarpType.ClockEntrance]: {
     x: 690,
@@ -114,7 +121,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 815,
     key: Key.Right,
     warpTo: WarpType.Lake,
-    visual: WarpVisual.WarpHidden,
+    visual: WarpVisual.WarpLocked,
     initializeOnStart: true,
   },
   [WarpType.Lake]: {
@@ -130,7 +137,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Left,
     warpTo: WarpType.MansionGrounds,
-    visual: WarpVisual.WarpHidden,
+    visual: WarpVisual.WarpLocked,
   },
   [WarpType.MansionGrounds]: {
     x: -620,
@@ -161,7 +168,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 640,
     key: Key.Down,
     warpTo: WarpType.Lab,
-    visual: WarpVisual.InvisibleHidden,
+    visual: WarpVisual.InvisibleLocked,
   },
   [WarpType.Lab]: {
     x: -1380,
@@ -178,7 +185,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Up,
     warpTo: WarpType.Library,
-    visual: WarpVisual.WarpHidden,
+    visual: WarpVisual.WarpLocked,
   },
   [WarpType.Library]: {
     x: 1730,

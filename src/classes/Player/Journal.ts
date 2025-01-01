@@ -7,7 +7,7 @@ import { Layer } from '../../data/layers';
 import { JournalEntry, NPCType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { getNPC, updateWarpVisibility } from '../../utils/interactionUtils';
+import { getNPC, updateWarpLocked } from '../../utils/interactionUtils';
 import { autosave } from '../../utils/save';
 import { toggleXRay } from '../../utils/shaders';
 import { openDialog } from '../../utils/util';
@@ -86,7 +86,7 @@ export class Journal extends GameObjects.Image {
 
   handleSideEffects(entry: JournalEntry, silent: boolean) {
     const { warpAdd } = JournalData[entry];
-    if (warpAdd) updateWarpVisibility(this.scene, warpAdd, true);
+    if (warpAdd) updateWarpLocked(this.scene, warpAdd, true);
 
     if (entry === JournalEntry.ClockFirstGear || entry === JournalEntry.ClockSecondGear) {
       const clock = getNPC(this.scene, NPCType.ClockTower);

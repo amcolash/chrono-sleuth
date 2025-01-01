@@ -29,6 +29,7 @@ Object.values(JournalData).forEach((entry) => {
 export class Warp extends Physics.Arcade.Image implements Interactive, LazyInitialize {
   warpType: WarpType;
   player: Player;
+  locked: boolean;
 
   graphics: GameObjects.Graphics;
 
@@ -50,14 +51,14 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
 
     this.setScale(0.6).setDepth(Layer.Warpers);
 
-    if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
+    if (visual === WarpVisual.Warp || visual === WarpVisual.WarpLocked) {
       this.setScale(0.6, 1);
       this.setPosition(x, y - warpYOffset);
     }
 
     if (!Config.debug) {
-      if (visual === WarpVisual.WarpHidden || visual === WarpVisual.InvisibleHidden) this.setVisible(false);
-      if (visual === WarpVisual.Invisible || visual === WarpVisual.InvisibleHidden) this.setAlpha(0);
+      this.setLocked(visual === WarpVisual.WarpLocked || visual === WarpVisual.InvisibleLocked);
+      if (visual === WarpVisual.Invisible || visual === WarpVisual.InvisibleLocked) this.setAlpha(0);
     }
 
     initializeObject(this, WarpData[warpType]);
@@ -76,29 +77,14 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     this.createParticles();
     this.createDebug();
 
+    if (this.warpType === WarpType.Underground) this.createLadder();
+
     if (this.hasExtendedBounds() && this.body) {
       this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
     }
 
-    // run overridden setVisible to make sure particles are properly started/stopped
-    this.setVisible(this.visible);
-
-    if (this.warpType === WarpType.Underground) {
-      this.scene.add
-        .image(this.x, this.y - 60, 'ladder')
-        .setScale(0.6)
-        .setDepth(Layer.Warpers)
-        .setPipeline('Light2D')
-        .setPostPipeline('XRayPipeline')
-        .setName('Ladder1');
-      this.scene.add
-        .image(this.x, this.y - 105, 'ladder')
-        .setScale(0.6)
-        .setDepth(Layer.Warpers)
-        .setPipeline('Light2D')
-        .setPostPipeline('XRayPipeline')
-        .setName('Ladder2');
-    }
+    // re-run setLocked to make sure particles are properly started/stopped
+    this.setLocked(this.locked);
 
     this.initialized = true;
   }
@@ -106,7 +92,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   // Delay creating particles until the player is close enough to increase start up performance
   createParticles() {
     const { visual, skipLighting } = WarpData[this.warpType];
-    if (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden) {
+    if (visual === WarpVisual.Warp || visual === WarpVisual.WarpLocked) {
       this.setAlpha(0.1);
 
       if (!this.scene.anims.exists('portal')) {
@@ -182,10 +168,27 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
   }
 
+  createLadder() {
+    this.scene.add
+      .image(this.x, this.y - 60, 'ladder')
+      .setScale(0.6)
+      .setDepth(Layer.Warpers)
+      .setPipeline('Light2D')
+      .setPostPipeline('XRayPipeline')
+      .setName('Ladder1');
+    this.scene.add
+      .image(this.x, this.y - 105, 'ladder')
+      .setScale(0.6)
+      .setDepth(Layer.Warpers)
+      .setPipeline('Light2D')
+      .setPostPipeline('XRayPipeline')
+      .setName('Ladder2');
+  }
+
   hasExtendedBounds() {
     const { visual, key } = WarpData[this.warpType];
     return (
-      (visual === WarpVisual.Warp || visual === WarpVisual.WarpHidden || visual === WarpVisual.Invisible) &&
+      (visual === WarpVisual.Warp || visual === WarpVisual.WarpLocked || visual === WarpVisual.Invisible) &&
       (key === Key.Left || key === Key.Right)
     );
   }
@@ -244,6 +247,11 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     return this;
   }
 
+  setLocked(locked: boolean) {
+    this.locked = locked;
+    this.setVisible(!locked);
+  }
+
   update(_time: number, _delta: number) {
     this.lazyInit();
   }
@@ -275,7 +283,7 @@ export function warpTo(location: WarpType, player: Player, offset?: Types.Math.V
   if (sourceWarp) {
     const data = WarpData[sourceWarp.warpType];
     if (data.visual === WarpVisual.Ladder) sound = 'ladder';
-    if (data.visual === WarpVisual.Invisible || data.visual === WarpVisual.InvisibleHidden) sound = 'door';
+    if (data.visual === WarpVisual.Invisible || data.visual === WarpVisual.InvisibleLocked) sound = 'door';
 
     if (data.sound) sound = data.sound;
   }
