@@ -149,7 +149,6 @@ function createStats(game: Phaser.Game) {
   const renderPanel = globalStats.addPanel(Panel('Render', '#e9f3a3', '#4c6b1a'));
   const stepPanel = globalStats.addPanel(Panel('Step', '#c3c3f3', '#1d1d6b'));
 
-  let last = 0;
   let preStep = 0;
   let preRender = 0;
 
@@ -166,8 +165,6 @@ function createStats(game: Phaser.Game) {
 
     // This might not work in all browsers
     if (performance.memory) memoryPanel.update(performance.memory.usedJSHeapSize / 1048576);
-
-    last = performance.now();
   });
 }
 

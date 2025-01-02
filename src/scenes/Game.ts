@@ -28,6 +28,7 @@ import { Interactive } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { setDaytime } from '../utils/lighting';
 import { load, loadConfig } from '../utils/save';
+import { Panel, PanelType, globalStats } from '../utils/stats';
 import { fadeIn, openDialog } from '../utils/util';
 
 export class Game extends Scene {
@@ -36,6 +37,8 @@ export class Game extends Scene {
   clock: Clock;
   gamepad: Gamepad;
   saveIcon: GameObjects.Image;
+
+  cullingStats: PanelType;
 
   shouldInit: boolean = true;
 
@@ -151,6 +154,49 @@ export class Game extends Scene {
         this.player.setInteractiveObject(undefined);
       }
     }
+
+    this.frustumCull();
+  }
+
+  frustumCull() {
+    const start = performance.now();
+
+    const children = this.children.getAll().filter((object) => {
+      if (
+        object instanceof GameObjects.Image ||
+        object instanceof GameObjects.Sprite ||
+        object instanceof GameObjects.Particles.ParticleEmitter ||
+        object instanceof GameObjects.Graphics
+      ) {
+        return !(
+          object instanceof Slope ||
+          (!(object instanceof Warp) && object.name?.startsWith('Warp')) || // TODO: Get frustum culling working for warps
+          object.depth >= Layer.Ui ||
+          object.name?.length === 0
+        );
+      }
+      return false;
+    });
+
+    for (let child of children) child.setVisible(false);
+    const visible = this.cameras.main.cull(children);
+
+    for (let child of visible) {
+      if (child instanceof Warp) child.updateLocked();
+      else child.visible = true;
+    }
+
+    // logEvery(
+    //   'culling',
+    //   1000,
+    //   children.length,
+    //   visible.length,
+    //   visible.map((v) => v.name)
+    // );
+
+    if (globalStats && !this.cullingStats)
+      this.cullingStats = globalStats.addPanel(Panel('Culling', '#9ad8e4', '#064b62'));
+    this.cullingStats?.update(performance.now() - start);
   }
 
   createBackgrounds() {
