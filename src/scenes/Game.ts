@@ -118,6 +118,13 @@ export class Game extends Scene {
     // load save, or start new game
     load(this);
 
+    // Before, only 1, 4 will work
+    // After unlocked, 1, 2, 4, 5 will work
+    // this.time.delayedCall(500, () => {
+    //   getWarper(this, WarpType.Test2)?.updateLocked(false);
+    //   getWarper(this, WarpType.Test5)?.updateLocked(false);
+    // });
+
     if (!Config.prod) {
       const endTime = performance.now();
       const duration = endTime - startTime;
