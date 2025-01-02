@@ -206,6 +206,7 @@ export class DebugTool extends Dialog {
             window.location.reload();
           } else {
             save(this.player.scene, data);
+            this.player.x += 0.1; // modify player position to trigger scene restart
             this.close(true);
           }
         },
