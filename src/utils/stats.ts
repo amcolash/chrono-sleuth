@@ -7,8 +7,8 @@
 type StatsType = {
   REVISION: number;
   dom: HTMLDivElement;
+  panels: PanelType[];
   addPanel: (panel: PanelType) => PanelType;
-  showPanel: (id: number) => void;
 };
 
 type PanelType = {
@@ -20,24 +20,21 @@ const Stats = (): StatsType => {
   const container = document.createElement('div');
   container.style.cssText = 'position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000';
 
+  const panels: PanelType[] = [];
+
   function addPanel(panel: PanelType) {
     container.appendChild(panel.dom);
+    panels.push(panel);
     return panel;
   }
 
-  function showPanel(id: number) {
-    for (let i = 0; i < container.children.length; i++) {
-      container.children[i].style.display = i === id ? 'block' : 'none';
-    }
-  }
-
   return {
-    REVISION: 16,
+    REVISION: 17,
 
     dom: container,
+    panels,
 
-    addPanel: addPanel,
-    showPanel: showPanel,
+    addPanel,
   };
 };
 
@@ -98,7 +95,7 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
       context.fillStyle = fg;
 
       context.fillText(`${name}: ${value.toFixed(1)}`, TEXT_X, TEXT_Y);
-      context.fillText(`[${round(min)} - ${round(max)}]`, TEXT_X, TEXT_Y + 10);
+      context.fillText(`[${min.toFixed(1)} - ${max.toFixed(1)}]`, TEXT_X, TEXT_Y + 10);
 
       context.drawImage(
         canvas,
@@ -161,8 +158,10 @@ function createStats(game: Phaser.Game) {
   game.events.on(Phaser.Core.Events.PRE_RENDER, () => (preRender = performance.now()));
 
   game.events.on(Phaser.Core.Events.POST_RENDER, () => {
+    const avgFps = game.loop.deltaHistory.slice(0, 10).reduce((a, b) => a + b, 0) / 10;
+
     renderPanel.update(performance.now() - preRender);
-    fpsPanel.update(1000 / game.loop.delta);
+    fpsPanel.update(1000 / avgFps);
     framePanel.update(performance.now() - preStep);
 
     // This might not work in all browsers

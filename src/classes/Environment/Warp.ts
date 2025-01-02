@@ -57,7 +57,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
 
     if (!Config.debug) {
-      this.setLocked(visual === WarpVisual.WarpLocked || visual === WarpVisual.InvisibleLocked);
+      this.updateLocked(visual === WarpVisual.WarpLocked || visual === WarpVisual.InvisibleLocked);
       if (visual === WarpVisual.Invisible || visual === WarpVisual.InvisibleLocked) this.setAlpha(0);
     }
 
@@ -83,8 +83,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
       this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
     }
 
-    // re-run setLocked to make sure particles are properly started/stopped
-    this.setLocked(this.locked);
+    // re-run updateLocked to make sure particles are properly started/stopped
+    this.updateLocked();
 
     this.initialized = true;
   }
@@ -247,9 +247,9 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     return this;
   }
 
-  setLocked(locked: boolean) {
-    this.locked = locked;
-    this.setVisible(!locked);
+  updateLocked(locked?: boolean) {
+    if (locked !== undefined) this.locked = locked;
+    this.setVisible(!this.locked);
   }
 
   update(_time: number, _delta: number) {

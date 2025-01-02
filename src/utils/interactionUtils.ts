@@ -57,7 +57,7 @@ export function getGameObjects<T extends GameObjects.GameObject>(
 export function updateWarpLocked(scene: Scene, warpType: WarpType, locked: boolean) {
   const warp = getWarper(scene, warpType);
   if (warp) {
-    warp.setLocked(locked);
+    warp.updateLocked(locked);
   }
 }
 

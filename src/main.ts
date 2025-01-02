@@ -73,8 +73,8 @@ const config: Types.Core.GameConfig = {
     default: 'arcade',
   },
   fps: {
-    // limit: 65,
-    panicMax: 120,
+    // limit: 60,
+    panicMax: 165,
     smoothStep: true,
   },
   render: {
