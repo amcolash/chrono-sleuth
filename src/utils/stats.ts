@@ -44,19 +44,19 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
     round = Math.round;
   const PR = round(window.devicePixelRatio || 1);
 
-  const WIDTH = 90 * PR,
-    HEIGHT = 52 * PR,
+  const WIDTH = 100 * PR,
+    HEIGHT = 65 * PR,
     TEXT_X = 3 * PR,
     TEXT_Y = 2 * PR,
     GRAPH_X = 3 * PR,
     GRAPH_Y = 23 * PR,
-    GRAPH_WIDTH = 84 * PR,
-    GRAPH_HEIGHT = 27 * PR;
+    GRAPH_WIDTH = WIDTH - GRAPH_X * 2,
+    GRAPH_HEIGHT = HEIGHT - GRAPH_Y - 2 * PR;
 
   const canvas = document.createElement('canvas');
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
-  canvas.style.cssText = 'width:80px;height:48px';
+  canvas.style.cssText = `width:${WIDTH / PR}}px;height:${HEIGHT / PR}px`;
 
   const context = canvas.getContext('2d')!;
   context.font = 'bold ' + 9 * PR + 'px Helvetica,Arial,sans-serif';
@@ -92,33 +92,26 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
       context.fillStyle = bg;
       context.globalAlpha = 1;
       context.fillRect(0, 0, WIDTH, GRAPH_Y);
-      context.fillStyle = fg;
 
+      context.fillStyle = fg;
       context.fillText(`${name}: ${value.toFixed(1)}`, TEXT_X, TEXT_Y);
       context.fillText(`[${min.toFixed(1)} - ${max.toFixed(1)}]`, TEXT_X, TEXT_Y + 10);
 
-      context.drawImage(
-        canvas,
-        GRAPH_X + PR,
-        GRAPH_Y,
-        GRAPH_WIDTH - PR,
-        GRAPH_HEIGHT,
-        GRAPH_X,
-        GRAPH_Y,
-        GRAPH_WIDTH - PR,
-        GRAPH_HEIGHT
-      );
-
-      context.fillRect(GRAPH_X + GRAPH_WIDTH - PR, GRAPH_Y, PR, GRAPH_HEIGHT);
+      context.fillRect(GRAPH_X, GRAPH_Y, GRAPH_WIDTH, GRAPH_HEIGHT);
 
       context.fillStyle = bg;
-      context.globalAlpha = 0.9;
-      context.fillRect(
-        GRAPH_X + GRAPH_WIDTH - PR,
-        GRAPH_Y,
-        PR,
-        Math.min(GRAPH_HEIGHT - PR, round((1 - value / max) * GRAPH_HEIGHT))
-      );
+      context.globalAlpha = 0.8;
+      for (let i = 0; i < GRAPH_WIDTH; i++) {
+        const offset = (index + i) % GRAPH_WIDTH;
+        const percent = data[offset] / max;
+
+        context.fillRect(
+          GRAPH_X + PR * i,
+          GRAPH_Y,
+          PR,
+          Math.min(GRAPH_HEIGHT - PR, Math.max(PR, round((1 - percent) * GRAPH_HEIGHT)))
+        );
+      }
 
       lastUpdate = performance.now();
     },
@@ -136,6 +129,7 @@ function createStats(game: Phaser.Game) {
   const style = globalStats.dom.style;
   style.display = 'flex';
   style.justifyContent = 'center';
+  style.flexWrap = 'wrap';
   style.gap = '6px';
   style.cursor = '';
   style.right = '0';
@@ -144,8 +138,8 @@ function createStats(game: Phaser.Game) {
   style.opacity = '0.7';
 
   const fpsPanel = globalStats.addPanel(Panel('FPS', '#9ad8e4', '#064b62'));
-  const framePanel = globalStats.addPanel(Panel('Frame', '#f3b0c3', '#6b1e3d'));
-  const memoryPanel = globalStats.addPanel(Panel('Memory', '#ffd59a', '#6b3e06'));
+  const framePanel = globalStats.addPanel(Panel('Frame Time', '#f3b0c3', '#6b1e3d'));
+  const memoryPanel = globalStats.addPanel(Panel('Memory (mb)', '#ffd59a', '#6b3e06'));
   const renderPanel = globalStats.addPanel(Panel('Render', '#e9f3a3', '#4c6b1a'));
   const stepPanel = globalStats.addPanel(Panel('Step', '#c3c3f3', '#1d1d6b'));
 

@@ -34,7 +34,7 @@ const config: Types.Core.GameConfig = {
   backgroundColor: getColorNumber(Colors.Background),
   scale: {
     mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
+    autoCenter: Config.prod ? Phaser.Scale.CENTER_BOTH : Phaser.Scale.CENTER_HORIZONTALLY,
   },
   loader: { imageLoadType: 'HTMLImageElement' },
   scene: [
