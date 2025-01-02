@@ -194,48 +194,4 @@ export const WarpData: Record<WarpType, Data> = {
     warpTo: WarpType.LibraryEntrance,
     visual: WarpVisual.Warp,
   },
-
-  // [WarpType.Test1]: {
-  //   x: 100,
-  //   y: 0,
-  //   key: Key.Up,
-  //   warpTo: WarpType.Test1,
-  //   visual: WarpVisual.Warp,
-  // },
-  // [WarpType.Test2]: {
-  //   x: 200,
-  //   y: 0,
-  //   key: Key.Up,
-  //   warpTo: WarpType.Test2,
-  //   visual: WarpVisual.WarpLocked,
-  // },
-  // [WarpType.Test3]: {
-  //   x: 300,
-  //   y: 0,
-  //   key: Key.Up,
-  //   warpTo: WarpType.Test3,
-  //   visual: WarpVisual.WarpLocked,
-  // },
-
-  // [WarpType.Test4]: {
-  //   x: 400,
-  //   y: 0,
-  //   key: Key.Up,
-  //   warpTo: WarpType.Test4,
-  //   visual: WarpVisual.Invisible,
-  // },
-  // [WarpType.Test5]: {
-  //   x: 500,
-  //   y: 0,
-  //   key: Key.Up,
-  //   warpTo: WarpType.Test5,
-  //   visual: WarpVisual.InvisibleLocked,
-  // },
-  // [WarpType.Test6]: {
-  //   x: 600,
-  //   y: 0,
-  //   key: Key.Up,
-  //   warpTo: WarpType.Test6,
-  //   visual: WarpVisual.InvisibleLocked,
-  // },
 };
