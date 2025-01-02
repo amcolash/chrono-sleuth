@@ -291,7 +291,9 @@ export function warpTo(location: WarpType, player: Player, offset?: Types.Math.V
   scene.sound.play(sound);
 
   scene.cameras.main.fadeOut(200, 0, 0, 0, (_camera: Cameras.Scene2D.Camera, progress: number) => {
-    if (progress >= 1) scene.cameras.main.fadeIn(1000, 0, 0, 0);
+    if (progress >= 1) {
+      scene.time.delayedCall(300, () => scene.cameras.main.fadeIn(1000, 0, 0, 0));
+    }
   });
 
   scene.cameras.main.stopFollow();

@@ -154,7 +154,7 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
     (wall.body as Physics.Arcade.Body)?.updateFromGameObject();
   }
 
-  updateWarpLocked(scene, WarpType.ForestEast, complete || false);
+  updateWarpLocked(scene, WarpType.ForestEast, !complete);
 
   const { x, y } = NPCData[NPCType.Sphinx];
   const newX = complete ? x + 200 : x;

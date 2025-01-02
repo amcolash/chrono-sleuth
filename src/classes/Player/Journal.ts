@@ -86,7 +86,7 @@ export class Journal extends GameObjects.Image {
 
   handleSideEffects(entry: JournalEntry, silent: boolean) {
     const { warpAdd } = JournalData[entry];
-    if (warpAdd) updateWarpLocked(this.scene, warpAdd, true);
+    if (warpAdd) updateWarpLocked(this.scene, warpAdd, false);
 
     if (entry === JournalEntry.ClockFirstGear || entry === JournalEntry.ClockSecondGear) {
       const clock = getNPC(this.scene, NPCType.ClockTower);

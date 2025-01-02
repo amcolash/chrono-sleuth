@@ -108,8 +108,8 @@ export class Quests extends GameObjects.Container {
 
   handleSideEffects(type: QuestType, completed: boolean, silent?: boolean) {
     const { warpAdd, warpComplete } = QuestData[type];
-    if (warpAdd) updateWarpLocked(this.scene as Game, warpAdd, true);
-    if (completed && warpComplete) updateWarpLocked(this.scene as Game, warpComplete, true);
+    if (warpAdd) updateWarpLocked(this.scene as Game, warpAdd, false);
+    if (completed && warpComplete) updateWarpLocked(this.scene as Game, warpComplete, false);
 
     if (type === QuestType.FindPotionIngredients && !completed) {
       const scene = this.player.scene;

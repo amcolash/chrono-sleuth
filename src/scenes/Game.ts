@@ -1,4 +1,4 @@
-import { GameObjects, Scene, Types } from 'phaser';
+import { GameObjects, Geom, Scene, Types } from 'phaser';
 
 import { DebugLight } from '../classes/Debug/DebugLight';
 import { DebugUI } from '../classes/Debug/DebugUI';
@@ -158,45 +158,59 @@ export class Game extends Scene {
     this.frustumCull();
   }
 
+  // Reused rectangles for frustum culling
+  cameraBounds: Geom.Rectangle = new Geom.Rectangle(0, 0, Config.width + 300, Config.height + 300);
+  objectBounds: Geom.Rectangle = new Geom.Rectangle(0, 0, 0, 0);
+
   frustumCull() {
     const start = performance.now();
 
-    const children = this.children.getAll().filter((object) => {
+    this.cameraBounds.x = this.cameras.main.scrollX - 150;
+    this.cameraBounds.y = this.cameras.main.scrollY - 150;
+
+    const children = this.children.getAll();
+
+    // let visible = '';
+    let count = 0;
+    let total = 0;
+    for (let child of children) {
       if (
-        object instanceof GameObjects.Image ||
-        object instanceof GameObjects.Sprite ||
-        object instanceof GameObjects.Particles.ParticleEmitter ||
-        object instanceof GameObjects.Graphics
+        child instanceof GameObjects.Image ||
+        child instanceof GameObjects.Sprite ||
+        child instanceof GameObjects.Particles.ParticleEmitter ||
+        child instanceof GameObjects.Graphics
       ) {
-        return !(
-          object instanceof Slope ||
-          (!(object instanceof Warp) && object.name?.startsWith('Warp')) || // TODO: Get frustum culling working for warps
-          object.depth >= Layer.Ui ||
-          object.name?.length === 0
-        );
+        if (
+          child.depth !== Layer.Debug &&
+          (child instanceof Slope ||
+            (!(child instanceof Warp) && child.name?.startsWith('Warp')) ||
+            child.depth >= Layer.Ui ||
+            child.name?.length === 0)
+        ) {
+          continue;
+        }
+
+        total++;
+
+        this.objectBounds.setTo(child.x, child.y, child.width || 1, child.height || 1);
+        if (Geom.Intersects.RectangleToRectangle(this.cameraBounds, this.objectBounds)) {
+          if (child instanceof Warp) child.updateLocked();
+          else child.setVisible(true);
+
+          // visible += child.name + ', ';
+          count++;
+        } else {
+          child.setVisible(false);
+        }
       }
-      return false;
-    });
-
-    for (let child of children) child.setVisible(false);
-    const visible = this.cameras.main.cull(children);
-
-    for (let child of visible) {
-      if (child instanceof Warp) child.updateLocked();
-      else child.visible = true;
     }
 
-    // logEvery(
-    //   'culling',
-    //   1000,
-    //   children.length,
-    //   visible.length,
-    //   visible.map((v) => v.name)
-    // );
+    // logEvery('culling', 1000, count, total);
 
     if (globalStats && !this.cullingStats)
       this.cullingStats = globalStats.addPanel(Panel('Culling', '#9ad8e4', '#064b62'));
     this.cullingStats?.update(performance.now() - start);
+    // this.cullingStats?.update(count);
   }
 
   createBackgrounds() {
