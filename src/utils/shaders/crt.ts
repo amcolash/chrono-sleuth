@@ -1,7 +1,7 @@
-import { Scene } from 'phaser';
+import { Plugins, Renderer } from 'phaser';
 
-import { Config } from '../config';
-import { getSavedData } from './save';
+import { Config } from '../../config';
+import { getSavedData } from '../save';
 
 export let crtAlpha = 1;
 
@@ -72,7 +72,7 @@ void main(void)
 }
 `;
 
-export class CRTPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
+export class CRTPipeline extends Renderer.WebGL.Pipelines.PostFXPipeline {
   constructor(game: any) {
     super({
       game,
@@ -86,7 +86,7 @@ export class CRTPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline 
   }
 }
 
-export class PipelinePlugin extends Phaser.Plugins.ScenePlugin {
+export class PipelinePlugin extends Plugins.ScenePlugin {
   boot() {
     this.systems?.events.on('start', this.applyPipeline, this);
 
@@ -108,56 +108,4 @@ export function toggleCrt(enabled?: boolean) {
   else Config.useShader = !Config.useShader;
 
   crtAlpha = Config.useShader ? 1 : 0;
-}
-
-/******************************************************************************/
-
-export let xrayAlpha = 0;
-
-const xrayShader = `
-precision mediump float;
-
-uniform float     uAlpha;
-uniform sampler2D uMainSampler;
-
-varying vec2 outTexCoord;
-
-void main(void)
-{
-  vec4 baseColor = vec4(texture2D(uMainSampler, outTexCoord).rgba);
-  vec4 newColor = baseColor;
-  newColor.g *= 1.25;
-  newColor.r *= 2.5;
-  newColor.b *= 3.;
-
-  gl_FragColor = mix(baseColor, newColor, uAlpha);
-}
-`;
-
-export class XRayPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline {
-  constructor(game: any) {
-    super({
-      game,
-      fragShader: xrayShader,
-    });
-  }
-
-  onPreRender(): void {
-    this.set1f('uAlpha', xrayAlpha);
-  }
-}
-
-export function toggleXRay(scene: Scene, enabled: boolean) {
-  const newValue = enabled ? 0.85 : 0;
-  if (xrayAlpha === newValue) return;
-
-  scene.tweens.addCounter({
-    from: xrayAlpha,
-    to: enabled ? 0.85 : 0,
-    onUpdate: (tween) => {
-      xrayAlpha = tween.getValue();
-    },
-    duration: 2500,
-    ease: 'Bounce',
-  });
 }

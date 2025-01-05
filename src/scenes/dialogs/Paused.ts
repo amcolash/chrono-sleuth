@@ -8,7 +8,7 @@ import { Gamepad } from '../../classes/UI/Gamepad';
 import { IconButton } from '../../classes/UI/IconButton';
 import { Config } from '../../config';
 import { fontStyle } from '../../utils/fonts';
-import { toggleCrt } from '../../utils/shaders';
+import { toggleCrt } from '../../utils/shaders/crt';
 import { openDialog } from '../../utils/util';
 import { Game } from '../Game';
 

@@ -9,7 +9,7 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { getNPC, updateWarpLocked } from '../../utils/interactionUtils';
 import { autosave } from '../../utils/save';
-import { toggleXRay } from '../../utils/shaders';
+import { toggleXRay } from '../../utils/shaders/xray';
 import { openDialog } from '../../utils/util';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';

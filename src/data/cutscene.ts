@@ -8,7 +8,7 @@ import { Config } from '../config';
 import { Game } from '../scenes/Game';
 import { rotationCorrection } from '../utils/animations';
 import { getNPC, getProp, getWall, hasUsedItem, updateWarpLocked } from '../utils/interactionUtils';
-import { toggleXRay } from '../utils/shaders';
+import { toggleXRay } from '../utils/shaders/xray';
 import { fadeIn, fadeOut } from '../utils/util';
 import { NPCData } from './npc';
 import { PropData } from './prop';

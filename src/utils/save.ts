@@ -7,7 +7,8 @@ import { SaveData, SaveType, saveKey, saves } from '../data/saves';
 import { ItemType, JournalEntry, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { Colors } from './colors';
-import { toggleCrt, toggleXRay } from './shaders';
+import { toggleCrt } from './shaders/crt';
+import { toggleXRay } from './shaders/xray';
 import { setZoomed, transformEnumValue } from './util';
 
 /** Get the current state of the game before saving */

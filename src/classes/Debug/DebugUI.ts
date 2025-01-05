@@ -7,6 +7,7 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { toggleLighting } from '../../utils/lighting';
 import { save } from '../../utils/save';
+import { toggleXRay } from '../../utils/shaders/xray';
 import { openDialog } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
@@ -21,6 +22,7 @@ export class DebugUI extends GameObjects.Container {
   outline: GameObjects.Rectangle;
   scene: Game;
   dayNight: boolean = false;
+  xray: boolean = false;
 
   constructor(scene: Game, player: Player) {
     super(scene, 0, 0);
@@ -91,6 +93,11 @@ export class DebugUI extends GameObjects.Container {
 
     this.scene.input.keyboard?.on('keydown-CLOSED_BRACKET', () => {
       openDialog(this.scene, 'DebugTool');
+    });
+
+    this.scene.input.keyboard?.on('keydown-QUOTES', () => {
+      toggleXRay(this.scene, !this.xray);
+      this.xray = !this.xray;
     });
 
     if (Config.debug) {
