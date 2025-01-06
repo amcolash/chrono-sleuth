@@ -1,6 +1,5 @@
 import { Renderer, Scene } from 'phaser';
 
-import { setChromaticOffset } from './crt';
 import xrayShader from './xray.glsl?raw';
 
 export let xrayAlpha = 0;
@@ -26,7 +25,7 @@ export function toggleXRay(scene: Scene, enabled: boolean) {
     from: xrayAlpha,
     to: enabled ? 0.85 : 0,
     onUpdate: (tween) => {
-      setChromaticOffset(tween.getValue());
+      xrayAlpha = tween.getValue();
     },
     duration: enabled ? 2500 : 1500,
     ease: enabled ? 'Bounce' : undefined,

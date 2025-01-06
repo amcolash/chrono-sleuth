@@ -5,7 +5,6 @@ import { getSavedData } from '../save';
 import crtFragmentShader from './crt.glsl?raw';
 
 export let crtAlpha = 1;
-export let chromaticOffset = 1;
 
 export class CRTPipeline extends Renderer.WebGL.Pipelines.PostFXPipeline {
   constructor(game: any) {
@@ -18,7 +17,6 @@ export class CRTPipeline extends Renderer.WebGL.Pipelines.PostFXPipeline {
 
   onPreRender(): void {
     this.set1f('uAlpha', crtAlpha);
-    this.set1f('uChromaticOffset', chromaticOffset);
   }
 }
 
@@ -44,8 +42,4 @@ export function toggleCrt(enabled?: boolean) {
   else Config.useShader = !Config.useShader;
 
   crtAlpha = Config.useShader ? 1 : 0;
-}
-
-export function setChromaticOffset(value: number) {
-  chromaticOffset = value;
 }

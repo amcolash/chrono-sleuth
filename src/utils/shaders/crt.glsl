@@ -1,7 +1,6 @@
 precision mediump float;
 
 uniform float     uAlpha;
-uniform float     uChromaticOffset;
 uniform sampler2D uMainSampler;
 
 varying vec2 outTexCoord;
@@ -16,20 +15,15 @@ float warp = 0.35;     // simulate curvature of CRT monitor (larger number = mor
 float scan = 0.75;    // simulate darkness between scanlines
 float scanSize = 0.75; // size of scanlines [0.0 - 2.0] (smaller number = taller scanlines)
 
-float chromaticAberration = 0.25 * uAlpha * uChromaticOffset;
+float chromaticAberration = 0.25 * uAlpha;
 float redOffset   =  0.006 * chromaticAberration;
 float greenOffset =  0.003 * chromaticAberration;
 float blueOffset  = -0.003 * chromaticAberration;
 
-vec4 mainImage(out vec4 fragColor,in vec2 fragCoord) {
+vec4 mainImage(in vec2 fragCoord, in vec2 uv) {
   if (uAlpha <= 0.0) {
-    return texture2D(uMainSampler, outTexCoord);
+    return texture2D(uMainSampler, uv);
   }
-
-  vec2 uv = outTexCoord;
-
-  float pixelate = max(50., 350. * (5. - uChromaticOffset));
-  uv = floor(uv * pixelate + 0.5) / pixelate;
 
   // squared distance from center
   vec2 dc = abs(0.5-uv);
@@ -62,5 +56,5 @@ vec4 mainImage(out vec4 fragColor,in vec2 fragCoord) {
 }
 
 void main(void) {
-  gl_FragColor = mainImage(gl_FragColor, gl_FragCoord.xy);
+  gl_FragColor = mainImage(gl_FragCoord.xy, outTexCoord);
 }
