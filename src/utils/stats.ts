@@ -1,5 +1,5 @@
 /**
- * stats.js (modified)
+ * stats.js (heavily modified)
  * @linkcode github https://github.com/mrdoob/stats.js
  * @author mrdoob / http://mrdoob.com/
  */
@@ -52,13 +52,12 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
     TEXT_Y = 2 * PR,
     GRAPH_X = 3 * PR,
     GRAPH_Y = 23 * PR,
-    GRAPH_WIDTH = WIDTH - GRAPH_X * 2,
+    GRAPH_WIDTH = Math.floor(WIDTH - GRAPH_X * 2),
     GRAPH_HEIGHT = HEIGHT - GRAPH_Y - 2 * PR;
 
   const canvas = document.createElement('canvas');
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
-  // canvas.style.cssText = `width:${WIDTH / PR}}px;height:${HEIGHT / PR}px`;
 
   const context = canvas.getContext('2d')!;
   context.font = 'bold ' + 9 * PR + 'px Helvetica,Arial,sans-serif';
@@ -67,7 +66,7 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
   context.fillStyle = bg;
   context.fillRect(0, 0, WIDTH, HEIGHT);
 
-  context.fillStyle = fg;
+  context.fillStyle = fg; // text color
   context.fillText(name, TEXT_X, TEXT_Y);
   context.fillRect(GRAPH_X, GRAPH_Y, GRAPH_WIDTH, GRAPH_HEIGHT);
 
@@ -77,7 +76,7 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
 
   let lastUpdate = 0;
   let index = 0;
-  let data = [];
+  let data = new Array(Math.floor(GRAPH_WIDTH / PR)).fill(0);
 
   return {
     dom: canvas,
@@ -86,7 +85,7 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
       if (performance.now() - lastUpdate < 100) return;
 
       data[index] = value;
-      index = (index + 1) % GRAPH_WIDTH;
+      index = (index + 1) % data.length;
 
       min = Math.min(...data);
       max = Math.max(...data);
@@ -103,8 +102,8 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
 
       context.fillStyle = bg;
       context.globalAlpha = 0.8;
-      for (let i = 0; i < GRAPH_WIDTH; i++) {
-        const offset = (index + i) % GRAPH_WIDTH;
+      for (let i = 0; i < data.length; i++) {
+        const offset = (index + i) % data.length;
         const percent = data[offset] / max;
 
         context.fillRect(
