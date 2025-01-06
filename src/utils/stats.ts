@@ -42,7 +42,9 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
   var min = Infinity,
     max = 0,
     round = Math.round;
-  const PR = round(window.devicePixelRatio || 1);
+
+  const scale = 1.25;
+  const PR = round(window.devicePixelRatio || 1) * scale;
 
   const WIDTH = 100 * PR,
     HEIGHT = 65 * PR,
@@ -56,7 +58,7 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
   const canvas = document.createElement('canvas');
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
-  canvas.style.cssText = `width:${WIDTH / PR}}px;height:${HEIGHT / PR}px`;
+  // canvas.style.cssText = `width:${WIDTH / PR}}px;height:${HEIGHT / PR}px`;
 
   const context = canvas.getContext('2d')!;
   context.font = 'bold ' + 9 * PR + 'px Helvetica,Arial,sans-serif';
@@ -95,7 +97,7 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
 
       context.fillStyle = fg;
       context.fillText(`${name}: ${value.toFixed(1)}`, TEXT_X, TEXT_Y);
-      context.fillText(`[${min.toFixed(1)} - ${max.toFixed(1)}]`, TEXT_X, TEXT_Y + 10);
+      context.fillText(`[${min.toFixed(1)} - ${max.toFixed(1)}]`, TEXT_X, TEXT_Y + 10 * PR);
 
       context.fillRect(GRAPH_X, GRAPH_Y, GRAPH_WIDTH, GRAPH_HEIGHT);
 
