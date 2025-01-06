@@ -7,6 +7,7 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { toggleLighting } from '../../utils/lighting';
 import { save } from '../../utils/save';
+import { setChromaticOffset } from '../../utils/shaders/crt';
 import { toggleXRay } from '../../utils/shaders/xray';
 import { openDialog } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
@@ -98,6 +99,21 @@ export class DebugUI extends GameObjects.Container {
     this.scene.input.keyboard?.on('keydown-QUOTES', () => {
       toggleXRay(this.scene, !this.xray);
       this.xray = !this.xray;
+    });
+
+    this.scene.input.keyboard?.on('keydown-SEMICOLON', () => {
+      this.scene.tweens.addCounter({
+        from: 0,
+        to: 5,
+        onUpdate: (tween) => {
+          setChromaticOffset(tween.getValue());
+        },
+        duration: 2000,
+        repeat: -1,
+        yoyo: true,
+        hold: 1000,
+        ease: 'Sine.easeInOut',
+      });
     });
 
     if (Config.debug) {
