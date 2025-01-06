@@ -99,4 +99,4 @@ loading?.remove();
 const game = new Game(config);
 
 // Only create stats in dev mode
-if (!Config.prod) createStats(game);
+if (!Config.prod || Config.debug) createStats(game);
