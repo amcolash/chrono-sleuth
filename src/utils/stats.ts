@@ -109,7 +109,7 @@ const Panel = (name: string, fg: string, bg: string): PanelType => {
         context.fillRect(
           GRAPH_X + PR * i,
           GRAPH_Y,
-          PR,
+          PR + (2 - scale),
           Math.min(GRAPH_HEIGHT - PR, Math.max(PR, round((1 - percent) * GRAPH_HEIGHT)))
         );
       }
