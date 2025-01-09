@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 
+import { createMusicInstance } from '../classes/Music';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
 import { fontStyle } from '../utils/fonts';
@@ -20,6 +21,9 @@ export class Boot extends Scene {
 
   init() {
     this.add.image(0, 0, 'splash').setOrigin(0).setDisplaySize(Config.width, Config.height);
+
+    this.sound.pauseOnBlur = false;
+    createMusicInstance(this.sound);
   }
 
   preload() {

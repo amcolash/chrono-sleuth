@@ -53,7 +53,7 @@ const defaultSave: SaveData = {
     zoomed: true,
     useShader: true,
     time: Date.now(),
-    muted: true,
+    muted: false,
   },
 };
 

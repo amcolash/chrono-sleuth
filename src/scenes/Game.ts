@@ -13,6 +13,7 @@ import { Prop } from '../classes/Environment/Prop';
 import { Slope } from '../classes/Environment/Slope';
 import { Walls } from '../classes/Environment/Walls';
 import { Warp } from '../classes/Environment/Warp';
+import { GAME_MUSIC, Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
 import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
@@ -55,6 +56,9 @@ export class Game extends Scene {
   create() {
     // skip creation if already restarting the scene (due to config changes)
     if (!this.shouldInit) return;
+
+    Music.setScene(this);
+    Music.start(GAME_MUSIC);
 
     const startTime = performance.now();
 
@@ -192,7 +196,9 @@ export class Game extends Scene {
 
         total++;
 
+        /* @ts-ignore */
         this.objectBounds.setTo(child.x, child.y, child.width || 1, child.height || 1);
+
         if (Geom.Intersects.RectangleToRectangle(this.cameraBounds, this.objectBounds)) {
           if (child instanceof Warp) child.updateLocked();
           else child.setVisible(true);
