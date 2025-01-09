@@ -256,6 +256,8 @@ export class Game extends Scene {
     this.time.delayedCall(50, () => {
       let x = 30;
       new IconButton(this, x, 30, 'settings', () => {
+        if (this.player.message.visible) return;
+
         this.scene.pause();
         this.scene.launch('Paused', { game: this });
       });
@@ -336,6 +338,8 @@ export class Game extends Scene {
 
   createEventListeners() {
     this.input.keyboard?.on('keydown-ESC', () => {
+      if (this.player.message.visible) return;
+
       this.scene.pause();
       this.scene.launch('Paused', { game: this });
     });
