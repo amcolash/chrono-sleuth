@@ -7,6 +7,7 @@ import { Message } from '../classes/UI/Message';
 import { Config } from '../config';
 import { Game } from '../scenes/Game';
 import { rotationCorrection } from '../utils/animations';
+import { fontStyle } from '../utils/fonts';
 import { getNPC, getProp, getWall, hasUsedItem, updateWarpLocked } from '../utils/interactionUtils';
 import { toggleXRay } from '../utils/shaders/xray';
 import { fadeIn, fadeOut } from '../utils/util';
@@ -20,6 +21,12 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
 
   const message = new Message(scene);
 
+  const text = scene.add
+    .text(Config.width / 2, Config.height / 2, 'Later that day...', { ...fontStyle, fontSize: '42px' })
+    .setOrigin(0.5)
+    .setScrollFactor(0)
+    .setAlpha(0);
+
   player.setAngle(rotationCorrection);
 
   const timeline3 = scene.add.timeline([
@@ -27,17 +34,42 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
       at: 1500,
       tween: { targets: player, x: 850 * scale, duration: 2500, onComplete: () => player.anims.pause() },
       run: () => player.anims.resume(),
+      sound: { key: 'ladder', config: { rate: 0.6 } },
+    },
+    {
+      at: 3100,
+      sound: { key: 'ladder', config: { rate: 0.6 } },
     },
     {
       at: 6000,
+      run: () => fadeOut(scene, 500),
+    },
+    {
+      at: 7500,
       run: () => {
-        fadeOut(scene, 500, () => {
-          if (scene.textures.exists('warp')) {
-            scene.scene.start('Game');
-          } else {
-            scene.scene.start('Preloader');
-          }
-        });
+        // Somewhat silly hack to fade in/out text, since camera had just faded out.
+        // Move camera to a completely different area (text is fixed), then fade in camera which fades text
+        // Finally fade out camera to fade out text before switching scenes
+        const camera = scene.cameras.main;
+        camera.stopFollow();
+        camera.centerOn(10000, 10000);
+
+        text.setAlpha(1);
+        fadeIn(scene, 500);
+      },
+    },
+    {
+      at: 10000,
+      run: () => fadeOut(scene, 500),
+    },
+    {
+      at: 12000,
+      run: () => {
+        if (scene.textures.exists('warp')) {
+          scene.scene.start('Game');
+        } else {
+          scene.scene.start('Preloader');
+        }
       },
     },
   ]);
@@ -52,6 +84,11 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
         onComplete: () => player.anims.pause(),
       },
       run: () => player.anims.resume(),
+      sound: { key: 'ladder', config: { rate: 0.6 } },
+    },
+    {
+      at: 3100,
+      sound: { key: 'ladder', config: { rate: 0.6 } },
     },
     {
       at: 5500,
@@ -84,6 +121,11 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
       at: 2500,
       tween: { targets: player, x: 850 * scale, duration: 3000, onComplete: () => player.anims.pause() },
       run: () => player.anims.resume(),
+      sound: { key: 'ladder', config: { rate: 0.6 } },
+    },
+    {
+      at: 4100,
+      sound: { key: 'ladder', config: { rate: 0.6 } },
     },
     {
       at: 7000,
@@ -122,18 +164,24 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
 }
 
 export function townIntro(scene: Game) {
-  const message = scene.player.message;
+  scene.player.active = false;
 
-  message.setDialog(
-    {
-      messages: [
-        'Now that I have arrived in town, I should talk to the townsfolk about the strange occurrences.',
-        'Maybe someone has seen something that could help me start my investigation.',
-      ],
-    },
-    undefined,
-    'player_portrait'
-  );
+  scene.time.delayedCall(1500, () => {
+    const message = scene.player.message;
+    message.setDialog(
+      {
+        messages: [
+          'Now that I have arrived in town, I should talk to the townsfolk about the strange occurrences.',
+          'Maybe someone has seen something that could help me start my investigation.',
+        ],
+        onCompleted: () => {
+          scene.player.active = true;
+        },
+      },
+      undefined,
+      'player_portrait'
+    );
+  });
 }
 
 export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {
