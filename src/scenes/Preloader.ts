@@ -1,8 +1,8 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { GAME_MUSIC } from '../classes/Music';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
+import { MusicType } from '../data/types';
 import { fadeOut } from '../utils/util';
 import { preloadIntro } from './Intro';
 
@@ -158,7 +158,10 @@ export class Preloader extends Scene {
     this.load.audio('door', 'sounds/sfx/door.mp3');
 
     // music
-    this.load.audio(GAME_MUSIC, 'sounds/music/Night Time Scavenge II.m4a');
+    this.load.audio(MusicType.Town, 'sounds/music/Unknown.m4a');
+    this.load.audio(MusicType.Clock, 'sounds/music/Night Time Scavenge II.m4a');
+    this.load.audio(MusicType.Mansion, 'sounds/music/Reflective District.m4a');
+    this.load.audio(MusicType.Forest, 'sounds/music/Serene.m4a');
 
     // optionally preload intro
     if (!localStorage.getItem(saveKey)) {

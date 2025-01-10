@@ -148,3 +148,24 @@ export enum PropType {
 export enum HelperTextType {
   LabStairs,
 }
+
+export enum Location {
+  Town,
+  ClockOutside,
+  ClockInner,
+  Forest,
+  Lake,
+  MansionOutside,
+  MansionInside,
+  AlchemyLab,
+  Library,
+}
+
+export enum MusicType {
+  Intro = 'music-intro',
+
+  Town = 'music-town',
+  Mansion = 'music-mansion',
+  Forest = 'music-forest',
+  Clock = 'music-clock',
+}

@@ -1,14 +1,12 @@
 import { Scene, Sound, Tweens } from 'phaser';
 
-export const INTRO_MUSIC = 'music-intro';
-export const GAME_MUSIC = 'music-main';
+import { MusicData } from '../data/music';
+import { MusicType } from '../data/types';
 
 export let Music: MusicManager;
 export function createMusicInstance(sound: Sound.BaseSoundManager) {
   Music = new MusicManager(sound);
 }
-
-type MusicKey = typeof INTRO_MUSIC | typeof GAME_MUSIC;
 
 class MusicManager {
   sound: Sound.BaseSoundManager;
@@ -34,11 +32,11 @@ class MusicManager {
     });
   }
 
-  start(music: MusicKey, volume?: number) {
+  start(music: MusicType, volume?: number) {
     if (this.music?.key === music && this.music?.isPlaying) return;
 
     this.stop();
-    this.volume = volume || this.volume;
+    this.volume = volume || MusicData[music].volume || 0.5;
 
     this.music = this.sound.get(music) || this.sound.add(music, { loop: true, volume: this.volume });
     if (!this.sound.mute && !this.sound.locked) {

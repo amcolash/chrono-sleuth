@@ -1,11 +1,14 @@
-import { Math as PhaserMath, Physics, Scene } from 'phaser';
+import { Geom, Math as PhaserMath, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Data as BackgroundInfo } from '../../data/background';
 import { Layer } from '../../data/layers';
-import { LazyInitialize } from '../../data/types';
+import { MusicData } from '../../data/music';
+import { LazyInitialize, MusicType } from '../../data/types';
+import { Game } from '../../scenes/Game';
 import { initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
+import { Music } from '../Music';
 import { Player } from '../Player/Player';
 
 export class Background extends Physics.Arcade.Image implements LazyInitialize {
@@ -13,8 +16,9 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
   initialized: boolean = false;
   info: BackgroundInfo;
   center: PhaserMath.Vector2;
+  bounds: Geom.Rectangle;
 
-  constructor(scene: Scene, info: BackgroundInfo, player: Player) {
+  constructor(scene: Game, info: BackgroundInfo, player: Player) {
     const { x, y, image, scale } = info;
     super(scene, x, y, image);
     this.name = `Background-${info.image}`;
@@ -42,6 +46,8 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
 
+    this.bounds = this.getBounds();
+
     if (Config.debug) {
       this.setInteractive({ draggable: true });
     }
@@ -51,5 +57,11 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
 
   update() {
     this.lazyInit();
+
+    if (this.bounds?.contains(this.player.x, this.player.y)) {
+      const music = Object.entries(MusicData).find(([key, value]) => value.locations.includes(this.info.location));
+
+      if (music && Music.music?.key !== music[0]) Music.start(music[0] as MusicType);
+    }
   }
 }

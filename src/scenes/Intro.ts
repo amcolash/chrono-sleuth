@@ -1,9 +1,10 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { INTRO_MUSIC, Music } from '../classes/Music';
+import { Music } from '../classes/Music';
 import { Config } from '../config';
 import { trainIntro } from '../data/cutscene';
 import { SaveType, saves } from '../data/saves';
+import { MusicType } from '../data/types';
 import { fadeIn, fadeOut } from '../utils/util';
 
 // Export the preload function (so it can be used in the main Preloader)
@@ -22,7 +23,7 @@ export function preloadIntro(scene: Scene) {
 
   scene.load.svg('chevron-down', 'icons/chevron-down.svg', { width: 64, height: 64 });
 
-  scene.load.audio(INTRO_MUSIC, "sounds/music/A New Day's Hurry.m4a");
+  scene.load.audio(MusicType.Intro, "sounds/music/A New Day's Hurry.m4a");
 }
 
 export class Intro extends Scene {
@@ -62,7 +63,7 @@ export class Intro extends Scene {
 
   create() {
     Music.setScene(this);
-    Music.start(INTRO_MUSIC);
+    Music.start(MusicType.Intro);
 
     const scale = Config.zoomed ? 0.75 : 1;
 
