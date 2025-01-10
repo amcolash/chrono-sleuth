@@ -37,7 +37,7 @@
   },
   "productName": "chrono-sleuth",
   "mainBinaryName": "chrono-sleuth",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "identifier": "com.amcolash.chrono-sleuth",
   "plugins": {},
   "app": {
