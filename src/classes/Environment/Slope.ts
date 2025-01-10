@@ -43,7 +43,7 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
     this.scene.physics.add.existing(this);
 
     this.setOrigin(0)
-      .setDepth(Layer.Debug)
+      .setDepth(Layer.Items)
       .setVisible(Config.debug)
       .setSize(this.width, this.height * 1.5);
 

@@ -215,6 +215,7 @@ export function save(scene: Game, override?: SaveData, silent?: boolean): void {
       duration: 500,
       hold: 250,
       yoyo: true,
+      onComplete: () => scene.saveIcon.setAlpha(0),
     });
   }
 }
