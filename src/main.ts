@@ -21,7 +21,7 @@ import { Colors, getColorNumber } from './utils/colors';
 import { CRTPipeline, PipelinePlugin } from './utils/shaders/crt';
 import { XRayPipeline } from './utils/shaders/xray';
 import { createStats } from './utils/stats';
-import { setupCursorHiding } from './utils/util';
+import { isMobile, setupCursorHiding } from './utils/util';
 
 // SW injection is done build-time in vite config
 
@@ -99,4 +99,4 @@ loading?.remove();
 const game = new Game(config);
 
 // Only create stats in dev mode
-if (!Config.prod || Config.debug) createStats(game);
+if ((!Config.prod || Config.debug) && !isMobile()) createStats(game);

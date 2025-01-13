@@ -39,3 +39,17 @@
 - [ ] Custom phaser build
 
 ## Bugs
+
+## Ideas
+
+- Town hall meeting each morning
+- Time loop
+  - "was that a dream?" mechanic
+  - maybe influenced by sphinx
+- Hotel or inn
+  - have to go to sleep each night after fixing part of clock
+  - time resets, but progress is kept
+  - people forget about you and need to re-introduce - maybe there is one peson on the last day who slips up and says your name, or some small thing to tip you off
+- Add more to intro
+  - controls intro
+  - introduce character instead of just dropping into town
