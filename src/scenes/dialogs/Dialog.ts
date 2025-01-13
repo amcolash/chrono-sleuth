@@ -122,6 +122,8 @@ export abstract class Dialog extends Scene {
   }
 
   close(success?: boolean) {
+    this.preHandleSuccess(success);
+
     this.fadeOut(() => {
       this.scene.stop();
       if (this.dialogData.childScene) this.scene.stop(this.dialogData.childScene);
@@ -133,6 +135,8 @@ export abstract class Dialog extends Scene {
       this.handleSuccess(success);
     });
   }
+
+  preHandleSuccess(success?: boolean): void {}
 
   abstract handleSuccess(success?: boolean): void;
 }

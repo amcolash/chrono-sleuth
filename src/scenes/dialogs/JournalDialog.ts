@@ -31,6 +31,12 @@ export class JournalDialog extends Dialog {
     this.input.keyboard?.on('keydown-J', () => {
       this.close();
     });
+
+    this.sound.play('book_open');
+  }
+
+  preHandleSuccess(): void {
+    this.sound.play('book_close');
   }
 
   handleSuccess(): void {}

@@ -38,6 +38,7 @@ export class Button extends GameObjects.Text {
       if (!this.disabled) {
         this.setSelected(false);
         onClick(this);
+        this.scene.sound.play('button');
       }
     });
     this.on('pointerover', () => {

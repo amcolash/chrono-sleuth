@@ -27,6 +27,9 @@ Some sound effects https://mixkit.co/
 
 - footsteps
 - door open
+- metallic clunk
+- book open/close
+- button click
 
 ### Music
 
