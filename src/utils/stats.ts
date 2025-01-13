@@ -7,6 +7,7 @@
 type StatsType = {
   REVISION: number;
   dom: HTMLDivElement;
+  fps: HTMLDivElement;
   panels: PanelType[];
   addPanel: (panel: PanelType) => PanelType;
 };
@@ -18,7 +19,32 @@ type PanelType = {
 
 const Stats = (): StatsType => {
   const container = document.createElement('div');
+  container.id = 'stats';
   container.style.cssText = 'position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000';
+
+  const fullStats = !(localStorage.getItem('chrono-sleuth-stats') === 'false');
+  container.classList.toggle('hidden', !fullStats);
+
+  const img = document.createElement('img');
+  img.src = '/assets/icons/bar-chart-2.svg';
+
+  const button = document.createElement('button');
+  button.style.cssText =
+    'background-color:transparent;border:none;padding:0;bottom:8px;right:8px;position:fixed;cursor:pointer';
+  button.appendChild(img);
+  button.onclick = () => {
+    const current = !container.classList.contains('hidden');
+
+    container.classList.toggle('hidden', current);
+    localStorage.setItem('chrono-sleuth-stats', (!current).toString());
+  };
+
+  container.appendChild(button);
+
+  const fps = document.createElement('div');
+  fps.style.cssText =
+    'position:fixed;top:6px;left:6px;color:white;font-family:sans-serif;text-shadow:1px 1px 1px black';
+  container.appendChild(fps);
 
   const panels: PanelType[] = [];
 
@@ -32,6 +58,7 @@ const Stats = (): StatsType => {
     REVISION: 17,
 
     dom: container,
+    fps,
     panels,
 
     addPanel,
@@ -157,6 +184,8 @@ function createStats(game: Phaser.Game) {
     renderPanel.update(performance.now() - preRender);
     fpsPanel.update(1000 / avgFps);
     framePanel.update(performance.now() - preStep);
+
+    globalStats.fps.textContent = `${Math.floor(1000 / avgFps)}`;
 
     // This might not work in all browsers
     if (performance.memory) memoryPanel.update(performance.memory.usedJSHeapSize / 1048576);

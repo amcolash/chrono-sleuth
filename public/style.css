@@ -29,3 +29,7 @@ body {
   max-width: calc(100% - 20px);
   max-height: calc(100% - 20px);
 }
+
+#stats.hidden > canvas {
+  display: none !important;
+}
