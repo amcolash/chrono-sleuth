@@ -1,9 +1,11 @@
 import { Scene } from 'phaser';
 
+import { Music } from '../classes/Music';
 import { Button } from '../classes/UI/Button';
 import { ButtonGroup } from '../classes/UI/ButtonGroup';
 import { FullscreenButton } from '../classes/UI/FullscreenButton';
 import { Gamepad } from '../classes/UI/Gamepad';
+import { InputManager } from '../classes/UI/InputManager';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
 
@@ -13,6 +15,8 @@ export class MainMenu extends Scene {
   }
 
   create() {
+    Music.stop();
+
     this.add.image(0, 0, 'splash').setOrigin(0).setDisplaySize(Config.width, Config.height);
 
     const container = this.add.container(0, 0);
@@ -30,6 +34,8 @@ export class MainMenu extends Scene {
         .setScale(0.4)
     );
 
+    // Add an input manager / gamepad to events
+    new InputManager(this);
     new Gamepad(this, true).setVisible(false);
 
     const buttonGroup = new ButtonGroup(this);

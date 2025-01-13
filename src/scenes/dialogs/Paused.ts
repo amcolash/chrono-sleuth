@@ -7,6 +7,7 @@ import { ButtonGrid } from '../../classes/UI/ButtonGrid';
 import { FullscreenButton } from '../../classes/UI/FullscreenButton';
 import { Gamepad } from '../../classes/UI/Gamepad';
 import { IconButton } from '../../classes/UI/IconButton';
+import { InputManager } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
 import { fontStyle } from '../../utils/fonts';
 import { toggleCrt } from '../../utils/shaders/crt';
@@ -33,7 +34,7 @@ export class Paused extends Scene {
     if (Music.music && Music.music.isPlaying) {
       this.tweens.add({
         targets: Music.music,
-        volume: 0.1,
+        volume: 0.2,
         duration: 800,
       });
     }
@@ -143,7 +144,9 @@ export class Paused extends Scene {
     // Keyboard interactions
     this.input.keyboard?.on('keydown-ESC', () => this.resume());
 
-    new Gamepad(this).setVisible(false);
+    // Add an input manager / gamepad to events
+    new InputManager(this);
+    new Gamepad(this, true).setVisible(false);
 
     this.tweens.add({
       targets: this.container,
