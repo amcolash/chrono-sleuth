@@ -1,4 +1,4 @@
-import { Cameras, GameObjects, Physics, Scene, Types } from 'phaser';
+import { GameObjects, Physics, Scene, Types } from 'phaser';
 
 import { Config } from '../../config';
 import { JournalData } from '../../data/journal';
@@ -8,7 +8,7 @@ import { InteractResult, Interactive, LazyInitialize, WarpType } from '../../dat
 import { WarpData, WarpVisual } from '../../data/warp';
 import { Game } from '../../scenes/Game';
 import { initializeObject } from '../../utils/interactionUtils';
-import { openDialog, shouldInitialize, splitTitleCase } from '../../utils/util';
+import { fadeIn, fadeOut, openDialog, shouldInitialize, splitTitleCase } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
@@ -205,7 +205,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
 
     if (shouldWarp) {
-      warpTo(WarpData[this.warpType].warpTo, this.player, undefined, this);
+      warpTo(this.warpType, WarpData[this.warpType].warpTo, this.player);
       return InteractResult.Teleported;
     }
 
@@ -213,10 +213,9 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   }
 
   getButtonPrompt() {
-    const key = WarpData[this.warpType].key;
+    const { key } = WarpData[this.warpType];
 
     let prompt;
-    if (key === Key.Continue) prompt = '[CONTINUE]';
     if (key === Key.Up) prompt = '[Up]';
     if (key === Key.Down) prompt = '[Down]';
     if (key === Key.Left) prompt = '[Left]';
@@ -264,88 +263,89 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   }
 }
 
-export function warpTo(location: WarpType, player: Player, offset?: Types.Math.Vector2Like, sourceWarp?: Warp) {
-  let { x, y, onWarp } = WarpData[location];
+const directions = {
+  [Key.Up]: { x: 0, y: -1 },
+  [Key.Down]: { x: 0, y: 1 },
+  [Key.Left]: { x: -1, y: 0 },
+  [Key.Right]: { x: 1, y: 0 },
+};
+
+export function warpTo(source: WarpType, destination: WarpType, player: Player, offset?: Types.Math.Vector2Like) {
+  const { direction, key, sound, visual } = WarpData[source];
+  let { x, y } = WarpData[destination];
+
+  const movement = directions[direction !== undefined ? direction : key];
+  const scene = player.scene;
+  const camera = scene.cameras.main;
+
+  // Calculate offset warp position
   if (offset) {
     x += offset.x;
     y += offset.y;
   }
 
-  const scene = player.scene;
-
+  // Calculate final camera position
   const targetScrollX = x - scene.cameras.main.width / 2;
-  const targetScrollY = y - scene.cameras.main.height / 2;
+  const targetScrollY = y - scene.cameras.main.height / 2 - Config.cameraOffset;
 
-  if (onWarp) onWarp(player);
+  // Determine warp sound
+  let warpSound = 'warp';
+  if (visual === WarpVisual.Ladder) warpSound = 'ladder';
+  if (visual === WarpVisual.Invisible || visual === WarpVisual.InvisibleLocked) warpSound = 'door';
+  if (sound) warpSound = sound;
 
-  let sound = 'warp';
-
-  if (sourceWarp) {
-    const data = WarpData[sourceWarp.warpType];
-    if (data.visual === WarpVisual.Ladder) sound = 'ladder';
-    if (data.visual === WarpVisual.Invisible || data.visual === WarpVisual.InvisibleLocked) sound = 'door';
-
-    if (data.sound) sound = data.sound;
-  }
-
-  scene.sound.play(sound);
-
-  scene.cameras.main.fadeOut(200, 0, 0, 0, (_camera: Cameras.Scene2D.Camera, progress: number) => {
-    if (progress >= 1) {
-      scene.time.delayedCall(300, () => scene.cameras.main.fadeIn(1000, 0, 0, 0));
-    }
-  });
-
-  scene.cameras.main.stopFollow();
-  scene.tweens.add({
-    targets: scene.cameras.main,
-    scrollX: targetScrollX,
-    scrollY: targetScrollY - Config.cameraOffset,
-    duration: 600,
-    delay: 100,
-    ease: 'Power1',
-    onComplete: () => {
-      scene.cameras.main.startFollow(player, true);
-      scene.cameras.main.setFollowOffset(0, Config.cameraOffset);
-    },
-  });
-
-  // fade player out and then in again
+  camera.stopFollow();
   player.setActive(false);
-  player.buttonPrompt.setVisible(false);
-  scene.tweens.add({
-    targets: player,
-    alpha: 0,
-    duration: 500,
-    ease: 'Power1',
-    yoyo: true,
-    repeat: 0,
-    onYoyo: () => {
-      player.setPosition(x, y);
-      player.previousPosition.set(x, y);
-    },
-    onComplete: () => {
-      player.alpha = 1;
-      player.setActive(true);
-    },
-  });
 
-  scene.tweens.add({
-    targets: player.light,
-    intensity: 0,
-    duration: 50,
-    hold: 600,
-    yoyo: true,
-    repeat: 0,
-  });
-
-  // move player to new location
-  const light = player.light instanceof GameObjects.Light ? player.light : player.light.light;
-  scene.tweens.add({
-    targets: light,
-    x,
-    y,
-    duration: 400,
-    ease: 'Power1',
-  });
+  scene.add
+    .timeline([
+      // Fade out camera and move in direction of warp
+      {
+        at: 0,
+        run: () => fadeOut(scene, 200),
+        tween: {
+          delay: 100,
+          targets: camera,
+          scrollX: camera.scrollX + movement.x * 50,
+          scrollY: camera.scrollY + movement.y * 50,
+          duration: 100,
+        },
+        sound: warpSound,
+      },
+      // Fade out player
+      {
+        at: 0,
+        tween: {
+          targets: player,
+          alpha: 0,
+          duration: 200,
+        },
+      },
+      // Move player / camera to final position
+      {
+        at: 450,
+        run: () => {
+          player.setPosition(x, y);
+          player.previousPosition.set(x, y);
+          camera.scrollX = targetScrollX;
+          camera.scrollY = targetScrollY;
+        },
+      },
+      // Fade in player/camera, then re-enable player
+      {
+        at: 600,
+        tween: {
+          targets: player,
+          alpha: 1,
+          duration: 200,
+        },
+        run: () =>
+          fadeIn(scene, 400, () => {
+            camera.startFollow(player, true);
+            camera.setFollowOffset(0, Config.cameraOffset);
+            player.setActive(true);
+          }),
+      },
+    ])
+    .play();
 }

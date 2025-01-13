@@ -1,4 +1,3 @@
-import { Player } from '../classes/Player/Player';
 import { Key } from '../classes/UI/InputManager';
 import { DataProps, WarpType } from './types';
 
@@ -27,10 +26,10 @@ export enum WarpSound {
 
 type Data = DataProps & {
   range?: number;
-  key: Key;
+  key: Key.Up | Key.Down | Key.Left | Key.Right;
+  direction?: Key.Up | Key.Down | Key.Left | Key.Right;
   warpTo: WarpType;
   visual: WarpVisual;
-  onWarp?: (player: Player) => void;
   sound?: WarpSound;
 };
 
@@ -75,7 +74,8 @@ export const WarpData: Record<WarpType, Data> = {
   [WarpType.ClockSquare]: {
     x: 560,
     y: -330,
-    key: Key.Down,
+    key: Key.Left,
+    direction: Key.Down,
     warpTo: WarpType.TownNorth,
     visual: WarpVisual.Warp,
   },
@@ -92,6 +92,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -1320,
     range: 15,
     key: Key.Left,
+    direction: Key.Down,
     warpTo: WarpType.ClockSquareNorth,
     visual: WarpVisual.Warp,
     skipLighting: true,
@@ -102,6 +103,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -1400,
     range: 20,
     key: Key.Right,
+    direction: Key.Up,
     warpTo: WarpType.ClockTop,
     visual: WarpVisual.Invisible,
     sound: WarpSound.Ladder,
@@ -111,6 +113,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -1970,
     range: 10,
     key: Key.Left,
+    direction: Key.Down,
     warpTo: WarpType.ClockStairs,
     visual: WarpVisual.Invisible,
     sound: WarpSound.Ladder,
@@ -152,8 +155,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 640,
     key: Key.Up,
     warpTo: WarpType.Mansion,
-    visual: WarpVisual.Warp,
-    sound: WarpSound.Door,
+    visual: WarpVisual.Invisible,
   },
   [WarpType.Mansion]: {
     x: -1405,
@@ -174,6 +176,7 @@ export const WarpData: Record<WarpType, Data> = {
     x: -1380,
     y: 1545,
     key: Key.Right,
+    direction: Key.Up,
     warpTo: WarpType.LabHatch,
     visual: WarpVisual.Invisible,
     range: 15,

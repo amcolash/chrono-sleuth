@@ -86,6 +86,8 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
       this.body &&
       this.scene.physics.world.intersects(this.body as Physics.Arcade.Body, player.body as Physics.Arcade.Body)
     ) {
+      if (!player.active || keys[Key.Shift]) return;
+
       let horizontalPercent = PhaserMath.Clamp(1 - (this.x + this.width - player.x) / this.width, 0, 1);
       if (this.flipped) horizontalPercent = 1 - horizontalPercent;
 

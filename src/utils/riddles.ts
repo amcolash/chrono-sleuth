@@ -116,7 +116,7 @@ export function handleSphinxAnswer(option: string, player: Player, npc?: NPC) {
             sphinxFail: true,
           });
 
-          warpTo(WarpType.TownEast, player, { x: -100, y: 0 });
+          warpTo(WarpType.Forest, WarpType.TownEast, player, { x: -100, y: 0 });
         },
       },
       npc

@@ -38,7 +38,7 @@ export class MazeDialog extends Dialog {
 
   handleSuccess(success: boolean): void {
     if (success) {
-      warpTo(WarpType.Forest, this.player);
+      warpTo(WarpType.TownEast, WarpType.Forest, this.player);
       this.player.gameState.updateData({ mazeSolved: true, mazeSeed: this.player.gameState.data.mazeSeed + 1 }, false);
     } else {
       this.player.setPosition(WarpData[WarpType.TownEast].x - 100, WarpData[WarpType.TownEast].y);
