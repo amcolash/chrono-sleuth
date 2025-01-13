@@ -78,8 +78,8 @@ export enum WarpType {
   LabHatch,
   Lab,
 
-  LibraryEntrance,
-  Library,
+  TownHallEntrance,
+  TownHall,
 }
 
 export enum ItemType {
@@ -158,7 +158,7 @@ export enum Location {
   MansionOutside,
   MansionInside,
   AlchemyLab,
-  Library,
+  TownHall,
 }
 
 export enum MusicType {

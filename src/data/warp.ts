@@ -73,15 +73,15 @@ export const WarpData: Record<WarpType, Data> = {
     visual: WarpVisual.WarpLocked,
   },
   [WarpType.ClockSquare]: {
-    x: 610,
+    x: 560,
     y: -330,
-    key: Key.Left,
+    key: Key.Down,
     warpTo: WarpType.TownNorth,
     visual: WarpVisual.Warp,
   },
 
   [WarpType.ClockSquareNorth]: {
-    x: 915,
+    x: 930,
     y: -330,
     key: Key.Up,
     warpTo: WarpType.ClockEntrance,
@@ -180,18 +180,18 @@ export const WarpData: Record<WarpType, Data> = {
     skipLighting: true,
   },
 
-  [WarpType.LibraryEntrance]: {
-    x: 1420,
-    y: 650,
-    key: Key.Up,
-    warpTo: WarpType.Library,
-    visual: WarpVisual.WarpLocked,
+  [WarpType.TownHallEntrance]: {
+    x: 1120,
+    y: -330,
+    key: Key.Right,
+    warpTo: WarpType.TownHall,
+    visual: WarpVisual.InvisibleLocked,
   },
-  [WarpType.Library]: {
-    x: 1730,
-    y: -120,
+  [WarpType.TownHall]: {
+    x: 1670,
+    y: -290,
     key: Key.Left,
-    warpTo: WarpType.LibraryEntrance,
+    warpTo: WarpType.TownHallEntrance,
     visual: WarpVisual.Warp,
   },
 };

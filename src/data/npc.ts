@@ -40,7 +40,7 @@ export const NPCData: Record<NPCType, Data> = {
     initializeOnStart: true,
   },
   [NPCType.Mayor]: {
-    x: 1065,
+    x: 790,
     y: -340,
     scale: 0.9,
     image: 'mayor',
