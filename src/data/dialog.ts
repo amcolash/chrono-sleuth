@@ -33,6 +33,7 @@ export interface Dialog<T> {
   options?: string[] | ((player: Player) => string[]);
 
   onCompleted?: (player: Player, target?: T) => void;
+  onMessageShown?(player: Player, index: number, target?: T): void;
   onSelected?: (option: string, player: Player, target?: T) => void;
 }
 
@@ -295,11 +296,14 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
     {
       messages: [
         'Slowly, you align and tighten the second gear into place.',
-        '[CREAKING NOISE]',
+        '[CLUNKING NOISE]',
         'Now two of the hands of the clock are moving again.',
       ],
       conditions: {
         hasItem: ItemType.Gear2,
+      },
+      onMessageShown: (player, index) => {
+        if (index === 1) player.scene.sound.play('clunk');
       },
       onCompleted: (player) => {
         player.inventory.removeItem(ItemType.Gear2);
@@ -316,11 +320,14 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       messages: [
         "This dusty clock tower hasn't told the correct time in many years. It appears to be missing some gears.",
         'Let’s see what happens when we add the first gear. You tighten the gear into place.',
-        '[CREAKING NOISE]',
+        '[CLUNKING NOISE]',
         'The clock tower is starting to partially move again. It looks like it’s missing two more gears.',
       ],
       conditions: {
         hasItem: ItemType.Gear1,
+      },
+      onMessageShown: (player, index) => {
+        if (index === 2) player.scene.sound.play('clunk');
       },
       onCompleted: (player) => {
         player.inventory.removeItem(ItemType.Gear1);

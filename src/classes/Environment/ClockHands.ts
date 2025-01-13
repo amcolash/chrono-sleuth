@@ -1,5 +1,6 @@
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, Geom, Scene } from 'phaser';
 
+import { Config } from '../../config';
 import { Layer } from '../../data/layers';
 import { JournalEntry } from '../../data/types';
 import { Colors, getColorNumber } from '../../utils/colors';
@@ -10,7 +11,7 @@ const radius1 = 50;
 const radius2 = 40;
 const radius3 = 25;
 
-const speed = 35;
+const speed = 45;
 const PI2 = Math.PI * 2;
 
 const sec = 1000 * 60;
@@ -28,6 +29,8 @@ export class ClockHands extends GameObjects.Graphics {
   update2: boolean = false;
   update3: boolean = false;
 
+  cameraBounds: Geom.Rectangle = new Geom.Rectangle(0, 0, Config.width + 300, Config.height + 300);
+
   constructor(scene: Scene, player: Player) {
     super(scene);
     this.name = 'ClockHands';
@@ -43,7 +46,10 @@ export class ClockHands extends GameObjects.Graphics {
   }
 
   update(time: number): void {
-    if (this.scene.cameras.main.worldView.contains(this.x, this.y)) {
+    this.cameraBounds.x = this.scene.cameras.main.scrollX - 150;
+    this.cameraBounds.y = this.scene.cameras.main.scrollY - 150;
+
+    if (!this.cameraBounds.contains(this.x, this.y)) {
       this.setVisible(false);
       return;
     }
@@ -57,10 +63,10 @@ export class ClockHands extends GameObjects.Graphics {
     this.clear();
 
     this.fillStyle(getColorNumber('#224477'));
-    this.fillCircle(0, 0, 6);
+    this.fillCircle(0, 0, 5);
 
-    [8, 6].forEach((width) => {
-      this.lineStyle(width, getColorNumber(width === 6 ? '#224477' : Colors.Black));
+    [6, 2].forEach((width) => {
+      this.lineStyle(width, getColorNumber(width === 2 ? '#4477aa' : Colors.Black));
       this.lineBetween(0, 0, Math.cos(this.angle1) * radius1, Math.sin(this.angle1) * radius1);
       this.lineBetween(0, 0, Math.cos(this.angle2) * radius2, Math.sin(this.angle2) * radius2);
       this.lineBetween(0, 0, Math.cos(this.angle3) * radius3, Math.sin(this.angle3) * radius3);

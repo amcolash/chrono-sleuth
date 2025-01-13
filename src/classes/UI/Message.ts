@@ -254,6 +254,9 @@ export class Message extends GameObjects.Container {
     }
 
     this.messageIndex++;
+
+    if (this.dialog.onMessageShown) this.dialog.onMessageShown(this.player, this.messageIndex, this.target);
+
     if (this.messageIndex >= messages.length) {
       if (this.dialog.onCompleted) {
         this.dialog.onCompleted(this.player, this.target);
