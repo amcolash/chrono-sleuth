@@ -114,7 +114,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
     },
     {
       messages: [
-        'The clock tower is the heart of our town, but it’s been broken for ages. I’ve got a wrench, but you’ll need three special gears to fix it.',
+        'The clock tower is the heart of our town, but it’s been broken for ages. I’ve got a wrench you can borrow, but you’ll need three special gears to fix it.',
         'You might find the others by helping the townsfolk.',
       ],
       onCompleted: (player) => {

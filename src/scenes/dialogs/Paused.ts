@@ -1,6 +1,7 @@
 import { exit } from '@tauri-apps/plugin-process';
 import { GameObjects, Scene } from 'phaser';
 
+import { Music } from '../../classes/Music';
 import { Button } from '../../classes/UI/Button';
 import { ButtonGrid } from '../../classes/UI/ButtonGrid';
 import { FullscreenButton } from '../../classes/UI/FullscreenButton';
@@ -27,6 +28,15 @@ export class Paused extends Scene {
 
   create() {
     const { width, height } = Config;
+
+    // Fade out background music
+    if (Music.music && Music.music.isPlaying) {
+      this.tweens.add({
+        targets: Music.music,
+        volume: 0.1,
+        duration: 800,
+      });
+    }
 
     this.container = this.add.container(0, 0);
 
@@ -143,6 +153,15 @@ export class Paused extends Scene {
   }
 
   resume() {
+    // Fade in background music
+    if (Music.music && Music.music.isPlaying) {
+      this.tweens.add({
+        targets: Music.music,
+        volume: Music.volume,
+        duration: 500,
+      });
+    }
+
     this.tweens.add({
       targets: this.container,
       alpha: { start: 1, to: 0 },
