@@ -14,6 +14,8 @@ type DialogData = {
   title: string;
   gamepadVisible: boolean;
   childScene?: string;
+
+  /** Hide the top-right button that closes a dialog in the "success state" */
   hideCloseSuccess?: boolean;
 };
 

@@ -33,20 +33,22 @@ export class TextBox extends GameObjects.Container {
     // Create text object
     this.textObject = new GameObjects.Text(scene, 0, 0, text, { ...fontStyle, padding: { x: 10, y: 10 }, ...style });
     this.textObject.setOrigin(0).setScrollFactor(0);
-    if (handleClick) this.textObject.setInteractive({ useHandCursor: true });
+    this.textObject.setInteractive({ useHandCursor: true });
     this.add(this.textObject);
 
     // Set up scroll events
     scene.input.on('wheel', this.handleScroll, this);
     this.textObject.on('pointermove', this.handleDrag, this);
     this.textObject.on('pointerdown', (_pointer: Input.Pointer, _localX: number, localY: number) => {
-      clearTimeout(this.scrollTimer);
-      this.scrollTimer = window.setTimeout(() => {
-        const lines = this.textObject.getWrappedText().length;
-        const percentage = localY / this.textObject.height;
-        const line = Math.floor(percentage * lines);
-        if (handleClick) handleClick(line);
-      }, clickDuration);
+      if (handleClick) {
+        clearTimeout(this.scrollTimer);
+        this.scrollTimer = window.setTimeout(() => {
+          const lines = this.textObject.getWrappedText().length;
+          const percentage = localY / this.textObject.height;
+          const line = Math.floor(percentage * lines);
+          handleClick(line);
+        }, clickDuration);
+      }
     });
 
     scene.input.keyboard?.on('keydown-UP', () => {
