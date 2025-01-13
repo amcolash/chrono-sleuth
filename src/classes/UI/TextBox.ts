@@ -1,13 +1,17 @@
 import { GameObjects, Input, Math as PhaserMath, Scene, Types } from 'phaser';
 
+import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 
-const scrollbarWidth = 4;
+const scrollbarWidth = 6;
+const clickDuration = 200;
 
 export class TextBox extends GameObjects.Container {
   textObject: GameObjects.Text;
   maskGraphics: GameObjects.Graphics;
   scrollbar: GameObjects.Rectangle;
+
+  scrollTimer?: number;
 
   scrollY: number;
   boxHeight: number;
@@ -36,10 +40,13 @@ export class TextBox extends GameObjects.Container {
     scene.input.on('wheel', this.handleScroll, this);
     this.textObject.on('pointermove', this.handleDrag, this);
     this.textObject.on('pointerdown', (_pointer: Input.Pointer, _localX: number, localY: number) => {
-      const lines = this.textObject.getWrappedText().length;
-      const percentage = localY / this.textObject.height;
-      const line = Math.floor(percentage * lines);
-      if (handleClick) handleClick(line);
+      clearTimeout(this.scrollTimer);
+      this.scrollTimer = window.setTimeout(() => {
+        const lines = this.textObject.getWrappedText().length;
+        const percentage = localY / this.textObject.height;
+        const line = Math.floor(percentage * lines);
+        if (handleClick) handleClick(line);
+      }, clickDuration);
     });
 
     scene.input.keyboard?.on('keydown-UP', () => {
@@ -57,7 +64,7 @@ export class TextBox extends GameObjects.Container {
     this.add(this.maskGraphics);
 
     // Create scrollbar
-    this.scrollbar = scene.add.rectangle(0, 0, scrollbarWidth, 0, 0x555555).setScrollFactor(0);
+    this.scrollbar = scene.add.rectangle(0, 0, scrollbarWidth, 0, getColorNumber(Colors.Night)).setScrollFactor(0);
     this.add(this.scrollbar);
   }
 
@@ -89,6 +96,8 @@ export class TextBox extends GameObjects.Container {
 
   private handleDrag(pointer: Input.Pointer) {
     if (pointer.isDown) {
+      clearTimeout(this.scrollTimer);
+
       this.scrollY -= pointer.velocity.y;
       this.updateTextPosition();
     }

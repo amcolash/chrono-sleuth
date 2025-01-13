@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, Scene, Tweens } from 'phaser';
 
 import { Config } from '../../config';
 import { Dialog } from '../../data/dialog';
@@ -32,6 +32,8 @@ export class Message extends GameObjects.Container {
   npcName: GameObjects.Text;
   text: GameObjects.Text;
   portrait: GameObjects.Image;
+  arrow: GameObjects.Image;
+  arrowTween: Tweens.Tween;
 
   options?: string[];
   optionsContainer: ButtonGroup;
@@ -101,18 +103,17 @@ export class Message extends GameObjects.Container {
 
     this.optionsContainer = new ButtonGroup(this.scene).setDepth(Layer.Overlay);
 
-    const arrow = this.scene.add.image(Config.width - padding * 2 - 20, boxHeight - 16, 'chevron-down').setScale(0.5);
-    this.scene.tweens.add({
-      targets: arrow,
-      y: boxHeight - 22,
-      scale: 0.4,
-      duration: 1000,
-      ease: 'Sine.easeInOut',
+    this.arrow = this.scene.add.image(Config.width - padding * 2 - 20, boxHeight - 22, 'chevron-down').setScale(0.5);
+    this.arrowTween = this.scene.tweens.add({
+      targets: this.arrow,
+      y: boxHeight - 16,
+      duration: 700,
+      ease: 'Sine.easeIn',
       yoyo: true,
       repeat: -1,
     });
 
-    this.add([box, this.npcName, this.text, this.portrait, arrow]);
+    this.add([box, this.npcName, this.text, this.portrait, this.arrow]);
   }
 
   setDialog<T>(dialog?: Dialog<T>, target?: T, portrait?: string) {
@@ -170,6 +171,8 @@ export class Message extends GameObjects.Container {
     const messages = this.getMessages();
     const message = messages && messages[this.messageIndex];
 
+    this.arrow.setAlpha(0);
+
     if (message) {
       this.text.setText(message);
 
@@ -193,6 +196,7 @@ export class Message extends GameObjects.Container {
         this.animating = false;
         this.stopAudio = undefined;
         this.stopAnimation = undefined;
+        this.resetArrow();
       });
 
       if (this.text.getWrappedText().length > maxLines) console.error('Message too long!', message);
@@ -250,6 +254,8 @@ export class Message extends GameObjects.Container {
       this.stopAudio?.();
       this.stopAnimation?.();
       this.animating = false;
+      this.resetArrow();
+
       return;
     }
 
@@ -295,5 +301,14 @@ export class Message extends GameObjects.Container {
       options = options(this.player);
     }
     return options;
+  }
+
+  resetArrow(): void {
+    this.arrowTween.restart();
+    this.scene.tweens.add({
+      targets: this.arrow,
+      alpha: 1,
+      duration: 500,
+    });
   }
 }
