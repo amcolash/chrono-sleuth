@@ -23,6 +23,7 @@ export class DebugUI extends GameObjects.Container {
   scene: Game;
   dayNight: boolean = false;
   xray: boolean = false;
+  debugCamera: GameObjects.Rectangle;
 
   constructor(scene: Game, player: Player) {
     super(scene, 0, 0);
@@ -45,13 +46,6 @@ export class DebugUI extends GameObjects.Container {
     this.setScrollFactor(0).setDepth(Layer.Debug).setAlpha(0.8);
     this.scene.add.existing(this);
 
-    // this.text = scene.add.text(20, 90, '', {
-    //   ...fontStyle,
-    //   fontSize: Config.zoomed ? 24 : 32,
-    //   backgroundColor: `#${Colors.Black}`,
-    //   padding: { x: 5, y: 5 },
-    // });
-
     this.rect = scene.add.rectangle(0, 0, 0, 0, getColorNumber(Colors.Black)).setOrigin(0).setDepth(Layer.Debug);
     this.add(this.rect);
 
@@ -59,6 +53,10 @@ export class DebugUI extends GameObjects.Container {
     this.add(this.text);
 
     this.outline = scene.add.rectangle(0, 0, 0, 0).setStrokeStyle(2, 0x00ff00).setScale(1.1).setDepth(Layer.Debug);
+    this.debugCamera = scene.add
+      .rectangle(0, 0, Config.width, Config.height)
+      .setStrokeStyle(4, 0xdd8800)
+      .setDepth(Layer.Debug);
   }
 
   createEventListeners() {
@@ -197,5 +195,10 @@ export class DebugUI extends GameObjects.Container {
     } else {
       this.outline.setSize(0, 0);
     }
+
+    this.debugCamera.setPosition(
+      Config.width / 2 + this.scene.cameras.main.scrollX,
+      Config.height / 2 + this.scene.cameras.main.scrollY
+    );
   }
 }
