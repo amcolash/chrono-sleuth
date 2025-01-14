@@ -1,4 +1,4 @@
-import { GameObjects, Input, Physics } from 'phaser';
+import { GameObjects, Input, Math as PhaserMath, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
@@ -23,6 +23,7 @@ export class DebugUI extends GameObjects.Container {
   scene: Game;
   dayNight: boolean = false;
   xray: boolean = false;
+  dragOffset = new PhaserMath.Vector2();
 
   constructor(scene: Game, player: Player) {
     super(scene, 0, 0);
@@ -116,17 +117,20 @@ export class DebugUI extends GameObjects.Container {
       this.scene.input.on('gameobjectdown', (pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
         if (pointer.buttons !== 1) return;
 
-        if (gameObject !== this.activeElement) {
+        if (gameObject && gameObject !== this.activeElement) {
           this.activeElement = gameObject;
+          // @ts-ignore
+          this.dragOffset.set(gameObject.x - pointer.worldX, gameObject.y - pointer.worldY);
         } else {
           this.activeElement = undefined;
+          this.dragOffset.set(0, 0);
         }
       });
 
       this.scene.input.on('drag', (pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
         if (this.activeElement === gameObject) {
           // @ts-ignore
-          gameObject.setPosition(pointer.worldX, pointer.worldY);
+          gameObject.setPosition(this.dragOffset.x + pointer.worldX, this.dragOffset.y + pointer.worldY);
         }
       });
 
