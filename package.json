@@ -22,7 +22,7 @@
     "phaser": "^3.87.0"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.1.0",
+    "@tauri-apps/cli": "^2.2.4",
     "@trivago/prettier-plugin-sort-imports": "^5.2.1",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^22.10.5",
