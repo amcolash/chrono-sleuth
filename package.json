@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.1.0",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.1",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^22.10.5",
     "prettier": "^3.4.2",
