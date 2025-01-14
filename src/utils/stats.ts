@@ -26,7 +26,7 @@ const Stats = (): StatsType => {
   container.classList.toggle('hidden', !fullStats);
 
   const img = document.createElement('img');
-  img.src = '/assets/icons/bar-chart-2.svg';
+  img.src = 'assets/icons/bar-chart-2.svg';
 
   const button = document.createElement('button');
   button.style.cssText =
@@ -43,7 +43,7 @@ const Stats = (): StatsType => {
 
   const fps = document.createElement('div');
   fps.style.cssText =
-    'position:fixed;top:6px;left:6px;color:white;font-family:sans-serif;text-shadow:1px 1px 1px black';
+    'position:fixed;top:6px;left:6px;color:white;font-family:Helvetica,Arial,sans-serif;text-shadow:1px 1px 1px black';
   container.appendChild(fps);
 
   const panels: PanelType[] = [];
