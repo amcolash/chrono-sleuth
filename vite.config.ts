@@ -80,7 +80,7 @@ export default defineConfig({
         registerType: 'autoUpdate',
 
         workbox: {
-          maximumFileSizeToCacheInBytes: 20 * 1000 * 1000, // 20mb
+          maximumFileSizeToCacheInBytes: 30 * 1000 * 1000, // 30mb
           globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,webp,svg,gif,ttf,m4a,mp3}'],
         },
         manifest,
@@ -90,14 +90,14 @@ export default defineConfig({
           // enabled: true,
         },
       }),
-      generateFile([
-        {
-          type: 'json',
-          output: './build.json',
-          data: { buildTime },
-        },
-      ]),
     ],
+    generateFile([
+      {
+        type: 'json',
+        output: './build.json',
+        data: { buildTime },
+      },
+    ]),
     ViteImageOptimizer({
       png: {
         quality: 50,

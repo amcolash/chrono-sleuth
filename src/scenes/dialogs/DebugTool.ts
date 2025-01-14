@@ -236,10 +236,11 @@ export class DebugTool extends Dialog {
     this.miscContainer = this.add.container(sidebarWidth + 60, 100);
     this.mainContainer.add(this.miscContainer);
 
+    let y = 10;
     const debugMode = new CenteredButton(
       this,
       350,
-      10,
+      (y += 60),
       'Debug Mode',
       () => {
         Config.debug = !Config.debug;
@@ -248,6 +249,26 @@ export class DebugTool extends Dialog {
       { backgroundColor: '#111' }
     );
     this.miscContainer.add(debugMode);
+
+    const clearCache = new CenteredButton(
+      this,
+      350,
+      (y += 60),
+      'Clear Cache',
+      async () => {
+        if ('serviceWorker' in navigator) {
+          const cacheNames = await caches.keys();
+          for (const cacheName of cacheNames) {
+            await caches.delete(cacheName);
+          }
+
+          window.location.reload();
+        }
+      },
+      { backgroundColor: '#111' }
+    );
+
+    this.miscContainer.add(clearCache);
   }
 
   makeTab(title: string, index: number): Button {
