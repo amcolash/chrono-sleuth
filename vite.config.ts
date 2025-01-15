@@ -82,9 +82,9 @@ export default defineConfig({
         workbox: {
           maximumFileSizeToCacheInBytes: 30 * 1000 * 1000, // 30mb
           globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,webp,svg,gif,ttf,m4a,mp3}'],
+          cleanupOutdatedCaches: true,
         },
         manifest,
-
         devOptions: {
           // Enable to have service worker/manifest in dev mode
           // enabled: true,

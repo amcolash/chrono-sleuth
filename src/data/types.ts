@@ -159,6 +159,7 @@ export enum Location {
   MansionInside,
   AlchemyLab,
   TownHall,
+  Inn,
 }
 
 export enum MusicType {

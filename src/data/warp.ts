@@ -74,8 +74,7 @@ export const WarpData: Record<WarpType, Data> = {
   [WarpType.ClockSquare]: {
     x: 560,
     y: -330,
-    key: Key.Left,
-    direction: Key.Down,
+    key: Key.Down,
     warpTo: WarpType.TownNorth,
     visual: WarpVisual.Warp,
   },

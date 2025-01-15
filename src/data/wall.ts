@@ -16,7 +16,7 @@ export const WallData: Data[] = [
   { x: 1650, y: 820 },
 
   // Clock Outside
-  { x: 530, y: -400 },
+  { x: 510, y: -400 },
   { x: 1150, y: -400 },
 
   // Clock Inside
@@ -48,5 +48,5 @@ export const WallData: Data[] = [
 
   // Town Hall
   { x: 1620, y: -350 },
-  { x: 2820, y: -350 },
+  { x: 2520, y: -350 },
 ];
