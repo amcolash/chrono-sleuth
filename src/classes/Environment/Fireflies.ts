@@ -77,10 +77,8 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
     }
 
     if (Config.debug) {
-      this.debug = this.scene.add.graphics().fillStyle(0xff0000, 0.5).lineStyle(2, 0xff0000, 1);
-
-      this.debug.fillCircle(this.bounds[0] / 2, this.bounds[1] / 2, 10);
-      this.debug.strokeRect(0, 0, this.bounds[0], this.bounds[1]);
+      this.debug = this.scene.add.graphics();
+      this.updateDebug();
     }
 
     this.setPosition(this.center.x, this.center.y);
@@ -88,10 +86,21 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
     this.initialized = true;
   }
 
+  updateDebug(near: boolean = false) {
+    const color = near ? 0x0033cc : 0xff0000;
+
+    this.debug.clear();
+    this.debug.fillStyle(color, 0.5).lineStyle(4, color, 1);
+    this.debug.fillCircle(this.bounds[0] / 2, this.bounds[1] / 2, 10);
+    this.debug.strokeRect(0, 0, this.bounds[0], this.bounds[1]);
+  }
+
   update(time: number, _delta: number) {
     this.lazyInit();
 
     const near = Math.abs(this.scene.player.x - this.center.x) <= this.bounds[0];
+    if (this.debug) this.updateDebug(near);
+
     if (!near) {
       this.lights.forEach((light) => (light.visible = false));
       return;
@@ -107,7 +116,7 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
       const cos2 = Math.cos(t * 70 + b[10]);
 
       light.visible = true;
-      light.intensity = Math.min(0.05 + Math.abs(b[4] * cos2 + b[3] * cos + b[4] * cos) / 50, 0.4);
+      light.intensity = Math.min(0.2 + Math.abs(b[4] * cos2 + b[3] * cos + b[4] * cos) / 50, 0.4);
 
       light.x = cos * b[0] + sin * b[1] + cos * b[2] + sin * b[3] + cos * b[4] + this.centers[i].x;
       light.y = sin * b[5] + cos * b[6] + sin * b[7] + cos * b[8] + sin * b[9] + this.centers[i].y;
