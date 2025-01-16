@@ -39,6 +39,8 @@ export class Boot extends Scene {
     this.load.svg('minimize', 'icons/minimize.svg', { width: 64, height: 64 });
     this.load.svg('settings', 'icons/settings.svg', { width: 64, height: 64 });
 
+    this.load.audio('button', 'sounds/sfx/button.mp3');
+
     if (import.meta.env.PROD) {
       this.load.json('build-cached', '../build.json');
       this.load.json('build-fresh', `../build.json?cacheBust=${Date.now()}`);

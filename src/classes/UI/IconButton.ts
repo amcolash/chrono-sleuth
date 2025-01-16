@@ -4,12 +4,12 @@ import { Layer } from '../../data/layers';
 import { Colors, getColorNumber } from '../../utils/colors';
 
 export class IconButton extends GameObjects.Container {
-  onClick: (button: IconButton) => void;
+  onClick: () => void;
   img: GameObjects.Image;
   rect: GameObjects.Rectangle;
   selected: boolean;
 
-  constructor(scene: Scene, x: number, y: number, texture: string, callback: (button: IconButton) => void) {
+  constructor(scene: Scene, x: number, y: number, texture: string, onClick: () => void) {
     super(scene, x, y);
     scene.add.existing(this);
     this.setScrollFactor(0).setDepth(Layer.Ui);
@@ -22,11 +22,12 @@ export class IconButton extends GameObjects.Container {
     this.add(this.rect);
     this.add(this.img);
 
-    this.onClick = callback;
-    this.rect.setInteractive({ useHandCursor: true }).on('pointerdown', () => {
+    this.onClick = () => {
+      onClick();
       this.scene.sound.play('button');
-      callback(this);
-    });
+    };
+
+    this.rect.setInteractive({ useHandCursor: true }).on('pointerdown', () => this.onClick());
 
     this.selected = false;
 

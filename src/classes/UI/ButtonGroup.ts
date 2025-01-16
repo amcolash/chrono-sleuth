@@ -21,7 +21,7 @@ export class ButtonGroup extends GameObjects.Container {
 
     scene.input.keyboard?.on('keydown-ENTER', () => {
       // @ts-ignore
-      this.buttons[this.activeIndex]?.onClick(this.buttons[this.activeIndex]);
+      this.buttons[this.activeIndex]?.onClick();
     });
   }
 
