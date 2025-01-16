@@ -256,14 +256,12 @@ export class DebugTool extends Dialog {
       (y += 60),
       'Clear Cache',
       async () => {
-        if ('serviceWorker' in navigator) {
-          const cacheNames = await caches.keys();
-          for (const cacheName of cacheNames) {
-            await caches.delete(cacheName);
-          }
-
-          window.location.reload();
+        const cacheNames = await caches.keys();
+        for (const cacheName of cacheNames) {
+          await caches.delete(cacheName);
         }
+
+        window.location.reload();
       },
       { backgroundColor: '#111' }
     );

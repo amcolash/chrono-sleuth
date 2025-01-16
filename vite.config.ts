@@ -1,5 +1,7 @@
+import { readdirSync, writeFileSync } from 'fs';
+import md5File from 'md5-file';
+import { join, relative, resolve } from 'path';
 import { defineConfig } from 'vite';
-import generateFile from 'vite-plugin-generate-file';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
 
@@ -62,23 +64,7 @@ export default defineConfig({
   plugins: [
     // Only include PWA plugin if not building for Tauri
     process.env.TAURI_PLATFORM === undefined && [
-      // Inject SW registration in main.ts - only when building for web
-      {
-        name: 'injectServiceWorker',
-        transform(code, id) {
-          if (id.endsWith('src/main.ts')) {
-            return `import { registerSW } from "virtual:pwa-register";
-            registerSW({ immediate: true });
-
-            ${code}`;
-          }
-          return code;
-        },
-      },
       VitePWA({
-        // TODO: Is this the right choice?
-        registerType: 'autoUpdate',
-
         workbox: {
           maximumFileSizeToCacheInBytes: 30 * 1000 * 1000, // 30mb
           globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,webp,svg,gif,ttf,m4a,mp3}'],
@@ -91,13 +77,28 @@ export default defineConfig({
         },
       }),
     ],
-    generateFile([
-      {
-        type: 'json',
-        output: './build.json',
-        data: { buildTime },
+    {
+      name: 'generate-build-info',
+      closeBundle: async () => {
+        const dist = resolve(__dirname, 'dist');
+        const files = readdirSync(dist, { recursive: true, withFileTypes: true });
+
+        const mapping = {};
+        for (const file of files) {
+          if (!file.isFile()) continue;
+
+          const filePath = join(file.parentPath, file.name);
+          mapping[relative(dist, filePath)] = md5File.sync(filePath);
+        }
+
+        const buildInfo = {
+          buildTime,
+          files: mapping,
+        };
+
+        writeFileSync(join(dist, '/build.json'), JSON.stringify(buildInfo, null, 2));
       },
-    ]),
+    },
     ViteImageOptimizer({
       png: {
         quality: 50,

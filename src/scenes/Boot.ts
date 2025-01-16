@@ -40,7 +40,8 @@ export class Boot extends Scene {
     this.load.svg('settings', 'icons/settings.svg', { width: 64, height: 64 });
 
     if (import.meta.env.PROD) {
-      this.load.json('build', `../build.json?cacheBust=${Date.now()}`);
+      this.load.json('build-cached', '../build.json');
+      this.load.json('build-fresh', `../build.json?cacheBust=${Date.now()}`);
     }
 
     if (Config.phaserInspector) {
@@ -58,8 +59,10 @@ export class Boot extends Scene {
   create() {
     if (import.meta.env.PROD) {
       try {
-        const build = this.cache.json.get('build')?.buildTime;
-        if (build && build !== __BUILD_TIME__) {
+        const buildCached = this.cache.json.get('build-cached');
+        const buildFresh = this.cache.json.get('build-fresh');
+
+        if (buildCached?.buildTime !== buildFresh?.buildTime) {
           const text = this.add
             .text(Config.width / 2, Config.height / 2, 'New version available!\nUpdating Game...', {
               ...fontStyle,
@@ -69,7 +72,23 @@ export class Boot extends Scene {
             .setOrigin(0.5);
           text.postFX.addGlow(0x000000, 10);
 
-          setTimeout(() => window.location.reload(), 15000); // fallback in case the game doesn't reload
+          caches.keys().then(async (cacheNames) => {
+            for (const cacheName of cacheNames) {
+              const cache = await caches.open(cacheName);
+              const keys = await cache.keys();
+
+              for (const request of keys) {
+                const file = decodeURIComponent(request.url.replace(location.href, ''));
+
+                if (buildCached?.files[file] && buildCached.files[file] !== buildFresh.files[file]) {
+                  console.log('Deleting cache for', file);
+                  await cache.delete(request);
+                }
+              }
+            }
+          });
+
+          setTimeout(() => window.location.reload(), 2000); // fallback in case the game doesn't reload
 
           return;
         }
