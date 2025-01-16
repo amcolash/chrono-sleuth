@@ -4,7 +4,7 @@ import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 
 export class Button extends GameObjects.Text {
-  onClick: (button: Button) => void;
+  onClick: () => void;
   disabled: boolean;
   selected: boolean;
 
@@ -13,7 +13,7 @@ export class Button extends GameObjects.Text {
     x: number,
     y: number,
     text: string,
-    onClick: (button: Button) => void,
+    onClick: () => void,
     style?: Types.GameObjects.Text.TextStyle
   ) {
     super(scene, x, y, text, {
@@ -27,7 +27,14 @@ export class Button extends GameObjects.Text {
 
     scene.add.existing(this);
 
-    this.onClick = onClick;
+    this.onClick = () => {
+      if (!this.disabled) {
+        this.setSelected(false);
+        onClick();
+        this.scene.sound.play('button');
+      }
+    };
+
     this.disabled = false;
     this.selected = false;
 
@@ -35,11 +42,7 @@ export class Button extends GameObjects.Text {
     this.setInteractive({ useHandCursor: true }).setScrollFactor(0);
 
     this.on('pointerdown', () => {
-      if (!this.disabled) {
-        this.setSelected(false);
-        onClick(this);
-        this.scene.sound.play('button');
-      }
+      this.onClick();
     });
     this.on('pointerover', () => {
       if (!this.disabled && !this.selected) this.setTint(0xbbbbbb);

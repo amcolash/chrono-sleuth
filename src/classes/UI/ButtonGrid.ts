@@ -35,7 +35,7 @@ export class ButtonGrid extends GameObjects.Container {
     scene.input.keyboard?.on('keydown-ENTER', () => {
       const button = this.getActiveButton();
       // @ts-ignore
-      if (button) button.onClick(button);
+      if (button) button.onClick();
     });
 
     scene.input.on('pointermove', () => {

@@ -5,7 +5,7 @@ export function createAnimation(player: Player) {
   player.anims.create({
     key: 'walk',
     frames: player.anims.generateFrameNumbers('character', { start: 0, end: 5 }),
-    frameRate: Config.prod ? 6 : 9,
+    frameRate: Config.prod ? 12 : 20,
     repeat: -1,
   });
 
