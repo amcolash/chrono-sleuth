@@ -4,12 +4,14 @@ import { Config } from '../../config';
 import { Dialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { NPCData } from '../../data/npc';
-import { DefaultVoice, VoiceData } from '../../data/voices';
+import { PropData } from '../../data/prop';
+import { DefaultVoice, NPCVoiceData, PlayerVoice, PropVoiceData } from '../../data/voices';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { animateText, playMessageAudio } from '../../utils/message';
 import { NPC } from '../Environment/NPC';
+import { Prop } from '../Environment/Prop';
 import { Player } from '../Player/Player';
 import { Button } from './Button';
 import { ButtonGroup } from './ButtonGroup';
@@ -153,15 +155,22 @@ export class Message extends GameObjects.Container {
       this.portrait.setVisible(true);
       this.portrait.setTexture(finalPortrait);
 
+      let name;
+      if (target instanceof NPC) {
+        name = NPCData[(target as NPC).npcType].name;
+      } else if (target instanceof Prop) {
+        name = PropData[(target as Prop).propType].name;
+      }
+
+      if (name) {
+        this.npcName.setVisible(true);
+        this.npcName.setText(name);
+      }
+
       this.text
-        .setPosition(padding + portraitOffset, padding + (target instanceof NPC ? nameOffset : 0))
+        .setPosition(padding + portraitOffset, padding + (name ? nameOffset : 0))
         .setWordWrapWidth(this.textWidth, true)
         .setFixedSize(this.textWidth, this.textHeight);
-
-      if (target instanceof NPC) {
-        this.npcName.setVisible(true);
-        this.npcName.setText(NPCData[target.npcType].name);
-      }
     }
 
     this.showMessage();
@@ -176,9 +185,12 @@ export class Message extends GameObjects.Container {
     if (message) {
       this.text.setText(message);
 
-      const npc = this.target instanceof NPC ? (this.target as NPC).npcType : undefined;
-      let voice =
-        this.portrait?.texture.key === 'player_portrait' ? VoiceData.player : npc ? VoiceData[npc] : DefaultVoice;
+      let voice;
+
+      if (this.portrait?.texture.key === 'player_portrait') voice = PlayerVoice;
+      if (this.target instanceof NPC) voice = NPCVoiceData[(this.target as NPC).npcType];
+      if (this.target instanceof Prop) voice = PropVoiceData[(this.target as Prop).propType];
+      if (!voice) voice = DefaultVoice;
 
       const { promise: audioPromise, stop: stopAudio } = playMessageAudio(
         message,

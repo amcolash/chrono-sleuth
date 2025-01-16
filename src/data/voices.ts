@@ -1,4 +1,4 @@
-import { NPCType } from './types';
+import { NPCType, PropType } from './types';
 
 export type Voice = {
   octave: number;
@@ -14,7 +14,13 @@ export const DefaultVoice: Voice = {
   type: 'sine',
 };
 
-export const VoiceData: Record<NPCType | string, Voice> = {
+export const PlayerVoice: Voice = {
+  octave: 3.7,
+  speed: 0.75,
+  volume: 0.9,
+};
+
+export const NPCVoiceData: Partial<Record<NPCType, Voice>> = {
   [NPCType.Inventor]: {
     octave: 3.3,
     speed: 1,
@@ -36,15 +42,13 @@ export const VoiceData: Record<NPCType | string, Voice> = {
     speed: 0.8,
     volume: 0.8,
   },
-  [NPCType.ClockTower]: {
+};
+
+export const PropVoiceData: Partial<Record<PropType, Voice>> = {
+  [PropType.ClockTower]: {
     octave: 2.1,
     speed: 1.5,
     volume: 1.5,
     type: 'sawtooth',
-  },
-  player: {
-    octave: 3.7,
-    speed: 0.75,
-    volume: 0.9,
   },
 };

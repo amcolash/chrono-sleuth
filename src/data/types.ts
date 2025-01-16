@@ -111,9 +111,6 @@ export enum NPCType {
   Sphinx,
   Mayor,
   Innkeeper,
-
-  // Inanimate objects (might be better as a Prop...)
-  ClockTower,
 }
 
 export enum WallType {
@@ -137,6 +134,7 @@ export enum JournalEntry {
 }
 
 export enum PropType {
+  ClockTower,
   Chest,
   LabHatch,
   LabBook,

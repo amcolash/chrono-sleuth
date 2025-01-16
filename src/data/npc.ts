@@ -55,25 +55,4 @@ export const NPCData: Record<NPCType, Data> = {
     portrait: 'innkeeper_portrait',
     name: 'Innkeeper',
   },
-
-  [NPCType.ClockTower]: {
-    x: 880,
-    y: -2090,
-    scale: 0.5,
-    image: 'warp',
-    portrait: 'clock_portrait',
-    name: 'Clock Tower',
-    particles: {
-      texture: 'warp',
-      scale: { start: 0, end: 1.1 },
-      alpha: { start: 1, end: 0 },
-      lifespan: 2000,
-      delay: 1000,
-      maxAliveParticles: 1,
-      tint: [0xc76350],
-    },
-    onCreate: (npc) => {
-      npc.setOffset(150, -40);
-    },
-  },
 };

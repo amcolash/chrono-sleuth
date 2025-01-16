@@ -4,10 +4,10 @@ import { Config } from '../../config';
 import { revealSafe } from '../../data/cutscene';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
-import { JournalEntry, NPCType } from '../../data/types';
+import { JournalEntry, PropType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { getNPC, updateWarpLocked } from '../../utils/interactionUtils';
+import { getProp, updateWarpLocked } from '../../utils/interactionUtils';
 import { autosave } from '../../utils/save';
 import { toggleXRay } from '../../utils/shaders/xray';
 import { openDialog } from '../../utils/util';
@@ -89,8 +89,8 @@ export class Journal extends GameObjects.Image {
     if (warpAdd) updateWarpLocked(this.scene, warpAdd, false);
 
     if (entry === JournalEntry.ClockFirstGear || entry === JournalEntry.ClockSecondGear) {
-      const clock = getNPC(this.scene, NPCType.ClockTower);
-      if (clock?.clock) clock.clock.updateHands();
+      const clock = getProp(this.scene, PropType.ClockTower);
+      clock?.clock?.updateHands();
     }
 
     if (entry === JournalEntry.ExtraPotionInformation && !this.journal.includes(JournalEntry.SafeDiscovered)) {

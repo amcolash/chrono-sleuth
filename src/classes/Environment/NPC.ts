@@ -9,7 +9,6 @@ import { initializeObject } from '../../utils/interactionUtils';
 import { isDaytime } from '../../utils/lighting';
 import { shouldInitialize } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
-import { ClockHands } from '../Environment/ClockHands';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
@@ -19,8 +18,6 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   light: GameObjects.Light | DebugLight;
   particles: GameObjects.Particles.ParticleEmitter;
   lastPos: Math.Vector2 = new Math.Vector2();
-
-  clock?: ClockHands;
 
   disabled: boolean = false;
   initialized: boolean = false;
@@ -63,11 +60,6 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
       this.particles = this.scene.add.particles(x, y, '', particles).setName(`NPC-${this.npcType}-Particles`);
     }
 
-    // TODO: Clock tower should likely be a Prop instead of an NPC
-    if (this.npcType === NPCType.ClockTower) {
-      this.clock = new ClockHands(this.scene, this.player);
-    }
-
     if (onCreate) onCreate(this);
 
     this.initialized = true;
@@ -80,8 +72,6 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
       this.light.setPosition(this.x, this.y);
     }
     this.lastPos.set(this.x, this.y);
-
-    if (this.clock) this.clock.update(time);
   }
 
   onInteract(keys: Record<Key, boolean>): InteractResult {
@@ -103,7 +93,6 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   }
 
   getButtonPrompt() {
-    if (this.npcType === NPCType.ClockTower) return ['Inspect Clock Tower', 'Press [CONTINUE]'];
     return [`Talk to ${NPCData[this.npcType].name}`, 'Press [CONTINUE]'];
   }
 }

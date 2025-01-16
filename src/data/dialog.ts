@@ -284,9 +284,34 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       },
     },
   ],
+  [NPCType.Innkeeper]: [
+    {
+      messages: [
+        'Welcome to our humble inn. I hope you find peace here.',
+        'We can set you up with a room if you need it.',
+      ],
+    },
+  ],
+};
 
-  // TODO: Should the clock tower be a different type than NPC?
-  [NPCType.ClockTower]: [
+export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
+  [ItemType.Gear1]: [
+    {
+      messages: ['Hmm, this gear looks like it belongs in the clock tower. I should ask the inventor about it.'],
+    },
+  ],
+  [ItemType.Gear2]: [
+    {
+      messages: ['Finally! I found the second gear to the clock tower.', 'I should take this and put it back.'],
+      onCompleted: (player) => {
+        player.quests.updateExistingQuest(QuestType.InvestigateTownWest, true);
+      },
+    },
+  ],
+};
+
+export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
+  [PropType.ClockTower]: [
     {
       messages: ['With two of the gears in place, the clocks hands are moving again.'],
       conditions: {
@@ -335,33 +360,6 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       },
     },
   ],
-  [NPCType.Innkeeper]: [
-    {
-      messages: [
-        'Welcome to our humble inn. I hope you find peace here.',
-        'We can set you up with a room if you need it.',
-      ],
-    },
-  ],
-};
-
-export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
-  [ItemType.Gear1]: [
-    {
-      messages: ['Hmm, this gear looks like it belongs in the clock tower. I should ask the inventor about it.'],
-    },
-  ],
-  [ItemType.Gear2]: [
-    {
-      messages: ['Finally! I found the second gear to the clock tower.', 'I should take this and put it back.'],
-      onCompleted: (player) => {
-        player.quests.updateExistingQuest(QuestType.InvestigateTownWest, true);
-      },
-    },
-  ],
-};
-
-export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.Chest]: [
     {
       messages: ['The chest seems to be locked.', 'It appears to have many symbols above the latch'],

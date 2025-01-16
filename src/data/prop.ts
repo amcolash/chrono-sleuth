@@ -2,9 +2,26 @@ import { DataProps, PropType } from './types';
 
 type Data = DataProps & {
   portrait?: string;
+  name?: string;
 };
 
 export const PropData: Record<PropType, Data> = {
+  [PropType.ClockTower]: {
+    x: 880,
+    y: -2090,
+    scale: 0.5,
+    portrait: 'clock_portrait',
+    name: 'Clock Tower',
+    particles: {
+      texture: 'warp',
+      scale: { start: 0, end: 1.1 },
+      alpha: { start: 1, end: 0 },
+      lifespan: 2000,
+      delay: 1000,
+      maxAliveParticles: 1,
+      tint: [0xc76350],
+    },
+  },
   [PropType.Chest]: {
     x: 5110,
     y: 915,

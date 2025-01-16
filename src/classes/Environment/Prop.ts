@@ -9,11 +9,14 @@ import { hasItem, hasJournalEntry, initializeObject } from '../../utils/interact
 import { shouldInitialize, splitTitleCase } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
+import { ClockHands } from './ClockHands';
 
 export class Prop extends Physics.Arcade.Image implements Interactive, LazyInitialize {
   propType: PropType;
   player: Player;
   particles: GameObjects.Particles.ParticleEmitter;
+
+  clock?: ClockHands;
 
   initialized: boolean = false;
   disabled?: boolean = false;
@@ -52,6 +55,10 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
 
     if (this.propType === PropType.MansionPicture)
       this.scene.add.image(this.x, this.y, 'safe').setOrigin(0, 0).setScale(0.9).setName('Prop-Safe');
+
+    if (this.propType === PropType.ClockTower) {
+      this.clock = new ClockHands(this.scene, this.player);
+    }
 
     this.initialized = true;
   }
@@ -98,7 +105,9 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     return dialog && dialog?.messages.length > 0 ? [`Inspect ${prop}`, 'Press [CONTINUE]'] : '';
   }
 
-  update() {
+  update(time: number) {
     this.lazyInit();
+
+    this.clock?.update(time);
   }
 }
