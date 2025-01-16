@@ -45,7 +45,7 @@ export const NPCData: Record<NPCType, Data> = {
     scale: 0.9,
     image: 'mayor',
     portrait: 'mayor_portrait',
-    name: 'Mayor of Town',
+    name: 'Joleen the Mayor',
   },
   [NPCType.Innkeeper]: {
     x: 2300,
@@ -53,6 +53,14 @@ export const NPCData: Record<NPCType, Data> = {
     scale: 1.1,
     image: 'innkeeper',
     portrait: 'innkeeper_portrait',
-    name: 'Innkeeper',
+    name: 'Bart the Innkeeper',
+  },
+  [NPCType.Baker]: {
+    x: 1836,
+    y: -1205,
+    scale: 0.85,
+    image: 'baker',
+    portrait: 'baker_portrait',
+    name: 'Amanda the Baker',
   },
 };

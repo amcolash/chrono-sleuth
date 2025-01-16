@@ -292,6 +292,11 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       ],
     },
   ],
+  [NPCType.Baker]: [
+    {
+      messages: ['Welcome! I bake the best bread in town.'],
+    },
+  ],
 };
 
 export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {

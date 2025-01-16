@@ -111,6 +111,7 @@ export enum NPCType {
   Sphinx,
   Mayor,
   Innkeeper,
+  Baker,
 }
 
 export enum WallType {
