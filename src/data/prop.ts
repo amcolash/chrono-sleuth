@@ -66,4 +66,9 @@ export const PropData: Record<PropType, Data> = {
     x: -1870,
     y: -490,
   },
+  [PropType.Bed]: {
+    x: 2670,
+    y: -1530,
+    scale: { x: 7, y: 2 },
+  },
 };

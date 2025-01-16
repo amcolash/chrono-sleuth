@@ -19,4 +19,13 @@ export const HelperTextData: Record<HelperTextType, Data> = {
     },
     text: 'Press [UP] to go upstairs',
   },
+  [HelperTextType.InnStairs]: {
+    x: 2000,
+    y: -1105,
+    size: {
+      x: 80,
+      y: 80,
+    },
+    text: 'Press [UP] to go upstairs',
+  },
 };

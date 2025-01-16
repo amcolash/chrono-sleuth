@@ -22,4 +22,7 @@ export const SlopeData: Data[] = [
   { x: -1710, y: 1577, width: 280, height: 190, upwards: true },
   { x: -1020, y: 1697, width: 200, height: 70 },
   { x: -2570, y: 1728, width: 200, height: 40, flip: true },
+
+  // Inn
+  { x: 1980, y: -1495, width: 360, height: 350, upwards: true },
 ];

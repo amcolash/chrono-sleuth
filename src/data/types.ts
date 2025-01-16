@@ -80,6 +80,9 @@ export enum WarpType {
 
   TownHallEntrance,
   TownHall,
+
+  InnEntrance,
+  Inn,
 }
 
 export enum ItemType {
@@ -143,10 +146,12 @@ export enum PropType {
   LabPotionShelf1,
   MansionPicture,
   MansionHole,
+  Bed,
 }
 
 export enum HelperTextType {
   LabStairs,
+  InnStairs,
 }
 
 export enum Location {
