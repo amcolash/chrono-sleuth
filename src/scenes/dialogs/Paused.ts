@@ -10,6 +10,7 @@ import { IconButton } from '../../classes/UI/IconButton';
 import { InputManager } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
 import { fontStyle } from '../../utils/fonts';
+import { getCurrentSaveState, save } from '../../utils/save';
 import { toggleCrt } from '../../utils/shaders/crt';
 import { openDialog } from '../../utils/util';
 import { Game } from '../Game';
@@ -19,12 +20,18 @@ export class Paused extends Scene {
   debugCount: number;
   container: GameObjects.Container;
 
+  preSave: string;
+
   constructor() {
     super('Paused');
   }
 
   init(data: { game: Game }) {
     this.parent = data.game;
+
+    const preSave = getCurrentSaveState(this.parent.player.scene);
+    preSave.settings.time = 0;
+    this.preSave = JSON.stringify(preSave);
   }
 
   create() {
@@ -173,6 +180,15 @@ export class Paused extends Scene {
         this.scene.stop();
         this.scene.resume('Game');
       },
+    });
+
+    // Delay saving until after scene has resumed
+    this.parent.time.delayedCall(300, () => {
+      const postSave = getCurrentSaveState(this.parent);
+      postSave.settings.time = 0;
+      if (this.preSave === JSON.stringify(postSave)) return;
+
+      save(this.parent);
     });
   }
 }
