@@ -71,7 +71,14 @@ export class Boot extends Scene {
             .setOrigin(0.5);
           text.postFX.addGlow(0x000000, 10);
 
-          setTimeout(() => window.location.reload(), 15000); // fallback in case the game doesn't reload
+          // Clear all of the cache for a new update (TODO: figure out a better way in the future if the game gets much bigger)
+          caches.keys().then((cacheNames) => {
+            for (const cacheName of cacheNames) {
+              caches.delete(cacheName);
+            }
+          });
+
+          setTimeout(() => window.location.reload(), 3000);
 
           return;
         }
