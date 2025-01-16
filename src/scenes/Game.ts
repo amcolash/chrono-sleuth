@@ -6,6 +6,7 @@ import { Background } from '../classes/Environment/Background';
 import { Clock } from '../classes/Environment/Clock';
 import { Fireflies, FireflyPositions } from '../classes/Environment/Fireflies';
 import { HelperText } from '../classes/Environment/HelperText';
+import { InnSign } from '../classes/Environment/InnSign';
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { ParallaxBackground } from '../classes/Environment/ParallaxBackground';
@@ -81,6 +82,8 @@ export class Game extends Scene {
     const items = this.createItems();
     const props = this.createProps();
 
+    const sign = new InnSign(this, 1350, 440);
+
     const forestFireflies = new Fireflies(this, FireflyPositions.Forest[0], FireflyPositions.Forest[1]);
     const lakeFireflies = new Fireflies(this, FireflyPositions.Lake[0], FireflyPositions.Lake[1]);
 
@@ -103,7 +106,7 @@ export class Game extends Scene {
 
     // update items added to the group
     const updateables = this.add.group(
-      [this.player, forestFireflies, lakeFireflies, ...slopes, walls, ...backgrounds, ...parallaxBackgrounds],
+      [this.player, forestFireflies, lakeFireflies, sign, ...slopes, walls, ...backgrounds, ...parallaxBackgrounds],
       {
         runChildUpdate: true,
       }
