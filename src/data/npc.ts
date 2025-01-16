@@ -47,6 +47,14 @@ export const NPCData: Record<NPCType, Data> = {
     portrait: 'mayor_portrait',
     name: 'Mayor of Town',
   },
+  [NPCType.Innkeeper]: {
+    x: 2300,
+    y: -1240,
+    scale: 1.1,
+    image: 'innkeeper',
+    portrait: 'innkeeper_portrait',
+    name: 'Innkeeper',
+  },
 
   [NPCType.ClockTower]: {
     x: 880,

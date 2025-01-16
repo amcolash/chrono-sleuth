@@ -110,8 +110,9 @@ export enum NPCType {
   Stranger,
   Sphinx,
   Mayor,
+  Innkeeper,
 
-  // Inanimate objects
+  // Inanimate objects (might be better as a Prop...)
   ClockTower,
 }
 

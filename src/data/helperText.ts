@@ -21,7 +21,7 @@ export const HelperTextData: Record<HelperTextType, Data> = {
   },
   [HelperTextType.InnStairs]: {
     x: 2000,
-    y: -1105,
+    y: -1205,
     size: {
       x: 80,
       y: 80,

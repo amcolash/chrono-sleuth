@@ -335,6 +335,14 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       },
     },
   ],
+  [NPCType.Innkeeper]: [
+    {
+      messages: [
+        'Welcome to our humble inn. I hope you find peace here.',
+        'We can set you up with a room if you need it.',
+      ],
+    },
+  ],
 };
 
 export const ItemDialogs: { [key in ItemType]?: Dialog<Item>[] } = {
