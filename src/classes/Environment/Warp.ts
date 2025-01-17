@@ -8,7 +8,8 @@ import { InteractResult, Interactive, LazyInitialize, WarpType } from '../../dat
 import { WarpData, WarpVisual } from '../../data/warp';
 import { Game } from '../../scenes/Game';
 import { initializeObject } from '../../utils/interactionUtils';
-import { fadeIn, fadeOut, openDialog, shouldInitialize, splitTitleCase } from '../../utils/util';
+import { fadeIn, fadeOut, nearby, openDialog, shouldInitialize, splitTitleCase } from '../../utils/util';
+import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
@@ -32,6 +33,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   locked: boolean;
 
   graphics: GameObjects.Graphics;
+  light: GameObjects.Light | DebugLight;
 
   portal1: GameObjects.Sprite;
   portal2: GameObjects.Sprite;
@@ -74,23 +76,32 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (!forcedInitializations.includes(this.warpType)) this.scene.add.existing(this);
 
     this.scene.physics.add.existing(this);
-    this.createParticles();
+    this.createAnimations();
     this.createDebug();
 
     if (this.warpType === WarpType.Underground) this.createLadder();
+
+    const visual = WarpData[this.warpType].visual;
+    if (visual === WarpVisual.Warp || (visual === WarpVisual.WarpLocked && !this.locked)) {
+      if (Config.debug) {
+        this.light = new DebugLight(this.scene, this.x, this.y, 100, 0x4e4faf, 2);
+      } else {
+        this.light = this.scene.lights.addLight(this.x, this.y, 100, 0x4e4faf, 2);
+      }
+    }
 
     if (this.hasExtendedBounds() && this.body) {
       this.setBodySize(this.body.width * ((this.range / defaultRange) * 4), this.body.height);
     }
 
-    // re-run updateLocked to make sure particles are properly started/stopped
+    // re-run updateLocked to make sure animations are properly started/stopped
     this.updateLocked();
 
     this.initialized = true;
   }
 
-  // Delay creating particles until the player is close enough to increase start up performance
-  createParticles() {
+  // Delay creating animations until the player is close enough to increase start up performance
+  createAnimations() {
     const { visual, skipLighting } = WarpData[this.warpType];
     if (visual === WarpVisual.Warp || visual === WarpVisual.WarpLocked) {
       this.setAlpha(0.1);
@@ -253,6 +264,12 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   update(_time: number, _delta: number) {
     this.lazyInit();
+    if (!this.initialized) return;
+
+    if (nearby(this, this.player, Config.width / 1.8)) {
+      this.light?.setPosition(this.x, this.y);
+      this.light?.setIntensity(Math.random() * 0.25 + 1.75);
+    }
   }
 
   destroy(fromScene?: boolean): void {

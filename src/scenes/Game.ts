@@ -204,8 +204,6 @@ export class Game extends Scene {
         if (Geom.Intersects.RectangleToRectangle(this.cameraBounds, this.objectBounds)) {
           if (child instanceof Warp) child.updateLocked();
           else child.setVisible(true);
-
-          // visible += child.name + ', ';
           count++;
         } else {
           child.setVisible(false);
@@ -213,12 +211,9 @@ export class Game extends Scene {
       }
     }
 
-    // logEvery('culling', 1000, count, total);
-
     if (globalStats && !this.cullingStats)
       this.cullingStats = globalStats.addPanel(Panel('Culling', '#9ad8e4', '#064b62'));
     this.cullingStats?.update(performance.now() - start);
-    // this.cullingStats?.update(count);
   }
 
   createBackgrounds() {
