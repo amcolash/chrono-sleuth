@@ -18,6 +18,7 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
   center: PhaserMath.Vector2;
   bounds: Geom.Rectangle;
   debug: GameObjects.Rectangle;
+  music: MusicType | undefined;
 
   constructor(scene: Game, info: BackgroundInfo, player: Player) {
     const { x, y, image, scale } = info;
@@ -32,6 +33,9 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
 
     const img = scene.textures.get(image)?.getSourceImage();
     this.center = new PhaserMath.Vector2(x + (img.width * (scale || 1)) / 2, y + img.height * ((scale || 1) / 2));
+
+    const found = Object.entries(MusicData).find(([key, value]) => value.locations.includes(this.info.location));
+    this.music = found ? (found[0] as MusicType) : undefined;
 
     if (Config.debug) {
       this.debug = scene.add.rectangle(this.x, this.y, img.width, img.height).setStrokeStyle(10, 0x006666).setOrigin(0);
@@ -56,9 +60,8 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
   update() {
     this.lazyInit();
 
-    if (this.bounds?.contains(this.player.x, this.player.y)) {
-      const music = Object.entries(MusicData).find(([key, value]) => value.locations.includes(this.info.location));
-      if (music && Music.music?.key !== music[0]) Music.start(music[0] as MusicType);
+    if (this.bounds?.contains(this.player.x, this.player.y) && this.music) {
+      Music.start(this.music);
     }
 
     this.debug?.setPosition(this.x, this.y);

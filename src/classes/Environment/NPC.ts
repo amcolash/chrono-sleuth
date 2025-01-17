@@ -1,4 +1,4 @@
-import { GameObjects, Math, Physics, Scene } from 'phaser';
+import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { NPCDialogs, getDialog } from '../../data/dialog';
@@ -17,7 +17,6 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   player: Player;
   light: GameObjects.Light | DebugLight;
   particles: GameObjects.Particles.ParticleEmitter;
-  lastPos: Math.Vector2 = new Math.Vector2();
 
   disabled: boolean = false;
   initialized: boolean = false;
@@ -68,10 +67,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   update(time: number, _delta: number): void {
     this.lazyInit();
 
-    if (this.light && (this.x !== this.lastPos.x || this.y !== this.lastPos.y)) {
-      this.light.setPosition(this.x, this.y);
-    }
-    this.lastPos.set(this.x, this.y);
+    this.light?.setPosition(this.x, this.y);
   }
 
   onInteract(keys: Record<Key, boolean>): InteractResult {

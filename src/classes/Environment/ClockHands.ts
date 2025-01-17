@@ -1,10 +1,11 @@
-import { GameObjects, Geom, Scene } from 'phaser';
+import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
 import { JournalEntry } from '../../data/types';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { hasJournalEntry } from '../../utils/interactionUtils';
+import { nearby } from '../../utils/util';
 import { Player } from '../Player/Player';
 
 const radius1 = 50;
@@ -29,8 +30,6 @@ export class ClockHands extends GameObjects.Graphics {
   update2: boolean = false;
   update3: boolean = false;
 
-  cameraBounds: Geom.Rectangle = new Geom.Rectangle(0, 0, Config.width + 300, Config.height + 300);
-
   constructor(scene: Scene, player: Player) {
     super(scene);
     this.name = 'ClockHands';
@@ -46,15 +45,7 @@ export class ClockHands extends GameObjects.Graphics {
   }
 
   update(time: number): void {
-    this.cameraBounds.x = this.scene.cameras.main.scrollX - 150;
-    this.cameraBounds.y = this.scene.cameras.main.scrollY - 150;
-
-    if (!this.cameraBounds.contains(this.x, this.y)) {
-      this.setVisible(false);
-      return;
-    }
-
-    this.setVisible(true);
+    if (!nearby(this, this.player, Config.width / 1.5)) return;
 
     if (this.update1) this.angle1 = PI2 * (time / sec) * speed;
     if (this.update2) this.angle2 = PI2 * (time / min) * speed;

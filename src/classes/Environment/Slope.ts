@@ -75,9 +75,7 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
     this.lazyInit();
     if (!this.initialized) return;
 
-    if (Config.debug && this.graphics) {
-      this.graphics.setPosition(this.x, this.y);
-    }
+    this.graphics?.setPosition(this.x, this.y);
 
     const player = this.scene.player;
     const keys = player.keys.keys;

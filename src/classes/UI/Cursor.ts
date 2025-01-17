@@ -34,9 +34,6 @@ export class Cursor extends GameObjects.Rectangle {
     if (time < this.nextUpdate) return;
     let moved = true;
 
-    const width = this.cursorData.regions[0]?.length;
-    const height = this.cursorData.regions.length;
-
     const keys = this.keys.keys;
     if (keys[Key.Continue]) this.cursorData.keyHandler(this.position);
     else if (keys[Key.Left]) this.position.x--;
@@ -46,6 +43,9 @@ export class Cursor extends GameObjects.Rectangle {
     else moved = false;
 
     if (moved) {
+      const width = this.cursorData.regions[0]?.length;
+      const height = this.cursorData.regions.length;
+
       this.position.x = PhaserMath.Clamp(this.position.x, 0, width - 1);
       this.position.y = PhaserMath.Clamp(this.position.y, 0, height - 1);
 
