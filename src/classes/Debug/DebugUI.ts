@@ -21,7 +21,6 @@ export class DebugUI extends GameObjects.Container {
   activeElement?: GameObjects.GameObject;
   outline: GameObjects.Rectangle;
   scene: Game;
-  dayNight: boolean = false;
   xray: boolean = false;
   dragOffset = new PhaserMath.Vector2();
   debugCamera: GameObjects.Rectangle;

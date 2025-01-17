@@ -18,6 +18,7 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../../utils/interactionUtils';
+import { toggleLighting } from '../../utils/lighting';
 import { convertSaveData, getCurrentSaveState, save } from '../../utils/save';
 import { openDialog } from '../../utils/util';
 import { Game } from '../Game';
@@ -236,7 +237,8 @@ export class DebugTool extends Dialog {
     this.miscContainer = this.add.container(sidebarWidth + 60, 100);
     this.mainContainer.add(this.miscContainer);
 
-    let y = 10;
+    let y = 10 - 60;
+
     const debugMode = new CenteredButton(
       this,
       350,
@@ -265,8 +267,17 @@ export class DebugTool extends Dialog {
       },
       { backgroundColor: '#111' }
     );
-
     this.miscContainer.add(clearCache);
+
+    const toggleLights = new CenteredButton(
+      this,
+      350,
+      (y += 60),
+      'Toggle Lights',
+      () => toggleLighting(this.player.scene),
+      { backgroundColor: '#111' }
+    );
+    this.miscContainer.add(toggleLights);
   }
 
   makeTab(title: string, index: number): Button {
