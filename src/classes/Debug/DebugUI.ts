@@ -99,6 +99,14 @@ export class DebugUI extends GameObjects.Container {
       this.xray = !this.xray;
     });
 
+    this.scene.input.keyboard?.on('keydown-PLUS', () => {
+      if (this.scene.scale.isFullscreen) {
+        this.scene.scale.stopFullscreen();
+      } else {
+        this.scene.scale.startFullscreen();
+      }
+    });
+
     if (Config.debug) {
       // Keys
       this.scene.input.keyboard?.on('keydown-COMMA', () => {
