@@ -36,6 +36,10 @@ export class DebugLight extends GameObjects.GameObject {
     this.y = y;
   }
 
+  setIntensity(intensity: number) {
+    this.light.setIntensity(intensity);
+  }
+
   destroy(fromScene?: boolean): void {
     super.destroy(fromScene);
     this.debug.destroy();

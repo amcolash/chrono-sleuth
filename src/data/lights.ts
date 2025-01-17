@@ -17,7 +17,6 @@ export const LightData: Data[] = [
   { x: 1561, y: 460 },
   { x: 791, y: 472, intensity: 0.5 },
   { x: 962, y: 469, intensity: 0.5 },
-  { x: 1345, y: 440, intensity: 1.5, color: getColorNumber(Colors.Warning) },
 
   // Underground
   { x: 162, y: 814, intensity: 2 },

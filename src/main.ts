@@ -82,6 +82,7 @@ const config: Types.Core.GameConfig = {
     pixelArt: true,
     antialias: false,
   },
+  maxLights: 20,
   dom: {
     createContainer: true,
   },
