@@ -21,8 +21,6 @@ export class Boot extends Scene {
 
   init() {
     this.add.image(0, 0, 'splash').setOrigin(0).setDisplaySize(Config.width, Config.height);
-
-    this.sound.pauseOnBlur = false;
     createMusicInstance(this.sound);
   }
 
