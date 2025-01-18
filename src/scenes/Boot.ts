@@ -15,13 +15,21 @@ export class Boot extends Scene {
     super({
       key: 'Boot',
       pack: {
-        files: [{ type: 'image', key: 'splash', url: 'assets/splash.jpg' }],
+        files: [
+          { type: 'image', key: 'splash', url: 'assets/splash.jpg' },
+          { type: 'image', key: 'logo', url: 'assets/logo.jpg' },
+        ],
       },
     });
   }
 
   init() {
     this.add.image(0, 0, 'splash').setOrigin(0).setDisplaySize(Config.width, Config.height);
+    this.add
+      .image(35, Config.height - 30, 'logo')
+      .setOrigin(0, 1)
+      .setScale(0.4);
+
     createMusicInstance(this.sound);
   }
 
@@ -30,7 +38,6 @@ export class Boot extends Scene {
     //  The smaller the file size of the assets, the better, as the Boot Scene itself has no preloader.
     this.load.setPath('assets');
 
-    this.load.image('logo', 'logo.jpg');
     this.load.font('m6x11', '../m6x11.ttf', 'truetype');
     this.load.bitmapFont('m6x11-24', 'fonts/m6x11-24.png', 'fonts/m6x11-24.xml');
 

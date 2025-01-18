@@ -1,6 +1,7 @@
 import { GameData, defaultState } from '../classes/Player/GameState';
 import { InventoryData } from '../classes/Player/Inventory';
 import { playerStart } from '../classes/Player/Player';
+import { Config } from '../config';
 import { isMobile } from '../utils/util';
 import { ItemType, JournalEntry, Quest, QuestType } from './types';
 
@@ -53,7 +54,7 @@ const defaultSave: SaveData = {
     zoomed: true,
     useShader: true,
     time: Date.now(),
-    muted: false,
+    muted: !Config.prod,
   },
 };
 
