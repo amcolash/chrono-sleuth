@@ -17,8 +17,10 @@ export const LightData: Data[] = [
   { x: 1561, y: 460 },
   { x: 791, y: 472, intensity: 0.5 },
   { x: 962, y: 469, intensity: 0.5 },
+  { x: 295, y: 640 },
 
   // Underground
+  { x: 300, y: 870 },
   { x: 162, y: 814, intensity: 2 },
   { x: 635, y: 772 },
   { x: 1638, y: 788, intensity: 2 },
