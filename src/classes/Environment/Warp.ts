@@ -1,4 +1,4 @@
-import { GameObjects, Physics, Scene, Types } from 'phaser';
+import { GameObjects, Math as PhaserMath, Physics, Scene, Types } from 'phaser';
 
 import { Config } from '../../config';
 import { JournalData } from '../../data/journal';
@@ -9,7 +9,6 @@ import { WarpData, WarpVisual } from '../../data/warp';
 import { Game } from '../../scenes/Game';
 import { initializeObject } from '../../utils/interactionUtils';
 import { fadeIn, fadeOut, nearby, openDialog, shouldInitialize, splitTitleCase } from '../../utils/util';
-import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
@@ -33,7 +32,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   locked: boolean;
 
   graphics: GameObjects.Graphics;
-  light: GameObjects.Light | DebugLight;
+  light: GameObjects.PointLight;
 
   portal1: GameObjects.Sprite;
   portal2: GameObjects.Sprite;
@@ -82,12 +81,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (this.warpType === WarpType.Underground) this.createLadder();
 
     const visual = WarpData[this.warpType].visual;
-    if (visual === WarpVisual.Warp || (visual === WarpVisual.WarpLocked && !this.locked)) {
-      if (Config.debug) {
-        this.light = new DebugLight(this.scene, this.x, this.y, 100, 0x4e4faf, 2);
-      } else {
-        this.light = this.scene.lights.addLight(this.x, this.y, 100, 0x4e4faf, 2);
-      }
+    if (visual === WarpVisual.Warp || visual === WarpVisual.WarpLocked) {
+      this.light = this.scene.lights.addPointLight(this.x, this.y, 0x4e4faf, 125, 0);
     }
 
     if (this.hasExtendedBounds() && this.body) {
@@ -122,7 +117,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
         .play('portal')
         .setName(`${this.name}-1`);
       this.portal1.postFX.addPixelate(1);
-      this.portal1.postFX.addShadow(0, 0, 0.1, 1, 0x3333aa, 6, 0.5);
+      this.portal1.postFX.addShadow(0, 0, 0.1, 2, 0x3333aa, 3, 0.5);
 
       this.portal2 = this.scene.add
         .sprite(this.x, this.y, 'portal_0')
@@ -253,6 +248,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
 
     this.portal1?.setVisible(value);
     this.portal2?.setVisible(value);
+    this.light?.setVisible(value);
 
     return this;
   }
@@ -266,9 +262,9 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     this.lazyInit();
     if (!this.initialized) return;
 
-    if (nearby(this, this.player, Config.width / 1.8)) {
-      this.light?.setPosition(this.x, this.y);
-      this.light?.setIntensity(Math.random() * 0.25 + 1.75);
+    if (this.light && nearby(this, this.player, Config.width / 1.8)) {
+      this.light.setPosition(this.x, this.y);
+      this.light.intensity = PhaserMath.Clamp(this.light.intensity + Math.random() * 0.025 - 0.0125, 0.1, 0.2);
     }
   }
 

@@ -15,7 +15,7 @@ export class DebugLight extends GameObjects.GameObject {
 
     this.light = scene.lights.addLight(x, y, radius, color, intensity);
     this.debug = scene.add.graphics({ x, y }).setDepth(Layer.Debug);
-    this.debug.lineStyle(3, 0x00ff00);
+    this.debug.lineStyle(3, color);
 
     // This name is used to dim opacity (when not visible) inside lighting.ts
     this.debug.name = 'DebugLightGraphics';
