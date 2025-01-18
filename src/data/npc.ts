@@ -3,11 +3,10 @@ import { Game } from '../scenes/Game';
 import { updateSphinx } from './cutscene';
 import { DataProps, NPCType } from './types';
 
-export type Data = DataProps & {
+export type Data = DataProps<NPC> & {
   image: string;
   portrait: string;
   name: string;
-  onCreate?: (npc: NPC) => void;
   light?: number;
 };
 
@@ -35,7 +34,7 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'sphinx',
     portrait: 'sphinx_portrait',
     name: 'Mystical Sphinx',
-    onCreate: (npc) => updateSphinx(npc.scene, (npc.scene as Game).player.gameState.data.sphinxMoved, true),
+    onCreate: (obj) => updateSphinx(obj.scene, (obj.scene as Game).player.gameState.data.sphinxMoved, true),
     light: 1.85,
     initializeOnStart: true,
   },

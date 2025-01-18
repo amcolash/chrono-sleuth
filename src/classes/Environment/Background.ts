@@ -54,6 +54,7 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
       this.setInteractive({ draggable: true });
     }
 
+    if (this.info.onCreate) this.info.onCreate(this);
     this.initialized = true;
   }
 

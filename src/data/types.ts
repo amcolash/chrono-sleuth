@@ -35,7 +35,7 @@ export interface LazyInitialize {
   lazyInit(forceInit?: boolean): void;
 }
 
-export type DataProps = {
+export type DataProps<T> = {
   x: number;
   y: number;
   image?: string;
@@ -48,6 +48,7 @@ export type DataProps = {
   particles?: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig;
   origin?: Types.Math.Vector2Like;
   initializeOnStart?: boolean;
+  onCreate?: (obj: T) => void;
 };
 
 export enum WarpType {

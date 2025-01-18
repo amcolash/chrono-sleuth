@@ -63,6 +63,8 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
       this.light = this.scene.lights.addLight(this.x, this.y, 150 * (this.displayHeight / 150), 0xffccaa, 2);
     }
 
+    const onCreate = ItemData[this.itemType].onCreate;
+    if (onCreate) onCreate(this);
     this.initialized = true;
   }
 

@@ -1,6 +1,7 @@
+import { Prop } from '../classes/Environment/Prop';
 import { DataProps, PropType } from './types';
 
-type Data = DataProps & {
+type Data = DataProps<Prop> & {
   portrait?: string;
   name?: string;
 };

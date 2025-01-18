@@ -60,7 +60,6 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     }
 
     if (onCreate) onCreate(this);
-
     this.initialized = true;
   }
 

@@ -1,6 +1,7 @@
+import { Item } from '../classes/Environment/Item';
 import { DataProps, ItemType } from './types';
 
-type Data = DataProps & {
+type Data = DataProps<Item> & {
   image: string;
   name: string;
 };

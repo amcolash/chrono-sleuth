@@ -1,3 +1,4 @@
+import { Warp } from '../classes/Environment/Warp';
 import { Key } from '../classes/UI/InputManager';
 import { DataProps, WarpType } from './types';
 
@@ -24,7 +25,7 @@ export enum WarpSound {
   Door = 'door',
 }
 
-type Data = DataProps & {
+type Data = DataProps<Warp> & {
   range?: number;
   key: Key.Up | Key.Down | Key.Left | Key.Right;
   direction?: Key.Up | Key.Down | Key.Left | Key.Right;

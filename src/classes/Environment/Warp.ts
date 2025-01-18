@@ -78,7 +78,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     this.createAnimations();
     this.createDebug();
 
-    const visual = WarpData[this.warpType].visual;
+    const { onCreate, visual } = WarpData[this.warpType];
+
     if (visual === WarpVisual.Warp || visual === WarpVisual.WarpLocked) {
       this.light = this.scene.lights.addPointLight(this.x, this.y, 0x4e4faf, 125, 0);
     }
@@ -90,6 +91,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     // re-run updateLocked to make sure animations are properly started/stopped
     this.updateLocked();
 
+    if (onCreate) onCreate(this);
     this.initialized = true;
   }
 

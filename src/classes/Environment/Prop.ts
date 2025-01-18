@@ -45,7 +45,8 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     this.scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
 
-    const particles = PropData[this.propType].particles;
+    const { particles, onCreate } = PropData[this.propType];
+
     if (particles) {
       this.particles = this.scene.add
         .particles(this.x, this.y, 'warp', particles)
@@ -60,6 +61,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
       this.clock = new ClockHands(this.scene, this.player);
     }
 
+    if (onCreate) onCreate(this);
     this.initialized = true;
   }
 

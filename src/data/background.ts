@@ -1,6 +1,7 @@
+import { Background } from '../classes/Environment/Background';
 import { DataProps, Location } from './types';
 
-export type Data = DataProps & {
+export type Data = DataProps<Background> & {
   image: string;
   scale?: number; // only allow uniform scaling
   location: Location;
