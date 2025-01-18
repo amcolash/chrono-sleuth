@@ -4,13 +4,14 @@ import { Config } from '../../config';
 import { revealSafe } from '../../data/cutscene';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
-import { JournalEntry, PropType } from '../../data/types';
+import { JournalEntry } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { getProp, updateWarpLocked } from '../../utils/interactionUtils';
+import { getGameObjects, updateWarpLocked } from '../../utils/interactionUtils';
 import { autosave } from '../../utils/save';
 import { toggleXRay } from '../../utils/shaders/xray';
 import { openDialog } from '../../utils/util';
+import { ClockHands } from '../Environment/ClockHands';
 import { Notification } from '../UI/Notification';
 import { Player } from './Player';
 
@@ -89,8 +90,8 @@ export class Journal extends GameObjects.Image {
     if (warpAdd) updateWarpLocked(this.scene, warpAdd, false);
 
     if (entry === JournalEntry.ClockFirstGear || entry === JournalEntry.ClockSecondGear) {
-      const clock = getProp(this.scene, PropType.ClockTower);
-      clock?.clock?.updateHands();
+      const clocks = getGameObjects(this.scene, ClockHands);
+      clocks.forEach((c) => c.updateHands());
     }
 
     if (entry === JournalEntry.ExtraPotionInformation && !this.journal.includes(JournalEntry.SafeDiscovered)) {

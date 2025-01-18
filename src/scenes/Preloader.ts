@@ -146,6 +146,7 @@ export class Preloader extends Scene {
     this.load.image('alchemy_blue', 'props/alchemy/alchemy_blue.png');
     this.load.image('alchemy_full', 'props/alchemy/alchemy_full.png');
 
+    this.load.image('train_sign', 'props/train_sign.png');
     this.load.image('inn_sign', 'props/inn_sign.png');
 
     // puzzles

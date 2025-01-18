@@ -88,4 +88,16 @@ export const PropData: Record<PropType, Data> = {
     y: -1530,
     scale: { x: 7, y: 2 },
   },
+  [PropType.InnSign]: {
+    x: 1350,
+    y: 450,
+    image: 'inn_sign',
+    scale: 0.2,
+  },
+  [PropType.TrainSign]: {
+    x: 235,
+    y: 555,
+    image: 'train_sign',
+    scale: 0.2,
+  },
 };

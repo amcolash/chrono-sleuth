@@ -147,6 +147,8 @@ export enum PropType {
   MansionPicture,
   MansionHole,
   Bed,
+  InnSign,
+  TrainSign,
 }
 
 export enum HelperTextType {
