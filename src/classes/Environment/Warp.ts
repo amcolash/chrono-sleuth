@@ -308,6 +308,8 @@ export function warpTo(source: WarpType, destination: WarpType, player: Player, 
   if (sound) warpSound = sound;
 
   camera.stopFollow();
+  camera.removeBounds();
+  player.unlockCamera = true;
   player.setActive(false);
 
   scene.add
@@ -338,6 +340,7 @@ export function warpTo(source: WarpType, destination: WarpType, player: Player, 
       {
         at: 450,
         run: () => {
+          player.unlockCamera = false;
           player.setPosition(x, y);
           player.previousPosition.set(x, y);
           camera.scrollX = targetScrollX;

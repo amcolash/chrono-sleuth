@@ -63,8 +63,29 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
     if (this.bounds?.contains(this.player.x, this.player.y) && this.music) {
       Music.start(this.music);
 
-      if (!Config.debug) {
-        this.scene.cameras.main.setBounds(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+      // Keep camera within bounds, only skip when warping
+      if (!Config.debug && !this.player.unlockCamera) {
+        if (this.bounds.width < Config.width) {
+          // Fix portrait maps, center in frame
+          const difference = Config.width - this.bounds.width;
+          this.scene.cameras.main.setBounds(
+            this.bounds.x - difference / 2,
+            this.bounds.y,
+            Config.width,
+            this.bounds.height
+          );
+        } else if (this.bounds.height < Config.height) {
+          // Fix landscape maps, center in frame
+          const difference = Config.height - this.bounds.height;
+          this.scene.cameras.main.setBounds(
+            this.bounds.x,
+            this.bounds.y - difference / 2,
+            this.bounds.width,
+            Config.height
+          );
+        } else {
+          this.scene.cameras.main.setBounds(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+        }
       }
     }
 

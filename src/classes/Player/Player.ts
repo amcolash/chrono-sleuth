@@ -45,6 +45,9 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   history: Math.Vector3[] = [];
   rewinding: boolean = false;
 
+  // Prevents camera from being locked when warping
+  unlockCamera: boolean = false;
+
   constructor(scene: Game) {
     super(scene, playerStart.x, playerStart.y, 'character', 0);
     this.name = 'Player';
