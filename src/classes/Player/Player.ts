@@ -166,6 +166,12 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     if (keys[Key.Left] && keys[Key.Right]) this.setVelocityX(0);
   }
 
+  setPosition(x?: number, y?: number, z?: number, w?: number): this {
+    super.setPosition(x, y, z, w);
+    if (x !== undefined && y !== undefined && this.light) this.light.setPosition(x, y - 20);
+    return this;
+  }
+
   record() {
     if (this.history.length < MAX_HISTORY)
       this.history.push(new Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
