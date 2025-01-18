@@ -44,7 +44,6 @@ export class Message extends GameObjects.Container {
   messageIndex: number;
   interactionTimeout: number;
 
-  gamepadVisible: boolean = false;
   initialized: boolean = false;
 
   animating: boolean = false;
@@ -120,7 +119,6 @@ export class Message extends GameObjects.Container {
 
   setDialog<T>(dialog?: Dialog<T>, target?: T, portrait?: string) {
     if (!this.npcName) this.createUI();
-    this.gamepadVisible = (this.scene as Game).gamepad?.visible || false;
 
     this.setVisible(true);
     this.scene.tweens.add({
@@ -135,7 +133,7 @@ export class Message extends GameObjects.Container {
     this.dialog = dialog;
     this.interactionTimeout = Date.now() + timeout;
 
-    (this.scene as Game).gamepad?.setVisible(this.dialog === undefined ? this.gamepadVisible : false);
+    (this.scene as Game).gamepad?.setAlpha(this.dialog ? 0 : 1);
 
     if (!dialog) {
       return;
@@ -294,7 +292,7 @@ export class Message extends GameObjects.Container {
       this.showMessage();
     }
 
-    (this.scene as Game).gamepad?.setVisible(this.dialog === undefined ? this.gamepadVisible : false);
+    (this.scene as Game).gamepad?.setAlpha(this.dialog === undefined ? 1 : 0);
 
     this.interactionTimeout = Date.now() + timeout;
   }

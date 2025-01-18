@@ -31,7 +31,7 @@ export class Button extends GameObjects.Text {
       if (!this.disabled) {
         this.setSelected(false);
         onClick();
-        this.scene.sound.play('button');
+        scene.sound.play('button');
       }
     };
 
