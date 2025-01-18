@@ -2,6 +2,7 @@ import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
+import { Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
 import { Message } from '../classes/UI/Message';
 import { Config } from '../config';
@@ -11,9 +12,10 @@ import { fontStyle } from '../utils/fonts';
 import { getNPC, getProp, getWall, hasUsedItem, updateWarpLocked } from '../utils/interactionUtils';
 import { toggleXRay } from '../utils/shaders/xray';
 import { fadeIn, fadeOut } from '../utils/util';
+import { Layer } from './layers';
 import { NPCData } from './npc';
 import { PropData } from './prop';
-import { ItemType, NPCType, PropType, QuestType, WallType, WarpType } from './types';
+import { ItemType, MusicType, NPCType, PropType, QuestType, WallType, WarpType } from './types';
 import { WallData } from './wall';
 
 export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
@@ -164,8 +166,12 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
 }
 
 export function townIntro(scene: Game) {
-  const player = scene.player;
+  Music.start(MusicType.Station);
 
+  const train = scene.add.image(800, 1460, 'train').setScale(1.25).setDepth(Layer.Shader);
+
+  // Flip player sprite
+  const player = scene.player;
   player.previousPosition.set(player.x + 1, player.y);
   updateAnimation(player);
 
@@ -174,8 +180,22 @@ export function townIntro(scene: Game) {
   scene.add
     .timeline([
       {
-        at: 1500,
+        at: 200,
+        sound: { key: 'train_whistle', config: { rate: 0.9 } },
+      },
+      {
+        at: 2500,
+        tween: { targets: train, x: -500, duration: 5000 },
+      },
+      {
+        at: 2500,
+        tween: { targets: train, y: train.y - 4, loop: -1, yoyo: true, duration: 100 },
+      },
+      {
+        at: 7250,
         run: () => {
+          train.destroy();
+
           const message = player.message;
           message.setDialog(
             {
