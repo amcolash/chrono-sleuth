@@ -387,6 +387,9 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       conditions: {
         hasItem: ItemType.Key,
       },
+      onMessageShown: (player, index) => {
+        if (index === 2) player.scene.sound.play('door');
+      },
       onCompleted: (player, prop) => {
         prop?.destroy();
         player.inventory.removeItem(ItemType.Key);

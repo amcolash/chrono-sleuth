@@ -207,30 +207,21 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
   const { x, y } = NPCData[NPCType.Sphinx];
   const newX = complete ? x + 200 : x;
   const newY = complete ? y - 90 : y;
+  const duration = !complete || instant ? 1 : 200;
 
-  scene.tweens.add({
-    targets: sphinx,
-    alpha: 0,
-    duration: !complete || instant ? 0 : 300,
-    ease: 'Power1',
-    yoyo: true,
-    repeat: 0,
-    onYoyo: () => {
-      sphinx.setPosition(newX, newY);
-    },
-    onComplete: () => {
-      sphinx.alpha = 1;
-      sphinx.disabled = complete || false;
-    },
-  });
-
-  scene.tweens.add({
-    targets: sphinx.light,
-    x: newX,
-    y: newY,
-    duration: !complete || instant ? 0 : 450,
-    ease: 'Power1',
-  });
+  scene.add
+    .timeline([
+      {
+        at: 0,
+        tween: {
+          targets: sphinx,
+          alpha: 0,
+          duration,
+        },
+      },
+      { at: duration + 1, tween: { targets: sphinx, alpha: 1, duration }, run: () => sphinx.setPosition(newX, newY) },
+    ])
+    .play();
 }
 
 export function openChest(player: Player) {

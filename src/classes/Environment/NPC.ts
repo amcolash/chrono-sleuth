@@ -70,6 +70,12 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     this.light?.setPosition(this.x, this.y);
   }
 
+  setPosition(x?: number, y?: number, z?: number, w?: number): this {
+    super.setPosition(x, y, z, w);
+    if (this.light && x && y) this.light.setPosition(x, y);
+    return this;
+  }
+
   onInteract(keys: Record<Key, boolean>): InteractResult {
     if (this.player.message.visible || Date.now() < this.player.message.interactionTimeout) return InteractResult.None;
 

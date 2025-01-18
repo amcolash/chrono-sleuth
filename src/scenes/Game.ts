@@ -31,7 +31,7 @@ import { Colors, getColorNumber } from '../utils/colors';
 import { setDaytime } from '../utils/lighting';
 import { load, loadConfig } from '../utils/save';
 import { Panel, PanelType, globalStats } from '../utils/stats';
-import { fadeIn, openDialog } from '../utils/util';
+import { fadeIn, fadeOut, openDialog } from '../utils/util';
 
 export class Game extends Scene {
   player: Player;
@@ -63,7 +63,8 @@ export class Game extends Scene {
     const startTime = performance.now();
 
     // fade in on start
-    fadeIn(this, Config.bootDialog ? 150 : 500);
+    fadeOut(this, 0);
+    this.time.delayedCall(Config.bootDialog ? 0 : 250, () => fadeIn(this, Config.bootDialog ? 150 : 500));
 
     // game objects
     this.player = new Player(this);
@@ -134,7 +135,6 @@ export class Game extends Scene {
 
       if (Config.debug && duration > 300) new Notification(this, message, undefined, Colors.Warning);
       else if (!Config.debug && duration > 150) new Notification(this, message, undefined, Colors.Warning);
-      else new Notification(this, message);
     }
   }
 

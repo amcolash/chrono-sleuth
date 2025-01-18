@@ -175,14 +175,6 @@ export function load(scene: Game) {
 
     scene.gamepad.setVisible(savedata.settings.gamepad);
 
-    const loadType = deepEqual(savedata, saves[SaveType.New]) ? '[New]' : '[Storage]';
-
-    if (!Config.prod) {
-      scene.time.delayedCall(200, () => {
-        new Notification(scene, `Game Loaded ${Config.prod ? '' : loadType}`);
-      });
-    }
-
     // If new game, save now
     if (deepEqual(savedata, saves[SaveType.New])) {
       save(scene, undefined, true);
