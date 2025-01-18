@@ -221,6 +221,9 @@ export class Message extends GameObjects.Container {
     this.options = this.getOptions();
     if (!this.options) return;
 
+    this.arrowTween.stop();
+    this.arrow.setAlpha(0);
+
     const tall = !Config.zoomed;
 
     this.options.forEach((option, index) => {

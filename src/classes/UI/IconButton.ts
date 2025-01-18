@@ -23,8 +23,8 @@ export class IconButton extends GameObjects.Container {
     this.add(this.img);
 
     this.onClick = () => {
-      onClick();
       scene.sound.play('button');
+      onClick();
     };
 
     this.rect.setInteractive({ useHandCursor: true }).on('pointerdown', () => this.onClick());

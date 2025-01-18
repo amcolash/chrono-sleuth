@@ -169,7 +169,6 @@ export class Preloader extends Scene {
     this.load.audio(MusicType.Clock, 'sounds/music/Night Time Scavenge II.m4a');
     this.load.audio(MusicType.Mansion, 'sounds/music/Reflective District.m4a');
     this.load.audio(MusicType.Forest, 'sounds/music/Serene.m4a');
-    this.load.audio(MusicType.Town, 'sounds/music/A Different Kind Of Journey.m4a');
 
     // optionally preload intro
     if (!localStorage.getItem(saveKey)) {

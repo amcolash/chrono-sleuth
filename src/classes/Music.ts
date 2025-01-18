@@ -63,7 +63,7 @@ function fadeInMusic(
   if (!scene) return;
 
   if (sound && !sound.pendingRemove) {
-    sound.play({ volume: 0 });
+    sound.play({ volume: 0, loop: true });
     scene.tweens.getTweensOf(sound).forEach((tween: Tweens.Tween) => tween.stop());
     scene.tweens.add({
       targets: sound,

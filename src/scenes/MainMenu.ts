@@ -8,6 +8,7 @@ import { Gamepad } from '../classes/UI/Gamepad';
 import { InputManager } from '../classes/UI/InputManager';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
+import { MusicType } from '../data/types';
 
 export class MainMenu extends Scene {
   constructor() {
@@ -15,7 +16,8 @@ export class MainMenu extends Scene {
   }
 
   create() {
-    Music.stop();
+    Music.setScene(this);
+    Music.start(MusicType.Town);
 
     this.add.image(0, 0, 'splash').setOrigin(0).setDisplaySize(Config.width, Config.height);
 

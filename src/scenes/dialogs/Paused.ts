@@ -41,7 +41,7 @@ export class Paused extends Scene {
     if (Music.music && Music.music.isPlaying) {
       this.tweens.add({
         targets: Music.music,
-        volume: 0.2,
+        volume: 0.15,
         duration: 800,
       });
     }
@@ -117,7 +117,7 @@ export class Paused extends Scene {
 
     let debugButton;
     if (!Config.prod) {
-      debugButton = new IconButton(this, 30, 30, 'terminal', () => {
+      debugButton = new IconButton(this, 80, 30, 'terminal', () => {
         this.resume();
         this.parent.time.delayedCall(200, () => {
           openDialog(this.parent as Game, 'DebugTool');
