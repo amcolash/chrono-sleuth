@@ -163,12 +163,13 @@ export class Preloader extends Scene {
     this.load.audio('clunk', 'sounds/sfx/clunk.mp3');
     this.load.audio('book_open', 'sounds/sfx/book_open.mp3');
     this.load.audio('book_close', 'sounds/sfx/book_close.mp3');
+    this.load.audio('lullaby', 'sounds/sfx/lullaby.mp3');
 
     // music
-    this.load.audio(MusicType.Town, 'sounds/music/Unknown.m4a');
     this.load.audio(MusicType.Clock, 'sounds/music/Night Time Scavenge II.m4a');
     this.load.audio(MusicType.Mansion, 'sounds/music/Reflective District.m4a');
     this.load.audio(MusicType.Forest, 'sounds/music/Serene.m4a');
+    this.load.audio(MusicType.Town, 'sounds/music/A Different Kind Of Journey.m4a');
 
     // optionally preload intro
     if (!localStorage.getItem(saveKey)) {

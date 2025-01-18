@@ -1,6 +1,7 @@
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
+import { Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
 import {
   getItem,
@@ -12,7 +13,7 @@ import {
   hasUsedItem,
 } from '../utils/interactionUtils';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
-import { openDialog } from '../utils/util';
+import { fadeIn, fadeOut, openDialog } from '../utils/util';
 import { addHerb, makePotion } from './cutscene';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
@@ -636,6 +637,44 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     },
     {
       messages: ['Literally a hole in the wall.'],
+    },
+  ],
+  [PropType.Bed]: [
+    {
+      messages: ['What a long day. Time for some sleep before I continue my journey.'],
+      onCompleted: (player) => {
+        Music.stop();
+        player.setActive(false);
+
+        player.scene.add
+          .timeline([
+            {
+              at: 0,
+              run: () =>
+                fadeOut(player.scene, 500, () => {
+                  player.setPosition(2660, player.y);
+                  player.previousPosition.set(player.x + 1, player.y);
+                }),
+            },
+            { at: 1000, sound: { key: 'lullaby', config: { volume: 0.5, rate: 0.85 } } },
+            {
+              at: 4000,
+              run: () => {
+                player.setActive(true);
+                fadeIn(player.scene, 1000, () => {
+                  player.message.setDialog(
+                    {
+                      messages: ['Ah, what a lovely rest. Time to get back to work!'],
+                    },
+                    player,
+                    'player_portrait'
+                  );
+                });
+              },
+            },
+          ])
+          .play();
+      },
     },
   ],
 };

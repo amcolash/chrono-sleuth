@@ -61,7 +61,7 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
     this.lazyInit();
 
     if (this.bounds?.contains(this.player.x, this.player.y) && this.music) {
-      Music.start(this.music);
+      if (this.player.active) Music.start(this.music);
 
       // Keep camera within bounds, only skip when warping
       if (!Config.debug && !this.player.unlockCamera) {
