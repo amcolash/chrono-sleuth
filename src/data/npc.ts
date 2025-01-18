@@ -21,8 +21,8 @@ export const NPCData: Record<NPCType, Data> = {
     name: 'Johan the Inventor',
   },
   [NPCType.Stranger]: {
-    x: 750,
-    y: 865,
+    x: 1340,
+    y: 1500,
     scale: 1.35,
     image: 'stranger',
     portrait: 'stranger_portrait',

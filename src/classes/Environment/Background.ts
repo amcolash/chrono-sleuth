@@ -16,7 +16,7 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
   initialized: boolean = false;
   info: BackgroundInfo;
   center: PhaserMath.Vector2;
-  bounds: Geom.Rectangle;
+  bounds: Geom.Rectangle = new Geom.Rectangle();
   debug: GameObjects.Rectangle;
   music: MusicType | undefined;
 
@@ -48,7 +48,7 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
 
-    this.bounds = this.getBounds();
+    this.getBounds(this.bounds);
 
     if (Config.debug) {
       this.setInteractive({ draggable: true });
@@ -60,8 +60,8 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
   update() {
     this.lazyInit();
 
-    if (this.bounds?.contains(this.player.x, this.player.y) && this.music) {
-      if (this.player.active) Music.start(this.music);
+    if (this.bounds?.contains(this.player.x, this.player.y)) {
+      if (this.player.active && this.music) Music.start(this.music);
 
       // Keep camera within bounds, only skip when warping
       if (!Config.debug && !this.player.unlockCamera) {

@@ -3,6 +3,7 @@ import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
 import { Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
+import { updateAnimation } from '../utils/animations';
 import {
   getItem,
   hasActiveQuest,
@@ -654,17 +655,18 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
                 fadeOut(player.scene, 500, () => {
                   player.setPosition(2660, player.y);
                   player.previousPosition.set(player.x + 1, player.y);
+                  updateAnimation(player);
                 }),
             },
             { at: 1000, sound: { key: 'lullaby', config: { volume: 0.5, rate: 0.85 } } },
             {
               at: 4000,
               run: () => {
-                player.setActive(true);
                 fadeIn(player.scene, 1000, () => {
                   player.message.setDialog(
                     {
                       messages: ['Ah, what a lovely rest. Time to get back to work!'],
+                      onCompleted: (player) => player.setActive(true),
                     },
                     player,
                     'player_portrait'

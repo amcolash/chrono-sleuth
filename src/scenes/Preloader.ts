@@ -82,7 +82,10 @@ export class Preloader extends Scene {
     this.load.svg('gamepad', 'icons/gamepad-solid.svg', { width: 64, height: 64 });
 
     // backgrounds
+    this.load.image('station', 'maps/station.jpg');
     this.load.image('town', 'maps/town.jpg');
+    this.load.image('town_hall', 'maps/town_hall.jpg');
+    this.load.image('inn', 'maps/inn.jpg');
 
     this.load.image('clock_outside', 'maps/clock_outside.jpg');
     this.load.image('clock_inner', 'maps/clock_inner.jpg');
@@ -93,12 +96,9 @@ export class Preloader extends Scene {
     this.load.image('mansion_outside', 'maps/mansion_outside.jpg');
     this.load.image('mansion_inside', 'maps/mansion_inside.jpg');
     this.load.image('alchemy_lab', 'maps/alchemy_lab.jpg');
-    this.load.image('town_hall', 'maps/town_hall.jpg');
-    this.load.image('inn', 'maps/inn.jpg');
 
     // interactive objects
     this.load.image('watch', 'items/watch.png');
-    this.load.image('ladder', 'props/ladder.png');
     this.load.image('warp', 'props/warp.png');
     this.load.spritesheet('portal', 'props/portal.png', { frameWidth: 140, frameHeight: 120 });
 
@@ -165,7 +165,8 @@ export class Preloader extends Scene {
     this.load.audio('book_close', 'sounds/sfx/book_close.mp3');
     this.load.audio('lullaby', 'sounds/sfx/lullaby.mp3');
 
-    // music
+    // music (town loaded for main menu)
+    this.load.audio(MusicType.Station, 'sounds/music/Unknown.m4a');
     this.load.audio(MusicType.Clock, 'sounds/music/Night Time Scavenge II.m4a');
     this.load.audio(MusicType.Mansion, 'sounds/music/Reflective District.m4a');
     this.load.audio(MusicType.Forest, 'sounds/music/Serene.m4a');

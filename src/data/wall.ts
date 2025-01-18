@@ -7,13 +7,13 @@ export interface Data {
 }
 
 export const WallData: Data[] = [
-  // Town Surface
+  // Town
   { x: 40, y: 600 },
   { x: 1750, y: 600 },
 
-  // Town Underground
-  { x: 90, y: 820 },
-  { x: 1650, y: 820 },
+  // Station
+  { x: 320, y: 1300 },
+  { x: 1410, y: 1450 },
 
   // Clock Outside
   { x: 510, y: -400 },

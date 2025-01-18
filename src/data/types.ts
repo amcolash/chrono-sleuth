@@ -51,7 +51,7 @@ export type DataProps = {
 };
 
 export enum WarpType {
-  Underground,
+  Station,
   Town,
 
   TownEast,
@@ -156,6 +156,7 @@ export enum HelperTextType {
 
 export enum Location {
   Town,
+  Station,
   ClockOutside,
   ClockInner,
   Forest,
@@ -169,7 +170,7 @@ export enum Location {
 
 export enum MusicType {
   Intro = 'music-intro',
-
+  Station = 'music-station',
   Town = 'music-town',
   Mansion = 'music-mansion',
   Forest = 'music-forest',

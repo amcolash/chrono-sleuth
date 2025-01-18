@@ -6,7 +6,7 @@ import { Player } from '../classes/Player/Player';
 import { Message } from '../classes/UI/Message';
 import { Config } from '../config';
 import { Game } from '../scenes/Game';
-import { rotationCorrection } from '../utils/animations';
+import { rotationCorrection, updateAnimation } from '../utils/animations';
 import { fontStyle } from '../utils/fonts';
 import { getNPC, getProp, getWall, hasUsedItem, updateWarpLocked } from '../utils/interactionUtils';
 import { toggleXRay } from '../utils/shaders/xray';
@@ -164,24 +164,36 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
 }
 
 export function townIntro(scene: Game) {
-  scene.player.active = false;
+  const player = scene.player;
 
-  scene.time.delayedCall(1500, () => {
-    const message = scene.player.message;
-    message.setDialog(
+  player.previousPosition.set(player.x + 1, player.y);
+  updateAnimation(player);
+
+  player.active = false;
+
+  scene.add
+    .timeline([
       {
-        messages: [
-          'Now that I have arrived in town, I should talk to the townsfolk about the strange occurrences.',
-          'Maybe someone has seen something that could help me start my investigation.',
-        ],
-        onCompleted: () => {
-          scene.player.active = true;
+        at: 1500,
+        run: () => {
+          const message = player.message;
+          message.setDialog(
+            {
+              messages: [
+                'Now that I have arrived in town, I should talk to the townsfolk about the strange occurrences.',
+                'Maybe someone has seen something that could help me start my investigation.',
+              ],
+              onCompleted: (player) => {
+                player.active = true;
+              },
+            },
+            player,
+            'player_portrait'
+          );
         },
       },
-      undefined,
-      'player_portrait'
-    );
-  });
+    ])
+    .play();
 }
 
 export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {

@@ -8,6 +8,11 @@ interface Data {
 export const MusicData: Record<MusicType, Data> = {
   [MusicType.Intro]: {
     locations: [],
+    volume: 0.4,
+  },
+
+  [MusicType.Station]: {
+    locations: [Location.Station],
     volume: 0.5,
   },
 

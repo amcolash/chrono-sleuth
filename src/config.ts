@@ -59,7 +59,7 @@ export const Config = {
 
   width,
   height,
-  cameraOffset: height / 3,
+  cameraOffset: height / 4,
   zoomed: true,
 
   dayMinutes: 0.25,

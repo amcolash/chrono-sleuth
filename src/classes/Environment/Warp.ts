@@ -42,7 +42,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   constructor(scene: Scene, warpType: WarpType, player: Player) {
     const { x, y, visual, range } = WarpData[warpType];
-    const texture = visual === WarpVisual.Ladder ? 'ladder' : 'warp';
+    const texture = 'warp';
 
     super(scene, x, y, texture);
     this.name = `Warp-${warpType}`;
@@ -77,8 +77,6 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     this.scene.physics.add.existing(this);
     this.createAnimations();
     this.createDebug();
-
-    if (this.warpType === WarpType.Underground) this.createLadder();
 
     const visual = WarpData[this.warpType].visual;
     if (visual === WarpVisual.Warp || visual === WarpVisual.WarpLocked) {
@@ -172,23 +170,6 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
         this.graphics.strokeCircle(0, 0, 5);
       }
     }
-  }
-
-  createLadder() {
-    this.scene.add
-      .image(this.x, this.y - 60, 'ladder')
-      .setScale(0.6)
-      .setDepth(Layer.Warpers)
-      .setPipeline('Light2D')
-      .setPostPipeline('XRayPipeline')
-      .setName('Ladder1');
-    this.scene.add
-      .image(this.x, this.y - 105, 'ladder')
-      .setScale(0.6)
-      .setDepth(Layer.Warpers)
-      .setPipeline('Light2D')
-      .setPostPipeline('XRayPipeline')
-      .setName('Ladder2');
   }
 
   hasExtendedBounds() {
@@ -303,7 +284,6 @@ export function warpTo(source: WarpType, destination: WarpType, player: Player, 
 
   // Determine warp sound
   let warpSound = 'warp';
-  if (visual === WarpVisual.Ladder) warpSound = 'ladder';
   if (visual === WarpVisual.Invisible || visual === WarpVisual.InvisibleLocked) warpSound = 'door';
   if (sound) warpSound = sound;
 

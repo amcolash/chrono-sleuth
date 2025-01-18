@@ -38,15 +38,16 @@ export const WarpData: Record<WarpType, Data> = {
     x: 300,
     y: 650,
     key: Key.Down,
-    warpTo: WarpType.Underground,
-    visual: WarpVisual.Ladder,
+    warpTo: WarpType.Station,
+    visual: WarpVisual.Invisible,
   },
-  [WarpType.Underground]: {
-    x: 301,
-    y: 875,
-    key: Key.Up,
+  [WarpType.Station]: {
+    x: 365,
+    y: 1355,
+    key: Key.Left,
+    direction: Key.Up,
     warpTo: WarpType.Town,
-    visual: WarpVisual.Ladder,
+    visual: WarpVisual.Invisible,
   },
 
   [WarpType.TownEast]: {
