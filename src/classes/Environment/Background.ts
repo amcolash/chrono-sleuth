@@ -62,6 +62,10 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
 
     if (this.bounds?.contains(this.player.x, this.player.y) && this.music) {
       Music.start(this.music);
+
+      if (!Config.debug) {
+        this.scene.cameras.main.setBounds(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+      }
     }
 
     this.debug?.setPosition(this.x, this.y);

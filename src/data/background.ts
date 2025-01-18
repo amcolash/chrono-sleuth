@@ -7,7 +7,7 @@ export type Data = DataProps & {
 };
 
 export const BackgroundData: Data[] = [
-  { x: 0, y: 0, image: 'town', location: Location.Town },
+  { x: 45, y: 0, image: 'town', location: Location.Town },
   { x: 500, y: -1100, image: 'clock_outside', location: Location.ClockOutside },
   { x: 500, y: -2400, image: 'clock_inner', location: Location.ClockInner, skipLighting: true },
   { x: 2300, y: 0, image: 'forest', location: Location.Forest },
