@@ -104,6 +104,8 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (this.propType === PropType.MansionPicture && hasJournalEntry(this.player, JournalEntry.SafeDiscovered))
       prop = 'Safe';
 
+    if (this.propType === PropType.Bed) return ['Rest in Bed', 'Press [CONTINUE]'];
+
     return dialog && dialog?.messages.length > 0 ? [`Inspect ${prop}`, 'Press [CONTINUE]'] : '';
   }
 

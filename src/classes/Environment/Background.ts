@@ -38,7 +38,10 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
     this.music = found ? (found[0] as MusicType) : undefined;
 
     if (Config.debug) {
-      this.debug = scene.add.rectangle(this.x, this.y, img.width, img.height).setStrokeStyle(10, 0x006666).setOrigin(0);
+      this.debug = scene.add
+        .rectangle(this.x, this.y, img.width * (scale || 1), img.height * (scale || 1))
+        .setStrokeStyle(10, 0x006666)
+        .setOrigin(0);
     }
   }
 
