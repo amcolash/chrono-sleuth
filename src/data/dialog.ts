@@ -236,8 +236,8 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Mayor]: [
     {
       messages: [
-        'I’ve been hearing strange reports from the townsfolk. It’s as if time is slipping. Have you felt it?',
         'The clock is still missing a gear. It must be somewhere nearby.',
+        'I’ve been hearing strange reports from the townsfolk. It’s as if time is slipping. Have you felt it?',
       ],
       conditions: {
         journalEntry: JournalEntry.ClockSecondGear,
@@ -420,16 +420,25 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         hasItem: ItemType.Potion,
       },
       onCompleted: (player) => {
+        player.active = false;
+
         player.journal.addEntry(JournalEntry.ExtraPotionInformation);
         player.inventory.removeItem(ItemType.Potion);
 
         player.scene.time.delayedCall(3500, () => {
-          player.message.setDialog({
-            messages: [
-              'I feel... different.',
-              'I should retrace my steps to see if there is anything new in the area.',
-            ],
-          });
+          player.message.setDialog(
+            {
+              messages: [
+                'I feel... different.',
+                'I should retrace my steps to see if there is anything strange or new in the area.',
+              ],
+              onCompleted: (player) => {
+                player.active = true;
+              },
+            },
+            player,
+            'player_portrait'
+          );
         });
       },
     },
@@ -478,8 +487,8 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     },
     {
       messages: [
-        'Now we have all of the ingredients.',
-        'Now I should be able to recreate the experiment.',
+        'Now I have all of the ingredients.',
+        'With these, I should be able to recreate the experiment.',
         'According to the book...',
       ],
       conditions: {

@@ -26,7 +26,7 @@ export const riddles = [
   {
     question: 'I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?',
     answer: 'map',
-    options: ['map', 'globe', 'dream', 'photograph', 'landscape'],
+    options: ['map', 'essay', 'dream', 'photograph', 'landscape'],
     hints: {
       [NPCType.Inventor]: [
         'Think of something that represents the world, showing cities and mountains but not in a literal way.',

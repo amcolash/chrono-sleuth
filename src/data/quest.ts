@@ -8,12 +8,12 @@ interface Data {
 
 export const QuestData: Record<QuestType, Data> = {
   [QuestType.ForestGear]: {
-    description: 'Find the gear in the forest',
+    description: 'Search the forest for clues',
     warpAdd: WarpType.TownEast,
     warpComplete: WarpType.TownNorth,
   },
   [QuestType.SphinxRiddle]: { description: 'Solve the Sphinx riddle' },
-  [QuestType.InvestigateTownWest]: { description: 'Investigate the west side of town', warpAdd: WarpType.TownWest },
+  [QuestType.InvestigateTownWest]: { description: 'Investigate the western mansion', warpAdd: WarpType.TownWest },
   [QuestType.ExploreLab]: { description: 'Explore the hidden alchemy lab' },
   [QuestType.FindPotionIngredients]: { description: 'Find the 3 potion ingredients' },
 };

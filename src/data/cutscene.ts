@@ -327,7 +327,7 @@ export function updateAlchemySet(player: Player) {
   }
 }
 
-export function makePotion(player: Player, target?: Prop) {
+export function makePotion(player: Player, potion?: Prop) {
   const scene = player.scene;
 
   player.inventory.removeItem(ItemType.HerbBlue);
@@ -335,9 +335,9 @@ export function makePotion(player: Player, target?: Prop) {
 
   fadeOut(scene, 500, () => {
     scene.time.delayedCall(700, () => {
-      target?.setTexture('alchemy_full');
-      target?.particles
-        ?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x660077], x: 30, delay: 200, stopAfter: 120 })
+      potion?.setTexture('alchemy_full');
+      potion?.particles
+        ?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x660077], x: 30, delay: 350, stopAfter: 120 })
         .start();
 
       fadeIn(scene, 1500, () => {
@@ -355,7 +355,7 @@ export function makePotion(player: Player, target?: Prop) {
               player.setActive(true);
             },
           },
-          target,
+          potion,
           'player_portrait'
         );
       });
@@ -410,7 +410,11 @@ export function openSafe(player: Player) {
     onComplete: () => {
       player.message.setDialog(
         {
-          messages: ['Wow, that was a trip', 'I should be more careful next time', 'At least I found the gear!'],
+          messages: [
+            'Wow, that was wild.',
+            'I should be more careful next time before I drink random potions.',
+            'At least I found the gear!',
+          ],
           onCompleted: () => {
             toggleXRay(scene, false);
             scene.time.delayedCall(1000, () => (gear.disabled = false));

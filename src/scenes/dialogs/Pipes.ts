@@ -24,6 +24,7 @@ export class Pipes extends Scene {
   pipeSize: number;
 
   initialized: boolean = false;
+  enabled: boolean = true;
 
   constructor() {
     super('Pipes');
@@ -34,6 +35,7 @@ export class Pipes extends Scene {
 
     this.blockSize = Config.zoomed ? 13 : 17;
     this.pipeSize = this.blockSize * 3.75;
+    this.enabled = true;
   }
 
   preload() {
@@ -85,7 +87,7 @@ export class Pipes extends Scene {
         size: this.pipeSize,
         keyHandler: (pos) => {
           const pipe = this.pipes[pos.y + 1][pos.x + 1];
-          if (pipe.interactive) {
+          if (pipe.interactive && this.initialized && this.enabled) {
             pipe.rotation = (pipe.rotation + 90) % 360;
             this.updatePipes();
           }
@@ -133,7 +135,7 @@ export class Pipes extends Scene {
         this.time.delayedCall(50 + index * delay, () => {
           const key = `pipe_${type}`;
           const image = this.add.image(x * this.pipeSize, y * this.pipeSize, key).on('pointerdown', () => {
-            if (this.initialized) {
+            if (this.initialized && this.enabled) {
               this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
               this.updatePipes();
             }
@@ -182,9 +184,11 @@ export class Pipes extends Scene {
   }
 
   completed(closeHandler?: () => void) {
+    this.enabled = false;
+
     const total = this.images.length;
     const start = new Display.Color(255, 255, 255);
-    const end = getColorObject(getColorNumber(Colors.Slate));
+    const end = getColorObject(getColorNumber(Colors.Teal));
 
     for (let i = 0; i < total; i++) {
       const sprite = this.images[i];
@@ -194,7 +198,18 @@ export class Pipes extends Scene {
         duration: 500,
         delay: i * 10,
         hold: 1000,
-        onComplete: last ? closeHandler : undefined,
+        onComplete: last
+          ? () => {
+              if (closeHandler) closeHandler();
+
+              // Help the fade out of the dialog look nicer by fading pipes before rest is faded out
+              this.tweens.add({
+                targets: this.container.list,
+                alpha: 0,
+                duration: 100,
+              });
+            }
+          : undefined,
       });
     }
   }

@@ -6,6 +6,7 @@ export const Colors = {
   Peach: 'd07151',
   Brown: '473946',
   Slate: '303646',
+  Teal: '008080',
   Black: '1c1831',
 
   Warning: '993333',
