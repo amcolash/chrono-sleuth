@@ -1,5 +1,6 @@
 import { Game } from '../../scenes/Game';
 import { updateSphinx } from '../../utils/cutscene';
+import { autosave } from '../../utils/save';
 import { Player } from './Player';
 
 export type GameData = {
@@ -35,6 +36,8 @@ export class GameState {
     Object.entries(data).forEach(([key, value]) => {
       this.handleSideEffects(key as keyof GameData, value, silent);
     });
+
+    if (!silent) autosave(this.scene);
   }
 
   handleSideEffects(key: keyof GameData, value: any, silent?: boolean) {
