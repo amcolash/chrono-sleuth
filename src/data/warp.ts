@@ -1,6 +1,6 @@
 import { Warp } from '../classes/Environment/Warp';
 import { Key } from '../classes/UI/InputManager';
-import { DataProps, WarpType } from './types';
+import { DataProps, Location, WarpType } from './types';
 
 export enum WarpVisual {
   /** Show a ladder, instead of standard warp */
@@ -26,6 +26,7 @@ export enum WarpSound {
 }
 
 type Data = DataProps<Warp> & {
+  location: Location;
   range?: number;
   key: Key.Up | Key.Down | Key.Left | Key.Right;
   direction?: Key.Up | Key.Down | Key.Left | Key.Right;
@@ -40,6 +41,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Down,
     warpTo: WarpType.Station,
+    location: Location.Station,
     visual: WarpVisual.Invisible,
   },
   [WarpType.Station]: {
@@ -48,6 +50,7 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Left,
     direction: Key.Up,
     warpTo: WarpType.Town,
+    location: Location.Town,
     visual: WarpVisual.Invisible,
   },
 
@@ -56,6 +59,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Right,
     warpTo: WarpType.Forest,
+    location: Location.Forest,
     visual: WarpVisual.WarpLocked,
   },
   [WarpType.Forest]: {
@@ -63,6 +67,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 815,
     key: Key.Left,
     warpTo: WarpType.TownEast,
+    location: Location.Town,
     visual: WarpVisual.Warp,
   },
 
@@ -71,6 +76,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Up,
     warpTo: WarpType.ClockSquare,
+    location: Location.ClockOutside,
     visual: WarpVisual.WarpLocked,
   },
   [WarpType.ClockSquare]: {
@@ -78,6 +84,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -330,
     key: Key.Down,
     warpTo: WarpType.TownNorth,
+    location: Location.Town,
     visual: WarpVisual.Warp,
   },
 
@@ -86,6 +93,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -330,
     key: Key.Up,
     warpTo: WarpType.ClockEntrance,
+    location: Location.ClockInner,
     visual: WarpVisual.WarpLocked,
   },
   [WarpType.ClockEntrance]: {
@@ -95,6 +103,7 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Left,
     direction: Key.Down,
     warpTo: WarpType.ClockSquareNorth,
+    location: Location.ClockOutside,
     visual: WarpVisual.Warp,
     skipLighting: true,
   },
@@ -106,6 +115,8 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Right,
     direction: Key.Up,
     warpTo: WarpType.ClockTop,
+    location: Location.ClockInner,
+    name: 'Clock Tower (Upstairs)',
     visual: WarpVisual.Invisible,
     sound: WarpSound.Ladder,
   },
@@ -116,6 +127,8 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Left,
     direction: Key.Down,
     warpTo: WarpType.ClockStairs,
+    location: Location.ClockInner,
+    name: 'Clock Tower (Downstairs)',
     visual: WarpVisual.Invisible,
     sound: WarpSound.Ladder,
   },
@@ -125,6 +138,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 815,
     key: Key.Right,
     warpTo: WarpType.Lake,
+    location: Location.Lake,
     visual: WarpVisual.WarpLocked,
     initializeOnStart: true,
   },
@@ -133,6 +147,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 915,
     key: Key.Left,
     warpTo: WarpType.ForestEast,
+    location: Location.Forest,
     visual: WarpVisual.Warp,
   },
 
@@ -141,6 +156,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Left,
     warpTo: WarpType.MansionGrounds,
+    location: Location.MansionOutside,
     visual: WarpVisual.WarpLocked,
   },
   [WarpType.MansionGrounds]: {
@@ -148,6 +164,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 640,
     key: Key.Right,
     warpTo: WarpType.TownWest,
+    location: Location.Town,
     visual: WarpVisual.Warp,
   },
 
@@ -156,6 +173,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 640,
     key: Key.Up,
     warpTo: WarpType.Mansion,
+    location: Location.MansionInside,
     visual: WarpVisual.Invisible,
   },
   [WarpType.Mansion]: {
@@ -163,6 +181,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -420,
     key: Key.Down,
     warpTo: WarpType.MansionEntrance,
+    location: Location.MansionOutside,
     visual: WarpVisual.Invisible,
   },
 
@@ -171,6 +190,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 640,
     key: Key.Down,
     warpTo: WarpType.Lab,
+    location: Location.AlchemyLab,
     visual: WarpVisual.InvisibleLocked,
   },
   [WarpType.Lab]: {
@@ -179,6 +199,7 @@ export const WarpData: Record<WarpType, Data> = {
     key: Key.Right,
     direction: Key.Up,
     warpTo: WarpType.LabHatch,
+    location: Location.MansionOutside,
     visual: WarpVisual.Invisible,
     range: 15,
     skipLighting: true,
@@ -189,6 +210,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -330,
     key: Key.Right,
     warpTo: WarpType.TownHall,
+    location: Location.TownHall,
     visual: WarpVisual.InvisibleLocked,
   },
   [WarpType.TownHall]: {
@@ -196,6 +218,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -290,
     key: Key.Left,
     warpTo: WarpType.TownHallEntrance,
+    location: Location.ClockOutside,
     visual: WarpVisual.Warp,
   },
 
@@ -204,6 +227,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: 650,
     key: Key.Up,
     warpTo: WarpType.Inn,
+    location: Location.Inn,
     visual: WarpVisual.Invisible,
   },
   [WarpType.Inn]: {
@@ -211,6 +235,7 @@ export const WarpData: Record<WarpType, Data> = {
     y: -1180,
     key: Key.Down,
     warpTo: WarpType.InnEntrance,
+    location: Location.Town,
     visual: WarpVisual.Invisible,
   },
 };

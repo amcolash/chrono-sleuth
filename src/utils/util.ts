@@ -89,7 +89,9 @@ export function transformEnumValue(value: any, enumType?: any, enumName?: string
 export function splitTitleCase(text: string): string {
   return text
     .replace(/([A-Z]+|[0-9]+)/g, ' $1')
-    .replace(/\s+/g, ' ')
+    .replace(/\s*([\(\[\{])\s*/g, ' $1') // remove right-handed space from parentheses and brackets
+    .replace(/\s*([\)\]\}])\s*/g, '$1 ') // remove left-handed space from parentheses and brackets
+    .replace(/\s+/g, ' ') // remove extra spaces
     .trim();
 }
 

@@ -6,7 +6,6 @@ import { DataProps, NPCType } from './types';
 export type Data = DataProps<NPC> & {
   image: string;
   portrait: string;
-  name: string;
   light?: number;
 };
 

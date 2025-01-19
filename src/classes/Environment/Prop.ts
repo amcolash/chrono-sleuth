@@ -98,15 +98,16 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     const dialogs = PropDialogs[this.propType] || [];
     const dialog = getDialog<Prop>(dialogs, this.player, this);
 
-    let prop = PropType[this.propType];
+    let prop = PropData[this.propType].name || PropType[this.propType];
     prop = splitTitleCase(prop);
 
     if (this.propType === PropType.MansionPicture && hasJournalEntry(this.player, JournalEntry.SafeDiscovered))
       prop = 'Safe';
 
-    if (this.propType === PropType.Bed) return ['Rest in Bed', 'Press [CONTINUE]'];
+    let action = 'Inspect';
+    if (this.propType === PropType.Bed) action = 'Rest in';
 
-    return dialog && dialog?.messages.length > 0 ? [`Inspect ${prop}`, 'Press [CONTINUE]'] : '';
+    return dialog && dialog?.messages.length > 0 ? [`${action} ${prop}`, 'Press [CONTINUE]'] : '';
   }
 
   update(time: number) {

@@ -40,6 +40,8 @@ export type DataProps<T> = {
   y: number;
   image?: string;
 
+  name?: string;
+
   scale?: number | Types.Math.Vector2Like;
   alpha?: number;
   angle?: number;
@@ -158,17 +160,17 @@ export enum HelperTextType {
 }
 
 export enum Location {
-  Town,
-  Station,
-  ClockOutside,
-  ClockInner,
-  Forest,
-  Lake,
-  MansionOutside,
-  MansionInside,
-  AlchemyLab,
-  TownHall,
-  Inn,
+  Town = 'Town',
+  Station = 'Train Station',
+  ClockOutside = 'Clock Tower Square',
+  ClockInner = 'Clock Tower',
+  Forest = 'Strange Woods',
+  Lake = 'Lake Epoch',
+  MansionOutside = 'Mansion Grounds',
+  MansionInside = 'Mansion',
+  AlchemyLab = 'Secret Alchemy Lab',
+  TownHall = 'Town Hall',
+  Inn = 'Inn',
 }
 
 export enum MusicType {

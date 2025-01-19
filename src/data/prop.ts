@@ -3,7 +3,6 @@ import { DataProps, PropType } from './types';
 
 type Data = DataProps<Prop> & {
   portrait?: string;
-  name?: string;
 };
 
 export const PropData: Record<PropType, Data> = {
@@ -11,8 +10,8 @@ export const PropData: Record<PropType, Data> = {
     x: 880,
     y: -2090,
     scale: 0.5,
-    portrait: 'clock_portrait',
     name: 'Clock Tower',
+    portrait: 'clock_portrait',
     particles: {
       texture: 'warp',
       scale: { start: 0, end: 1.1 },
@@ -32,10 +31,12 @@ export const PropData: Record<PropType, Data> = {
   [PropType.LabHatch]: {
     x: -1910,
     y: 640,
+    name: 'Trap Door',
   },
   [PropType.LabBook]: {
     x: -700,
     y: 1630,
+    name: 'Journal',
     image: 'book',
   },
   [PropType.AlchemySet]: {
@@ -57,24 +58,29 @@ export const PropData: Record<PropType, Data> = {
   [PropType.LabBookshelf1]: {
     x: -2025,
     y: 1700,
+    name: 'Bookshelf',
   },
   [PropType.LabBookshelf2]: {
     x: -1290,
     y: 1700,
+    name: 'Bookshelf',
   },
   [PropType.LabBookshelf3]: {
     x: -1115,
     y: 1700,
+    name: 'Bookshelf',
   },
   [PropType.LabPotionShelf1]: {
     x: -1790,
     y: 1700,
+    name: 'Potion Shelf',
   },
   [PropType.MansionPicture]: {
     x: -1233,
     y: -580,
     scale: 1.2,
     angle: 5,
+    name: 'Picture',
     image: 'picture',
     origin: { x: 0, y: 0 },
     initializeOnStart: true,
@@ -83,6 +89,7 @@ export const PropData: Record<PropType, Data> = {
   [PropType.MansionHole]: {
     x: -1870,
     y: -490,
+    name: 'Hole in the Wall',
   },
   [PropType.Bed]: {
     x: 2670,

@@ -202,7 +202,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
   }
 
   getButtonPrompt() {
-    const { key } = WarpData[this.warpType];
+    const { key, location, name } = WarpData[this.warpType];
 
     let prompt;
     if (key === Key.Up) prompt = '[Up]';
@@ -210,10 +210,10 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (key === Key.Left) prompt = '[Left]';
     if (key === Key.Right) prompt = '[Right]';
 
-    let location = WarpType[WarpData[this.warpType].warpTo];
-    location = splitTitleCase(location);
+    let destination: string = name || location;
+    destination = splitTitleCase(destination);
 
-    return [`Travel to ${location}`, 'Press ' + prompt];
+    return [`Travel to ${destination}`, 'Press ' + prompt];
   }
 
   setPosition(x?: number, y?: number, z?: number, w?: number): this {

@@ -3,7 +3,6 @@ import { DataProps, ItemType } from './types';
 
 type Data = DataProps<Item> & {
   image: string;
-  name: string;
 };
 
 export const ItemData: Record<ItemType, Data> = {
