@@ -94,7 +94,7 @@ export class Gamepad extends GameObjects.Container {
 
     // D-pad background
     const dpad = this.scene.add
-      .circle(0, 0, 60, getColorNumber(Colors.Teal), backgroundAlpha)
+      .circle(0, 0, 60, getColorNumber(Colors.Slate), backgroundAlpha)
       .setStrokeStyle(3, getColorNumber(Colors.Black));
     dpadContainer.add(dpad);
 
@@ -111,7 +111,7 @@ export class Gamepad extends GameObjects.Container {
 
     // Buttons background
     const buttons = this.scene.add
-      .circle(40, 0, 65, getColorNumber(Colors.Teal), backgroundAlpha)
+      .circle(40, 0, 65, getColorNumber(Colors.Slate), backgroundAlpha)
       .setStrokeStyle(3, getColorNumber(Colors.Black))
       .setScale(1, 0.6)
       .setAngle(-30);
@@ -195,7 +195,7 @@ export class Gamepad extends GameObjects.Container {
 
     button.on('pointerdown', () => {
       this.scene.input.keyboard?.emit(`keydown-${key}`);
-      button.setFillStyle(getColorNumber(Colors.Teal), Math.min(1, buttonAlpha + 0.25));
+      button.setFillStyle(getColorNumber(Colors.Slate), Math.min(1, buttonAlpha + 0.25));
     });
     button.on('pointerup', () => {
       this.scene.input.keyboard?.emit(`keyup-${key}`);

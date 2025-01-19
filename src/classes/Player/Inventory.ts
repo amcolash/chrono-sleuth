@@ -33,7 +33,7 @@ export class Inventory extends GameObjects.Container {
     this.scene.add.existing(this);
 
     this.rect = this.scene.add
-      .rectangle(0, 0, 0, 0, getColorNumber(Colors.Teal))
+      .rectangle(0, 0, 0, 0, getColorNumber(Colors.Slate))
       .setStrokeStyle(2, getColorNumber(Colors.White))
       .setAlpha(0.75)
       .setOrigin(0);

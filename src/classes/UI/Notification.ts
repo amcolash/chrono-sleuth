@@ -6,7 +6,7 @@ import { fontStyle } from '../../utils/fonts';
 import { getGameObjects } from '../../utils/interactionUtils';
 
 export class Notification extends GameObjects.Text {
-  constructor(scene: Scene, text: string, duration: number = 3500, color: string = Colors.Teal) {
+  constructor(scene: Scene, text: string, duration: number = 3500, color: string = Colors.Slate) {
     const y =
       getGameObjects(scene, Notification).reduce((acc, obj) => {
         return Math.max(acc, obj.y - 20);

@@ -5,7 +5,7 @@ export const Colors = {
   Tan: 'e6c99d',
   Peach: 'd07151',
   Brown: '473946',
-  Teal: '303646',
+  Slate: '303646',
   Black: '1c1831',
 
   Warning: '993333',

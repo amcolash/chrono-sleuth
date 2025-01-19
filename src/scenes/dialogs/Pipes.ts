@@ -184,7 +184,7 @@ export class Pipes extends Scene {
   completed(closeHandler?: () => void) {
     const total = this.images.length;
     const start = new Display.Color(255, 255, 255);
-    const end = getColorObject(getColorNumber(Colors.Teal));
+    const end = getColorObject(getColorNumber(Colors.Slate));
 
     for (let i = 0; i < total; i++) {
       const sprite = this.images[i];

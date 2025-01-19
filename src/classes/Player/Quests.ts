@@ -36,7 +36,7 @@ export class Quests extends GameObjects.Container {
     this.setScrollFactor(0).setDepth(Layer.Ui).setVisible(false);
 
     this.questRectangle = this.scene.add
-      .rectangle(0, 0, size, 60, getColorNumber(Colors.Teal))
+      .rectangle(0, 0, size, 60, getColorNumber(Colors.Slate))
       .setStrokeStyle(2, getColorNumber(Colors.White))
       .setAlpha(0.75)
       .setOrigin(0);

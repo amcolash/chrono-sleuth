@@ -19,7 +19,7 @@ export class Button extends GameObjects.Text {
     super(scene, x, y, text, {
       ...fontStyle,
       fontSize: 48,
-      backgroundColor: `#${Colors.Teal}`,
+      backgroundColor: `#${Colors.Slate}`,
       padding: { x: 15, y: 10 },
       ...style,
     });

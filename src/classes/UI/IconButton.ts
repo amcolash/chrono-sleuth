@@ -15,7 +15,7 @@ export class IconButton extends GameObjects.Container {
     this.setScrollFactor(0).setDepth(Layer.Ui);
 
     this.rect = scene.add
-      .rectangle(0, 0, 42, 42, getColorNumber(Colors.Teal))
+      .rectangle(0, 0, 42, 42, getColorNumber(Colors.Slate))
       .setScrollFactor(0)
       .setStrokeStyle(2, getColorNumber(Colors.Black));
     this.img = scene.add.image(-1, 1, texture).setDisplaySize(32, 32);
