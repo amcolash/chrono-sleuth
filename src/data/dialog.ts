@@ -369,7 +369,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   ],
   [PropType.Chest]: [
     {
-      messages: ['The chest seems to be locked.', 'It appears to have many symbols above the latch'],
+      messages: ['The chest seems to be locked.', 'It appears to have many symbols above the latch.'],
       conditions: {
         custom: (player) => !hasItem(player, ItemType.Gear1) && getItem(player.scene, ItemType.Gear1) === undefined,
       },
@@ -622,7 +622,10 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
     },
     {
-      messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture', '[CREAK]'],
+      messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture...', '[CREAK]'],
+      onMessageShown: (player, index) => {
+        if (index === 2) player.scene.sound.play('chest');
+      },
       onCompleted: (player) => {
         player.journal.addEntry(JournalEntry.SafeDiscovered);
       },

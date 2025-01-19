@@ -3,11 +3,11 @@ import { GameObjects, Scene } from 'phaser';
 import { Config } from '../../config';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
-import { JournalEntry } from '../../data/types';
+import { ItemType, JournalEntry } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { revealSafe } from '../../utils/cutscene';
-import { getGameObjects, updateWarpLocked } from '../../utils/interactionUtils';
+import { getGameObjects, hasItem, updateWarpLocked } from '../../utils/interactionUtils';
 import { autosave } from '../../utils/save';
 import { toggleXRay } from '../../utils/shaders/xray';
 import { openDialog } from '../../utils/util';
@@ -94,7 +94,7 @@ export class Journal extends GameObjects.Image {
       clocks.forEach((c) => c.updateHands());
     }
 
-    if (entry === JournalEntry.ExtraPotionInformation && !this.journal.includes(JournalEntry.SafeDiscovered)) {
+    if (entry === JournalEntry.ExtraPotionInformation && !hasItem(this.player, ItemType.Gear2)) {
       toggleXRay(this.scene, true);
     }
 

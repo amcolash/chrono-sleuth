@@ -71,6 +71,9 @@ export function shouldInitialize(obj: Types.Math.Vector2Like, player: Player, di
 }
 
 export function openDialog(scene: Game, dialog: string, opts?: any) {
+  scene.player.message.setDialog();
+  scene.player.message.setVisible(false);
+
   scene.gamepad?.setAlpha(0);
   scene.gamepad?.resetButtons();
   scene.scene.pause();
