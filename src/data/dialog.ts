@@ -4,6 +4,7 @@ import { Prop } from '../classes/Environment/Prop';
 import { Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
 import { updateAnimation } from '../utils/animations';
+import { addHerb, makePotion } from '../utils/cutscene';
 import {
   getItem,
   hasActiveQuest,
@@ -15,7 +16,6 @@ import {
 } from '../utils/interactionUtils';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
 import { fadeIn, fadeOut, openDialog } from '../utils/util';
-import { addHerb, makePotion } from './cutscene';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
 export interface Dialog<T> {

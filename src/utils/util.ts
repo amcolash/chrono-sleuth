@@ -87,7 +87,10 @@ export function transformEnumValue(value: any, enumType?: any, enumName?: string
 }
 
 export function splitTitleCase(text: string): string {
-  return text.replace(/([A-Z]+|[0-9]+)/g, ' $1').trim();
+  return text
+    .replace(/([A-Z]+|[0-9]+)/g, ' $1')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 // code based on: https://supernapie.com/blog/hiding-the-mouse-in-a-ux-friendly-way/

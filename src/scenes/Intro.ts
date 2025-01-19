@@ -2,9 +2,9 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Music } from '../classes/Music';
 import { Config } from '../config';
-import { trainIntro } from '../data/cutscene';
 import { SaveType, saves } from '../data/saves';
 import { MusicType } from '../data/types';
+import { trainIntro } from '../utils/cutscene';
 import { fadeIn, fadeOut } from '../utils/util';
 
 // Export the preload function (so it can be used in the main Preloader)

@@ -1,5 +1,5 @@
-import { updateSphinx } from '../../data/cutscene';
 import { Game } from '../../scenes/Game';
+import { updateSphinx } from '../../utils/cutscene';
 import { Player } from './Player';
 
 export type GameData = {

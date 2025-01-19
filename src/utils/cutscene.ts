@@ -6,17 +6,17 @@ import { Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
 import { Message } from '../classes/UI/Message';
 import { Config } from '../config';
+import { Layer } from '../data/layers';
+import { NPCData } from '../data/npc';
+import { PropData } from '../data/prop';
+import { ItemType, MusicType, NPCType, PropType, QuestType, WallType, WarpType } from '../data/types';
+import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
-import { rotationCorrection, updateAnimation } from '../utils/animations';
-import { fontStyle } from '../utils/fonts';
-import { getNPC, getProp, getWall, hasUsedItem, updateWarpLocked } from '../utils/interactionUtils';
-import { toggleXRay } from '../utils/shaders/xray';
-import { fadeIn, fadeOut } from '../utils/util';
-import { Layer } from './layers';
-import { NPCData } from './npc';
-import { PropData } from './prop';
-import { ItemType, MusicType, NPCType, PropType, QuestType, WallType, WarpType } from './types';
-import { WallData } from './wall';
+import { rotationCorrection, updateAnimation } from './animations';
+import { fontStyle } from './fonts';
+import { getNPC, getProp, getWall, hasUsedItem, updateWarpLocked } from './interactionUtils';
+import { toggleXRay } from './shaders/xray';
+import { fadeIn, fadeOut } from './util';
 
 export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
   const scale = Config.zoomed ? 0.75 : 1;

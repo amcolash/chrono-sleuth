@@ -1,12 +1,12 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { revealSafe } from '../../data/cutscene';
 import { JournalData } from '../../data/journal';
 import { Layer } from '../../data/layers';
 import { JournalEntry } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
+import { revealSafe } from '../../utils/cutscene';
 import { getGameObjects, updateWarpLocked } from '../../utils/interactionUtils';
 import { autosave } from '../../utils/save';
 import { toggleXRay } from '../../utils/shaders/xray';

@@ -1,6 +1,6 @@
 import { NPC } from '../classes/Environment/NPC';
 import { Game } from '../scenes/Game';
-import { updateSphinx } from './cutscene';
+import { updateSphinx } from '../utils/cutscene';
 import { DataProps, NPCType } from './types';
 
 export type Data = DataProps<NPC> & {

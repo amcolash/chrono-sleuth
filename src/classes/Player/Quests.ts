@@ -1,12 +1,12 @@
 import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../../config';
-import { updateAlchemySet } from '../../data/cutscene';
 import { Layer } from '../../data/layers';
 import { QuestData } from '../../data/quest';
 import { ItemType, Quest, QuestType } from '../../data/types';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
+import { updateAlchemySet } from '../../utils/cutscene';
 import { fontStyle } from '../../utils/fonts';
 import { updateWarpLocked } from '../../utils/interactionUtils';
 import { autosave } from '../../utils/save';

@@ -4,8 +4,8 @@ import { Player } from '../../classes/Player/Player';
 import { ButtonGroup } from '../../classes/UI/ButtonGroup';
 import { Cursor } from '../../classes/UI/Cursor';
 import { Config } from '../../config';
-import { openChest } from '../../data/cutscene';
 import { Colors, getColorNumber, getColorObject, tweenColor } from '../../utils/colors';
+import { openChest } from '../../utils/cutscene';
 import { Dialog } from './Dialog';
 
 const digits = 6;

@@ -2,11 +2,11 @@ import deepEqual from 'deep-equal';
 
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
-import { townIntro } from '../data/cutscene';
 import { SaveData, SaveType, saveKey, saves } from '../data/saves';
 import { ItemType, JournalEntry, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
 import { Colors } from './colors';
+import { townIntro } from './cutscene';
 import { toggleCrt } from './shaders/crt';
 import { toggleXRay } from './shaders/xray';
 import { setZoomed, transformEnumValue } from './util';
