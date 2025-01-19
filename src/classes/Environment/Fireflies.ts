@@ -11,7 +11,7 @@ function r() {
 
 export const FireflyPositions = {
   Forest: [3200, 600],
-  Lake: [5350, 690],
+  Lake: [5125, 700],
 };
 
 const weights = [500, 200, 100, 50, 10];

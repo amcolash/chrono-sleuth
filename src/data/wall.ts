@@ -30,8 +30,8 @@ export const WallData: Data[] = [
   { x: 3630, y: 760, id: WallType.Sphinx },
 
   // Lake
-  { x: 4575, y: 850 },
-  { x: 5835, y: 900 },
+  { x: 4455, y: 850 },
+  { x: 5690, y: 900 },
 
   // Mansion Outside
   { x: -565, y: 575 },
