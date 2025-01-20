@@ -120,6 +120,13 @@ export class Message extends GameObjects.Container {
   setDialog<T>(dialog?: Dialog<T>, target?: T, portrait?: string) {
     if (!this.npcName) this.createUI();
 
+    if (this.animating) {
+      this.stopAudio?.();
+      this.stopAnimation?.();
+      this.animating = false;
+      this.resetArrow();
+    }
+
     this.setVisible(true);
     this.scene.tweens.add({
       targets: this,
@@ -317,7 +324,7 @@ export class Message extends GameObjects.Container {
   }
 
   resetArrow(): void {
-    this.arrowTween.restart();
+    if (!this.arrowTween.isDestroyed()) this.arrowTween.restart();
     this.scene.tweens.add({
       targets: this.arrow,
       alpha: 1,
