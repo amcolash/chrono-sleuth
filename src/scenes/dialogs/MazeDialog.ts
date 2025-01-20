@@ -19,7 +19,10 @@ export class MazeDialog extends Dialog {
   init(data: { player: Player }) {
     this.player = data.player;
     this.dialogData.gamepadVisible = (data.player.scene as Game)?.gamepad?.visible;
+  }
 
+  preload() {
+    this.load.setPath('assets');
     this.load.image('arrow', 'puzzles/arrow.png');
   }
 
