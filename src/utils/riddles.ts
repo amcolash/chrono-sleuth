@@ -1,11 +1,15 @@
 import { Scene } from 'phaser';
 
 import { NPC } from '../classes/Environment/NPC';
-import { warpTo } from '../classes/Environment/Warp';
+import { Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
-import { NPCType, QuestType, WarpType } from '../data/types';
+import { PropData } from '../data/prop';
+import { NPCType, PropType, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
+import { updateAnimation } from './animations';
 import { hasActiveQuest } from './interactionUtils';
+import { setChromaticAberration } from './shaders/crt';
+import { fadeIn, fadeOut } from './util';
 
 export const riddles = [
   {
@@ -116,7 +120,62 @@ export function handleSphinxAnswer(option: string, player: Player, npc?: NPC) {
             sphinxFail: true,
           });
 
-          warpTo(WarpType.Forest, WarpType.TownEast, player, { x: -100, y: 0 });
+          // tween needs a target, but actual work is done in onUpdate
+          const obj = { value: 0 };
+
+          player.active = false;
+
+          player.scene.add
+            .timeline([
+              {
+                at: 0,
+                tween: {
+                  targets: obj,
+                  value: { from: 1, to: 15 },
+                  duration: 1000,
+                  onUpdate: (tween) => setChromaticAberration(tween.getValue()),
+                },
+              },
+              {
+                at: 500,
+                run: () => {
+                  fadeOut(player.scene, 300);
+                  Music.stop();
+                },
+                sound: 'sphinx_warp',
+              },
+              {
+                at: 3500,
+                run: () => {
+                  setChromaticAberration(1);
+
+                  const { x, y } = PropData[PropType.Bed];
+                  player.setPosition(x, y);
+                  player.previousPosition.set(player.x + 1, player.y);
+                  updateAnimation(player);
+
+                  fadeIn(player.scene, 2000);
+                },
+              },
+              {
+                at: 6500,
+                run: () => {
+                  player.active = true;
+
+                  player.message.setDialog<Player>(
+                    {
+                      messages: [
+                        'I just had the oddest dream.',
+                        'I suppose I should continue investigating the town...',
+                      ],
+                    },
+                    player,
+                    'player_portrait'
+                  );
+                },
+              },
+            ])
+            .play();
         },
       },
       npc

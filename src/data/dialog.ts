@@ -40,10 +40,12 @@ export interface Dialog<T> {
   onSelected?: (option: string, player: Player, target?: T) => void;
 }
 
-const sphinxRiddle: Dialog<NPC> = {
-  messages: (player) => getSphinxRiddle(player.scene),
-  options: (player) => getSphinxOptions(player.scene),
-  onSelected: handleSphinxAnswer,
+const sphinxRiddle = (): Dialog<NPC> => {
+  return {
+    messages: (player) => getSphinxRiddle(player.scene),
+    options: (player) => getSphinxOptions(player.scene),
+    onSelected: handleSphinxAnswer,
+  };
 };
 
 export const PipesCompletionDialog: Dialog<Prop> = {
@@ -221,7 +223,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       },
       onCompleted: (player, target) => {
         player.scene.time.delayedCall(50, () => {
-          player.message.setDialog<NPC>({ ...sphinxRiddle }, target);
+          player.message.setDialog<NPC>(sphinxRiddle(), target);
         });
       },
     },
