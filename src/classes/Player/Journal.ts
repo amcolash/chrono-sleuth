@@ -95,7 +95,7 @@ export class Journal extends GameObjects.Image {
     }
 
     if (entry === JournalEntry.ExtraPotionInformation && !hasItem(this.player, ItemType.Gear2)) {
-      toggleXRay(this.scene, true);
+      toggleXRay(this.scene, true, silent);
     }
 
     if (entry === JournalEntry.SafeDiscovered) {

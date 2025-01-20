@@ -15,6 +15,7 @@ import {
   hasUsedItem,
 } from '../utils/interactionUtils';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
+import { xrayAlpha } from '../utils/shaders/xray';
 import { fadeIn, fadeOut, openDialog } from '../utils/util';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
@@ -411,6 +412,12 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
     },
     {
+      messages: ['I should retrace my steps to see if there is anything strange or new in the area.'],
+      conditions: {
+        custom: () => xrayAlpha > 0,
+      },
+    },
+    {
       messages: [
         'How could I have missed this? The potion is called the "Elixir of Sight".',
         'This must be related to one of the gears in the clock tower.',
@@ -418,6 +425,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       ],
       conditions: {
         hasItem: ItemType.Potion,
+        custom: () => xrayAlpha === 0,
       },
       onCompleted: (player) => {
         player.active = false;

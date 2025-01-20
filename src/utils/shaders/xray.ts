@@ -1,6 +1,6 @@
 import { Renderer, Scene } from 'phaser';
 
-import { chromaticAberration, setChromaticAberration } from './crt';
+import { setChromaticAberration } from './crt';
 import xrayShader from './xray.glsl?raw';
 
 export let xrayAlpha = 0;
@@ -20,13 +20,11 @@ export class XRayPipeline extends Renderer.WebGL.Pipelines.PostFXPipeline {
 
 export function toggleXRay(scene: Scene, enabled: boolean, instant: boolean = false) {
   const newXrayAlpha = enabled ? 0.85 : 0;
-  const newChromaticAberration = enabled ? 15 : 1;
 
   if (xrayAlpha === newXrayAlpha) return;
 
   if (instant) {
     xrayAlpha = newXrayAlpha;
-    setChromaticAberration(newChromaticAberration);
     return;
   }
 
@@ -41,11 +39,11 @@ export function toggleXRay(scene: Scene, enabled: boolean, instant: boolean = fa
   });
 
   scene.tweens.addCounter({
-    from: chromaticAberration,
-    to: newChromaticAberration,
+    from: 1,
+    to: 15,
     onUpdate: (tween) => setChromaticAberration(tween.getValue()),
     ease: 'Bounce',
-    duration: 800,
+    duration: 1000,
     yoyo: true,
   });
 }

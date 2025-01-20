@@ -24,12 +24,13 @@ export class CRTPipeline extends Renderer.WebGL.Pipelines.PostFXPipeline {
 
 export class PipelinePlugin extends Plugins.ScenePlugin {
   boot() {
+    crtAlpha = 1;
+    chromaticAberration = 1;
+
     this.systems?.events.on('start', this.applyPipeline, this);
 
     const { save: savedata } = getSavedData();
     toggleCrt(savedata.settings.useShader);
-
-    chromaticAberration = 1;
   }
 
   applyPipeline() {

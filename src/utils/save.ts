@@ -131,6 +131,7 @@ export function load(scene: Game) {
   try {
     checkConfig(savedata, scene);
 
+    scene.sound.stopAll();
     scene.sound.mute = savedata.settings.muted;
     scene.player.setX(savedata.player.x);
     scene.player.setY(savedata.player.y);
