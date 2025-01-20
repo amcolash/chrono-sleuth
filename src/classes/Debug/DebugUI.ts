@@ -2,7 +2,7 @@ import { GameObjects, Input, Math as PhaserMath, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
-import { SaveType, saveKey, saves } from '../../data/saves';
+import { saveKey } from '../../data/saves';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { toggleLighting } from '../../utils/lighting';
@@ -66,11 +66,6 @@ export class DebugUI extends GameObjects.Container {
     });
 
     this.scene.input.keyboard?.on('keydown-L', () => {
-      this.scene.scene.restart();
-    });
-
-    this.scene.input.keyboard?.on('keydown-M', () => {
-      save(this.scene, saves[SaveType.Act2]);
       this.scene.scene.restart();
     });
 

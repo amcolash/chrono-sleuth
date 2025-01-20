@@ -94,7 +94,7 @@ function checkConfig(savedata: SaveData, scene: Game): boolean {
   Config.useShader = savedata.settings.useShader;
 
   toggleCrt(Config.useShader);
-  toggleXRay(scene, false);
+  toggleXRay(scene, false, true);
 
   if (Config.zoomed !== originalConfig.zoomed) {
     setZoomed(scene, Config.zoomed);

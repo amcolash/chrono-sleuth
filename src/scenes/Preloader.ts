@@ -169,6 +169,7 @@ export class Preloader extends Scene {
     this.load.audio('ingredient', 'sounds/sfx/ingredient.mp3');
     this.load.audio('potion', 'sounds/sfx/potion.mp3');
     this.load.audio('safe', 'sounds/sfx/safe.mp3');
+    this.load.audio('xray', 'sounds/sfx/xray.mp3');
 
     // music (town loaded for main menu)
     this.load.audio(MusicType.Station, 'sounds/music/Unknown.m4a');

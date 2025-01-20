@@ -5,6 +5,7 @@ import { getSavedData } from '../save';
 import crtFragmentShader from './crt.glsl?raw';
 
 export let crtAlpha = 1;
+export let chromaticAberration = 1;
 
 export class CRTPipeline extends Renderer.WebGL.Pipelines.PostFXPipeline {
   constructor(game: any) {
@@ -17,6 +18,7 @@ export class CRTPipeline extends Renderer.WebGL.Pipelines.PostFXPipeline {
 
   onPreRender(): void {
     this.set1f('uAlpha', crtAlpha);
+    this.set1f('uChromaticAberration', chromaticAberration);
   }
 }
 
@@ -26,6 +28,8 @@ export class PipelinePlugin extends Plugins.ScenePlugin {
 
     const { save: savedata } = getSavedData();
     toggleCrt(savedata.settings.useShader);
+
+    chromaticAberration = 1;
   }
 
   applyPipeline() {
@@ -42,4 +46,8 @@ export function toggleCrt(enabled?: boolean) {
   else Config.useShader = !Config.useShader;
 
   crtAlpha = Config.useShader ? 1 : 0;
+}
+
+export function setChromaticAberration(alpha: number) {
+  chromaticAberration = alpha;
 }
