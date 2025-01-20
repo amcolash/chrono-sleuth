@@ -149,9 +149,6 @@ export class Preloader extends Scene {
     this.load.image('train_sign', 'props/train_sign.png');
     this.load.image('inn_sign', 'props/inn_sign.png');
 
-    // puzzles
-    this.load.image('arrow', 'puzzles/arrow.png');
-
     // words (named by letter)
     Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i)).forEach((l) =>
       this.load.audio(l, `sounds/words/${l}.mp3`)

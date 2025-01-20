@@ -4,7 +4,6 @@ import { warpTo } from '../../classes/Environment/Warp';
 import { Player } from '../../classes/Player/Player';
 import { Config } from '../../config';
 import { WarpType } from '../../data/types';
-import { WarpData } from '../../data/warp';
 import { Game } from '../Game';
 import { Dialog } from './Dialog';
 
@@ -20,6 +19,8 @@ export class MazeDialog extends Dialog {
   init(data: { player: Player }) {
     this.player = data.player;
     this.dialogData.gamepadVisible = (data.player.scene as Game)?.gamepad?.visible;
+
+    this.load.image('arrow', 'puzzles/arrow.png');
   }
 
   create() {
@@ -40,8 +41,6 @@ export class MazeDialog extends Dialog {
     if (success) {
       warpTo(WarpType.TownEast, WarpType.Forest, this.player);
       this.player.gameState.updateData({ mazeSolved: true, mazeSeed: this.player.gameState.data.mazeSeed + 1 }, false);
-    } else {
-      this.player.setPosition(WarpData[WarpType.TownEast].x - 100, WarpData[WarpType.TownEast].y);
     }
   }
 }

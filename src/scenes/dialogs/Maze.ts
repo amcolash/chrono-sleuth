@@ -25,6 +25,8 @@ export class Maze extends Scene {
 
   init(data: { parent: MazeDialog }) {
     this.parent = data.parent;
+
+    this.load.image('maze_player', 'puzzles/maze_player.png');
   }
 
   create() {

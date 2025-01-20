@@ -123,7 +123,7 @@ export class TumblerDialog extends Dialog {
 
     this.fx.push(ring.postFX.addGlow(getColorNumber(Colors.Night), 2, 0));
 
-    this.input.enableDebug(ring);
+    if (Config.debug) this.input.enableDebug(ring);
 
     this.container.add(ring);
     this.rings.push(ring);

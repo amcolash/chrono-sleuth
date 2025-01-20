@@ -28,7 +28,7 @@ export class SliderDialog extends Dialog {
     this.load.setPath('assets');
 
     const puzzleSize = Math.floor(1024 / cols);
-    this.load.spritesheet('puzzle', 'puzzles/puzzle.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
+    this.load.spritesheet('slider', 'puzzles/slider.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
   }
 
   create() {
@@ -56,7 +56,7 @@ export class SliderDialog extends Dialog {
       regions[y].push({ x: xPos, y: yPos });
 
       const tile = this.add
-        .image(xPos, yPos, 'puzzle', index)
+        .image(xPos, yPos, 'slider', index)
         .setOrigin(0.5)
         .setDisplaySize(size * 0.95, size * 0.95);
 
