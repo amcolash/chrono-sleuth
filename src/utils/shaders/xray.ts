@@ -20,6 +20,7 @@ export class XRayPipeline extends Renderer.WebGL.Pipelines.PostFXPipeline {
 
 export function toggleXRay(scene: Scene, enabled: boolean, instant: boolean = false) {
   const newXrayAlpha = enabled ? 0.85 : 0;
+  setChromaticAberration(1);
 
   if (xrayAlpha === newXrayAlpha) return;
 
