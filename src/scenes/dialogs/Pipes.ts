@@ -85,13 +85,7 @@ export class Pipes extends Scene {
       {
         regions,
         size: this.pipeSize,
-        keyHandler: (pos) => {
-          const pipe = this.pipes[pos.y + 1][pos.x + 1];
-          if (pipe.interactive && this.initialized && this.enabled) {
-            pipe.rotation = (pipe.rotation + 90) % 360;
-            this.updatePipes();
-          }
-        },
+        keyHandler: (pos) => this.rotatePipe(pos.x + 1, pos.y + 1),
       },
       this.keys
     );
@@ -134,12 +128,9 @@ export class Pipes extends Scene {
         const index = x + y * level[0].length;
         this.time.delayedCall(50 + index * delay, () => {
           const key = `pipe_${type}`;
-          const image = this.add.image(x * this.pipeSize, y * this.pipeSize, key).on('pointerdown', () => {
-            if (this.initialized && this.enabled) {
-              this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
-              this.updatePipes();
-            }
-          });
+          const image = this.add
+            .image(x * this.pipeSize, y * this.pipeSize, key)
+            .on('pointerdown', () => this.rotatePipe(x, y));
 
           image.setAlpha(0).setScale(0.5).setAngle(this.pipes[y][x].rotation);
           this.tweens.add({
@@ -167,6 +158,15 @@ export class Pipes extends Scene {
     this.parent.addTarget(this.container);
   }
 
+  rotatePipe(x: number, y: number) {
+    if (this.pipes[y][x].interactive && this.initialized && this.enabled) {
+      this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
+      if (Math.random() > 0.7) this.sound.play('pipes_squeak', { volume: 0.25, detune: PhaserMath.Between(-500, 500) });
+
+      this.updatePipes();
+    }
+  }
+
   updatePipes() {
     const connected = getConnectedPipes(this.pipes, startPipe.x, startPipe.y);
 
@@ -189,6 +189,8 @@ export class Pipes extends Scene {
     const total = this.images.length;
     const start = new Display.Color(255, 255, 255);
     const end = getColorObject(getColorNumber(Colors.Teal));
+
+    this.sound.play('pipes_complete', { volume: 1.2 });
 
     for (let i = 0; i < total; i++) {
       const sprite = this.images[i];
