@@ -14,7 +14,9 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../utils/interactionUtils';
+import { setDaytime } from '../utils/lighting';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
+import { xrayAlpha } from '../utils/shaders/xray';
 import { fadeIn, fadeOut, openDialog } from '../utils/util';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
@@ -39,10 +41,12 @@ export interface Dialog<T> {
   onSelected?: (option: string, player: Player, target?: T) => void;
 }
 
-const sphinxRiddle: Dialog<NPC> = {
-  messages: (player) => getSphinxRiddle(player.scene),
-  options: (player) => getSphinxOptions(player.scene),
-  onSelected: handleSphinxAnswer,
+const sphinxRiddle = (): Dialog<NPC> => {
+  return {
+    messages: (player) => getSphinxRiddle(player.scene),
+    options: (player) => getSphinxOptions(player.scene),
+    onSelected: handleSphinxAnswer,
+  };
 };
 
 export const PipesCompletionDialog: Dialog<Prop> = {
@@ -220,7 +224,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       },
       onCompleted: (player, target) => {
         player.scene.time.delayedCall(50, () => {
-          player.message.setDialog<NPC>({ ...sphinxRiddle }, target);
+          player.message.setDialog<NPC>(sphinxRiddle(), target);
         });
       },
     },
@@ -369,7 +373,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   ],
   [PropType.Chest]: [
     {
-      messages: ['The chest seems to be locked.', 'It appears to have many symbols above the latch'],
+      messages: ['The chest seems to be locked.', 'It appears to have many symbols above the latch.'],
       conditions: {
         custom: (player) => !hasItem(player, ItemType.Gear1) && getItem(player.scene, ItemType.Gear1) === undefined,
       },
@@ -411,6 +415,12 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
     },
     {
+      messages: ['I should retrace my steps to see if there is anything strange or new in the area.'],
+      conditions: {
+        custom: () => xrayAlpha > 0,
+      },
+    },
+    {
       messages: [
         'How could I have missed this? The potion is called the "Elixir of Sight".',
         'This must be related to one of the gears in the clock tower.',
@@ -418,6 +428,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       ],
       conditions: {
         hasItem: ItemType.Potion,
+        custom: () => xrayAlpha === 0,
       },
       onCompleted: (player) => {
         player.active = false;
@@ -622,7 +633,10 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
     },
     {
-      messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture', '[CREAK]'],
+      messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture...', '[CREAK]'],
+      onMessageShown: (player, index) => {
+        if (index === 2) player.scene.sound.play('chest');
+      },
       onCompleted: (player) => {
         player.journal.addEntry(JournalEntry.SafeDiscovered);
       },
@@ -655,6 +669,8 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       onCompleted: (player) => {
         Music.stop();
         player.setActive(false);
+
+        setDaytime(player.scene, false);
 
         player.scene.add
           .timeline([

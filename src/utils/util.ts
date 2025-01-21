@@ -34,7 +34,17 @@ export function getRandomElement<T>(array: T[]): T {
 const black = getColorObject(getColorNumber(Colors.Background));
 
 export function fadeIn(scene: Scene, duration: number, callback?: () => void) {
-  scene.cameras.main.fadeIn(
+  const camera = scene.cameras.main;
+
+  // Check if a fade effect exists and the screen is already fully visible
+  if (camera.fadeEffect && camera.fadeEffect.progress === 1 && camera.fadeEffect.direction === false) {
+    // If already fully faded out, just schedule the callback
+    if (callback) scene.time.delayedCall(duration, () => callback());
+
+    return;
+  }
+
+  camera.fadeIn(
     duration,
     black.red,
     black.green,
@@ -48,7 +58,17 @@ export function fadeIn(scene: Scene, duration: number, callback?: () => void) {
 }
 
 export function fadeOut(scene: Scene, duration: number, callback?: () => void) {
-  scene.cameras.main.fadeOut(
+  const camera = scene.cameras.main;
+
+  // Check if a fade effect exists and the screen is already fully black
+  if (camera.fadeEffect && camera.fadeEffect.progress === 1 && camera.fadeEffect.direction === true) {
+    // If already fully faded out, just schedule the callback
+    if (callback) scene.time.delayedCall(duration, () => callback());
+
+    return;
+  }
+
+  camera.fadeOut(
     duration,
     black.red,
     black.green,
@@ -71,6 +91,9 @@ export function shouldInitialize(obj: Types.Math.Vector2Like, player: Player, di
 }
 
 export function openDialog(scene: Game, dialog: string, opts?: any) {
+  scene.player.message.setDialog();
+  scene.player.message.setVisible(false);
+
   scene.gamepad?.setAlpha(0);
   scene.gamepad?.resetButtons();
   scene.scene.pause();

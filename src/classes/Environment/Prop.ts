@@ -55,7 +55,12 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
 
     if (this.propType === PropType.MansionPicture)
-      this.scene.add.image(this.x, this.y, 'safe').setOrigin(0, 0).setScale(0.9).setName('Prop-Safe');
+      this.scene.add
+        .image(this.x, this.y, 'safe')
+        .setOrigin(0, 0)
+        .setScale(0.9)
+        .setName('Prop-Safe')
+        .setPipeline('Light2D');
 
     if (this.propType === PropType.ClockTower) {
       this.clock = new ClockHands(this.scene, this.player);

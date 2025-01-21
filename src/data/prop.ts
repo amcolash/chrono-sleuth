@@ -38,6 +38,7 @@ export const PropData: Record<PropType, Data> = {
     y: 1630,
     name: 'Journal',
     image: 'book',
+    skipLighting: true,
   },
   [PropType.AlchemySet]: {
     x: -2650,
@@ -84,7 +85,6 @@ export const PropData: Record<PropType, Data> = {
     image: 'picture',
     origin: { x: 0, y: 0 },
     initializeOnStart: true,
-    skipLighting: true,
   },
   [PropType.MansionHole]: {
     x: -1870,

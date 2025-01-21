@@ -1,5 +1,6 @@
 import { GameObjects, Scene } from 'phaser';
 
+import { musicFileMapping } from '../classes/Music';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
 import { MusicType } from '../data/types';
@@ -149,9 +150,6 @@ export class Preloader extends Scene {
     this.load.image('train_sign', 'props/train_sign.png');
     this.load.image('inn_sign', 'props/inn_sign.png');
 
-    // puzzles
-    this.load.image('arrow', 'puzzles/arrow.png');
-
     // words (named by letter)
     Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i)).forEach((l) =>
       this.load.audio(l, `sounds/words/${l}.mp3`)
@@ -159,18 +157,28 @@ export class Preloader extends Scene {
 
     // sound effects
     this.load.audio('warp', 'sounds/sfx/warp.mp3');
+    this.load.audio('sphinx_warp', 'sounds/sfx/sphinx_warp.mp3');
     this.load.audio('ladder', 'sounds/sfx/ladder.mp3');
     this.load.audio('door', 'sounds/sfx/door.mp3');
     this.load.audio('clunk', 'sounds/sfx/clunk.mp3');
     this.load.audio('book_open', 'sounds/sfx/book_open.mp3');
     this.load.audio('book_close', 'sounds/sfx/book_close.mp3');
     this.load.audio('lullaby', 'sounds/sfx/lullaby.mp3');
+    this.load.audio('chest', 'sounds/sfx/chest.mp3');
+    this.load.audio('ingredient', 'sounds/sfx/ingredient.mp3');
+    this.load.audio('potion', 'sounds/sfx/potion.mp3');
+    this.load.audio('xray', 'sounds/sfx/xray.mp3');
+    this.load.audio('pipes_complete', 'sounds/sfx/pipes_complete.mp3');
+    this.load.audio('pipes_squeak', 'sounds/sfx/pipes_squeak.mp3');
+    this.load.audio('safe_click', 'sounds/sfx/safe_click.mp3');
+    this.load.audio('safe_open', 'sounds/sfx/safe_open.mp3');
 
-    // music (town loaded for main menu)
-    this.load.audio(MusicType.Station, 'sounds/music/Unknown.m4a');
-    this.load.audio(MusicType.Clock, 'sounds/music/Night Time Scavenge II.m4a');
-    this.load.audio(MusicType.Mansion, 'sounds/music/Reflective District.m4a');
-    this.load.audio(MusicType.Forest, 'sounds/music/Serene.m4a');
+    // music
+    Object.entries(musicFileMapping)
+      .filter(([key, _value]) => key !== MusicType.Town)
+      .forEach(([key, value]) => {
+        this.load.audio(key, value);
+      });
 
     // Main game intro
     if (!this.load.textureManager.exists('train')) this.load.image('train', 'maps/intro/train.png');

@@ -8,7 +8,9 @@ import { InteractResult, Interactive, LazyInitialize, WarpType } from '../../dat
 import { WarpData, WarpVisual } from '../../data/warp';
 import { Game } from '../../scenes/Game';
 import { initializeObject } from '../../utils/interactionUtils';
+import { isNighttime } from '../../utils/lighting';
 import { fadeIn, fadeOut, nearby, openDialog, shouldInitialize, splitTitleCase } from '../../utils/util';
+import { Music } from '../Music';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 
@@ -267,8 +269,20 @@ const directions = {
 };
 
 export function warpTo(source: WarpType, destination: WarpType, player: Player, offset?: Types.Math.Vector2Like) {
-  const { direction, key, sound, visual } = WarpData[source];
+  const { direction, key, sound, visual, location } = WarpData[source];
   let { x, y } = WarpData[destination];
+
+  if (
+    isNighttime(player.scene) &&
+    (source === WarpType.TownEast || source === WarpType.TownWest || source === WarpType.Town)
+  ) {
+    player.message.setDialog(
+      { messages: ['It is too late to leave town now.', 'I should rest at the inn until tomorrow.'] },
+      player,
+      'player_portrait'
+    );
+    return;
+  }
 
   const movement = directions[direction !== undefined ? direction : key];
   const scene = player.scene;
@@ -293,6 +307,9 @@ export function warpTo(source: WarpType, destination: WarpType, player: Player, 
   camera.removeBounds();
   player.unlockCamera = true;
   player.setActive(false);
+
+  const music = Music.getLocationMusic(location);
+  if (music) Music.start(music);
 
   scene.add
     .timeline([

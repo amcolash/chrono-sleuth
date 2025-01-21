@@ -37,7 +37,7 @@ type Data = DataProps<Warp> & {
 
 export const WarpData: Record<WarpType, Data> = {
   [WarpType.Town]: {
-    x: 300,
+    x: 280,
     y: 650,
     key: Key.Down,
     warpTo: WarpType.Station,

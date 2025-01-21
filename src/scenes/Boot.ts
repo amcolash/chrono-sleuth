@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 
-import { createMusicInstance } from '../classes/Music';
+import { createMusicInstance, musicFileMapping } from '../classes/Music';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
 import { MusicType } from '../data/types';
@@ -46,7 +46,7 @@ export class Boot extends Scene {
     this.load.svg('settings', 'icons/settings.svg', { width: 64, height: 64 });
 
     this.load.audio('button', 'sounds/sfx/button.mp3');
-    this.load.audio(MusicType.Town, 'sounds/music/A Different Kind Of Journey.m4a');
+    this.load.audio(MusicType.Town, musicFileMapping[MusicType.Town]);
 
     if (import.meta.env.PROD) {
       this.load.json('build', `../build.json?cacheBust=${Date.now()}`);

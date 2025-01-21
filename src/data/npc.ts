@@ -52,6 +52,7 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'innkeeper',
     portrait: 'innkeeper_portrait',
     name: 'Bart the Innkeeper',
+    skipLighting: true,
   },
   [NPCType.Baker]: {
     x: 1836,
@@ -60,5 +61,6 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'baker',
     portrait: 'baker_portrait',
     name: 'Amanda the Baker',
+    skipLighting: true,
   },
 };

@@ -15,7 +15,7 @@ export class Maze extends Scene {
 
   keys: InputManager;
   maze: Cell[][];
-  mazePlayer: GameObjects.Ellipse;
+  mazePlayer: GameObjects.Image;
 
   nextUpdate: number;
 
@@ -27,13 +27,15 @@ export class Maze extends Scene {
     this.parent = data.parent;
   }
 
+  preload() {
+    this.load.setPath('assets');
+    this.load.image('maze_player', 'puzzles/maze_player.png');
+  }
+
   create() {
     this.createMaze();
 
-    this.mazePlayer = this.add
-      .ellipse(0, 0, cellSize * 0.8, cellSize * 0.8, 0x557799)
-      .setSmoothness(32)
-      .setOrigin(-0.13);
+    this.mazePlayer = this.add.image(0, 0, 'maze_player').setScale(0.5).setOrigin(-0.25);
 
     this.cameras.main.startFollow(this.mazePlayer);
     this.keys = this.parent.keys;

@@ -264,12 +264,14 @@ export function openChest(player: Player) {
   const chest = getProp(scene, PropType.Chest);
   if (!chest) return;
 
-  player.setX(chest.x - 100);
+  player.active = false;
 
+  player.setX(chest.x - 75);
+  player.previousPosition.set(player.x - 1, player.y);
+
+  scene.sound.play('chest');
   chest.setTexture('chest_open');
 
-  chest.disabled = true;
-  gear.disabled = true;
   gear.setPosition(chest.x, chest.y - 20);
   gear.setScale(0.15);
 
@@ -278,10 +280,7 @@ export function openChest(player: Player) {
     scale: 0.35,
     y: chest.y + 20,
     duration: 700,
-    onComplete: () => {
-      chest.disabled = false;
-      gear.disabled = false;
-    },
+    onComplete: () => (player.active = true),
     ease: 'Bounce.easeOut',
   });
 }
@@ -301,6 +300,8 @@ export function addHerb(
   player.setActive(false);
 
   if (!target || !target.particles) return;
+
+  player.scene.sound.play('ingredient');
 
   updateAlchemySet(player);
   target.disabled = true;
@@ -339,6 +340,8 @@ export function makePotion(player: Player, potion?: Prop) {
       potion?.particles
         ?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x660077], x: 30, delay: 350, stopAfter: 120 })
         .start();
+
+      scene.sound.play('potion');
 
       fadeIn(scene, 1500, () => {
         player.message.setDialog<Prop>(
@@ -392,6 +395,8 @@ export function revealSafe(player: Player, silent: boolean) {
 export function openSafe(player: Player) {
   player.inventory.removeItem(ItemType.Potion);
 
+  player.active = false;
+
   const scene = player.scene;
   const gear = new Item(player.scene, ItemType.Gear2, player);
   scene.interactiveObjects.add(gear);
@@ -399,7 +404,9 @@ export function openSafe(player: Player) {
   const safe = getProp(scene, PropType.MansionPicture);
   if (!safe) return;
 
-  gear.disabled = true;
+  toggleXRay(scene, false);
+
+  scene.sound.play('safe_open');
   gear.setPosition(safe.x, safe.y + 20);
 
   scene.tweens.add({
@@ -407,6 +414,7 @@ export function openSafe(player: Player) {
     x: safe.x - 10,
     y: safe.y + 120,
     duration: 1000,
+    hold: 3750,
     onComplete: () => {
       player.message.setDialog(
         {
@@ -415,10 +423,7 @@ export function openSafe(player: Player) {
             'I should be more careful next time before I drink random potions.',
             'At least I found the gear!',
           ],
-          onCompleted: () => {
-            toggleXRay(scene, false);
-            scene.time.delayedCall(1000, () => (gear.disabled = false));
-          },
+          onCompleted: () => scene.time.delayedCall(500, () => (player.active = true)),
         },
         safe,
         'player_portrait'

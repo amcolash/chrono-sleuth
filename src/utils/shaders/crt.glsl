@@ -1,6 +1,8 @@
 precision mediump float;
 
 uniform float     uAlpha;
+uniform float     uChromaticAberration;
+
 uniform sampler2D uMainSampler;
 
 varying vec2 outTexCoord;
@@ -11,11 +13,14 @@ varying vec2 outTexCoord;
 // original shader from: https://www.shadertoy.com/view/WsVSzV
 // tips for chromatic aberration: https://lettier.github.io/3d-game-shaders-for-beginners/chromatic-aberration.html
 
-float warp = 0.35;     // simulate curvature of CRT monitor (larger number = more curvature)
-float scan = 0.75;    // simulate darkness between scanlines
-float scanSize = 0.85; // size of scanlines [0.0 - 2.0] (smaller number = taller scanlines)
+const float warp = 0.35;     // simulate curvature of CRT monitor (larger number = more curvature)
+const float scan = 0.75;    // simulate darkness between scanlines
+const float scanSize = 0.85; // size of scanlines [0.0 - 2.0] (smaller number = taller scanlines)
 
-float chromaticAberration = 0.15 * uAlpha;
+// TODO: Remove hardcoded screen size
+vec2 pixels = vec2(floor(960. / uChromaticAberration / 2.), floor(540. / uChromaticAberration / 2.));
+
+float chromaticAberration = 0.15 * uAlpha * uChromaticAberration;
 float redOffset   =  0.006 * chromaticAberration;
 float greenOffset =  0.003 * chromaticAberration;
 float blueOffset  = -0.003 * chromaticAberration;
@@ -34,6 +39,11 @@ vec4 mainImage(in vec2 fragCoord, in vec2 uv) {
   uv.y -= 0.5; uv.y *= 1.0+(dc.x*(0.4*warp)); uv.y += 0.5;
 
   vec2 chromaticOffset = vec2((abs(0.5-uv) + 0.5) * 2.);
+
+  if (uChromaticAberration > 1.) {
+    uv.x -= mod(uv.x, 1.0/pixels.x);
+    uv.y -= mod(uv.y, 1.0/pixels.y);
+  }
 
   vec4 color;
   color.r = texture2D(uMainSampler,uv + vec2(redOffset * chromaticOffset)).r;

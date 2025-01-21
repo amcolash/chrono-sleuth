@@ -65,8 +65,8 @@ const debugSettings: Settings = {
 
 const act1: SaveData = {
   player: {
-    x: playerStart.x,
-    y: playerStart.y,
+    x: 642,
+    y: 650,
     flip: false,
   },
   journal: [JournalEntry.FixTheClock],
@@ -85,7 +85,7 @@ const act1: SaveData = {
 const act2: SaveData = {
   player: {
     x: -770,
-    y: playerStart.y,
+    y: 650,
     flip: true,
   },
   journal: [JournalEntry.FixTheClock, JournalEntry.MetTheMayor, JournalEntry.ClockFirstGear],

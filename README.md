@@ -26,14 +26,7 @@ Portal Images were cropped + resized using these commands (for helpful reference
 
 ### SFX
 
-Most sound effects https://mixkit.co/free-sound-effects/
-
-- footsteps
-- door open
-- metallic clunk
-- book open/close
-- button click
-- lullaby
+Most sound effects from Mixkit: https://mixkit.co/free-sound-effects/
 
 ### Music
 
