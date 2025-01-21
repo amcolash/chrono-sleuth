@@ -48,6 +48,7 @@ class MusicManager {
 
     // console.log('start music:', music, volume, this.scene.load.isLoading());
 
+    /** Disabled for now, consider if this should be done
     if (!this.scene.cache.audio.exists(music)) {
       // console.log('loading music:', music, musicFileMapping[music]);
 
@@ -56,6 +57,7 @@ class MusicManager {
 
       return;
     }
+    */
 
     this.stop();
     this.volume = volume || MusicData[music].volume || 0.5;

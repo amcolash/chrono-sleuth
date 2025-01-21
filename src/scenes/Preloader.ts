@@ -1,7 +1,9 @@
 import { GameObjects, Scene } from 'phaser';
 
+import { musicFileMapping } from '../classes/Music';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
+import { MusicType } from '../data/types';
 import { fadeOut } from '../utils/util';
 import { preloadIntro } from './Intro';
 
@@ -167,6 +169,13 @@ export class Preloader extends Scene {
     this.load.audio('potion', 'sounds/sfx/potion.mp3');
     this.load.audio('safe', 'sounds/sfx/safe.mp3');
     this.load.audio('xray', 'sounds/sfx/xray.mp3');
+
+    // music
+    Object.entries(musicFileMapping)
+      .filter(([key, _value]) => key !== MusicType.Town)
+      .forEach(([key, value]) => {
+        this.load.audio(key, value);
+      });
 
     // Main game intro
     if (!this.load.textureManager.exists('train')) this.load.image('train', 'maps/intro/train.png');
