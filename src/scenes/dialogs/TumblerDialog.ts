@@ -57,7 +57,7 @@ export class TumblerDialog extends Dialog {
     this.rings = [];
     this.fx = [];
 
-    this.active = -1;
+    this.active = 0;
     this.nextUpdate = 0;
 
     this.disabled = false;
@@ -132,12 +132,19 @@ export class TumblerDialog extends Dialog {
   handleMove(index: number, angle: number, checkComplete?: boolean) {
     if (this.disabled) return;
 
+    const previous = JSON.stringify(this.angles);
+
     const movement = this.angles[index] - angle;
-    this.angles[index] = angle % (Math.PI * 2);
+    this.angles[index] = PhaserMath.Snap.To(angle % (Math.PI * 2), snapThreshold);
 
     rings[index]?.forEach((r, j) => {
-      if (j !== index) this.angles[j] = (this.angles[j] + r * movement) % (Math.PI * 2);
+      if (j !== index)
+        this.angles[j] = PhaserMath.Snap.To((this.angles[j] + r * movement) % (Math.PI * 2), snapThreshold);
     });
+
+    console.log(this.angles, rings);
+    if (previous !== JSON.stringify(this.angles))
+      this.sound.play('safe_click', { detune: PhaserMath.Between(-500, 500) });
 
     this.updateMarkers(checkComplete);
   }
@@ -161,6 +168,12 @@ export class TumblerDialog extends Dialog {
   }
 
   completed(closeHandler?: () => void) {
+    for (let i = 0; i < 5; i++) {
+      this.sound.play('safe_click', { delay: i * 0.1 + Math.random() * 0.05, detune: PhaserMath.Between(-500, 500) });
+    }
+
+    this.sound.play('chest', { delay: 0.75 });
+
     this.tweens.add({
       targets: this.rings,
       rotation: 0,

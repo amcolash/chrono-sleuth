@@ -167,10 +167,11 @@ export class Preloader extends Scene {
     this.load.audio('chest', 'sounds/sfx/chest.mp3');
     this.load.audio('ingredient', 'sounds/sfx/ingredient.mp3');
     this.load.audio('potion', 'sounds/sfx/potion.mp3');
-    this.load.audio('safe', 'sounds/sfx/safe.mp3');
     this.load.audio('xray', 'sounds/sfx/xray.mp3');
     this.load.audio('pipes_complete', 'sounds/sfx/pipes_complete.mp3');
     this.load.audio('pipes_squeak', 'sounds/sfx/pipes_squeak.mp3');
+    this.load.audio('safe_click', 'sounds/sfx/safe_click.mp3');
+    this.load.audio('safe_open', 'sounds/sfx/safe_open.mp3');
 
     // music
     Object.entries(musicFileMapping)

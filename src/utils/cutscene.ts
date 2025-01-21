@@ -406,7 +406,7 @@ export function openSafe(player: Player) {
 
   toggleXRay(scene, false);
 
-  scene.sound.play('safe');
+  scene.sound.play('safe_open');
   gear.setPosition(safe.x, safe.y + 20);
 
   scene.tweens.add({
