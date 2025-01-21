@@ -4,12 +4,12 @@ import { MusicData } from '../data/music';
 import { Location, MusicType } from '../data/types';
 
 export const musicFileMapping: Record<MusicType, string> = {
-  [MusicType.Station]: 'sounds/music/Unknown.m4a',
-  [MusicType.Clock]: 'sounds/music/Night Time Scavenge II.m4a',
-  [MusicType.Mansion]: 'sounds/music/Reflective District.m4a',
-  [MusicType.Forest]: 'sounds/music/Serene.m4a',
-  [MusicType.Intro]: "sounds/music/A New Day's Hurry.m4a",
-  [MusicType.Town]: 'sounds/music/A Different Kind Of Journey.m4a',
+  [MusicType.Station]: 'sounds/music/Unknown.mp3',
+  [MusicType.Clock]: 'sounds/music/Night Time Scavenge II.mp3',
+  [MusicType.Mansion]: 'sounds/music/Reflective District.mp3',
+  [MusicType.Forest]: 'sounds/music/Serene.mp3',
+  [MusicType.Intro]: "sounds/music/A New Day's Hurry.mp3",
+  [MusicType.Town]: 'sounds/music/A Different Kind Of Journey.mp3',
 };
 
 export let Music: MusicManager;
