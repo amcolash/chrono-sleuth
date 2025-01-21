@@ -38,6 +38,7 @@ export const PropData: Record<PropType, Data> = {
     y: 1630,
     name: 'Journal',
     image: 'book',
+    skipLighting: true,
   },
   [PropType.AlchemySet]: {
     x: -2650,

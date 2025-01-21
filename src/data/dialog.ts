@@ -14,6 +14,7 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../utils/interactionUtils';
+import { setDaytime } from '../utils/lighting';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
 import { xrayAlpha } from '../utils/shaders/xray';
 import { fadeIn, fadeOut, openDialog } from '../utils/util';
@@ -668,6 +669,8 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       onCompleted: (player) => {
         Music.stop();
         player.setActive(false);
+
+        setDaytime(player.scene, false);
 
         player.scene.add
           .timeline([

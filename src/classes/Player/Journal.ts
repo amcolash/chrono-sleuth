@@ -8,6 +8,7 @@ import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { revealSafe } from '../../utils/cutscene';
 import { getGameObjects, hasItem, updateWarpLocked } from '../../utils/interactionUtils';
+import { setNighttime } from '../../utils/lighting';
 import { autosave } from '../../utils/save';
 import { toggleXRay } from '../../utils/shaders/xray';
 import { openDialog } from '../../utils/util';
@@ -92,6 +93,8 @@ export class Journal extends GameObjects.Image {
     if (entry === JournalEntry.ClockFirstGear || entry === JournalEntry.ClockSecondGear) {
       const clocks = getGameObjects(this.scene, ClockHands);
       clocks.forEach((c) => c.updateHands());
+
+      setNighttime(this.scene, false);
     }
 
     if (entry === JournalEntry.ExtraPotionInformation && !hasItem(this.player, ItemType.Gear2)) {
