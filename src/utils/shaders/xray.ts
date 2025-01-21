@@ -29,13 +29,16 @@ export function toggleXRay(scene: Scene, enabled: boolean, instant: boolean = fa
     return;
   }
 
-  scene.sound.play('xray', { rate: 0.85 });
+  const delay = enabled ? 0 : 1750;
+
+  scene.sound.play('xray', { rate: 0.85, delay: delay / 1000 });
 
   scene.tweens.addCounter({
     from: xrayAlpha,
     to: enabled ? 0.85 : 0,
     onUpdate: (tween) => (xrayAlpha = tween.getValue()),
     duration: enabled ? 2500 : 1500,
+    delay,
     ease: enabled ? 'Bounce' : undefined,
   });
 
@@ -45,6 +48,7 @@ export function toggleXRay(scene: Scene, enabled: boolean, instant: boolean = fa
     onUpdate: (tween) => setChromaticAberration(tween.getValue()),
     ease: 'Bounce',
     duration: 1000,
+    delay,
     yoyo: true,
   });
 }

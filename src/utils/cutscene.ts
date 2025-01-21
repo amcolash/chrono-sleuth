@@ -414,7 +414,7 @@ export function openSafe(player: Player) {
     x: safe.x - 10,
     y: safe.y + 120,
     duration: 1000,
-    hold: 1500,
+    hold: 3750,
     onComplete: () => {
       player.message.setDialog(
         {
@@ -423,7 +423,7 @@ export function openSafe(player: Player) {
             'I should be more careful next time before I drink random potions.',
             'At least I found the gear!',
           ],
-          onCompleted: () => (player.active = true),
+          onCompleted: () => scene.time.delayedCall(500, () => (player.active = true)),
         },
         safe,
         'player_portrait'
