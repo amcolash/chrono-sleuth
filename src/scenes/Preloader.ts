@@ -2,7 +2,6 @@ import { GameObjects, Scene } from 'phaser';
 
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
-import { MusicType } from '../data/types';
 import { fadeOut } from '../utils/util';
 import { preloadIntro } from './Intro';
 
@@ -168,12 +167,6 @@ export class Preloader extends Scene {
     this.load.audio('potion', 'sounds/sfx/potion.mp3');
     this.load.audio('safe', 'sounds/sfx/safe.mp3');
     this.load.audio('xray', 'sounds/sfx/xray.mp3');
-
-    // music (town loaded for main menu)
-    this.load.audio(MusicType.Station, 'sounds/music/Unknown.m4a');
-    this.load.audio(MusicType.Clock, 'sounds/music/Night Time Scavenge II.m4a');
-    this.load.audio(MusicType.Mansion, 'sounds/music/Reflective District.m4a');
-    this.load.audio(MusicType.Forest, 'sounds/music/Serene.m4a');
 
     // Main game intro
     if (!this.load.textureManager.exists('train')) this.load.image('train', 'maps/intro/train.png');

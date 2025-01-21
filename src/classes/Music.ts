@@ -1,7 +1,16 @@
 import { Scene, Sound, Tweens } from 'phaser';
 
 import { MusicData } from '../data/music';
-import { MusicType } from '../data/types';
+import { Location, MusicType } from '../data/types';
+
+export const musicFileMapping: Record<MusicType, string> = {
+  [MusicType.Station]: 'sounds/music/Unknown.m4a',
+  [MusicType.Clock]: 'sounds/music/Night Time Scavenge II.m4a',
+  [MusicType.Mansion]: 'sounds/music/Reflective District.m4a',
+  [MusicType.Forest]: 'sounds/music/Serene.m4a',
+  [MusicType.Intro]: "sounds/music/A New Day's Hurry.m4a",
+  [MusicType.Town]: 'sounds/music/A Different Kind Of Journey.m4a',
+};
 
 export let Music: MusicManager;
 export function createMusicInstance(sound: Sound.BaseSoundManager) {
@@ -33,15 +42,26 @@ class MusicManager {
   }
 
   start(music: MusicType, volume?: number) {
+    if (this.sound.mute || this.sound.locked) return;
     if (this.music?.key === music && this.music?.isPlaying) return;
+    if (this.scene.load.isLoading()) return;
+
+    // console.log('start music:', music, volume, this.scene.load.isLoading());
+
+    if (!this.scene.cache.audio.exists(music)) {
+      // console.log('loading music:', music, musicFileMapping[music]);
+
+      this.scene.load.audio(music, musicFileMapping[music]);
+      this.scene.load.start();
+
+      return;
+    }
 
     this.stop();
     this.volume = volume || MusicData[music].volume || 0.5;
 
     this.music = this.sound.get(music) || this.sound.add(music, { loop: true, volume: this.volume });
-    if (!this.sound.mute && !this.sound.locked) {
-      fadeInMusic(this.scene, this.music, this.volume);
-    }
+    fadeInMusic(this.scene, this.music, this.volume);
   }
 
   stop() {
@@ -51,6 +71,14 @@ class MusicManager {
 
   setScene(scene: Scene) {
     this.scene = scene;
+    this.scene.load.setPath('assets');
+  }
+
+  getLocationMusic(location: Location): MusicType | undefined {
+    const found = Object.entries(MusicData).find(([_key, value]) => value.locations.includes(location));
+    if (found) return found[0] as MusicType;
+
+    return;
   }
 }
 

@@ -1,6 +1,6 @@
 import { GameObjects, Scene } from 'phaser';
 
-import { Music } from '../classes/Music';
+import { Music, musicFileMapping } from '../classes/Music';
 import { Config } from '../config';
 import { SaveType, saves } from '../data/saves';
 import { MusicType } from '../data/types';
@@ -23,7 +23,7 @@ export function preloadIntro(scene: Scene) {
 
   scene.load.svg('chevron-down', 'icons/chevron-down.svg', { width: 64, height: 64 });
 
-  scene.load.audio(MusicType.Intro, "sounds/music/A New Day's Hurry.m4a");
+  scene.load.audio(MusicType.Intro, musicFileMapping[MusicType.Intro]);
 }
 
 export class Intro extends Scene {
