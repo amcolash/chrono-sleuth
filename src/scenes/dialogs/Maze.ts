@@ -1,5 +1,5 @@
 import generateMaze, { Cell } from 'generate-maze';
-import { GameObjects, Geom, Input, Math as PhaserMath, Scene, Tilemaps } from 'phaser';
+import { GameObjects, Input, Math as PhaserMath, Scene, Tilemaps } from 'phaser';
 
 import { InputManager, Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
@@ -44,9 +44,10 @@ export class Maze extends Scene {
 
     const camera = this.cameras.main;
 
-    camera.setBackgroundColor(0x4b692f);
     camera.startFollow(this.mazePlayer);
-    camera.setZoom(4);
+    camera.setZoom(3);
+    camera.setViewport(50, 130, Config.width - 100, Config.height - 170);
+
     this.keys = this.parent.keys;
 
     this.parent.addTarget(this.mazePlayer);
@@ -74,76 +75,106 @@ export class Maze extends Scene {
 
     this.maze = generateMaze(cells, cells, true, seed);
 
+    const maze = this.maze;
+    const n = maze.length; // Number of rows
+    const m = maze[0].length; // Number of columns
+
+    // Create an expanded array of size (2n + 1) x (2m + 1), filled with walls ('#')
+    const expanded: number[][] = Array.from({ length: 2 * n + 1 }, () => Array(2 * m + 1).fill(1));
+
+    // Populate the expanded array
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < m; j++) {
+        // Place the current cell as an empty tile
+        expanded[2 * i + 1][2 * j + 1] = 0;
+
+        // Place empty tiles for unblocked edges
+        if (!maze[i][j].top) {
+          expanded[2 * i][2 * j + 1] = 0;
+        }
+        if (!maze[i][j].bottom) {
+          expanded[2 * i + 2][2 * j + 1] = 0;
+        }
+        if (!maze[i][j].left) {
+          expanded[2 * i + 1][2 * j] = 0;
+        }
+        if (!maze[i][j].right) {
+          expanded[2 * i + 1][2 * j + 2] = 0;
+        }
+      }
+    }
+
+    const tileSize = expanded.length;
+
     // Create tilemap and layer
     const map = this.make.tilemap({
       tileWidth: cellSize,
       tileHeight: cellSize,
-      width: cells,
-      height: cells,
+      width: tileSize,
+      height: tileSize,
     });
 
     const tiles = map.addTilesetImage('maze_tiles');
-    map.createBlankLayer('layer', tiles!);
+    const layer = map.createBlankLayer('layer', tiles!)!;
+    layer.setScale(0.5);
 
-    for (let y = 0; y < cells; y++) {
-      for (let x = 0; x < cells; x++) {
-        const cell = this.maze[y][x];
+    this.parent.addTarget(layer);
 
-        const top = cell.top ? 1 : 0;
-        const right = cell.right ? 1 : 0;
-        const bottom = cell.bottom ? 1 : 0;
-        const left = cell.left ? 1 : 0;
+    for (let y = 0; y < tileSize - 1; y++) {
+      for (let x = 0; x < tileSize - 1; x++) {
+        const nw = expanded[y]?.[x];
+        const ne = expanded[y]?.[x + 1];
+        const sw = expanded[y + 1]?.[x];
+        const se = expanded[y + 1]?.[x + 1];
 
-        const tile = left + bottom * 2 + right * 4 + top * 8;
+        const tile = se + sw * 2 + ne * 4 + nw * 8;
 
-        map.putTileAt(tile, x, y);
+        layer.putTileAt(tile, x, y);
       }
     }
 
-    // this.drawGraphicsOld();
-
-    this.cameras.main.setViewport(50, 130, Config.width - 100, Config.height - 170);
-  }
-
-  drawGraphicsOld() {
     this.graphics = this.add.graphics();
 
     this.graphics.fillStyle(0x993322, 0.5);
     this.graphics.fillRect((cells - 1) * cellSize, (cells - 1) * cellSize, cellSize, cellSize);
 
-    this.graphics.lineStyle(1, 0x33aa33);
-
-    this.maze.forEach((row) => {
-      row.forEach((col) => {
-        if (col.top) {
-          const line = new Geom.Line(col.x * cellSize, col.y * cellSize, col.x * cellSize + cellSize, col.y * cellSize);
-          this.graphics.strokeLineShape(line);
-        }
-        if (col.bottom) {
-          const line = new Geom.Line(
-            col.x * cellSize,
-            col.y * cellSize + cellSize,
-            col.x * cellSize + cellSize,
-            col.y * cellSize + cellSize
-          );
-          this.graphics.strokeLineShape(line);
-        }
-        if (col.left) {
-          const line = new Geom.Line(col.x * cellSize, col.y * cellSize, col.x * cellSize, col.y * cellSize + cellSize);
-          this.graphics.strokeLineShape(line);
-        }
-        if (col.right) {
-          const line = new Geom.Line(
-            col.x * cellSize + cellSize,
-            col.y * cellSize,
-            col.x * cellSize + cellSize,
-            col.y * cellSize + cellSize
-          );
-          this.graphics.strokeLineShape(line);
-        }
-      });
-    });
+    // this.drawGraphicsOld();
   }
+
+  // drawGraphicsOld() {
+  //   this.graphics.lineStyle(2, 0x33aaaa);
+
+  //   this.maze.forEach((row) => {
+  //     row.forEach((col) => {
+  //       if (col.top) {
+  //         const line = new Geom.Line(col.x * cellSize, col.y * cellSize, col.x * cellSize + cellSize, col.y * cellSize);
+  //         this.graphics.strokeLineShape(line);
+  //       }
+  //       if (col.bottom) {
+  //         const line = new Geom.Line(
+  //           col.x * cellSize,
+  //           col.y * cellSize + cellSize,
+  //           col.x * cellSize + cellSize,
+  //           col.y * cellSize + cellSize
+  //         );
+  //         this.graphics.strokeLineShape(line);
+  //       }
+  //       if (col.left) {
+  //         const line = new Geom.Line(col.x * cellSize, col.y * cellSize, col.x * cellSize, col.y * cellSize + cellSize);
+  //         this.graphics.strokeLineShape(line);
+  //       }
+  //       if (col.right) {
+  //         const line = new Geom.Line(
+  //           col.x * cellSize + cellSize,
+  //           col.y * cellSize,
+  //           col.x * cellSize + cellSize,
+  //           col.y * cellSize + cellSize
+  //         );
+  //         this.graphics.strokeLineShape(line);
+  //       }
+  //     });
+  //   });
+  // }
 
   update(time: number, _delta: number): void {
     if (time < this.nextUpdate) return;
