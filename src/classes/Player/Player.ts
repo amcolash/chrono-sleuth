@@ -210,5 +210,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
 
     if (text && !this.buttonPrompt) this.buttonPrompt = new ButtonPrompt(this.scene);
     this.buttonPrompt?.setText(text);
+
+    this.buttonPrompt?.setVisible(text?.length > 0);
   }
 }

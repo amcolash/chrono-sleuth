@@ -19,6 +19,8 @@ export class Maze extends Scene {
   playerPosition: PhaserMath.Vector2 = new PhaserMath.Vector2(0, 0);
   nextUpdate: number;
 
+  audioThrottle: number = 0;
+
   constructor() {
     super('Maze');
   }
@@ -163,6 +165,11 @@ export class Maze extends Scene {
       (this.playerPosition.x !== newPosition.x || this.playerPosition.y !== newPosition.y) &&
       this.canMove(newPosition)
     ) {
+      if (Date.now() > this.audioThrottle) {
+        this.sound.play('ladder', { name: 'step', start: 0, duration: 0.3, config: { volume: 0.5 } });
+        this.audioThrottle = Date.now() + 250;
+      }
+
       this.mazePlayer.setPosition(this.playerPosition.x, this.playerPosition.y);
       this.playerPosition.set(newPosition.x, newPosition.y);
 
