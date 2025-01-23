@@ -14,7 +14,7 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../utils/interactionUtils';
-import { setDaytime } from '../utils/lighting';
+import { isNighttime, setDaytime } from '../utils/lighting';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
 import { xrayAlpha } from '../utils/shaders/xray';
 import { fadeIn, fadeOut, openDialog } from '../utils/util';
@@ -665,6 +665,9 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   ],
   [PropType.Bed]: [
     {
+      conditions: {
+        custom: (player) => isNighttime(player.scene),
+      },
       messages: ['What a long day. Time for some sleep before I continue my journey.'],
       onCompleted: (player) => {
         Music.stop();
@@ -702,6 +705,9 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
           ])
           .play();
       },
+    },
+    {
+      messages: ['A comfortable bed.', 'I should rest here if I need to.'],
     },
   ],
 };

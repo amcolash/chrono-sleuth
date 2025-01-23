@@ -181,7 +181,7 @@ export function townIntro(scene: Game) {
     .timeline([
       {
         at: 200,
-        sound: { key: 'train_whistle', config: { rate: 0.9 } },
+        sound: { key: 'train_whistle', config: { rate: 0.9, volume: 0.6 } },
       },
       {
         at: 2500,

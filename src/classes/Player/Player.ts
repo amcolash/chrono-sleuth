@@ -207,10 +207,9 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     if (interactive?.onCollided) interactive.onCollided();
 
     const text = interactive?.getButtonPrompt?.();
-
     if (text && !this.buttonPrompt) this.buttonPrompt = new ButtonPrompt(this.scene);
-    this.buttonPrompt?.setText(text);
 
-    this.buttonPrompt?.setVisible(text?.length > 0);
+    this.buttonPrompt?.setText(text);
+    this.buttonPrompt?.setVisible(this.message.visible ? false : text?.length > 0);
   }
 }

@@ -93,7 +93,7 @@ export class Message extends GameObjects.Container {
     this.portrait = this.scene.add.image(padding, padding, '').setOrigin(0).setScale(1.5);
 
     const box = this.scene.add
-      .rectangle(0, 0, Config.width - padding * 2, boxHeight, getColorNumber(Colors.Black), 0.8)
+      .rectangle(0, 0, Config.width - padding * 2, boxHeight, getColorNumber(Colors.Black), 0.9)
       .setStrokeStyle(2, getColorNumber(Colors.Tan), 1)
       .setOrigin(0, 0)
       .setScrollFactor(0)
