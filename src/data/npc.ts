@@ -1,12 +1,20 @@
 import { NPC } from '../classes/Environment/NPC';
 import { Game } from '../scenes/Game';
 import { updateSphinx } from '../utils/cutscene';
+import { isNighttime } from '../utils/lighting';
 import { DataProps, NPCType } from './types';
+
+type PositionData = {
+  x: number;
+  y: number;
+  condition: (target: NPC) => boolean;
+};
 
 export type Data = DataProps<NPC> & {
   image: string;
   portrait: string;
   light?: number;
+  positionData?: PositionData[];
 };
 
 export const NPCData: Record<NPCType, Data> = {
@@ -17,6 +25,13 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'inventor',
     portrait: 'inventor_portrait',
     name: 'Johan the Inventor',
+    positionData: [
+      {
+        x: 0,
+        y: 0,
+        condition: (target) => isNighttime(target.scene),
+      },
+    ],
   },
   [NPCType.Stranger]: {
     x: 1340,
@@ -36,6 +51,9 @@ export const NPCData: Record<NPCType, Data> = {
     onCreate: (obj) => updateSphinx(obj.scene, (obj.scene as Game).player.gameState.data.sphinxMoved, true),
     light: 1.85,
     initializeOnStart: true,
+    positionData: [
+      // TODO
+    ],
   },
   [NPCType.Mayor]: {
     x: 790,
@@ -44,6 +62,13 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'mayor',
     portrait: 'mayor_portrait',
     name: 'Joleen the Mayor',
+    positionData: [
+      {
+        x: 0,
+        y: 0,
+        condition: (target) => isNighttime(target.scene),
+      },
+    ],
   },
   [NPCType.Innkeeper]: {
     x: 2300,
@@ -62,5 +87,12 @@ export const NPCData: Record<NPCType, Data> = {
     portrait: 'baker_portrait',
     name: 'Amanda the Baker',
     skipLighting: true,
+    positionData: [
+      {
+        x: 0,
+        y: 0,
+        condition: (target) => isNighttime(target.scene),
+      },
+    ],
   },
 };

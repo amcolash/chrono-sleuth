@@ -81,8 +81,8 @@ export function fadeOut(scene: Scene, duration: number, callback?: () => void) {
   );
 }
 
-export function nearby(obj: Types.Math.Vector2Like, player: Player, distance: number): boolean {
-  return PhaserMath.Distance.BetweenPointsSquared(obj, player) < distance * distance;
+export function nearby(obj1: Types.Math.Vector2Like, obj2: Types.Math.Vector2Like, distance: number): boolean {
+  return PhaserMath.Distance.BetweenPointsSquared(obj1, obj2) < distance * distance;
 }
 
 export function shouldInitialize(obj: Types.Math.Vector2Like, player: Player, distance?: number): boolean {

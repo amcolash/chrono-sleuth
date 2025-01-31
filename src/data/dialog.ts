@@ -14,7 +14,7 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../utils/interactionUtils';
-import { isNighttime, setDaytime } from '../utils/lighting';
+import { isNighttime, setDaytime, setNighttime } from '../utils/lighting';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
 import { xrayAlpha } from '../utils/shaders/xray';
 import { fadeIn, fadeOut, openDialog } from '../utils/util';
@@ -344,12 +344,16 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       onCompleted: (player) => {
         player.inventory.removeItem(ItemType.Gear2);
         player.journal.addEntry(JournalEntry.ClockSecondGear);
+        setNighttime(player.scene, true);
       },
     },
     {
       messages: ['The clock is partially moving again, but it is still missing two gears.'],
       conditions: {
         journalEntry: JournalEntry.ClockFirstGear,
+      },
+      onCompleted: (player) => {
+        setNighttime(player.scene, true);
       },
     },
     {

@@ -14,6 +14,7 @@ import { Key } from '../UI/InputManager';
 
 export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitialize {
   npcType: NPCType;
+  npcData: Data;
   player: Player;
   light: GameObjects.Light | DebugLight;
   particles: GameObjects.Particles.ParticleEmitter;
@@ -22,18 +23,20 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   initialized: boolean = false;
 
   constructor(scene: Scene, npcType: NPCType, player: Player) {
-    const { x, y, image } = NPCData[npcType] as Data;
+    const data = NPCData[npcType];
+    const { x, y, image } = data;
 
     super(scene, x, y, image);
     this.name = `NPC-${npcType}`;
 
+    this.npcData = data;
     this.npcType = npcType;
     this.player = player;
 
     this.setDepth(Layer.Npcs);
     if (image === 'warp') this.setAlpha(0);
 
-    initializeObject(this, NPCData[npcType]);
+    initializeObject(this, data);
   }
 
   lazyInit(forceInit?: boolean) {
@@ -43,7 +46,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     this.scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
 
-    const { x, y, light, particles, onCreate } = NPCData[this.npcType] as Data;
+    const { x, y, light, particles, onCreate } = this.npcData;
 
     const intensity = light || 1;
     const night = !isDaytime(this.scene);
@@ -64,9 +67,25 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   }
 
   update(time: number, _delta: number): void {
-    this.lazyInit();
+    // Update NPC position, regardless of if it is initialized
 
-    this.light?.setPosition(this.x, this.y);
+    const posData = this.npcData.positionData || [];
+    let moved = false;
+
+    for (let i = 0; i < posData.length; i++) {
+      const { x, y, condition } = posData[i];
+      if (condition(this)) {
+        this.setPosition(x, y);
+        moved = true;
+        break;
+      }
+    }
+
+    if (!moved) this.setPosition(this.npcData.x, this.npcData.y);
+
+    if (this.npcData.positionData) this.light?.setPosition(this.x, this.y);
+
+    this.lazyInit();
   }
 
   setPosition(x?: number, y?: number, z?: number, w?: number): this {
@@ -83,7 +102,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
       const dialog = getDialog<NPC>(dialogs, this.player, this);
 
       if (dialog && dialog?.messages.length > 0) {
-        const showPortrait = NPCData[this.npcType].portrait.length > 0;
+        const showPortrait = this.npcData.portrait.length > 0;
         this.player.message.setDialog<NPC>(dialog, showPortrait ? this : undefined);
 
         return InteractResult.Talked;
@@ -94,6 +113,6 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   }
 
   getButtonPrompt() {
-    return [`Talk to ${NPCData[this.npcType].name}`, 'Press [CONTINUE]'];
+    return [`Talk to ${this.npcData.name}`, 'Press [CONTINUE]'];
   }
 }
