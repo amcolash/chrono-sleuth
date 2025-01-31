@@ -115,7 +115,7 @@ export class Preloader extends Scene {
     this.load.image('potion', 'items/potion.png');
 
     // characters
-    this.load.spritesheet('character', 'characters/player.png', { frameWidth: 128, frameHeight: 80 });
+    this.load.spritesheet('character', 'characters/player.png', { frameWidth: 40, frameHeight: 74 });
     this.load.image('inventor', 'characters/inventor.png');
     this.load.image('stranger', 'characters/stranger.png');
     this.load.image('sphinx', 'characters/sphinx.png');

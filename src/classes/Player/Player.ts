@@ -58,9 +58,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive();
 
-    this.setBodySize(48, 70)
-      .setOffset(40, 10)
-      .setOrigin(0.5, 0.65)
+    this.setBodySize(48, 74)
       .setDepth(Layer.Player)
       .setScale(size)
       .setPipeline('Light2D')
