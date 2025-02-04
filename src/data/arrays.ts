@@ -1,5 +1,5 @@
 import { PipeType } from '../utils/pipes';
-import { HelperTextType, ItemType, JournalEntry, NPCType, PropType, QuestType, WarpType } from './types';
+import { HelperTextType, ItemType, JournalEntry, Location, NPCType, PropType, QuestType, WarpType } from './types';
 
 export const itemList: ItemType[] = Object.keys(ItemType)
   .map((key: any) => ItemType[key])
@@ -24,6 +24,9 @@ export const questList: QuestType[] = Object.keys(QuestType)
 export const warpList: WarpType[] = Object.keys(WarpType)
   .map((key: any) => WarpType[key])
   .filter((k) => typeof k === 'number');
+
+export const locationListKeys: Location[] = Object.keys(Location) as Location[];
+export const locationListValues: Location[] = Object.values(Location) as Location[];
 
 export const helperTextList: HelperTextType[] = Object.keys(HelperTextType)
   .map((key: any) => HelperTextType[key])

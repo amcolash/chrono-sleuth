@@ -4,7 +4,7 @@ import { Player } from '../../classes/Player/Player';
 import { Button, CenteredButton } from '../../classes/UI/Button';
 import { TextBox } from '../../classes/UI/TextBox';
 import { Config } from '../../config';
-import { itemList, journalList, questList, sceneList, warpList } from '../../data/arrays';
+import { itemList, journalList, locationListValues, questList, sceneList, warpList } from '../../data/arrays';
 import { SaveType, saveKey, saves } from '../../data/saves';
 import { ItemType, JournalEntry, QuestType, WarpType } from '../../data/types';
 import { Voice } from '../../data/voices';
@@ -20,7 +20,7 @@ import {
 } from '../../utils/interactionUtils';
 import { toggleLighting } from '../../utils/lighting';
 import { convertSaveData, getCurrentSaveState, save } from '../../utils/save';
-import { openDialog } from '../../utils/util';
+import { openDialog, splitTitleCase } from '../../utils/util';
 import { Game } from '../Game';
 import { Dialog } from './Dialog';
 
@@ -36,6 +36,34 @@ enum Tab {
 
 const sidebarWidth = 250;
 const lastDebugKey = 'chrono-sleuth-debug-tab';
+
+const updatedWarpList: { label: string; warp?: WarpType }[] = [];
+
+// Group wraps by location
+locationListValues.sort().forEach((l) => {
+  // Generate a title for the location, such as ------ Town ------
+  const totalWidth = 28;
+  const padding = totalWidth - l.length;
+
+  const half = Math.floor(padding / 2);
+  const dashes = '-'.repeat(half - 1);
+
+  let label = `${dashes} ${l} ${dashes}`;
+  label = label.padEnd(totalWidth, '-');
+
+  updatedWarpList.push({ label });
+
+  // Find warps located at each location
+  const warps = warpList
+    .filter((w) => {
+      return WarpData[w].location === l;
+    })
+    .sort((a, b) => WarpType[a].localeCompare(WarpType[b]))
+    .map((w) => ({ label: WarpData[w].name || splitTitleCase(WarpType[w]), warp: w }));
+
+  updatedWarpList.push(...warps);
+  updatedWarpList.push({ label: '' });
+});
 
 export class DebugTool extends Dialog {
   player: Player;
@@ -104,7 +132,7 @@ export class DebugTool extends Dialog {
         fontSize: 32,
       },
       (line) => this.handleLineClick(line)
-    ).setBoxSize(Config.width * 0.38, Config.height * 0.75);
+    ).setBoxSize(Config.width * 0.42, Config.height * 0.75);
     this.mainContainer.add(this.textBox);
 
     this.helperText = this.add
@@ -336,10 +364,12 @@ export class DebugTool extends Dialog {
         }
         break;
       case Tab.Warp:
-        const warp = warpList[line] as WarpType;
-        const warpData = WarpData[warp];
-        this.player.setPosition(warpData.x, warpData.y);
-        this.close();
+        const val = updatedWarpList[line];
+        if (val.warp) {
+          const warpData = WarpData[WarpData[val.warp].warpTo];
+          this.player.setPosition(warpData.x, warpData.y);
+          this.close();
+        }
         break;
       case Tab.Misc:
         if (line > 1) {
@@ -409,7 +439,7 @@ export class DebugTool extends Dialog {
         this.helperText.setText('[-] quest active\n[x] quest complete');
         break;
       case Tab.Warp:
-        text = warpList.map((entry) => WarpType[entry]).join('\n');
+        text = updatedWarpList.map((entry) => entry.label).join('\n');
         break;
       case Tab.Misc:
         text = ['Scenes', '-----------------', ...sceneList].join('\n');
