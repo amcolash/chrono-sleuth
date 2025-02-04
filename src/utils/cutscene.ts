@@ -296,7 +296,7 @@ export function addHerb(
   target: Prop | undefined,
   type: ItemType.HerbRed | ItemType.HerbGreen | ItemType.HerbBlue
 ) {
-  player.inventory.removeItem(type);
+  player.inventory.useItem(type);
   player.setActive(false);
 
   if (!target || !target.particles) return;
@@ -331,7 +331,7 @@ export function updateAlchemySet(player: Player) {
 export function makePotion(player: Player, potion?: Prop) {
   const scene = player.scene;
 
-  player.inventory.removeItem(ItemType.HerbBlue);
+  player.inventory.useItem(ItemType.HerbBlue);
   player.setActive(false);
 
   fadeOut(scene, 500, () => {
@@ -393,7 +393,7 @@ export function revealSafe(player: Player, silent: boolean) {
 }
 
 export function openSafe(player: Player) {
-  player.inventory.removeItem(ItemType.Potion);
+  player.inventory.useItem(ItemType.Potion);
 
   player.active = false;
 

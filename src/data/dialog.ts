@@ -342,7 +342,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         if (index === 1) player.scene.sound.play('clunk');
       },
       onCompleted: (player) => {
-        player.inventory.removeItem(ItemType.Gear2);
+        player.inventory.useItem(ItemType.Gear2);
         player.journal.addEntry(JournalEntry.ClockSecondGear);
         setNighttime(player.scene, true);
       },
@@ -370,7 +370,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         if (index === 2) player.scene.sound.play('clunk');
       },
       onCompleted: (player) => {
-        player.inventory.removeItem(ItemType.Gear1);
+        player.inventory.useItem(ItemType.Gear1);
         player.journal.addEntry(JournalEntry.ClockFirstGear);
       },
     },
@@ -402,7 +402,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
       onCompleted: (player, prop) => {
         prop?.destroy();
-        player.inventory.removeItem(ItemType.Key);
+        player.inventory.useItem(ItemType.Key);
         player.journal.addEntry(JournalEntry.AlchemyLabFound);
       },
     },
@@ -438,7 +438,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         player.active = false;
 
         player.journal.addEntry(JournalEntry.ExtraPotionInformation);
-        player.inventory.removeItem(ItemType.Potion);
+        player.inventory.useItem(ItemType.Potion);
 
         player.scene.time.delayedCall(3500, () => {
           player.message.setDialog(

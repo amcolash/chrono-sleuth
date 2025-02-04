@@ -67,7 +67,7 @@ export class Inventory extends GameObjects.Container {
     }
   }
 
-  removeItem(item: ItemType) {
+  useItem(item: ItemType) {
     if (!this.initialized) this.createUI();
 
     const found = this.inventory.find((i) => i.type === item);
