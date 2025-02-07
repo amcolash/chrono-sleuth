@@ -40,6 +40,10 @@ export class DebugLight extends GameObjects.GameObject {
     this.light.setIntensity(intensity);
   }
 
+  setVisible(visible: boolean) {
+    this.light.setVisible(visible);
+  }
+
   destroy(fromScene?: boolean): void {
     super.destroy(fromScene);
     this.debug.destroy();

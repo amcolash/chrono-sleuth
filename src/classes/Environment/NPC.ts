@@ -1,4 +1,4 @@
-import { GameObjects, Physics, Scene } from 'phaser';
+import { GameObjects, Physics, Scene, Time } from 'phaser';
 
 import { Config } from '../../config';
 import { NPCDialogs, getDialog } from '../../data/dialog';
@@ -6,7 +6,7 @@ import { Layer } from '../../data/layers';
 import { Data, NPCData } from '../../data/npc';
 import { InteractResult, Interactive, LazyInitialize, NPCType } from '../../data/types';
 import { initializeObject } from '../../utils/interactionUtils';
-import { isDaytime } from '../../utils/lighting';
+import { isDaytime, isNighttime } from '../../utils/lighting';
 import { shouldInitialize } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
@@ -18,6 +18,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   player: Player;
   light: GameObjects.Light | DebugLight;
   particles: GameObjects.Particles.ParticleEmitter;
+  moveTimeline?: Time.Timeline;
 
   disabled: boolean = false;
   initialized: boolean = false;
@@ -66,26 +67,71 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     this.initialized = true;
   }
 
-  update(time: number, _delta: number): void {
-    // Update NPC position, regardless of if it is initialized
+  update(_time: number, _delta: number): void {
+    this.handleMovement();
+    this.lazyInit();
+  }
 
-    const posData = this.npcData.positionData || [];
-    let moved = false;
+  handleMovement() {
+    const posData = this.npcData.positionData;
 
-    for (let i = 0; i < posData.length; i++) {
-      const { x, y, condition } = posData[i];
-      if (condition(this)) {
-        this.setPosition(x, y);
-        moved = true;
-        break;
+    // Update NPC position, regardless of if it is initialized. Use a smooth
+    // tween + fade out/in npc
+    if (posData && !this.moveTimeline) {
+      const nextPos = { x: this.npcData.x, y: this.npcData.y };
+
+      for (let i = 0; i < posData.length; i++) {
+        const { x, y, condition } = posData[i];
+        if (condition(this)) {
+          nextPos.x = x;
+          nextPos.y = y;
+          break;
+        }
+      }
+
+      if (Math.abs(this.x - nextPos.x) > 1 || Math.abs(this.y - nextPos.y) > 1) {
+        const originalLightValue =
+          this.light instanceof DebugLight ? this.light?.light?.intensity : this.light?.intensity;
+
+        const duration = 200;
+        this.moveTimeline = this.scene.add
+          .timeline([
+            {
+              at: 0,
+              tween: {
+                targets: this,
+                alpha: 0,
+                duration,
+                onUpdate: (_tween, _target, _key, current) => this.light?.setIntensity(current * originalLightValue),
+                onComplete: () => {
+                  this.light?.setVisible(false);
+                  this.light?.setIntensity(originalLightValue);
+                },
+              },
+            },
+            {
+              at: duration + 100,
+              tween: {
+                targets: this,
+                alpha: 1,
+                duration,
+                delay: duration,
+                onStart: () => {
+                  this.light?.setIntensity(0);
+                  if (isNighttime(this.scene)) this.light?.setVisible(true);
+                },
+                onUpdate: (_tween, _target, _key, current) => this.light?.setIntensity(current * originalLightValue),
+              },
+              run: () => this.setPosition(nextPos.x, nextPos.y),
+            },
+          ])
+          .play()
+          .once('complete', () => (this.moveTimeline = undefined));
       }
     }
 
-    if (!moved) this.setPosition(this.npcData.x, this.npcData.y);
-
-    if (this.npcData.positionData) this.light?.setPosition(this.x, this.y);
-
-    this.lazyInit();
+    // Always update light position
+    this.light?.setPosition(this.x, this.y);
   }
 
   setPosition(x?: number, y?: number, z?: number, w?: number): this {

@@ -50,9 +50,14 @@ export const NPCData: Record<NPCType, Data> = {
     name: 'Mystical Sphinx',
     onCreate: (obj) => updateSphinx(obj.scene, (obj.scene as Game).player.gameState.data.sphinxMoved, true),
     light: 1.85,
-    initializeOnStart: true,
     positionData: [
-      // TODO
+      {
+        x: 3720,
+        y: 700,
+        condition: (sphinx) => {
+          return (sphinx.scene as Game).player.gameState.data.sphinxMoved;
+        },
+      },
     ],
   },
   [NPCType.Mayor]: {

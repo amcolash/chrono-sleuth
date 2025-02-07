@@ -7,14 +7,13 @@ import { Player } from '../classes/Player/Player';
 import { Message } from '../classes/UI/Message';
 import { Config } from '../config';
 import { Layer } from '../data/layers';
-import { NPCData } from '../data/npc';
 import { PropData } from '../data/prop';
-import { ItemType, MusicType, NPCType, PropType, QuestType, WallType, WarpType } from '../data/types';
+import { ItemType, MusicType, PropType, QuestType, WallType, WarpType } from '../data/types';
 import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
 import { rotationCorrection, updateAnimation } from './animations';
 import { fontStyle } from './fonts';
-import { getNPC, getProp, getWall, hasUsedItem, updateWarpLocked } from './interactionUtils';
+import { getProp, getWall, hasUsedItem, updateWarpLocked } from './interactionUtils';
 import { toggleXRay } from './shaders/xray';
 import { fadeIn, fadeOut } from './util';
 
@@ -216,18 +215,12 @@ export function townIntro(scene: Game) {
     .play();
 }
 
-export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean) {
-  const sphinx = getNPC(scene, NPCType.Sphinx);
-  if (!sphinx) {
-    console.error('Sphinx not found');
-    return;
-  }
-
+export function updateSphinx(scene: Scene, complete?: boolean) {
   const wall = getWall(scene, WallType.Sphinx);
   if (wall) {
     const x = WallData.find((data) => data.id === WallType.Sphinx)?.x || 0;
     if (complete) {
-      wall.setX(x || 0);
+      wall.setX(x);
     } else {
       wall.setX(x - 150);
     }
@@ -235,25 +228,6 @@ export function updateSphinx(scene: Scene, complete?: boolean, instant?: boolean
   }
 
   updateWarpLocked(scene, WarpType.ForestEast, !complete);
-
-  const { x, y } = NPCData[NPCType.Sphinx];
-  const newX = complete ? x + 200 : x;
-  const newY = complete ? y - 90 : y;
-  const duration = !complete || instant ? 1 : 200;
-
-  scene.add
-    .timeline([
-      {
-        at: 0,
-        tween: {
-          targets: sphinx,
-          alpha: 0,
-          duration,
-        },
-      },
-      { at: duration + 1, tween: { targets: sphinx, alpha: 1, duration }, run: () => sphinx.setPosition(newX, newY) },
-    ])
-    .play();
 }
 
 export function openChest(player: Player) {
