@@ -14,6 +14,7 @@ import { Game } from '../scenes/Game';
 import { rotationCorrection, updateAnimation } from './animations';
 import { fontStyle } from './fonts';
 import { getProp, getWall, hasUsedItem, updateWarpLocked } from './interactionUtils';
+import { setDaytime } from './lighting';
 import { toggleXRay } from './shaders/xray';
 import { fadeIn, fadeOut } from './util';
 
@@ -405,4 +406,42 @@ export function openSafe(player: Player) {
     },
     ease: 'Bounce.easeOut',
   });
+}
+
+export function bedtime(player: Player) {
+  Music.stop();
+  player.setActive(false);
+
+  player.gameState.updateData({ day: player.gameState.data.day + 1 });
+  setDaytime(player.scene, false);
+
+  player.scene.add
+    .timeline([
+      {
+        at: 0,
+        run: () =>
+          fadeOut(player.scene, 500, () => {
+            player.setPosition(2660, player.y);
+            player.previousPosition.set(player.x + 1, player.y);
+            updateAnimation(player);
+          }),
+      },
+      { at: 1000, sound: { key: 'lullaby', config: { volume: 0.5, rate: 0.85 } } },
+      {
+        at: 4000,
+        run: () => {
+          fadeIn(player.scene, 1000, () => {
+            player.message.setDialog(
+              {
+                messages: ['Ah, what a lovely rest. Time to get back to work!'],
+                onCompleted: (player) => player.setActive(true),
+              },
+              player,
+              'player_portrait'
+            );
+          });
+        },
+      },
+    ])
+    .play();
 }

@@ -10,6 +10,12 @@ type PositionData = {
   condition: (target: NPC) => boolean;
 };
 
+export const nighttimeVillager: PositionData = {
+  x: 0,
+  y: 0,
+  condition: (target) => isNighttime(target.scene),
+};
+
 export type Data = DataProps<NPC> & {
   image: string;
   portrait: string;
@@ -25,13 +31,7 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'inventor',
     portrait: 'inventor_portrait',
     name: 'Johan the Inventor',
-    positionData: [
-      {
-        x: 0,
-        y: 0,
-        condition: (target) => isNighttime(target.scene),
-      },
-    ],
+    positionData: [nighttimeVillager],
   },
   [NPCType.Stranger]: {
     x: 1340,
@@ -67,13 +67,7 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'mayor',
     portrait: 'mayor_portrait',
     name: 'Joleen the Mayor',
-    positionData: [
-      {
-        x: 0,
-        y: 0,
-        condition: (target) => isNighttime(target.scene),
-      },
-    ],
+    positionData: [nighttimeVillager],
   },
   [NPCType.Innkeeper]: {
     x: 2300,
@@ -92,12 +86,6 @@ export const NPCData: Record<NPCType, Data> = {
     portrait: 'baker_portrait',
     name: 'Amanda the Baker',
     skipLighting: true,
-    positionData: [
-      {
-        x: 0,
-        y: 0,
-        condition: (target) => isNighttime(target.scene),
-      },
-    ],
+    positionData: [nighttimeVillager],
   },
 };

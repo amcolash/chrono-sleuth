@@ -94,7 +94,10 @@ export class Journal extends GameObjects.Image {
       const clocks = getGameObjects(this.scene, ClockHands);
       clocks.forEach((c) => c.updateHands());
 
-      setNighttime(this.scene, false);
+      const nightDayOne = entry === JournalEntry.ClockFirstGear && this.player.gameState.data.day === 1;
+      const nightDayTwo = entry === JournalEntry.ClockSecondGear && this.player.gameState.data.day === 2;
+
+      if (nightDayOne || nightDayTwo) setNighttime(this.scene, false);
     }
 
     if (entry === JournalEntry.ExtraPotionInformation && !hasItem(this.player, ItemType.Gear2)) {

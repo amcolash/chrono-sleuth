@@ -8,6 +8,7 @@ export type GameData = {
   mazeSeed: number;
   sphinxFail: boolean;
   sphinxMoved: boolean;
+  day: number;
 };
 
 export const defaultState: GameData = {
@@ -15,6 +16,7 @@ export const defaultState: GameData = {
   mazeSeed: 0,
   sphinxFail: false,
   sphinxMoved: false,
+  day: 1,
 };
 
 export class GameState {
@@ -45,7 +47,7 @@ export class GameState {
     // we can consistently move the sphinx back and forth and not have to worry
     // about ordering of effects.
     if (key === 'sphinxMoved') {
-      updateSphinx(this.scene, value, silent);
+      updateSphinx(this.scene, value);
     }
   }
 }

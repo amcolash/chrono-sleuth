@@ -1,10 +1,8 @@
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
-import { Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
-import { updateAnimation } from '../utils/animations';
-import { addHerb, makePotion } from '../utils/cutscene';
+import { addHerb, bedtime, makePotion } from '../utils/cutscene';
 import {
   getItem,
   hasActiveQuest,
@@ -14,10 +12,10 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../utils/interactionUtils';
-import { isNighttime, setDaytime, setNighttime } from '../utils/lighting';
+import { isNighttime, setNighttime } from '../utils/lighting';
 import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
 import { xrayAlpha } from '../utils/shaders/xray';
-import { fadeIn, fadeOut, openDialog } from '../utils/util';
+import { openDialog } from '../utils/util';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
 
 export interface Dialog<T> {
@@ -673,42 +671,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         custom: (player) => isNighttime(player.scene),
       },
       messages: ['What a long day. Time for some sleep before I continue my journey.'],
-      onCompleted: (player) => {
-        Music.stop();
-        player.setActive(false);
-
-        setDaytime(player.scene, false);
-
-        player.scene.add
-          .timeline([
-            {
-              at: 0,
-              run: () =>
-                fadeOut(player.scene, 500, () => {
-                  player.setPosition(2660, player.y);
-                  player.previousPosition.set(player.x + 1, player.y);
-                  updateAnimation(player);
-                }),
-            },
-            { at: 1000, sound: { key: 'lullaby', config: { volume: 0.5, rate: 0.85 } } },
-            {
-              at: 4000,
-              run: () => {
-                fadeIn(player.scene, 1000, () => {
-                  player.message.setDialog(
-                    {
-                      messages: ['Ah, what a lovely rest. Time to get back to work!'],
-                      onCompleted: (player) => player.setActive(true),
-                    },
-                    player,
-                    'player_portrait'
-                  );
-                });
-              },
-            },
-          ])
-          .play();
-      },
+      onCompleted: (player) => bedtime(player),
     },
     {
       messages: ['A comfortable bed.', 'I should rest here if I need to.'],
