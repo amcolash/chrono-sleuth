@@ -1,4 +1,4 @@
-import { GameObjects, Math, Math as PhaserMath, Physics } from 'phaser';
+import { GameObjects, Math as PhaserMath, Physics } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
@@ -39,10 +39,12 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   journal: Journal;
   gameState: GameState;
 
-  previousPosition: Math.Vector2 = new Math.Vector2();
+  previousPosition: PhaserMath.Vector2 = new PhaserMath.Vector2();
+  walkingSound: Phaser.Sound.BaseSound;
+  lastPlayedSound: number = 0;
 
   counter: number = 0;
-  history: Math.Vector3[] = [];
+  history: PhaserMath.Vector3[] = [];
   rewinding: boolean = false;
 
   // Prevents camera from being locked when warping
@@ -80,6 +82,8 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     this.quests = new Quests(scene, this);
     this.journal = new Journal(scene, this);
     this.gameState = new GameState(scene, this);
+
+    this.walkingSound = scene.sound.add('ladder', { loop: true, rate: 0.75, volume: 0.4 });
 
     if (Config.perfTest) {
       scene.time.delayedCall(1000, () => {
@@ -128,6 +132,13 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     // Update animations
     updateAnimation(this);
 
+    const moved = Math.abs(this.body?.velocity.x || 0) > 1 || Math.abs(this.body?.velocity.y || 0) > 1;
+    if (moved && !this.walkingSound.isPlaying && Date.now() - this.lastPlayedSound > 150) this.walkingSound.play();
+    else if (!moved) {
+      this.walkingSound.stop();
+      this.lastPlayedSound = Date.now();
+    }
+
     this.previousPosition.set(this.x, this.y);
   }
 
@@ -175,7 +186,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
 
   record() {
     if (this.history.length < MAX_HISTORY)
-      this.history.push(new Math.Vector3(this.x, this.y, this.body?.velocity.x || 0));
+      this.history.push(new PhaserMath.Vector3(this.x, this.y, this.body?.velocity.x || 0));
     else console.warn('Max history reached');
   }
 
