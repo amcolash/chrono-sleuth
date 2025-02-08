@@ -124,7 +124,7 @@ export const WarpData: Record<WarpType, Data> = {
   },
   [WarpType.ClockTop]: {
     x: 780,
-    y: -1970,
+    y: -1980,
     range: 10,
     key: Key.Left,
     direction: Key.Down,
@@ -136,7 +136,7 @@ export const WarpData: Record<WarpType, Data> = {
   },
 
   [WarpType.ForestEast]: {
-    x: 3590,
+    x: 3570,
     y: 815,
     key: Key.Right,
     warpTo: WarpType.Lake,

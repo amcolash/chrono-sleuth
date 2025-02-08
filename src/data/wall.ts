@@ -27,7 +27,7 @@ export const WallData: Data[] = [
 
   // Forest
   { x: 2600, y: 760 },
-  { x: 3630, y: 760, id: WallType.Sphinx },
+  { x: 3610, y: 760, id: WallType.Sphinx },
 
   // Lake
   { x: 4455, y: 850 },

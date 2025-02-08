@@ -196,7 +196,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     }
 
     if (shouldWarp) {
-      warpTo(this.warpType, WarpData[this.warpType].warpTo, this.player);
+      const data = WarpData[this.warpType];
+      warpTo(this.warpType, data.warpTo, this.player, { x: 0, y: -warpYOffset });
       return InteractResult.Teleported;
     }
 
