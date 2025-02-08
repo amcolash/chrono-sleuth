@@ -8,6 +8,7 @@ type PositionData = {
   x: number;
   y: number;
   condition: (target: NPC) => boolean;
+  onMove?: (target: NPC) => void;
 };
 
 export const nighttimeVillager: PositionData = {
@@ -48,15 +49,21 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'sphinx',
     portrait: 'sphinx_portrait',
     name: 'Mystical Sphinx',
-    onCreate: (obj) => updateSphinx(obj.scene, (obj.scene as Game).player.gameState.data.sphinxMoved, true),
     light: 1.85,
     positionData: [
       {
+        // Position after sphinx allows player to pass
         x: 3720,
         y: 700,
-        condition: (sphinx) => {
-          return (sphinx.scene as Game).player.gameState.data.sphinxMoved;
-        },
+        condition: (sphinx) => (sphinx.scene as Game).player.gameState.data.sphinxMoved,
+        onMove: (sphinx) => updateSphinx(sphinx.scene, true),
+      },
+      {
+        // Duplicated default position - used to trigger updateSphinx
+        x: 3520,
+        y: 790,
+        condition: () => true,
+        onMove: (sphinx) => updateSphinx(sphinx.scene, false),
       },
     ],
   },

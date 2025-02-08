@@ -1,5 +1,4 @@
 import { Game } from '../../scenes/Game';
-import { updateSphinx } from '../../utils/cutscene';
 import { autosave } from '../../utils/save';
 import { Player } from './Player';
 
@@ -42,12 +41,5 @@ export class GameState {
     if (!silent) autosave(this.scene);
   }
 
-  handleSideEffects(key: keyof GameData, value: any, silent?: boolean) {
-    // By using a state instead of side effects in various different places,
-    // we can consistently move the sphinx back and forth and not have to worry
-    // about ordering of effects.
-    if (key === 'sphinxMoved') {
-      updateSphinx(this.scene, value);
-    }
-  }
+  handleSideEffects(key: keyof GameData, value: any, silent?: boolean) {}
 }

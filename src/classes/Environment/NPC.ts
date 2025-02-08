@@ -65,68 +65,80 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
 
     if (onCreate) onCreate(this);
     this.initialized = true;
+
+    this.handleMovement(true);
   }
 
   update(_time: number, _delta: number): void {
-    this.handleMovement();
     this.lazyInit();
+    this.handleMovement();
   }
 
-  handleMovement() {
+  handleMovement(silent: boolean = false) {
+    if (!this.initialized) return;
+
     const posData = this.npcData.positionData;
 
     // Update NPC position, regardless of if it is initialized. Use a smooth
     // tween + fade out/in npc
     if (posData && !this.moveTimeline) {
       const nextPos = { x: this.npcData.x, y: this.npcData.y };
+      let onMove: ((target: NPC) => void) | undefined;
 
       for (let i = 0; i < posData.length; i++) {
         const { x, y, condition } = posData[i];
         if (condition(this)) {
           nextPos.x = x;
           nextPos.y = y;
+          onMove = posData[i].onMove;
           break;
         }
       }
 
       if (Math.abs(this.x - nextPos.x) > 1 || Math.abs(this.y - nextPos.y) > 1) {
-        const originalLightValue =
-          this.light instanceof DebugLight ? this.light?.light?.intensity : this.light?.intensity;
+        if (onMove) onMove(this);
 
-        const duration = 200;
-        this.moveTimeline = this.scene.add
-          .timeline([
-            {
-              at: 0,
-              tween: {
-                targets: this,
-                alpha: 0,
-                duration,
-                onUpdate: (_tween, _target, _key, current) => this.light?.setIntensity(current * originalLightValue),
-                onComplete: () => {
-                  this.light?.setVisible(false);
-                  this.light?.setIntensity(originalLightValue);
+        if (silent) {
+          this.setPosition(nextPos.x, nextPos.y);
+        } else {
+          const originalLightValue =
+            this.light instanceof DebugLight ? this.light?.light?.intensity : this.light?.intensity;
+
+          const duration = 200;
+          this.moveTimeline = this.scene.add
+            .timeline([
+              {
+                at: 0,
+                tween: {
+                  targets: this,
+                  alpha: 0,
+                  duration,
+                  onUpdate: (_tween, _target, _key, current) => this.light?.setIntensity(current * originalLightValue),
+                  onComplete: () => {
+                    this.light?.setVisible(false);
+                    this.light?.setIntensity(originalLightValue);
+                  },
                 },
               },
-            },
-            {
-              at: duration + 100,
-              tween: {
-                targets: this,
-                alpha: 1,
-                duration,
-                delay: duration,
-                onStart: () => {
-                  this.light?.setIntensity(0);
-                  if (isNighttime(this.scene)) this.light?.setVisible(true);
+              {
+                at: duration + 100,
+                tween: {
+                  targets: this,
+                  alpha: 1,
+                  duration,
+                  delay: duration,
+                  onStart: () => {
+                    this.light?.setIntensity(0);
+                    if (isNighttime(this.scene)) this.light?.setVisible(true);
+                  },
+                  onUpdate: (_tween, _target, _key, current) => this.light?.setIntensity(current * originalLightValue),
                 },
-                onUpdate: (_tween, _target, _key, current) => this.light?.setIntensity(current * originalLightValue),
+                run: () => this.setPosition(nextPos.x, nextPos.y),
               },
-              run: () => this.setPosition(nextPos.x, nextPos.y),
-            },
-          ])
-          .play()
-          .once('complete', () => (this.moveTimeline = undefined));
+            ])
+            .play()
+            .once('complete', () => (this.moveTimeline = undefined));
+        }
       }
     }
 
