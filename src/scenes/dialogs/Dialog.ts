@@ -1,5 +1,6 @@
 import { GameObjects, Scene } from 'phaser';
 
+import { Music } from '../../classes/Music';
 import { Button } from '../../classes/UI/Button';
 import { Gamepad } from '../../classes/UI/Gamepad';
 import { IconButton } from '../../classes/UI/IconButton';
@@ -85,6 +86,9 @@ export abstract class Dialog extends Scene {
       const childScene = this.scene.get(this.dialogData.childScene);
       childScene.events.on('create', () => this.fadeIn());
     } else this.fadeIn();
+
+    Music.setScene(this);
+    Music.fadeMusic(0.15);
   }
 
   fadeIn() {
@@ -126,13 +130,16 @@ export abstract class Dialog extends Scene {
   close(success?: boolean) {
     this.preHandleSuccess(success);
 
+    const game = this.scene.get('Game') as Game;
+    Music.fadeMusic(Music.volume, 500, () => Music.setScene(game));
+
     this.fadeOut(() => {
       this.scene.stop();
       if (this.dialogData.childScene) this.scene.stop(this.dialogData.childScene);
 
-      this.scene.resume('Game');
-      (this.scene.get('Game') as Game)?.gamepad?.setAlpha(1);
-      (this.scene.get('Game') as Game)?.gamepad?.resetButtons();
+      this.scene.resume(game);
+      game?.gamepad?.setAlpha(1);
+      game?.gamepad?.resetButtons();
 
       this.handleSuccess(success);
     });

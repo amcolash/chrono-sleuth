@@ -38,13 +38,8 @@ export class Paused extends Scene {
     const { width, height } = Config;
 
     // Fade out background music
-    if (Music.music && Music.music.isPlaying) {
-      this.tweens.add({
-        targets: Music.music,
-        volume: 0.15,
-        duration: 800,
-      });
-    }
+    Music.setScene(this);
+    Music.fadeMusic(0.15);
 
     this.container = this.add.container(0, 0);
 
@@ -164,13 +159,7 @@ export class Paused extends Scene {
 
   resume() {
     // Fade in background music
-    if (Music.music && Music.music.isPlaying) {
-      this.tweens.add({
-        targets: Music.music,
-        volume: Music.volume,
-        duration: 500,
-      });
-    }
+    Music.fadeMusic(Music.volume, 500, () => Music.setScene(this.parent));
 
     this.tweens.add({
       targets: this.container,

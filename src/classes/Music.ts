@@ -82,8 +82,21 @@ class MusicManager {
 
     return;
   }
+
+  /** Fade current music to specified volume */
+  fadeMusic(volume: number, duration: number = 500, onComplete?: () => void) {
+    if (this.music) {
+      this.scene.tweens.add({
+        targets: this.music,
+        volume,
+        duration,
+        onComplete,
+      });
+    }
+  }
 }
 
+/** Play and fade in music */
 function fadeInMusic(
   scene: Scene | undefined,
   sound: Phaser.Sound.BaseSound,
@@ -103,6 +116,7 @@ function fadeInMusic(
   }
 }
 
+/** Fade out and stop music */
 function fadeOutMusic(scene: Scene | undefined, sound: Phaser.Sound.BaseSound, duration: number = 500) {
   if (scene && sound.isPlaying) {
     scene.tweens.getTweensOf(sound).forEach((tween: Tweens.Tween) => tween.stop());
