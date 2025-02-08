@@ -29,6 +29,7 @@ export class SliderDialog extends Dialog {
 
     const puzzleSize = Math.floor(1024 / cols);
     this.load.spritesheet('slider', 'puzzles/slider.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
+    this.load.audio('puzzle_slide', 'sounds/sfx/puzzle_slide.mp3');
   }
 
   create() {
@@ -98,6 +99,8 @@ export class SliderDialog extends Dialog {
     if (Math.abs(emptyX - x) + Math.abs(emptyY - y) === 1) {
       this.layout[emptyIndex] = this.layout[index];
       this.layout[index] = emptyTile;
+
+      this.sound.play('puzzle_slide', { volume: 0.5 });
 
       this.updateLayout();
     }
