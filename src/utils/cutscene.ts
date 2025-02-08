@@ -168,7 +168,7 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
 export function townIntro(scene: Game) {
   Music.start(MusicType.Station);
 
-  const train = scene.add.image(800, 1460, 'train').setScale(1.25).setDepth(Layer.Shader);
+  const train = scene.add.image(800, 1460, 'train').setScale(1.15).setDepth(Layer.Shader);
 
   // Flip player sprite
   const player = scene.player;
@@ -193,7 +193,7 @@ export function townIntro(scene: Game) {
         tween: { targets: train, y: train.y - 4, loop: -1, yoyo: true, duration: 100 },
       },
       {
-        at: 7250,
+        at: 7800,
         run: () => {
           train.destroy();
 

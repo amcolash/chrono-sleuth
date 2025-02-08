@@ -69,6 +69,11 @@ export class DebugUI extends GameObjects.Container {
       this.scene.scene.restart();
     });
 
+    this.scene.input.keyboard?.on('keydown-M', () => {
+      localStorage.removeItem(saveKey);
+      this.scene.scene.restart();
+    });
+
     this.scene.input.keyboard?.on('keydown-N', () => {
       localStorage.removeItem(saveKey);
       this.scene.scene.start('Preloader');
