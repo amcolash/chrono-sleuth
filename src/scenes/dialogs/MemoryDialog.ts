@@ -31,6 +31,9 @@ export class MemoryDialog extends Dialog {
     for (let i = 1; i <= 12; i++) {
       this.load.image(`rune_${i}`, `puzzles/runes/Stone${i}.png`);
     }
+
+    this.load.audio('memory_wrong', 'sounds/sfx/memory_wrong.mp3');
+    this.load.audio('unlock', 'sounds/sfx/unlock.mp3');
   }
 
   create(): void {
@@ -99,6 +102,8 @@ export class MemoryDialog extends Dialog {
   onButtonPress(btn: GameObjects.Image, value: number) {
     const index = this.pressed.length;
     if (this.sequence[index] === value) {
+      this.sound.play('safe_click', { volume: 0.75 });
+
       this.pressed.push(value);
       btn.disableInteractive();
 
@@ -120,6 +125,8 @@ export class MemoryDialog extends Dialog {
         },
       });
     } else {
+      this.sound.play('memory_wrong', { volume: 0.75 });
+
       btn.disableInteractive();
 
       const start = new Display.Color(255, 255, 255);
@@ -147,6 +154,8 @@ export class MemoryDialog extends Dialog {
 
   completed(callback: () => void) {
     this.time.delayedCall(300, () => {
+      this.sound.play('unlock', { volume: 0.75 });
+
       this.buttons.getAll<GameObjects.Image>().forEach((b, i) => {
         const last = i === total - 1;
 
