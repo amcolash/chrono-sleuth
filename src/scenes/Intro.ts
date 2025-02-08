@@ -24,6 +24,7 @@ export function preloadIntro(scene: Scene) {
   scene.load.svg('chevron-down', 'icons/chevron-down.svg', { width: 64, height: 64 });
 
   scene.load.audio(MusicType.Intro, musicFileMapping[MusicType.Intro]);
+  scene.load.audio('train_rolling', 'sounds/sfx/train_rolling.mp3');
 }
 
 export class Intro extends Scene {
@@ -64,6 +65,10 @@ export class Intro extends Scene {
   create() {
     Music.setScene(this);
     Music.start(MusicType.Intro);
+
+    const trainRolling = this.sound.add('train_rolling');
+    trainRolling.addMarker({ name: 'start', start: 0.5, duration: 3.25 });
+    trainRolling.play('start', { loop: true, volume: 0.15 });
 
     const scale = Config.zoomed ? 0.75 : 1;
 

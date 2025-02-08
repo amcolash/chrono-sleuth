@@ -186,6 +186,7 @@ export function townIntro(scene: Game) {
       {
         at: 2500,
         tween: { targets: train, x: -500, duration: 5000 },
+        sound: { key: 'train_rolling', config: { volume: 0.6 } },
       },
       {
         at: 2500,

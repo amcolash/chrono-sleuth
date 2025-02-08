@@ -182,6 +182,7 @@ export class Preloader extends Scene {
     // Main game intro
     if (!this.load.textureManager.exists('train')) this.load.image('train', 'maps/intro/train.png');
     this.load.audio('train_whistle', 'sounds/sfx/train_whistle.mp3');
+    this.load.audio('train_rolling', 'sounds/sfx/train_rolling.mp3');
 
     // optionally preload intro
     if (!localStorage.getItem(saveKey)) {

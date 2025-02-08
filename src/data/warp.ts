@@ -43,6 +43,7 @@ export const WarpData: Record<WarpType, Data> = {
     warpTo: WarpType.Station,
     location: Location.Station,
     visual: WarpVisual.Invisible,
+    sound: WarpSound.Ladder,
   },
   [WarpType.Station]: {
     x: 365,
@@ -52,6 +53,7 @@ export const WarpData: Record<WarpType, Data> = {
     warpTo: WarpType.Town,
     location: Location.Town,
     visual: WarpVisual.Invisible,
+    sound: WarpSound.Ladder,
   },
 
   [WarpType.TownEast]: {

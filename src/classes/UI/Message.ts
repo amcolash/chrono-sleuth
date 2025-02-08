@@ -279,7 +279,9 @@ export class Message extends GameObjects.Container {
       return;
     }
 
+    this.scene.sound.play('button', { volume: 0.7 });
     this.messageIndex++;
+    this.text.setText('');
 
     if (this.dialog.onMessageShown) this.dialog.onMessageShown(this.player, this.messageIndex, this.target);
 
@@ -288,7 +290,6 @@ export class Message extends GameObjects.Container {
         this.dialog.onCompleted(this.player, this.target);
       }
       this.dialog = undefined;
-      this.text.setText('');
 
       this.scene.tweens.add({
         targets: this,
@@ -299,7 +300,8 @@ export class Message extends GameObjects.Container {
 
       (this.scene as Game).gamepad?.resetButtons();
     } else {
-      this.showMessage();
+      // Wait a brief moment before showing the next message
+      this.scene.time.delayedCall(150, () => this.showMessage());
     }
 
     (this.scene as Game).gamepad?.setAlpha(this.dialog === undefined ? 1 : 0);
