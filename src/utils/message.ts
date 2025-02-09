@@ -69,12 +69,12 @@ export function playMessageAudio(
 
     const playAudio = (key: string): Promise<void> => {
       return new Promise((resolve) => {
-        const sound = scene.sound.add(key);
+        const sound = scene.sound.addAudioSprite('words');
         sound.on('complete', () => {
           sound.destroy(); // Clean up after playback
           resolve();
         });
-        sound.play({ rate: 3, detune: (voice.octave - 4) * 300 });
+        sound.play(key, { rate: 3, detune: (voice.octave - 4) * 300 });
       });
     };
 

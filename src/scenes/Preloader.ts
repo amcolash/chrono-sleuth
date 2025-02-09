@@ -150,10 +150,7 @@ export class Preloader extends Scene {
     this.load.image('train_sign', 'props/train_sign.png');
     this.load.image('inn_sign', 'props/inn_sign.png');
 
-    // words (named by letter)
-    Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i)).forEach((l) =>
-      this.load.audio(l, `sounds/words/${l}.mp3`)
-    );
+    this.load.audioSprite('words', 'sounds/words.json');
 
     // sound effects
     this.load.audio('warp', 'sounds/sfx/warp.mp3');
@@ -196,7 +193,7 @@ export class Preloader extends Scene {
     //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
 
     this.time.delayedCall(Config.prod ? 2500 : 0, () => {
-      fadeOut(this, 300, () => {
+      fadeOut(this, Config.prod ? 300 : 0, () => {
         if (localStorage.getItem(saveKey)) {
           this.scene.start('Game');
         } else {

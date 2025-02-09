@@ -38,7 +38,7 @@ export class PipelinePlugin extends Plugins.ScenePlugin {
 
     // Prevent 1 frame issue where the shader doesn't apply
     const pipeline = this.scene?.cameras.main.getPostPipeline(CRTPipeline) as CRTPipeline;
-    pipeline.bootFX();
+    pipeline?.bootFX();
   }
 }
 
