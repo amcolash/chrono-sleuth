@@ -67,20 +67,20 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
 
     // icons
-    this.load.svg('sun', 'icons/sun.svg', { width: 64, height: 64 });
-    this.load.svg('moon', 'icons/moon.svg', { width: 64, height: 64 });
-    this.load.svg('zoom-in', 'icons/zoom-in.svg', { width: 64, height: 64 });
-    this.load.svg('zoom-out', 'icons/zoom-out.svg', { width: 64, height: 64 });
-    this.load.svg('terminal', 'icons/terminal.svg', { width: 64, height: 64 });
-    this.load.svg('award', 'icons/award.svg', { width: 64, height: 64 });
-    this.load.svg('tv', 'icons/tv.svg', { width: 64, height: 64 });
-    this.load.svg('save', 'icons/save.svg', { width: 64, height: 64 });
-    this.load.svg('chevron-down', 'icons/chevron-down.svg', { width: 64, height: 64 });
-    this.load.svg('volume', 'icons/volume-2.svg', { width: 64, height: 64 });
-    this.load.svg('volume-mute', 'icons/volume-x.svg', { width: 64, height: 64 });
+    this.load.image('sun', 'icons/sun.png');
+    this.load.image('moon', 'icons/moon.png');
+    this.load.image('zoom-in', 'icons/zoom-in.png');
+    this.load.image('zoom-out', 'icons/zoom-out.png');
+    this.load.image('terminal', 'icons/terminal.png');
+    this.load.image('award', 'icons/award.png');
+    this.load.image('tv', 'icons/tv.png');
+    this.load.image('save', 'icons/save.png');
+    this.load.image('chevron-down', 'icons/chevron-down.png');
+    this.load.image('volume', 'icons/volume-2.png');
+    this.load.image('volume-mute', 'icons/volume-x.png');
 
     // fontawesome icons
-    this.load.svg('gamepad', 'icons/gamepad-solid.svg', { width: 64, height: 64 });
+    this.load.image('gamepad', 'icons/gamepad-solid.png');
 
     // backgrounds
     this.load.image('station', 'maps/station.jpg');
@@ -150,24 +150,8 @@ export class Preloader extends Scene {
     this.load.image('train_sign', 'props/train_sign.png');
     this.load.image('inn_sign', 'props/inn_sign.png');
 
+    // audio sprites
     this.load.audioSprite('words', 'sounds/words.json');
-
-    // sound effects
-    this.load.audio('warp', 'sounds/sfx/warp.mp3');
-    this.load.audio('sphinx_warp', 'sounds/sfx/sphinx_warp.mp3');
-    this.load.audio('door', 'sounds/sfx/door.mp3');
-    this.load.audio('clunk', 'sounds/sfx/clunk.mp3');
-    this.load.audio('book_open', 'sounds/sfx/book_open.mp3');
-    this.load.audio('book_close', 'sounds/sfx/book_close.mp3');
-    this.load.audio('lullaby', 'sounds/sfx/lullaby.mp3');
-    this.load.audio('chest', 'sounds/sfx/chest.mp3');
-    this.load.audio('ingredient', 'sounds/sfx/ingredient.mp3');
-    this.load.audio('potion', 'sounds/sfx/potion.mp3');
-    this.load.audio('xray', 'sounds/sfx/xray.mp3');
-    this.load.audio('pipes_complete', 'sounds/sfx/pipes_complete.mp3');
-    this.load.audio('pipes_squeak', 'sounds/sfx/pipes_squeak.mp3');
-    this.load.audio('safe_click', 'sounds/sfx/safe_click.mp3');
-    this.load.audio('safe_open', 'sounds/sfx/safe_open.mp3');
 
     // music
     Object.entries(musicFileMapping)
@@ -178,8 +162,6 @@ export class Preloader extends Scene {
 
     // Main game intro
     if (!this.load.textureManager.exists('train')) this.load.image('train', 'maps/intro/train.png');
-    this.load.audio('train_whistle', 'sounds/sfx/train_whistle.mp3');
-    this.load.audio('train_rolling', 'sounds/sfx/train_rolling.mp3');
 
     // optionally preload intro
     if (!localStorage.getItem(saveKey)) {
@@ -192,14 +174,18 @@ export class Preloader extends Scene {
     //  For example, you can define global animations here, so we can use them in other scenes.
     //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
 
-    this.time.delayedCall(Config.prod ? 2500 : 0, () => {
-      fadeOut(this, Config.prod ? 300 : 0, () => {
-        if (localStorage.getItem(saveKey)) {
-          this.scene.start('Game');
-        } else {
-          this.scene.start('Intro');
-        }
-      });
-    });
+    if (Config.prod) {
+      this.time.delayedCall(2500, () => fadeOut(this, 300, () => this.start()));
+    } else {
+      this.start();
+    }
+  }
+
+  start() {
+    if (localStorage.getItem(saveKey)) {
+      this.scene.start('Game');
+    } else {
+      this.scene.start('Intro');
+    }
   }
 }

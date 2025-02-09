@@ -24,7 +24,6 @@ export function preloadIntro(scene: Scene) {
   scene.load.svg('chevron-down', 'icons/chevron-down.svg', { width: 64, height: 64 });
 
   scene.load.audio(MusicType.Intro, musicFileMapping[MusicType.Intro]);
-  scene.load.audio('train_rolling', 'sounds/sfx/train_rolling.mp3');
 }
 
 export class Intro extends Scene {
