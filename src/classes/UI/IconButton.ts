@@ -23,7 +23,7 @@ export class IconButton extends GameObjects.Container {
     this.add(this.img);
 
     this.onClick = () => {
-      scene.sound.play('button');
+      scene.sound.playAudioSprite('sfx', 'button');
       onClick();
     };
 

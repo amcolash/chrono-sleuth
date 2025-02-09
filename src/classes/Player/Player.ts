@@ -83,7 +83,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     this.journal = new Journal(scene, this);
     this.gameState = new GameState(scene, this);
 
-    this.walkingSound = scene.sound.addAudioSprite('sfx', { loop: true, rate: 0.75, volume: 0.4 });
+    this.walkingSound = scene.sound.addAudioSprite('sfx');
 
     if (Config.perfTest) {
       scene.time.delayedCall(1000, () => {
@@ -134,7 +134,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
 
     const moved = Math.abs(this.body?.velocity.x || 0) > 1 || Math.abs(this.body?.velocity.y || 0) > 1;
     if (moved && !this.walkingSound.isPlaying && Date.now() - this.lastPlayedSound > 150)
-      this.walkingSound.play('ladder');
+      this.walkingSound.play('ladder', { loop: true, rate: 0.75, volume: 0.4 });
     else if (!moved) {
       this.walkingSound.stop();
       this.lastPlayedSound = Date.now();

@@ -100,7 +100,7 @@ export class SliderDialog extends Dialog {
       this.layout[emptyIndex] = this.layout[index];
       this.layout[index] = emptyTile;
 
-      this.sound.play('puzzle_slide', { volume: 0.5 });
+      this.sound.playAudioSprite('sfx', 'puzzle_slide', { volume: 0.5 });
 
       this.updateLayout();
     }

@@ -317,7 +317,10 @@ export function warpTo(source: WarpType, destination: WarpType, player: Player, 
       // Fade out camera and move in direction of warp
       {
         at: 0,
-        run: () => fadeOut(scene, 200),
+        run: () => {
+          fadeOut(scene, 200);
+          scene.sound.playAudioSprite('sfx', warpSound);
+        },
         tween: {
           delay: 0,
           targets: camera,
@@ -325,7 +328,6 @@ export function warpTo(source: WarpType, destination: WarpType, player: Player, 
           scrollY: camera.scrollY + movement.y * 75,
           duration: 200,
         },
-        sound: warpSound,
       },
       // Fade out player
       {

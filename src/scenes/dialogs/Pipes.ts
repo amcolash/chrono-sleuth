@@ -161,7 +161,8 @@ export class Pipes extends Scene {
   rotatePipe(x: number, y: number) {
     if (this.pipes[y][x].interactive && this.initialized && this.enabled) {
       this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
-      if (Math.random() > 0.7) this.sound.play('pipes_squeak', { volume: 0.25, detune: PhaserMath.Between(-500, 500) });
+      if (Math.random() > 0.7)
+        this.sound.playAudioSprite('sfx', 'pipes_squeak', { volume: 0.25, detune: PhaserMath.Between(-500, 500) });
 
       this.updatePipes();
     }
@@ -190,7 +191,7 @@ export class Pipes extends Scene {
     const start = new Display.Color(255, 255, 255);
     const end = getColorObject(getColorNumber(Colors.Teal));
 
-    this.sound.play('pipes_complete', { volume: 1.2 });
+    this.sound.playAudioSprite('sfx', 'pipes_complete', { volume: 1.2 });
 
     for (let i = 0; i < total; i++) {
       const sprite = this.images[i];

@@ -166,7 +166,7 @@ export class Maze extends Scene {
       this.canMove(newPosition)
     ) {
       if (Date.now() > this.audioThrottle) {
-        this.sound.play('ladder', { name: 'step', start: 0, duration: 0.3, config: { volume: 0.5 } });
+        this.sound.playAudioSprite('sfx', 'ladder', { volume: 0.5 });
         this.audioThrottle = Date.now() + 250;
       }
 

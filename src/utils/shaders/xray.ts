@@ -31,7 +31,7 @@ export function toggleXRay(scene: Scene, enabled: boolean, instant: boolean = fa
 
   const delay = enabled ? 0 : 1750;
 
-  scene.sound.play('xray', { rate: 0.85, delay: delay / 1000 });
+  scene.sound.playAudioSprite('sfx', 'xray', { rate: 0.85, delay: delay / 1000 });
 
   scene.tweens.addCounter({
     from: xrayAlpha,

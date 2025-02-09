@@ -35,12 +35,14 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
     {
       at: 1500,
       tween: { targets: player, x: 850 * scale, duration: 2500, onComplete: () => player.anims.pause() },
-      run: () => player.anims.resume(),
-      sound: { key: 'ladder', config: { rate: 0.6 } },
+      run: () => {
+        player.anims.resume();
+        scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 });
+      },
     },
     {
       at: 3100,
-      sound: { key: 'ladder', config: { rate: 0.6 } },
+      run: () => scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 }),
     },
     {
       at: 6000,
@@ -85,12 +87,14 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
         duration: 2500,
         onComplete: () => player.anims.pause(),
       },
-      run: () => player.anims.resume(),
-      sound: { key: 'ladder', config: { rate: 0.6 } },
+      run: () => {
+        player.anims.resume();
+        scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 });
+      },
     },
     {
       at: 3100,
-      sound: { key: 'ladder', config: { rate: 0.6 } },
+      run: () => scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 }),
     },
     {
       at: 5500,
@@ -122,12 +126,14 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
     {
       at: 2500,
       tween: { targets: player, x: 850 * scale, duration: 3000, onComplete: () => player.anims.pause() },
-      run: () => player.anims.resume(),
-      sound: { key: 'ladder', config: { rate: 0.6 } },
+      run: () => {
+        player.anims.resume();
+        scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 });
+      },
     },
     {
       at: 4100,
-      sound: { key: 'ladder', config: { rate: 0.6 } },
+      run: () => scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 }),
     },
     {
       at: 7000,
@@ -181,12 +187,12 @@ export function townIntro(scene: Game) {
     .timeline([
       {
         at: 200,
-        sound: { key: 'train_whistle', config: { rate: 0.9, volume: 0.6 } },
+        run: () => scene.sound.playAudioSprite('sfx', 'train_whistle', { rate: 0.9, volume: 0.6 }),
       },
       {
         at: 2500,
         tween: { targets: train, x: -500, duration: 5000 },
-        sound: { key: 'train_rolling', config: { volume: 0.6 } },
+        run: () => scene.sound.playAudioSprite('sfx', 'train_rolling', { volume: 0.6 }),
       },
       {
         at: 2500,
@@ -245,7 +251,7 @@ export function openChest(player: Player) {
   player.setX(chest.x - 75);
   player.previousPosition.set(player.x - 1, player.y);
 
-  scene.sound.play('chest');
+  scene.sound.playAudioSprite('sfx', 'chest');
   chest.setTexture('chest_open');
 
   gear.setPosition(chest.x, chest.y - 20);
@@ -277,7 +283,7 @@ export function addHerb(
 
   if (!target || !target.particles) return;
 
-  player.scene.sound.play('ingredient');
+  player.scene.sound.playAudioSprite('sfx', 'ingredient');
 
   updateAlchemySet(player);
   target.disabled = true;
@@ -317,7 +323,7 @@ export function makePotion(player: Player, potion?: Prop) {
         ?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x660077], x: 30, delay: 350, stopAfter: 120 })
         .start();
 
-      scene.sound.play('potion');
+      scene.sound.playAudioSprite('sfx', 'potion');
 
       fadeIn(scene, 1500, () => {
         player.message.setDialog<Prop>(
@@ -382,7 +388,7 @@ export function openSafe(player: Player) {
 
   toggleXRay(scene, false);
 
-  scene.sound.play('safe_open');
+  scene.sound.playAudioSprite('sfx', 'safe_open');
   gear.setPosition(safe.x, safe.y + 20);
 
   scene.tweens.add({
@@ -427,7 +433,7 @@ export function bedtime(player: Player) {
             updateAnimation(player);
           }),
       },
-      { at: 1000, sound: { key: 'lullaby', config: { volume: 0.5, rate: 0.85 } } },
+      { at: 1000, run: () => player.scene.sound.playAudioSprite('sfx', 'lullaby', { rate: 0.85, volume: 0.4 }) },
       {
         at: 4000,
         run: () => {

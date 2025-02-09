@@ -29,7 +29,7 @@ export class Button extends GameObjects.Text {
 
     this.onClick = () => {
       if (!this.disabled) {
-        scene.sound.play('button');
+        scene.sound.playAudioSprite('sfx', 'button');
         this.setSelected(false);
         onClick();
       }

@@ -32,11 +32,11 @@ export class JournalDialog extends Dialog {
       this.close();
     });
 
-    this.sound.play('book_open');
+    this.sound.playAudioSprite('sfx', 'book_open');
   }
 
   preHandleSuccess(): void {
-    this.sound.play('book_close');
+    this.sound.playAudioSprite('sfx', 'book_close');
   }
 
   handleSuccess(): void {}

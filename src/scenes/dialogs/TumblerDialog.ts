@@ -144,7 +144,7 @@ export class TumblerDialog extends Dialog {
 
     console.log(this.angles, rings);
     if (previous !== JSON.stringify(this.angles))
-      this.sound.play('safe_click', { detune: PhaserMath.Between(-500, 500) });
+      this.sound.playAudioSprite('sfx', 'safe_click', { detune: PhaserMath.Between(-500, 500) });
 
     this.updateMarkers(checkComplete);
   }
@@ -169,10 +169,13 @@ export class TumblerDialog extends Dialog {
 
   completed(closeHandler?: () => void) {
     for (let i = 0; i < 5; i++) {
-      this.sound.play('safe_click', { delay: i * 0.1 + Math.random() * 0.05, detune: PhaserMath.Between(-500, 500) });
+      this.sound.playAudioSprite('sfx', 'safe_click', {
+        delay: i * 0.1 + Math.random() * 0.05,
+        detune: PhaserMath.Between(-500, 500),
+      });
     }
 
-    this.sound.play('chest', { delay: 0.75 });
+    this.sound.playAudioSprite('sfx', 'chest', { delay: 0.75 });
 
     this.tweens.add({
       targets: this.rings,

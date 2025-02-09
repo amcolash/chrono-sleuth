@@ -279,7 +279,7 @@ export class Message extends GameObjects.Container {
       return;
     }
 
-    this.scene.sound.play('button', { volume: 0.7 });
+    this.scene.sound.playAudioSprite('sfx', 'button', { volume: 0.7 });
     this.messageIndex++;
     this.text.setText('');
 

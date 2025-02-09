@@ -337,7 +337,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         hasItem: ItemType.Gear2,
       },
       onMessageShown: (player, index) => {
-        if (index === 1) player.scene.sound.play('clunk');
+        if (index === 1) player.scene.sound.playAudioSprite('sfx', 'clunk');
       },
       onCompleted: (player) => {
         player.inventory.useItem(ItemType.Gear2);
@@ -365,7 +365,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         hasItem: ItemType.Gear1,
       },
       onMessageShown: (player, index) => {
-        if (index === 2) player.scene.sound.play('clunk');
+        if (index === 2) player.scene.sound.playAudioSprite('sfx', 'clunk');
       },
       onCompleted: (player) => {
         player.inventory.useItem(ItemType.Gear1);
@@ -396,7 +396,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         hasItem: ItemType.Key,
       },
       onMessageShown: (player, index) => {
-        if (index === 2) player.scene.sound.play('door');
+        if (index === 2) player.scene.sound.playAudioSprite('sfx', 'door');
       },
       onCompleted: (player, prop) => {
         prop?.destroy();
@@ -637,7 +637,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     {
       messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture...', '[CREAK]'],
       onMessageShown: (player, index) => {
-        if (index === 2) player.scene.sound.play('chest');
+        if (index === 2) player.scene.sound.playAudioSprite('sfx', 'chest');
       },
       onCompleted: (player) => {
         player.journal.addEntry(JournalEntry.SafeDiscovered);
