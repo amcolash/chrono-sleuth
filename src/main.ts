@@ -92,6 +92,8 @@ const config: Types.Core.GameConfig = {
   },
 };
 
+export const bootTime = Date.now();
+
 setupCursorHiding();
 
 const loading = document.querySelector('#initial-loader');
