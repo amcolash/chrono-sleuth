@@ -154,11 +154,13 @@ export class Preloader extends Scene {
     this.load.audioSprite('words', 'sounds/words.json');
 
     // music
-    Object.entries(musicFileMapping)
-      .filter(([key, _value]) => key !== MusicType.Town)
-      .forEach(([key, value]) => {
-        this.load.audio(key, value);
-      });
+    if (Config.prod) {
+      Object.entries(musicFileMapping)
+        .filter(([key, _value]) => key !== MusicType.Town)
+        .forEach(([key, value]) => {
+          this.load.audio(key, value);
+        });
+    }
 
     // Main game intro
     if (!this.load.textureManager.exists('train')) this.load.image('train', 'maps/intro/train.png');

@@ -62,8 +62,10 @@ class MusicManager {
     this.stop();
     this.volume = volume || MusicData[music].volume || 0.5;
 
-    this.music = this.sound.get(music) || this.sound.add(music, { loop: true, volume: this.volume });
-    fadeInMusic(this.scene, this.music, this.volume);
+    if (this.scene.cache.audio.exists(music)) {
+      this.music = this.sound.get(music) || this.sound.add(music, { loop: true, volume: this.volume });
+      fadeInMusic(this.scene, this.music, this.volume);
+    }
   }
 
   stop() {
