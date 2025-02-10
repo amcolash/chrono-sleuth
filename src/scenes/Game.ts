@@ -27,7 +27,6 @@ import { LightData } from '../data/lights';
 import { ParallaxBackgroundData } from '../data/parallaxBackground';
 import { SlopeData } from '../data/slope';
 import { Interactive } from '../data/types';
-import { bootTime } from '../main';
 import { Colors, getColorNumber } from '../utils/colors';
 import { setDaytime } from '../utils/lighting';
 import { load, loadConfig } from '../utils/save';
@@ -146,7 +145,7 @@ export class Game extends Scene {
       if (Config.debug && duration > 300) new Notification(this, message, undefined, Colors.Warning);
       else if (!Config.debug && duration > 150) new Notification(this, message, undefined, Colors.Warning);
 
-      console.log('Total game boot time', Date.now() - bootTime);
+      console.log('Total game boot time', Date.now() - (window as any).bootTime);
     }
   }
 

@@ -213,8 +213,7 @@ export function townIntro(scene: Game) {
                 player.active = true;
               },
             },
-            player,
-            'player_portrait'
+            player
           );
         },
       },
@@ -365,8 +364,7 @@ export function revealSafe(player: Player, silent: boolean) {
               'It looks like it requires a special key to open.',
             ],
           },
-          undefined,
-          'player_portrait'
+          player
         );
       }
     },
@@ -441,8 +439,7 @@ export function bedtime(player: Player) {
                 messages: ['Ah, what a lovely rest. Time to get back to work!'],
                 onCompleted: (player) => player.setActive(true),
               },
-              player,
-              'player_portrait'
+              player
             );
           });
         },

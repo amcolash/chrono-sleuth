@@ -445,8 +445,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
                 player.active = true;
               },
             },
-            player,
-            'player_portrait'
+            player
           );
         });
       },

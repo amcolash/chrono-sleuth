@@ -279,8 +279,7 @@ export function warpTo(source: WarpType, destination: WarpType, player: Player, 
   ) {
     player.message.setDialog(
       { messages: ['It is too late to leave town now.', 'I should rest at the inn until tomorrow.'] },
-      player,
-      'player_portrait'
+      player
     );
     return;
   }

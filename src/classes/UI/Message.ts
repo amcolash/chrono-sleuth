@@ -12,7 +12,7 @@ import { fontStyle } from '../../utils/fonts';
 import { animateText, playMessageAudio } from '../../utils/message';
 import { NPC } from '../Environment/NPC';
 import { Prop } from '../Environment/Prop';
-import { Player } from '../Player/Player';
+import { Player, playerName } from '../Player/Player';
 import { Button } from './Button';
 import { ButtonGroup } from './ButtonGroup';
 
@@ -148,7 +148,8 @@ export class Message extends GameObjects.Container {
       return;
     }
 
-    const finalPortrait = portrait || (target instanceof NPC ? NPCData[(target as NPC).npcType].portrait : undefined);
+    let finalPortrait = portrait || (target instanceof NPC ? NPCData[(target as NPC).npcType].portrait : undefined);
+    if (target instanceof Player) finalPortrait = 'player_portrait';
 
     this.npcName.setVisible(false);
 
@@ -163,7 +164,9 @@ export class Message extends GameObjects.Container {
       this.portrait.setTexture(finalPortrait);
 
       let name;
-      if (target instanceof NPC) {
+      if (finalPortrait === 'player_portrait') {
+        name = playerName;
+      } else if (target instanceof NPC) {
         name = NPCData[(target as NPC).npcType].name;
       } else if (target instanceof Prop) {
         name = PropData[(target as Prop).propType].name;

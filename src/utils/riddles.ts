@@ -169,8 +169,7 @@ export function handleSphinxAnswer(option: string, player: Player, npc?: NPC) {
                         'I suppose I should continue investigating the town...',
                       ],
                     },
-                    player,
-                    'player_portrait'
+                    player
                   );
                 },
               },
