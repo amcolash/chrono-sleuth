@@ -48,9 +48,8 @@ export class Boot extends Scene {
     this.load.audioSprite('words', 'sounds/words.json');
     this.load.audioSprite('sfx', 'sounds/sfx.json');
 
-    this.load.audio(MusicType.Town, musicFileMapping[MusicType.Town]);
-
     if (import.meta.env.PROD) {
+      this.load.audio(MusicType.Town, musicFileMapping[MusicType.Town]);
       this.load.json('build', `../build.json?cacheBust=${Date.now()}`);
     }
 

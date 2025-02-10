@@ -161,7 +161,7 @@ export class Pipes extends Scene {
   rotatePipe(x: number, y: number) {
     if (this.pipes[y][x].interactive && this.initialized && this.enabled) {
       this.pipes[y][x].rotation = (this.pipes[y][x].rotation + 90) % 360;
-      if (Math.random() > 0.7)
+      if (Math.random() > 0.35)
         this.sound.playAudioSprite('sfx', 'pipes_squeak', { volume: 0.25, detune: PhaserMath.Between(-500, 500) });
 
       this.updatePipes();

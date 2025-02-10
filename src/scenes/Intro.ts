@@ -21,7 +21,9 @@ export function preloadIntro(scene: Scene) {
   scene.load.spritesheet('character', 'characters/player.png', { frameWidth: 128, frameHeight: 80 });
   scene.load.image('player_portrait', 'characters/player_portrait.png');
 
-  scene.load.audio(MusicType.Intro, musicFileMapping[MusicType.Intro]);
+  if (Config.prod) {
+    scene.load.audio(MusicType.Intro, musicFileMapping[MusicType.Intro]);
+  }
 }
 
 export class Intro extends Scene {

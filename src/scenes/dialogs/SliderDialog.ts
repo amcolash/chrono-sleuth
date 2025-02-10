@@ -29,7 +29,6 @@ export class SliderDialog extends Dialog {
 
     const puzzleSize = Math.floor(1024 / cols);
     this.load.spritesheet('slider', 'puzzles/slider.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
-    this.load.audio('puzzle_slide', 'sounds/sfx/puzzle_slide.mp3');
   }
 
   create() {

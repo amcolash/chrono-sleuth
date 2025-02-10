@@ -31,9 +31,6 @@ export class MemoryDialog extends Dialog {
     for (let i = 1; i <= 12; i++) {
       this.load.image(`rune_${i}`, `puzzles/runes/Stone${i}.png`);
     }
-
-    this.load.audio('memory_wrong', 'sounds/sfx/memory_wrong.mp3');
-    this.load.audio('unlock', 'sounds/sfx/unlock.mp3');
   }
 
   create(): void {
