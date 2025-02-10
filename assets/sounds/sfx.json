@@ -1,0 +1,122 @@
+{
+  "resources": [
+    "sounds/sfx.mp3"
+  ],
+  "spritemap": {
+    "book_close": {
+      "start": 0,
+      "end": 0.9440416666666667,
+      "loop": false
+    },
+    "book_open": {
+      "start": 1.25,
+      "end": 2.258583333333333,
+      "loop": false
+    },
+    "button": {
+      "start": 3.5,
+      "end": 3.87925,
+      "loop": false
+    },
+    "chest": {
+      "start": 4.75,
+      "end": 5.557,
+      "loop": false
+    },
+    "clunk": {
+      "start": 6,
+      "end": 6.857833333333334,
+      "loop": false
+    },
+    "door": {
+      "start": 7.25,
+      "end": 7.673416666666666,
+      "loop": false
+    },
+    "ingredient": {
+      "start": 8.5,
+      "end": 9.166416666666667,
+      "loop": false
+    },
+    "ladder": {
+      "start": 9.75,
+      "end": 10.701708333333332,
+      "loop": false
+    },
+    "lullaby": {
+      "start": 11,
+      "end": 14.383375000000001,
+      "loop": false
+    },
+    "memory_wrong": {
+      "start": 15.25,
+      "end": 15.602833333333333,
+      "loop": false
+    },
+    "pipes_complete": {
+      "start": 16.5,
+      "end": 19.37925,
+      "loop": false
+    },
+    "pipes_squeak": {
+      "start": 19.75,
+      "end": 19.940083333333334,
+      "loop": false
+    },
+    "potion": {
+      "start": 21,
+      "end": 22.741083333333332,
+      "loop": false
+    },
+    "puzzle_slide": {
+      "start": 23.25,
+      "end": 23.500666666666667,
+      "loop": false
+    },
+    "rewind": {
+      "start": 24.5,
+      "end": 28.889,
+      "loop": false
+    },
+    "safe_click": {
+      "start": 29.75,
+      "end": 29.87025,
+      "loop": false
+    },
+    "safe_open": {
+      "start": 31,
+      "end": 32.137791666666665,
+      "loop": false
+    },
+    "sphinx_warp": {
+      "start": 33.25,
+      "end": 35.87829166666667,
+      "loop": false
+    },
+    "train_rolling": {
+      "start": 36.5,
+      "end": 41.470375,
+      "loop": false
+    },
+    "train_whistle": {
+      "start": 41.75,
+      "end": 43.41833333333334,
+      "loop": false
+    },
+    "unlock": {
+      "start": 44,
+      "end": 44.658,
+      "loop": false
+    },
+    "warp": {
+      "start": 45.25,
+      "end": 46.550291666666666,
+      "loop": false
+    },
+    "xray": {
+      "start": 47.5,
+      "end": 52.054916666666664,
+      "loop": false
+    }
+  }
+}
