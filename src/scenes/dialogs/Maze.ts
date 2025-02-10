@@ -1,5 +1,5 @@
 import generateMaze, { Cell } from 'generate-maze';
-import { GameObjects, Input, Math as PhaserMath, Scene } from 'phaser';
+import { GameObjects, Input, Math as PhaserMath, Scene, Sound } from 'phaser';
 
 import { InputManager, Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
@@ -19,6 +19,7 @@ export class Maze extends Scene {
   playerPosition: PhaserMath.Vector2 = new PhaserMath.Vector2(0, 0);
   nextUpdate: number;
 
+  walking: Sound.BaseSound;
   audioThrottle: number = 0;
 
   constructor() {
@@ -68,6 +69,10 @@ export class Maze extends Scene {
         }
       );
     }
+
+    this.walking = this.sound.addAudioSprite('sfx');
+    const marker = this.walking.markers['ladder'];
+    this.walking.addMarker({ name: 'step', start: marker.start, duration: 0.3 });
   }
 
   getMazeSeed() {
@@ -166,8 +171,8 @@ export class Maze extends Scene {
       this.canMove(newPosition)
     ) {
       if (Date.now() > this.audioThrottle) {
-        this.sound.playAudioSprite('sfx', 'ladder', { volume: 0.5 });
-        this.audioThrottle = Date.now() + 250;
+        this.walking.play('step', { volume: 0.5 });
+        this.audioThrottle = Date.now() + 350;
       }
 
       this.mazePlayer.setPosition(this.playerPosition.x, this.playerPosition.y);

@@ -21,7 +21,7 @@ export function preloadIntro(scene: Scene) {
   scene.load.spritesheet('character', 'characters/player.png', { frameWidth: 128, frameHeight: 80 });
   scene.load.image('player_portrait', 'characters/player_portrait.png');
 
-  scene.load.svg('chevron-down', 'icons/chevron-down.svg', { width: 64, height: 64 });
+  scene.load.image('chevron-down', 'icons/chevron-down.png');
 
   scene.load.audio(MusicType.Intro, musicFileMapping[MusicType.Intro]);
 }
@@ -65,9 +65,11 @@ export class Intro extends Scene {
     Music.setScene(this);
     Music.start(MusicType.Intro);
 
-    const trainRolling = this.sound.add('train_rolling');
-    trainRolling.addMarker({ name: 'start', start: 0.5, duration: 3.25 });
-    trainRolling.play('start', { loop: true, volume: 0.15 });
+    const trainRolling = this.sound.addAudioSprite('sfx');
+    const marker = trainRolling.markers['train_rolling'];
+    trainRolling.addMarker({ name: 'train_rolling_trimmed', start: (marker.start || 0) + 0.5, duration: 3.25 });
+
+    trainRolling.play('train_rolling_trimmed', { loop: true, volume: 0.15 });
 
     const scale = Config.zoomed ? 0.75 : 1;
 
