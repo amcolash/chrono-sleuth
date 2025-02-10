@@ -269,14 +269,25 @@ const directions = {
   [Key.Right]: { x: 1, y: 0 },
 };
 
-export function warpTo(source: WarpType, destination: WarpType, player: Player, offset?: Types.Math.Vector2Like) {
+export function warpTo(
+  source: WarpType,
+  destination: WarpType,
+  player: Player,
+  offset?: Types.Math.Vector2Like,
+  force?: boolean
+) {
   const { direction, key, sound, visual, location } = WarpData[source];
   let { x, y } = WarpData[destination];
 
+  let canWarp = true;
   if (
     isNighttime(player.scene) &&
     (source === WarpType.TownEast || source === WarpType.TownWest || source === WarpType.Town)
-  ) {
+  )
+    canWarp = false;
+  if (!Config.prod && force) canWarp = true;
+
+  if (!canWarp) {
     player.message.setDialog(
       { messages: ['It is too late to leave town now.', 'I should rest at the inn until tomorrow.'] },
       player

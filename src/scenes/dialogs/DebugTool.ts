@@ -1,5 +1,6 @@
 import { GameObjects } from 'phaser';
 
+import { warpTo } from '../../classes/Environment/Warp';
 import { Player } from '../../classes/Player/Player';
 import { Button, CenteredButton } from '../../classes/UI/Button';
 import { TextBox } from '../../classes/UI/TextBox';
@@ -365,8 +366,7 @@ export class DebugTool extends Dialog {
       case Tab.Warp:
         const val = updatedWarpList[line];
         if (val.warp) {
-          const warpData = WarpData[WarpData[val.warp].warpTo];
-          this.player.setPosition(warpData.x, warpData.y);
+          warpTo(WarpType.Town, WarpData[val.warp].warpTo, this.player, undefined, true);
           this.close();
         }
         break;

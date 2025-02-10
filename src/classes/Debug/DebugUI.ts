@@ -121,6 +121,8 @@ export class DebugUI extends GameObjects.Container {
       this.scene.input.on('gameobjectdown', (pointer: Input.Pointer, gameObject: GameObjects.GameObject) => {
         if (pointer.buttons !== 1) return;
 
+        if (gameObject instanceof Player) return;
+
         if (gameObject && gameObject !== this.activeElement) {
           this.activeElement = gameObject;
           // @ts-ignore
