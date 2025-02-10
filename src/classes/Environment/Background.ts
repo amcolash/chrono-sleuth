@@ -40,8 +40,9 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
     if (Config.debug) {
       this.debug = scene.add
         .rectangle(this.x, this.y, img.width * (scale || 1), img.height * (scale || 1))
-        .setStrokeStyle(10, 0x006666)
-        .setOrigin(0);
+        .setStrokeStyle(6, 0x006666)
+        .setOrigin(0)
+        .setDepth(Layer.Debug);
     }
   }
 
@@ -93,6 +94,8 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
       }
     }
 
-    this.debug?.setPosition(this.x, this.y);
+    if (Config.debug) {
+      this.debug?.setPosition(this.x, this.y);
+    }
   }
 }

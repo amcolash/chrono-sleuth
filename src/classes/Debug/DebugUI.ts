@@ -51,7 +51,7 @@ export class DebugUI extends GameObjects.Container {
     this.text = scene.add.bitmapText(20, 90, 'm6x11-24', '');
     this.add(this.text);
 
-    this.outline = scene.add.rectangle(0, 0, 0, 0).setStrokeStyle(2, 0x00ff00).setScale(1.1).setDepth(Layer.Debug);
+    this.outline = scene.add.rectangle(0, 0, 0, 0).setStrokeStyle(6, 0x00ff00).setDepth(Layer.Debug);
     this.debugCamera = scene.add
       .rectangle(0, 0, Config.width, Config.height)
       .setStrokeStyle(4, 0xdd8800)
@@ -168,6 +168,7 @@ export class DebugUI extends GameObjects.Container {
       `FPS (now): ${(1000 / this.scene.game.loop.delta).toFixed(1)}`,
       `FPS (avg): ${this.scene.game.loop.actualFps.toFixed(1)}`,
       `Frame Time: ${this.scene.game.loop.delta.toFixed(2)}`,
+      `Camera: ${this.scene.cameras.main.scrollX.toFixed(1)}, ${this.scene.cameras.main.scrollY.toFixed(1)}`,
       `Zoom: ${this.scene.cameras.main.zoom.toFixed(2)}`,
       '',
       `Player x: ${this.player.x.toFixed(1)}`,
