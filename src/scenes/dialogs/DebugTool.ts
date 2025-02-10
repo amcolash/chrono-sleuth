@@ -18,7 +18,6 @@ import {
   hasUnusedItem,
   hasUsedItem,
 } from '../../utils/interactionUtils';
-import { toggleLighting } from '../../utils/lighting';
 import { convertSaveData, getCurrentSaveState, save } from '../../utils/save';
 import { openDialog, splitTitleCase } from '../../utils/util';
 import { Game } from '../Game';
@@ -302,7 +301,7 @@ export class DebugTool extends Dialog {
       350,
       (y += 60),
       'Toggle Lights',
-      () => toggleLighting(this.player.scene),
+      () => this.player.gameState.updateData({ night: !this.player.gameState.data.night }),
       { backgroundColor: '#111' }
     );
     this.miscContainer.add(toggleLights);

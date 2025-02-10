@@ -14,7 +14,6 @@ import { Game } from '../scenes/Game';
 import { rotationCorrection, updateAnimation } from './animations';
 import { fontStyle } from './fonts';
 import { getProp, getWall, hasUsedItem, updateWarpLocked } from './interactionUtils';
-import { setDaytime } from './lighting';
 import { toggleXRay } from './shaders/xray';
 import { fadeIn, fadeOut } from './util';
 
@@ -419,8 +418,7 @@ export function bedtime(player: Player) {
   Music.stop();
   player.setActive(false);
 
-  player.gameState.updateData({ day: player.gameState.data.day + 1 });
-  setDaytime(player.scene, false);
+  player.gameState.updateData({ day: player.gameState.data.day + 1, night: false });
 
   player.scene.add
     .timeline([

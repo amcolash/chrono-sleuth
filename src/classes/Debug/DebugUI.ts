@@ -5,7 +5,6 @@ import { Layer } from '../../data/layers';
 import { saveKey } from '../../data/saves';
 import { Game } from '../../scenes/Game';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { toggleLighting } from '../../utils/lighting';
 import { save } from '../../utils/save';
 import { toggleXRay } from '../../utils/shaders/xray';
 import { openDialog } from '../../utils/util';
@@ -86,7 +85,7 @@ export class DebugUI extends GameObjects.Container {
     });
 
     this.scene.input.keyboard?.on('keydown-FORWARD_SLASH', () => {
-      toggleLighting(this.scene);
+      this.scene.player.gameState.updateData({ night: !this.scene.player.gameState.data.night });
     });
 
     this.scene.input.keyboard?.on('keydown-CLOSED_BRACKET', () => {

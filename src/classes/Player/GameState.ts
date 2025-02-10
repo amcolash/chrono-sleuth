@@ -1,4 +1,5 @@
 import { Game } from '../../scenes/Game';
+import { setDaytime, setNighttime } from '../../utils/lighting';
 import { autosave } from '../../utils/save';
 import { Player } from './Player';
 
@@ -8,6 +9,7 @@ export type GameData = {
   sphinxFail: boolean;
   sphinxMoved: boolean;
   day: number;
+  night: boolean;
 };
 
 export const defaultState: GameData = {
@@ -16,6 +18,7 @@ export const defaultState: GameData = {
   sphinxFail: false,
   sphinxMoved: false,
   day: 1,
+  night: false,
 };
 
 export class GameState {
@@ -41,5 +44,10 @@ export class GameState {
     if (!silent) autosave(this.scene);
   }
 
-  handleSideEffects(key: keyof GameData, value: any, silent?: boolean) {}
+  handleSideEffects(key: keyof GameData, value: any, silent?: boolean) {
+    if (key === 'night') {
+      if (value) setNighttime(this.scene, !silent);
+      else setDaytime(this.scene, !silent);
+    }
+  }
 }
