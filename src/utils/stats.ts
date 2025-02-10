@@ -26,7 +26,7 @@ const Stats = (): StatsType => {
   container.classList.toggle('hidden', !fullStats);
 
   const img = document.createElement('img');
-  img.src = 'assets/icons/bar-chart-2.png';
+  img.src = 'bar-chart-2.svg';
   img.width = 24;
   img.height = 24;
 

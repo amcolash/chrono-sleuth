@@ -1,12 +1,29 @@
 const { execSync } = require('child_process');
-const { readdirSync, mkdirSync } = require('fs');
+const { readdirSync, mkdirSync, readFileSync, writeFileSync, rmdirSync } = require('fs');
 const { join } = require('path');
 
 const assetsDir = 'public/assets';
+const tmp = '/tmp/chrono-sleuth-assets';
 
 function exc(command) {
   console.log(`Executing: ${command}`);
   execSync(command, { stdio: 'inherit' });
+}
+
+function atlas(inputPath, outputFile) {
+  exc(`npx harp-atlas-generator -i "${inputPath}/*.png" -o ${assetsDir}/${outputFile}`);
+
+  const jsonFile = join(assetsDir, outputFile + '.json');
+  const data = JSON.parse(readFileSync(jsonFile).toString());
+
+  const output = {
+    frames: Object.entries(data).map((f) => ({
+      filename: f[0],
+      frame: { x: f[1].x, y: f[1].y, w: f[1].width, h: f[1].height },
+    })),
+  };
+
+  writeFileSync(jsonFile, JSON.stringify(output, undefined, 2));
 }
 
 function words() {
@@ -17,14 +34,18 @@ function words() {
 function icons() {
   const iconDir = 'src-assets/icons';
   const icons = readdirSync(iconDir);
-  const iconsOutput = join(assetsDir, 'icons');
-  mkdirSync(iconsOutput, { recursive: true });
+  const iconsTmp = join(tmp, 'icons');
+
+  rmdirSync(iconsTmp, { recursive: true });
+  mkdirSync(iconsTmp, { recursive: true });
 
   icons.forEach((i) => {
     const icon = join(iconDir, i);
-    const output = join(iconsOutput, i.replace('.svg', '.png'));
+    const output = join(iconsTmp, i.replace('.svg', '.png'));
     exc(`inkscape -w 64 -h 64 ${icon} -o ${output}`);
   });
+
+  atlas(iconsTmp, 'icons');
 }
 
 function sfx() {
@@ -33,5 +54,8 @@ function sfx() {
 }
 
 // words();
-// icons();
+icons();
 // sfx();
+
+// const iconsTmp = join(tmp, 'icons');
+// atlas(iconsTmp, 'icons');

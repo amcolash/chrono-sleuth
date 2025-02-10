@@ -52,7 +52,7 @@ export class Preloader extends Scene {
       });
     }
 
-    const gear = this.add.image(Config.width - 50, Config.height - 60, 'settings').setScale(0.75);
+    const gear = this.add.image(Config.width - 50, Config.height - 60, 'icons', 'settings').setScale(0.75);
     this.tweens.add({
       targets: gear,
       angle: 360,
@@ -65,22 +65,6 @@ export class Preloader extends Scene {
   preload() {
     //  Load the assets for the game - Replace with your own assets
     this.load.setPath('assets');
-
-    // icons
-    this.load.image('sun', 'icons/sun.png');
-    this.load.image('moon', 'icons/moon.png');
-    this.load.image('zoom-in', 'icons/zoom-in.png');
-    this.load.image('zoom-out', 'icons/zoom-out.png');
-    this.load.image('terminal', 'icons/terminal.png');
-    this.load.image('award', 'icons/award.png');
-    this.load.image('tv', 'icons/tv.png');
-    this.load.image('save', 'icons/save.png');
-    this.load.image('chevron-down', 'icons/chevron-down.png');
-    this.load.image('volume', 'icons/volume-2.png');
-    this.load.image('volume-mute', 'icons/volume-x.png');
-
-    // fontawesome icons
-    this.load.image('gamepad', 'icons/gamepad-solid.png');
 
     // backgrounds
     this.load.image('station', 'maps/station.jpg');
@@ -149,9 +133,6 @@ export class Preloader extends Scene {
 
     this.load.image('train_sign', 'props/train_sign.png');
     this.load.image('inn_sign', 'props/inn_sign.png');
-
-    // audio sprites
-    this.load.audioSprite('words', 'sounds/words.json');
 
     // music
     if (Config.prod) {

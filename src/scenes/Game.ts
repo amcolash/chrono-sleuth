@@ -275,7 +275,7 @@ export class Game extends Scene {
         // new IconButton(this, (x += 50), 30, isDaytime(this) ? 'moon' : 'sun', (button) => {
         //   const prev = isDaytime(this);
         //   toggleLighting(this);
-        //   button.img.setTexture(prev ? 'sun' : 'moon');
+        //   button.setIcon(prev ? 'sun' : 'moon');
         // });
         // new IconButton(this, (x += 50), 30, Config.zoomed ? 'zoom-out' : 'zoom-in', () => {
         //   const savedata = getCurrentSaveState(this);
@@ -290,7 +290,7 @@ export class Game extends Scene {
       }
 
       this.saveIcon = this.add
-        .image(30, Config.height - 30, 'save')
+        .image(30, Config.height - 30, 'icons', 'save')
         .setScale(0.4)
         .setDepth(Layer.Ui)
         .setScrollFactor(0)

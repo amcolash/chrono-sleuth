@@ -16,14 +16,14 @@ export class FullscreenButton extends IconButton {
       // For some very weird reason, it seems like the scene is sometimes not the same as the scene that the button was created in
       this.img.scene = scene;
 
-      this.img.setTexture('minimize');
+      this.img.setTexture('icons', 'minimize');
     });
 
     scene.scale.on(Phaser.Scale.Events.LEAVE_FULLSCREEN, () => {
       // For some very weird reason, it seems like the scene is sometimes not the same as the scene that the button was created in
       this.img.scene = scene;
 
-      this.img.setTexture('maximize');
+      this.img.setTexture('icons', 'maximize');
     });
   }
 }

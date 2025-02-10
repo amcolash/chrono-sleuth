@@ -41,11 +41,13 @@ export class Boot extends Scene {
     this.load.font('m6x11', 'fonts/m6x11.ttf', 'truetype');
     this.load.bitmapFont('m6x11-24', 'fonts/m6x11-24.png', 'fonts/m6x11-24.xml');
 
-    this.load.image('maximize', 'icons/maximize.png');
-    this.load.image('minimize', 'icons/minimize.png');
-    this.load.image('settings', 'icons/settings.png');
+    // atlases
+    this.load.atlas('icons', 'icons.png', 'icons.json');
 
+    // audio sprites
+    this.load.audioSprite('words', 'sounds/words.json');
     this.load.audioSprite('sfx', 'sounds/sfx.json');
+
     this.load.audio(MusicType.Town, musicFileMapping[MusicType.Town]);
 
     if (import.meta.env.PROD) {

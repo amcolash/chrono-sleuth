@@ -18,7 +18,7 @@ export class IconButton extends GameObjects.Container {
       .rectangle(0, 0, 42, 42, getColorNumber(Colors.Slate))
       .setScrollFactor(0)
       .setStrokeStyle(2, getColorNumber(Colors.Black));
-    this.img = scene.add.image(-1, 1, texture).setDisplaySize(32, 32);
+    this.img = scene.add.image(-1, 1, 'icons', texture).setDisplaySize(32, 32);
     this.add(this.rect);
     this.add(this.img);
 
@@ -51,6 +51,6 @@ export class IconButton extends GameObjects.Container {
   }
 
   setIcon(texture: string) {
-    this.img.setTexture(texture).setDisplaySize(32, 32);
+    this.img.setTexture('icons', texture).setDisplaySize(32, 32);
   }
 }

@@ -21,8 +21,6 @@ export function preloadIntro(scene: Scene) {
   scene.load.spritesheet('character', 'characters/player.png', { frameWidth: 128, frameHeight: 80 });
   scene.load.image('player_portrait', 'characters/player_portrait.png');
 
-  scene.load.image('chevron-down', 'icons/chevron-down.png');
-
   scene.load.audio(MusicType.Intro, musicFileMapping[MusicType.Intro]);
 }
 

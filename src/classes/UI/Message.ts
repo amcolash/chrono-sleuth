@@ -104,7 +104,9 @@ export class Message extends GameObjects.Container {
 
     this.optionsContainer = new ButtonGroup(this.scene).setDepth(Layer.Overlay);
 
-    this.arrow = this.scene.add.image(Config.width - padding * 2 - 20, boxHeight - 22, 'chevron-down').setScale(0.5);
+    this.arrow = this.scene.add
+      .image(Config.width - padding * 2 - 20, boxHeight - 22, 'icons', 'chevron-down')
+      .setScale(0.5);
     this.arrowTween = this.scene.tweens.add({
       targets: this.arrow,
       y: boxHeight - 16,
