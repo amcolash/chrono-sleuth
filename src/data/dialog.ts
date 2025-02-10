@@ -557,8 +557,9 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.LabBookshelf1]: [
     {
       messages: [
-        '<b>[Secrets of the Silver Transmutation]</b>\n"Silver, the mirror of the soul, can be yielded from common materials. Begin with a lead base, cleanse it with the tears of a willow, and chant thrice under a new moon. Such processes, though fraught with danger, promise immense reward. Meticulous preparation of the material is crucial."',
-        '"Among these pages lie safeguards against volatile spirits and the precise lunar phases essential for success. Here are protective circles and counter-spells to be used should spirits prove malevolent. This knowledge has been passed down and refined for safety."',
+        '<b>[Secrets of the Silver Transmutation]</b>\n"Silver, the mirror of the soul, can be yielded from common materials. Begin with a lead base, cleanse it with the tears of a willow,"',
+        '"and chant thrice under a new moon. Such processes, though fraught with danger, promise immense reward. Meticulous preparation of the material is crucial. Among these pages lie safeguards against volatile spirits"',
+        '"and the precise lunar phases essential for success. Here are protective circles and counter-spells to be used should spirits prove malevolent. This knowledge has been passed down and refined for safety."',
       ],
       conditions: {
         activeQuest: QuestType.ExploreLab,
@@ -568,8 +569,9 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.LabBookshelf2]: [
     {
       messages: [
-        '<b>[Whispering Woods: A Compendium]</b>\n"The sentient trees of Eldergrove are not myths; their trunks groan with ancient wisdom. To engage them, perform the Ritual of Leaves, using moonlit water and rare herbs, along with whispered incantations passed down by forest guardians."',
-        '"Notes on the rare Blue Moonflower, whose petals glow ghostly and unlock forest languages, are also included. Its bloom is brief, and harvesting must be timed at midnight to retain its properties. The chapter concludes with a discussion on plant symbiosis with Eldertrees."',
+        '<b>[Whispering Woods: A Compendium]</b>\n"The sentient trees of Eldergrove are not myths; their trunks groan with ancient wisdom. To engage them, perform the Ritual of Leaves,"',
+        '"using moonlit water and rare herbs, along with whispered incantations passed down by forest guardians. Notes on the rare Blue Moonflower, whose petals glow ghostly and unlock forest languages, are also included."',
+        '"Its bloom is brief, and harvesting must be timed at midnight to retain its properties. The chapter concludes with a discussion on plant symbiosis with Eldertrees."',
       ],
       conditions: {
         activeQuest: QuestType.ExploreLab,
@@ -579,8 +581,9 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.LabBookshelf3]: [
     {
       messages: [
-        '<b>[The Essence of Fire: Ignite and Control]</b>\n"Mastering fire requires strength of will and profound respect for its power. Here, summoning circles and incantations to call forth fire spirits are detailed. Each summoning demands a tribute of phoenix ash. The endeavor is perilous, as spirits may lash out if provoked."',
-        '"The tome also discusses methods to quell flames should they rise against the summoner. Included are the chant of suppression and a dousing mixture from elemental waters and frost-bitten herbs. These countermeasures are vital for maintaining control over summoned entities."',
+        '<b>[The Essence of Fire: Ignite and Control]</b>\n"Mastering fire requires strength of will and profound respect for its power. Here, summoning circles and incantations to call forth fire spirits"',
+        '"are detailed. Each summoning demands a tribute of phoenix ash. The endeavor is perilous, as spirits may lash out if provoked. The tome also discusses methods to quell flames should they rise against the summoner."',
+        '"Included are the chant of suppression and a dousing mixture from elemental waters and frost-bitten herbs. These countermeasures are vital for maintaining control over summoned entities."',
       ],
       conditions: {
         activeQuest: QuestType.ExploreLab,
