@@ -1,12 +1,14 @@
 import { GameObjects, Scene } from 'phaser';
+import BBCodeText from 'phaser3-rex-plugins/plugins/bbcodetext';
 
+import { maxMessageLines } from '../classes/UI/Message';
 import { Voice } from '../data/voices';
 
 /**
  * Create typewriter animation for text.
  * Code mostly from: https://dev.to/joelnet/creating-a-typewriter-effect-in-phaserjs-v3-4e66
  */
-export function animateText(target: GameObjects.Text, speedInMs: number = 15) {
+export function animateText(target: GameObjects.Text | BBCodeText, speedInMs: number = 15) {
   // store original text
   const message = target.text;
   const invisibleMessage = message.replace(/[^ ]/g, ' ');
@@ -16,6 +18,7 @@ export function animateText(target: GameObjects.Text, speedInMs: number = 15) {
 
   // mutable state for visible text
   let visibleText = '';
+  let charIndex = 0;
 
   const timer = target.scene.time.addEvent({
     delay: speedInMs,
@@ -27,16 +30,20 @@ export function animateText(target: GameObjects.Text, speedInMs: number = 15) {
     promise: new Promise<void>((resolve) => {
       timer.callback = () => {
         // if all characters are visible, stop the timer
-        if (target.text === message) {
+        if (charIndex >= message.length) {
+          target.text = message;
           timer.destroy();
+
+          if (target.getWrappedText().length > maxMessageLines) console.error('Message too long!', message);
           return resolve();
         }
 
-        // add next character to visible text
-        visibleText += message[visibleText.length];
+        // get next visible text with BBCode handling
+        visibleText = getVisibleTextWithBBCode(message, charIndex + 1);
+        charIndex++;
 
         // right pad with invisibleText
-        const invisibleText = invisibleMessage.substring(visibleText.length);
+        const invisibleText = invisibleMessage.substring(visibleText.replace(/\<[^\>]+\>/g, '').length);
 
         // update text on screen
         target.text = visibleText + invisibleText;
@@ -45,8 +52,54 @@ export function animateText(target: GameObjects.Text, speedInMs: number = 15) {
     stop: () => {
       timer.destroy();
       target.text = message;
+
+      if (target.getWrappedText().length > maxMessageLines) console.error('Message too long!', message);
     },
   };
+}
+
+export function getVisibleTextWithBBCode(message: string, visibleLength: number) {
+  let visibleText = '';
+  let tagStack = [];
+  let charCount = 0;
+  let i = 0;
+
+  while (charCount < visibleLength && i < message.length) {
+    if (message[i] === '<') {
+      // Start of a tag, find the closing bracket
+      let endIdx = message.indexOf('>', i);
+      if (endIdx !== -1) {
+        let tag = message.substring(i, endIdx + 1);
+        visibleText += tag;
+
+        // If it's a closing tag, pop the stack
+        if (tag.startsWith('</')) {
+          tagStack.pop();
+        } else if (!tag.endsWith('/>')) {
+          // Ignore self-closing tags
+          tagStack.push(tag);
+        }
+
+        i = endIdx + 1;
+        continue;
+      }
+    }
+
+    // Add normal character
+    visibleText += message[i];
+    charCount++;
+    i++;
+  }
+
+  // Ensure all open tags are properly closed
+  for (let j = tagStack.length - 1; j >= 0; j--) {
+    let tagName = tagStack[j].match(/\<([^\>=]*)/);
+    if (tagName) {
+      visibleText += `</${tagName[1]}>`;
+    }
+  }
+
+  return visibleText;
 }
 
 export function playMessageAudio(

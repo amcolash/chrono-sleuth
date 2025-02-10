@@ -105,6 +105,12 @@ export class DebugUI extends GameObjects.Container {
       }
     });
 
+    this.scene.input.keyboard?.on('keydown-V', () => {
+      this.player.message.setDialog({
+        messages: ['<b><i>[CREAK]</i></b> A <color=red>red</color> test [CREAK]'],
+      });
+    });
+
     if (Config.debug) {
       // Keys
       this.scene.input.keyboard?.on('keydown-COMMA', () => {

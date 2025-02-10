@@ -79,7 +79,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
     },
     {
       messages: [
-        'Blue Plumed Frond? I have not heard of such a plant.',
+        '<color=blue>Blue Plumed Frond</color>? I have not heard of such a plant.',
         'The stranger may know. Many secrets lie under this town.',
       ],
       conditions: {
@@ -157,7 +157,7 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
       },
     },
     {
-      messages: ['Green Writhewood? Hm, there might be some near the forest or lake.'],
+      messages: ['<color=green>Green Writhewood</color>? Hm, there might be some near the forest or lake.'],
       conditions: {
         activeQuest: QuestType.FindPotionIngredients,
       },
@@ -330,7 +330,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     {
       messages: [
         'Slowly, you align and tighten the second gear into place.',
-        '[CLUNKING NOISE]',
+        '<b><i>[CLUNKING NOISE]</i></b>',
         'Now two of the hands of the clock are moving again.',
       ],
       conditions: {
@@ -354,7 +354,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       messages: [
         "This dusty clock tower hasn't told the correct time in many years. It appears to be missing some gears.",
         'Let’s see what happens when we add the first gear. You tighten the gear into place.',
-        '[CLUNKING NOISE]',
+        '<b><i>[CLUNKING NOISE]</i></b>',
         'The clock tower is starting to partially move again. It looks like it’s missing two more gears.',
       ],
       conditions: {
@@ -385,7 +385,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       messages: [
         'Let me see if I can open this hatch.',
         'Wow, the rusty key fits!',
-        '[CREAKING NOISE]',
+        '<b><i>[CREAKING NOISE]</i></b>',
         'Alright, let’s see what is down there!',
       ],
       conditions: {
@@ -453,7 +453,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     {
       messages: [
         'With the alchemy set fixed, I should be able to recreate the experiment.',
-        'I will need to find three ingredients according to this - Crimson Starbloom, Green Writhewood, and a Blue Plumed Frond.',
+        'I will need to find three ingredients according to this - <color=red>Crimson Starbloom</color>, <color=green>Green Writhewood</color>, and a <color=blue>Blue Plumed Frond</color>.',
         'Maybe I can find them in the lab or the forest. The villagers should know more.',
       ],
       conditions: {
@@ -557,7 +557,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.LabBookshelf1]: [
     {
       messages: [
-        '[Secrets of the Silver Transmutation]\n"Silver, the mirror of the soul, can be yielded from common materials. Begin with a lead base, cleanse it with the tears of a willow, and chant thrice under a new moon. Such processes, though fraught with danger, promise immense reward. Meticulous preparation of the material is crucial."',
+        '<b>[Secrets of the Silver Transmutation]</b>\n"Silver, the mirror of the soul, can be yielded from common materials. Begin with a lead base, cleanse it with the tears of a willow, and chant thrice under a new moon. Such processes, though fraught with danger, promise immense reward. Meticulous preparation of the material is crucial."',
         '"Among these pages lie safeguards against volatile spirits and the precise lunar phases essential for success. Here are protective circles and counter-spells to be used should spirits prove malevolent. This knowledge has been passed down and refined for safety."',
       ],
       conditions: {
@@ -568,7 +568,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.LabBookshelf2]: [
     {
       messages: [
-        '[Whispering Woods: A Compendium]\n"The sentient trees of Eldergrove are not myths; their trunks groan with ancient wisdom. To engage them, perform the Ritual of Leaves, using moonlit water and rare herbs, along with whispered incantations passed down by forest guardians."',
+        '<b>[Whispering Woods: A Compendium]</b>\n"The sentient trees of Eldergrove are not myths; their trunks groan with ancient wisdom. To engage them, perform the Ritual of Leaves, using moonlit water and rare herbs, along with whispered incantations passed down by forest guardians."',
         '"Notes on the rare Blue Moonflower, whose petals glow ghostly and unlock forest languages, are also included. Its bloom is brief, and harvesting must be timed at midnight to retain its properties. The chapter concludes with a discussion on plant symbiosis with Eldertrees."',
       ],
       conditions: {
@@ -579,7 +579,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   [PropType.LabBookshelf3]: [
     {
       messages: [
-        '[The Essence of Fire: Ignite and Control]\n"Mastering fire requires strength of will and profound respect for its power. Here, summoning circles and incantations to call forth fire spirits are detailed. Each summoning demands a tribute of phoenix ash. The endeavor is perilous, as spirits may lash out if provoked."',
+        '<b>[The Essence of Fire: Ignite and Control]</b>\n"Mastering fire requires strength of will and profound respect for its power. Here, summoning circles and incantations to call forth fire spirits are detailed. Each summoning demands a tribute of phoenix ash. The endeavor is perilous, as spirits may lash out if provoked."',
         '"The tome also discusses methods to quell flames should they rise against the summoner. Included are the chant of suppression and a dousing mixture from elemental waters and frost-bitten herbs. These countermeasures are vital for maintaining control over summoned entities."',
       ],
       conditions: {
@@ -591,7 +591,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
     {
       messages: [
         'Nightshade, wolfsbane, starvine, frost ferns... No, those are not the right ingedients.',
-        'Oh, a Crimson Starbloom! Yes, this should work!',
+        'Oh, a <color=red>Crimson Starbloom</color>! Yes, this should work!',
       ],
       conditions: {
         activeQuest: QuestType.FindPotionIngredients,
@@ -630,7 +630,11 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       },
     },
     {
-      messages: ['An abstract picture of blocks.', 'Wait a moment, something is behind this picture...', '[CREAK]'],
+      messages: [
+        'An abstract picture of blocks.',
+        'Wait a moment, something is behind this picture...',
+        '<b><i>[CREAK]</i></b>',
+      ],
       onMessageShown: (player, index) => {
         if (index === 2) player.scene.sound.playAudioSprite('sfx', 'chest');
       },

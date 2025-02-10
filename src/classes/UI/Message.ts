@@ -1,4 +1,5 @@
 import { GameObjects, Scene, Tweens } from 'phaser';
+import BBCodeText from 'phaser3-rex-plugins/plugins/bbcodetext';
 
 import { Config } from '../../config';
 import { Dialog } from '../../data/dialog';
@@ -20,7 +21,7 @@ const padding = 20;
 const boxHeight = 170;
 const portraitOffset = 150;
 const nameOffset = 40;
-const maxLines = 5;
+export const maxMessageLines = 4;
 
 const timeout = 350;
 const fadeDuration = 125;
@@ -32,7 +33,7 @@ export class Message extends GameObjects.Container {
   player: Player;
   target?: any;
   npcName: GameObjects.Text;
-  text: GameObjects.Text;
+  text: BBCodeText;
   portrait: GameObjects.Image;
   arrow: GameObjects.Image;
   arrowTween: Tweens.Tween;
@@ -84,11 +85,17 @@ export class Message extends GameObjects.Container {
       color: '#' + Colors.Tan,
     });
 
-    this.text = this.scene.add.text(padding + portraitOffset, padding + nameOffset, '', fontStyle);
+    this.text = new BBCodeText(this.scene, padding + portraitOffset, padding + nameOffset, '', {
+      fontFamily: fontStyle.fontFamily,
+      fontSize: fontStyle.fontSize,
+      color: `#${Colors.White}`,
+    });
+    this.scene.add.existing(this.text);
+
     this.text.width = this.textWidth;
     this.text.height = this.textHeight;
 
-    this.text.setOrigin(0).setMaxLines(maxLines);
+    this.text.setOrigin(0).setMaxLines(maxMessageLines).setWrapMode('word').setDelimiters('<>');
 
     this.portrait = this.scene.add.image(padding, padding, '').setOrigin(0).setScale(1.5);
 
@@ -157,7 +164,7 @@ export class Message extends GameObjects.Container {
       this.portrait.setVisible(false);
       this.text
         .setPosition(padding, padding)
-        .setWordWrapWidth(padding + portraitOffset + this.textWidth, true)
+        .setWordWrapWidth(padding + portraitOffset + this.textWidth)
         .setFixedSize(padding + portraitOffset + this.textWidth, this.textHeight);
     } else {
       this.portrait.setVisible(true);
@@ -179,7 +186,7 @@ export class Message extends GameObjects.Container {
 
       this.text
         .setPosition(padding + portraitOffset, padding + (name ? nameOffset : 0))
-        .setWordWrapWidth(this.textWidth, true)
+        .setWordWrapWidth(this.textWidth)
         .setFixedSize(this.textWidth, this.textHeight);
     }
 
@@ -220,8 +227,6 @@ export class Message extends GameObjects.Container {
         this.stopAnimation = undefined;
         this.resetArrow();
       });
-
-      if (this.text.getWrappedText().length > maxLines) console.error('Message too long!', message);
     }
 
     this.updateOptions();
