@@ -28,10 +28,16 @@ import { ParallaxBackgroundData } from '../data/parallaxBackground';
 import { SlopeData } from '../data/slope';
 import { Interactive } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
-import { setDaytime } from '../utils/lighting';
+import { isNighttime, setDaytime } from '../utils/lighting';
 import { load, loadConfig } from '../utils/save';
 import { Panel, PanelType, globalStats } from '../utils/stats';
 import { fadeIn, fadeOut, openDialog } from '../utils/util';
+
+type LightData = {
+  light: GameObjects.Light | DebugLight;
+  random: number;
+  intensity: number;
+};
 
 export class Game extends Scene {
   player: Player;
@@ -39,6 +45,8 @@ export class Game extends Scene {
   clock: Clock;
   gamepad: Gamepad;
   saveIcon: GameObjects.Image;
+
+  lightData: LightData[] = [];
 
   cullingStats: PanelType;
 
@@ -149,7 +157,7 @@ export class Game extends Scene {
     }
   }
 
-  update(): void {
+  update(time: number): void {
     if (this.player) {
       const isOverlapping = this.physics.overlap(
         this.interactiveObjects,
@@ -172,18 +180,33 @@ export class Game extends Scene {
       }
     }
 
+    // Slight flicker for lights
+    if (isNighttime(this)) {
+      for (let light of this.lightData) {
+        if (Math.random() > 0.98) {
+          light.light.setIntensity(light.intensity * (0.9 + Math.random() * 0.1));
+        }
+      }
+    }
+
     this.frustumCull();
   }
 
   // Reused rectangles for frustum culling
-  cameraBounds: Geom.Rectangle = new Geom.Rectangle(0, 0, Config.width + 300, Config.height + 300);
+  cameraPadding = 150;
+  cameraBounds: Geom.Rectangle = new Geom.Rectangle(
+    0,
+    0,
+    Config.width + this.cameraPadding * 2,
+    Config.height + this.cameraPadding * 2
+  );
   objectBounds: Geom.Rectangle = new Geom.Rectangle(0, 0, 0, 0);
 
   frustumCull() {
     const start = performance.now();
 
-    this.cameraBounds.x = this.cameras.main.scrollX - 150;
-    this.cameraBounds.y = this.cameras.main.scrollY - 150;
+    this.cameraBounds.x = this.cameras.main.scrollX - this.cameraPadding;
+    this.cameraBounds.y = this.cameras.main.scrollY - this.cameraPadding;
 
     const children = this.children.getAll();
 
@@ -321,23 +344,33 @@ export class Game extends Scene {
     this.lights.enable().setAmbientColor(getColorNumber(Colors.White));
 
     LightData.forEach((light) => {
+      const intensity = light.intensity || 1;
+
       if (Config.debug) {
-        new DebugLight(
-          this,
-          light.x,
-          light.y,
-          light.radius || 100,
-          light.color || getColorNumber(Colors.Lights),
-          light.intensity || 1
-        );
+        this.lightData.push({
+          light: new DebugLight(
+            this,
+            light.x,
+            light.y,
+            light.radius || 100,
+            light.color || getColorNumber(Colors.Lights),
+            intensity
+          ),
+          random: Math.random(),
+          intensity,
+        });
       } else {
-        this.lights.addLight(
-          light.x,
-          light.y,
-          light.radius || 100,
-          light.color || getColorNumber(Colors.Lights),
-          light.intensity || 1
-        );
+        this.lightData.push({
+          light: this.lights.addLight(
+            light.x,
+            light.y,
+            light.radius || 100,
+            light.color || getColorNumber(Colors.Lights),
+            intensity
+          ),
+          random: Math.random(),
+          intensity,
+        });
       }
     });
 

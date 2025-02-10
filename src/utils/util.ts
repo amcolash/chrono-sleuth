@@ -144,3 +144,11 @@ export function logEvery(key: string, time: number, ...data: any) {
     logTimes[key] = Date.now();
   }
 }
+
+export function generateCosTable(size: number): number[] {
+  const cosTable = [];
+  for (let i = 0; i < size; i++) {
+    cosTable.push(Math.cos((i / size) * Math.PI * 2));
+  }
+  return cosTable;
+}
