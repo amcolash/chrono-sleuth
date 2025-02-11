@@ -1,0 +1,130 @@
+{
+  "frames": [
+    {
+      "filename": "baker_portrait",
+      "frame": {
+        "x": 283,
+        "y": 0,
+        "w": 85,
+        "h": 85
+      }
+    },
+    {
+      "filename": "baker",
+      "frame": {
+        "x": 0,
+        "y": 287,
+        "w": 51,
+        "h": 130
+      }
+    },
+    {
+      "filename": "clock_portrait",
+      "frame": {
+        "x": 283,
+        "y": 86,
+        "w": 85,
+        "h": 85
+      }
+    },
+    {
+      "filename": "innkeeper_portrait",
+      "frame": {
+        "x": 0,
+        "y": 201,
+        "w": 85,
+        "h": 85
+      }
+    },
+    {
+      "filename": "innkeeper",
+      "frame": {
+        "x": 100,
+        "y": 287,
+        "w": 43,
+        "h": 120
+      }
+    },
+    {
+      "filename": "inventor_portrait",
+      "frame": {
+        "x": 86,
+        "y": 201,
+        "w": 85,
+        "h": 85
+      }
+    },
+    {
+      "filename": "inventor",
+      "frame": {
+        "x": 221,
+        "y": 0,
+        "w": 61,
+        "h": 151
+      }
+    },
+    {
+      "filename": "mayor_portrait",
+      "frame": {
+        "x": 172,
+        "y": 201,
+        "w": 85,
+        "h": 85
+      }
+    },
+    {
+      "filename": "mayor",
+      "frame": {
+        "x": 52,
+        "y": 287,
+        "w": 47,
+        "h": 120
+      }
+    },
+    {
+      "filename": "player_portrait",
+      "frame": {
+        "x": 258,
+        "y": 201,
+        "w": 85,
+        "h": 85
+      }
+    },
+    {
+      "filename": "sphinx_portrait",
+      "frame": {
+        "x": 369,
+        "y": 0,
+        "w": 85,
+        "h": 85
+      }
+    },
+    {
+      "filename": "sphinx",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 200
+      }
+    },
+    {
+      "filename": "stranger_portrait",
+      "frame": {
+        "x": 369,
+        "y": 86,
+        "w": 85,
+        "h": 85
+      }
+    },
+    {
+      "filename": "stranger",
+      "frame": {
+        "x": 369,
+        "y": 172,
+        "w": 43,
+        "h": 72
+      }
+    }
+  ]
+}

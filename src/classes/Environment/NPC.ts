@@ -27,7 +27,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     const data = NPCData[npcType];
     const { x, y, image } = data;
 
-    super(scene, x, y, image);
+    super(scene, x, y, 'characters', image);
     this.name = `NPC-${npcType}`;
 
     this.npcData = data;

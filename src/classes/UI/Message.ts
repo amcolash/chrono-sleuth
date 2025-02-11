@@ -97,7 +97,7 @@ export class Message extends GameObjects.Container {
 
     this.text.setOrigin(0).setMaxLines(maxMessageLines).setWrapMode('word').setDelimiters('<>');
 
-    this.portrait = this.scene.add.image(padding, padding, '').setOrigin(0).setScale(1.5);
+    this.portrait = this.scene.add.image(padding, padding, 'characters', '').setOrigin(0).setScale(1.5);
 
     const box = this.scene.add
       .rectangle(0, 0, Config.width - padding * 2, boxHeight, getColorNumber(Colors.Black), 0.9)
@@ -155,7 +155,8 @@ export class Message extends GameObjects.Container {
       return;
     }
 
-    let finalPortrait = portrait || (target instanceof NPC ? NPCData[(target as NPC).npcType].portrait : undefined);
+    let finalPortrait = portrait;
+    if (target instanceof NPC) finalPortrait = NPCData[(target as NPC).npcType].portrait;
     if (target instanceof Player) finalPortrait = 'player_portrait';
 
     this.npcName.setVisible(false);
@@ -168,7 +169,7 @@ export class Message extends GameObjects.Container {
         .setFixedSize(padding + portraitOffset + this.textWidth, this.textHeight);
     } else {
       this.portrait.setVisible(true);
-      this.portrait.setTexture(finalPortrait);
+      this.portrait.setFrame(finalPortrait);
 
       let name;
       if (finalPortrait === 'player_portrait') {
@@ -204,7 +205,7 @@ export class Message extends GameObjects.Container {
 
       let voice;
 
-      if (this.portrait?.texture.key === 'player_portrait') voice = PlayerVoice;
+      if (this.portrait?.frame?.name === 'player_portrait') voice = PlayerVoice;
       if (this.target instanceof NPC) voice = NPCVoiceData[(this.target as NPC).npcType];
       if (this.target instanceof Prop) voice = PropVoiceData[(this.target as Prop).propType];
       if (!voice) voice = DefaultVoice;

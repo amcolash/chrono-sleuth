@@ -88,25 +88,10 @@ export class Preloader extends Scene {
     // atlases
     this.load.atlas('items', 'atlases/items.png', 'atlases/items.json');
     this.load.atlas('props', 'atlases/props.png', 'atlases/props.json');
+    this.load.atlas('characters', 'atlases/characters.png', 'atlases/characters.json');
 
     // characters
-    this.load.spritesheet('character', 'characters/player.png', { frameWidth: 40, frameHeight: 74 });
-    this.load.image('inventor', 'characters/inventor.png');
-    this.load.image('stranger', 'characters/stranger.png');
-    this.load.image('sphinx', 'characters/sphinx.png');
-    this.load.image('mayor', 'characters/mayor.png');
-    this.load.image('innkeeper', 'characters/innkeeper.png');
-    this.load.image('baker', 'characters/baker.png');
-
-    // portraits
-    this.load.image('player_portrait', 'characters/player_portrait.png');
-    this.load.image('inventor_portrait', 'characters/inventor_portrait.png');
-    this.load.image('stranger_portrait', 'characters/stranger_portrait.png');
-    this.load.image('sphinx_portrait', 'characters/sphinx_portrait.png');
-    this.load.image('mayor_portrait', 'characters/mayor_portrait.png');
-    this.load.image('innkeeper_portrait', 'characters/innkeeper_portrait.png');
-    this.load.image('baker_portrait', 'characters/baker_portrait.png');
-    this.load.image('clock_portrait', 'characters/clock_portrait.png');
+    this.load.spritesheet('character', 'player.png', { frameWidth: 40, frameHeight: 74 });
 
     // music
     if (Config.prod) {

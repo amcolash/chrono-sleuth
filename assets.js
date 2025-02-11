@@ -64,7 +64,7 @@ function icons() {
   generateAtlas(iconsTmp, 'icons');
 }
 
-const atlases = ['items', 'props'];
+const atlases = ['items', 'props', 'characters'];
 
 function atlas() {
   atlases.forEach((a) => {
@@ -82,4 +82,4 @@ function fullExport() {
 
 // fullExport();
 
-// generateAtlas(join(srcDir, '/props'), 'props');
+generateAtlas(join(srcDir, '/characters'), 'characters');
