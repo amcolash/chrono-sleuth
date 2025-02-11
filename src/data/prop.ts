@@ -35,6 +35,7 @@ export const PropData: Record<PropType, Data> = {
   [PropType.LabBook]: {
     x: -700,
     y: 1630,
+    scale: 0.7,
     name: 'Journal',
     image: 'book',
     skipLighting: true,
@@ -42,6 +43,7 @@ export const PropData: Record<PropType, Data> = {
   [PropType.AlchemySet]: {
     x: -2650,
     y: 1600,
+    scale: 0.7,
     image: 'alchemy_empty',
     initializeOnStart: true,
     skipLighting: true,
@@ -99,12 +101,12 @@ export const PropData: Record<PropType, Data> = {
     x: 1350,
     y: 450,
     image: 'inn_sign',
-    scale: 0.2,
+    scale: 0.4,
   },
   [PropType.TrainSign]: {
     x: 235,
     y: 555,
     image: 'train_sign',
-    scale: 0.2,
+    scale: 0.4,
   },
 };
