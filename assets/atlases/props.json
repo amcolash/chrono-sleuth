@@ -1,0 +1,121 @@
+{
+  "frames": [
+    {
+      "filename": "alchemy_blue",
+      "frame": {
+        "x": 129,
+        "y": 126,
+        "w": 136,
+        "h": 111
+      }
+    },
+    {
+      "filename": "alchemy_empty",
+      "frame": {
+        "x": 266,
+        "y": 126,
+        "w": 136,
+        "h": 111
+      }
+    },
+    {
+      "filename": "alchemy_full",
+      "frame": {
+        "x": 0,
+        "y": 255,
+        "w": 136,
+        "h": 111
+      }
+    },
+    {
+      "filename": "alchemy_green",
+      "frame": {
+        "x": 137,
+        "y": 255,
+        "w": 136,
+        "h": 111
+      }
+    },
+    {
+      "filename": "alchemy_red",
+      "frame": {
+        "x": 274,
+        "y": 255,
+        "w": 136,
+        "h": 111
+      }
+    },
+    {
+      "filename": "book",
+      "frame": {
+        "x": 0,
+        "y": 367,
+        "w": 125,
+        "h": 56
+      }
+    },
+    {
+      "filename": "chest_open",
+      "frame": {
+        "x": 468,
+        "y": 126,
+        "w": 20,
+        "h": 24
+      }
+    },
+    {
+      "filename": "chest",
+      "frame": {
+        "x": 468,
+        "y": 151,
+        "w": 20,
+        "h": 24
+      }
+    },
+    {
+      "filename": "inn_sign",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 250,
+        "h": 125
+      }
+    },
+    {
+      "filename": "picture",
+      "frame": {
+        "x": 411,
+        "y": 255,
+        "w": 63,
+        "h": 62
+      }
+    },
+    {
+      "filename": "safe",
+      "frame": {
+        "x": 403,
+        "y": 126,
+        "w": 64,
+        "h": 77
+      }
+    },
+    {
+      "filename": "train_sign",
+      "frame": {
+        "x": 251,
+        "y": 0,
+        "w": 250,
+        "h": 125
+      }
+    },
+    {
+      "filename": "warp",
+      "frame": {
+        "x": 0,
+        "y": 126,
+        "w": 128,
+        "h": 128
+      }
+    }
+  ]
+}
