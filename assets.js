@@ -1,6 +1,6 @@
 const { execSync } = require('child_process');
-const { readdirSync, mkdirSync, readFileSync, writeFileSync, rmdirSync, renameSync } = require('fs');
-const { join } = require('path');
+const { readdirSync, mkdirSync, readFileSync, writeFileSync, rmdirSync, renameSync, mkdir, existsSync } = require('fs');
+const { join, dirname } = require('path');
 const sharp = require('sharp');
 
 const srcDir = 'src-assets';
@@ -61,7 +61,7 @@ async function icons() {
   const icons = readdirSync(iconDir);
   const iconsTmp = join(tmp, 'icons');
 
-  rmdirSync(iconsTmp, { recursive: true });
+  if (existsSync(iconsTmp)) rmdirSync(iconsTmp, { recursive: true });
   mkdirSync(iconsTmp, { recursive: true });
 
   icons.forEach((i) => {
@@ -71,6 +71,39 @@ async function icons() {
   });
 
   await generateAtlas(iconsTmp, 'icons');
+}
+
+async function maps() {
+  const inputDir = join(srcDir, '/maps');
+  const outputDir = join(assetsDir, '/maps');
+
+  const maps = readdirSync(inputDir, { recursive: true }).map((f) => f.toString());
+
+  if (existsSync(outputDir)) rmdirSync(outputDir, { recursive: true });
+  mkdirSync(outputDir, { recursive: true });
+
+  for (const map of maps) {
+    const mapFile = join(inputDir, map);
+    const output = join(outputDir, map.replace('.jpg', '.png'));
+
+    mkdirSync(dirname(output), { recursive: true });
+
+    if (map.endsWith('.jpg') || map.endsWith('.png')) {
+      console.log(output);
+
+      const image = sharp(mapFile);
+      const dims = await image.metadata();
+
+      const size = Math.max(300, Math.floor(Math.min((dims.width || 1000) / 2, (dims.height || 1000) / 2)));
+
+      console.log({ width: dims.width, height: dims.height, size, ratio: Math.min(dims.width, dims.height) / size });
+
+      await image
+        .resize({ width: size, height: size, fit: 'outside', kernel: 'nearest' })
+        .png({ quality: 10, compressionLevel: 9 })
+        .toFile(output);
+    }
+  }
 }
 
 const atlases = ['items', 'props', 'characters'];
@@ -85,9 +118,13 @@ async function atlas() {
 // Main export
 async function fullExport() {
   audio();
+
   await icons();
   await atlas();
+  await maps();
 }
 
 // fullExport();
-generateAtlas(join(srcDir, '/items'), 'items');
+// generateAtlas(join(srcDir, '/items'), 'items');
+
+maps();

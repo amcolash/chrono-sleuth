@@ -173,7 +173,7 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
 export function townIntro(scene: Game) {
   Music.start(MusicType.Station);
 
-  const train = scene.add.image(800, 1460, 'train').setScale(1.15).setDepth(Layer.Shader);
+  const train = scene.add.image(800, 1460, 'train').setScale(1.35).setDepth(Layer.Shader);
 
   // Flip player sprite
   const player = scene.player;
