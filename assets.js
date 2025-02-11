@@ -1,6 +1,7 @@
 const { execSync } = require('child_process');
-const { readdirSync, mkdirSync, readFileSync, writeFileSync, rmdirSync } = require('fs');
+const { readdirSync, mkdirSync, readFileSync, writeFileSync, rmdirSync, renameSync } = require('fs');
 const { join } = require('path');
+const sharp = require('sharp');
 
 const srcDir = 'src-assets';
 const assetsDir = 'public/assets';
@@ -20,7 +21,7 @@ function audioSprite(inputPath, outputFile, opts) {
   );
 }
 
-function generateAtlas(inputPath, outputFile) {
+async function generateAtlas(inputPath, outputFile) {
   exc(`npx harp-atlas-generator -i "${inputPath}/**/*.png" -o ${assetsDir}/atlases/${outputFile}`);
 
   const jsonFile = join(assetsDir, '/atlases/', outputFile + '.json');
@@ -34,20 +35,28 @@ function generateAtlas(inputPath, outputFile) {
   };
 
   writeFileSync(jsonFile, JSON.stringify(output, undefined, 2));
+
+  // reduce texture quality to improve size
+  const texture = join(assetsDir, '/atlases/', outputFile + '.png');
+  await sharp(texture)
+    .png({ quality: 10, compressionLevel: 9 })
+    .toFile(texture + '1');
+
+  renameSync(texture + '1', texture);
 }
 
 // Audio
-const audioSprites = ['words', 'sfx'];
+const audioSprites = [{ name: 'words', opts: { gap: 0 } }, { name: 'sfx' }];
 
 function audio() {
   audioSprites.forEach((a) => {
-    const outDir = join(srcDir, '/audio/', a);
-    audioSprite(outDir, a);
+    const outDir = join(srcDir, '/audio/', a.name);
+    audioSprite(outDir, a.name, a.opts);
   });
 }
 
 // Atlases
-function icons() {
+async function icons() {
   const iconDir = join(srcDir, '/icons');
   const icons = readdirSync(iconDir);
   const iconsTmp = join(tmp, 'icons');
@@ -61,25 +70,24 @@ function icons() {
     exc(`inkscape -w 64 -h 64 ${icon} -o ${output}`);
   });
 
-  generateAtlas(iconsTmp, 'icons');
+  await generateAtlas(iconsTmp, 'icons');
 }
 
 const atlases = ['items', 'props', 'characters'];
 
-function atlas() {
-  atlases.forEach((a) => {
+async function atlas() {
+  for (const a of atlases) {
     const inputDir = join(srcDir, '/', a);
-    generateAtlas(inputDir, a);
-  });
+    await generateAtlas(inputDir, a);
+  }
 }
 
 // Main export
-function fullExport() {
-  audio();
-  icons();
-  atlas();
+async function fullExport() {
+  // audio();
+  await icons();
+  await atlas();
 }
 
-// fullExport();
-
-generateAtlas(join(srcDir, '/characters'), 'characters');
+fullExport();
+// generateAtlas(join(srcDir, '/characters'), 'characters');
