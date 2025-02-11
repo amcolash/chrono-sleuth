@@ -84,10 +84,10 @@ async function atlas() {
 
 // Main export
 async function fullExport() {
-  // audio();
+  audio();
   await icons();
   await atlas();
 }
 
-fullExport();
-// generateAtlas(join(srcDir, '/characters'), 'characters');
+// fullExport();
+generateAtlas(join(srcDir, '/props'), 'props');
