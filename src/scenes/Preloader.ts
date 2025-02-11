@@ -88,15 +88,7 @@ export class Preloader extends Scene {
     this.load.spritesheet('portal', 'props/portal.png', { frameWidth: 140, frameHeight: 120 });
 
     // items
-    this.load.image('gear', 'items/gear.png');
-    this.load.image('gear2', 'items/gear2.png');
-    this.load.image('journal', 'items/journal.png');
-    this.load.image('wrench', 'items/wrench.png');
-    this.load.image('key', 'items/key.png');
-    this.load.image('herb_red', 'items/herb_red.png');
-    this.load.image('herb_green', 'items/herb_green.png');
-    this.load.image('herb_blue', 'items/herb_blue.png');
-    this.load.image('potion', 'items/potion.png');
+    this.load.atlas('items', 'atlases/items.png', 'atlases/items.json');
 
     // characters
     this.load.spritesheet('character', 'characters/player.png', { frameWidth: 40, frameHeight: 74 });

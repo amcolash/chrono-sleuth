@@ -41,8 +41,8 @@ export class Boot extends Scene {
     this.load.font('m6x11', 'fonts/m6x11.ttf', 'truetype');
     this.load.bitmapFont('m6x11-24', 'fonts/m6x11-24.png', 'fonts/m6x11-24.xml');
 
-    // atlases
-    this.load.atlas('icons', 'icons.png', 'icons.json');
+    // icons
+    this.load.atlas('icons', 'atlases/icons.png', 'atlases/icons.json');
 
     // audio sprites
     this.load.audioSprite('words', 'sounds/words.json');

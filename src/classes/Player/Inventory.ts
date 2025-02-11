@@ -51,7 +51,7 @@ export class Inventory extends GameObjects.Container {
     this.inventory.push(item);
 
     if (!item.used) {
-      const i = this.scene.add.image(0, 0, ItemData[item.type].image).setScale(0.35);
+      const i = this.scene.add.image(0, 0, 'items', ItemData[item.type].image).setScale(0.35);
       if (item.type === ItemType.Key) i.setAngle(45);
       this.add(i);
     }
@@ -75,7 +75,7 @@ export class Inventory extends GameObjects.Container {
       found.used = true;
 
       this.getAll<GameObjects.Image>()
-        .find((i) => i.texture?.key === ItemData[item].image)
+        .find((i) => i.frame.name === ItemData[item].image)
         ?.destroy();
     }
 

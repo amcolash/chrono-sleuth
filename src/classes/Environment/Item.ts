@@ -23,7 +23,7 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
   constructor(scene: Scene, type: ItemType, player: Player) {
     const { x, y, image } = ItemData[type];
 
-    super(scene, x, y, image);
+    super(scene, x, y, 'items', image);
     this.name = `Item-${type}`;
 
     this.itemType = type;

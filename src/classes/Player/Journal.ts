@@ -23,7 +23,7 @@ export class Journal extends GameObjects.Image {
   initialized: boolean = false;
 
   constructor(scene: Scene, player: Player) {
-    super(scene, Config.width - 50, Config.height - 55, 'journal');
+    super(scene, Config.width - 50, Config.height - 55, 'items', 'journal');
     this.player = player;
   }
 

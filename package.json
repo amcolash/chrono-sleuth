@@ -11,7 +11,8 @@
     "build:tauri": "tauri build",
     "preview": "vite preview",
     "lint": "tsc --noEmit -p .",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "assets": "node assets.js"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.2.0",
