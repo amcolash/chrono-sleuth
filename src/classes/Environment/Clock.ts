@@ -34,7 +34,7 @@ export class Clock extends GameObjects.Container {
     this.rewindable = rewindable;
     this.player = player;
 
-    this.add(scene.add.image(0, 0, 'props', 'watch').setScale(0.25));
+    this.add(scene.add.image(0, 0, 'items', 'watch'));
 
     this.hand = scene.add.rectangle(0, 10, 3, 14, getColorNumber(Colors.Black)).setOrigin(0, 0);
     this.add(this.hand);

@@ -90,4 +90,4 @@ async function fullExport() {
 }
 
 // fullExport();
-generateAtlas(join(srcDir, '/props'), 'props');
+generateAtlas(join(srcDir, '/items'), 'items');
