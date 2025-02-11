@@ -44,9 +44,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   constructor(scene: Scene, warpType: WarpType, player: Player) {
     const { x, y, visual, range } = WarpData[warpType];
-    const texture = 'warp';
 
-    super(scene, x, y, texture);
+    super(scene, x, y, 'props', 'warp');
     this.name = `Warp-${warpType}`;
     this.warpType = warpType;
     this.player = player;

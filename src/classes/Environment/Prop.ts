@@ -23,7 +23,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
 
   constructor(scene: Scene, type: PropType, player: Player) {
     const { x, y, image } = PropData[type];
-    super(scene, x, y, image || '');
+    super(scene, x, y, image ? 'props' : '', image || '');
     this.name = `Prop-${type}`;
 
     this.propType = type;
@@ -49,14 +49,14 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
 
     if (particles) {
       this.particles = this.scene.add
-        .particles(this.x, this.y, 'warp', particles)
+        .particles(this.x, this.y, 'props', { frame: 'warp', ...particles })
         .setDepth(Layer.Items)
         .setName(`Prop-${this.propType}-Particles`);
     }
 
     if (this.propType === PropType.MansionPicture)
       this.scene.add
-        .image(this.x, this.y, 'safe')
+        .image(this.x, this.y, 'props', 'safe')
         .setOrigin(0, 0)
         .setScale(0.9)
         .setName('Prop-Safe')

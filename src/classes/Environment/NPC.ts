@@ -35,7 +35,6 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     this.player = player;
 
     this.setDepth(Layer.Npcs);
-    if (image === 'warp') this.setAlpha(0);
 
     initializeObject(this, data);
   }
@@ -60,7 +59,9 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     }
 
     if (particles) {
-      this.particles = this.scene.add.particles(x, y, '', particles).setName(`NPC-${this.npcType}-Particles`);
+      this.particles = this.scene.add
+        .particles(x, y, 'props', { frame: 'warp', ...particles })
+        .setName(`NPC-${this.npcType}-Particles`);
     }
 
     if (onCreate) onCreate(this);

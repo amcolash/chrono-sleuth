@@ -13,7 +13,6 @@ export const PropData: Record<PropType, Data> = {
     name: 'Clock Tower',
     portrait: 'clock_portrait',
     particles: {
-      texture: 'warp',
       scale: { start: 0, end: 1.1 },
       alpha: { start: 1, end: 0 },
       lifespan: 2000,

@@ -18,9 +18,6 @@ export function preloadIntro(scene: Scene) {
   scene.load.image('layer4', 'maps/intro/layer4.png');
   scene.load.image('layer5', 'maps/intro/layer5.png');
 
-  scene.load.spritesheet('character', 'characters/player.png', { frameWidth: 128, frameHeight: 80 });
-  scene.load.image('player_portrait', 'characters/player_portrait.png');
-
   if (Config.prod) {
     scene.load.audio(MusicType.Intro, musicFileMapping[MusicType.Intro]);
   }
@@ -47,7 +44,7 @@ export class Intro extends Scene {
     if (!Config.prod) {
       this.input.keyboard?.on('keydown-BACK_SLASH', () => {
         fadeOut(this, 500, () => {
-          if (this.textures.exists('warp')) {
+          if (this.textures.exists('props')) {
             this.scene.start('Game');
           } else {
             this.scene.start('Preloader');

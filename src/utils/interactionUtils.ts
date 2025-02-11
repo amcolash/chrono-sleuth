@@ -88,7 +88,7 @@ export function getClockRewind(scene: Game): number {
   return gameScene.clock?.rewindCount || 0;
 }
 
-export function initializeObject(obj: Physics.Arcade.Image & LazyInitialize, config: DataProps) {
+export function initializeObject<T>(obj: Physics.Arcade.Image & LazyInitialize, config: DataProps<T>) {
   const { scale, alpha, angle, depth, skipLighting, origin, initializeOnStart } = config;
 
   if (scale) {

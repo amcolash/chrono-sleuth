@@ -250,7 +250,7 @@ export function openChest(player: Player) {
   player.previousPosition.set(player.x - 1, player.y);
 
   scene.sound.playAudioSprite('sfx', 'chest');
-  chest.setTexture('chest_open');
+  chest.setFrame('chest_open');
 
   gear.setPosition(chest.x, chest.y - 20);
   gear.setScale(0.15);
@@ -266,9 +266,9 @@ export function openChest(player: Player) {
 }
 
 const herbData = {
-  [ItemType.HerbRed]: { texture: 'alchemy_red', tint: 0xaa0000, x: -20 },
-  [ItemType.HerbGreen]: { texture: 'alchemy_green', tint: 0x00aa00, x: -35 },
-  [ItemType.HerbBlue]: { texture: 'alchemy_blue', tint: 0x0000aa, x: -5 },
+  [ItemType.HerbRed]: { frame: 'alchemy_red', tint: 0xaa0000, x: -20 },
+  [ItemType.HerbGreen]: { frame: 'alchemy_green', tint: 0x00aa00, x: -35 },
+  [ItemType.HerbBlue]: { frame: 'alchemy_blue', tint: 0x0000aa, x: -5 },
 };
 
 export function addHerb(
@@ -297,14 +297,14 @@ export function addHerb(
 export function updateAlchemySet(player: Player) {
   const alchemySet = getProp(player.scene, PropType.AlchemySet);
   if (!alchemySet) return;
-  alchemySet.setTexture('alchemy_empty');
+  alchemySet.setFrame('alchemy_empty');
 
   if (hasUsedItem(player, ItemType.HerbBlue)) {
-    alchemySet.setTexture(herbData[ItemType.HerbBlue].texture);
+    alchemySet.setFrame(herbData[ItemType.HerbBlue].frame);
   } else if (hasUsedItem(player, ItemType.HerbRed)) {
-    alchemySet.setTexture(herbData[ItemType.HerbRed].texture);
+    alchemySet.setFrame(herbData[ItemType.HerbRed].frame);
   } else if (hasUsedItem(player, ItemType.HerbGreen)) {
-    alchemySet.setTexture(herbData[ItemType.HerbGreen].texture);
+    alchemySet.setFrame(herbData[ItemType.HerbGreen].frame);
   }
 }
 
@@ -316,7 +316,7 @@ export function makePotion(player: Player, potion?: Prop) {
 
   fadeOut(scene, 500, () => {
     scene.time.delayedCall(700, () => {
-      potion?.setTexture('alchemy_full');
+      potion?.setFrame('alchemy_full');
       potion?.particles
         ?.setConfig({ ...PropData[PropType.AlchemySet].particles, tint: [0x660077], x: 30, delay: 350, stopAfter: 120 })
         .start();
@@ -334,7 +334,7 @@ export function makePotion(player: Player, potion?: Prop) {
               player.inventory.addItem({ type: ItemType.Potion, used: false });
               player.quests.updateExistingQuest(QuestType.ExploreLab, true);
 
-              target?.setTexture('alchemy_empty');
+              target?.setFrame('alchemy_empty');
               player.setActive(true);
             },
           },
@@ -348,14 +348,16 @@ export function makePotion(player: Player, potion?: Prop) {
 
 export function revealSafe(player: Player, silent: boolean) {
   const picture = getProp(player.scene, PropType.MansionPicture);
+  const angle = 97;
 
-  if (!silent) player.setActive(false);
-  picture?.scene.tweens.add({
-    targets: picture,
-    angle: 97,
-    duration: silent ? 0 : 1500,
-    onComplete: () => {
-      if (!silent) {
+  if (silent) picture?.setAngle(angle);
+  else {
+    player.setActive(false);
+    picture?.scene.tweens.add({
+      targets: picture,
+      angle,
+      duration: 1500,
+      onComplete: () => {
         player.setActive(true);
         player.message.setDialog(
           {
@@ -366,9 +368,9 @@ export function revealSafe(player: Player, silent: boolean) {
           },
           player
         );
-      }
-    },
-  });
+      },
+    });
+  }
 }
 
 export function openSafe(player: Player) {

@@ -83,12 +83,11 @@ export class Preloader extends Scene {
     this.load.image('alchemy_lab', 'maps/alchemy_lab.jpg');
 
     // interactive objects
-    this.load.image('watch', 'items/watch.png');
-    this.load.image('warp', 'props/warp.png');
-    this.load.spritesheet('portal', 'props/portal.png', { frameWidth: 140, frameHeight: 120 });
+    this.load.spritesheet('portal', 'portal.png', { frameWidth: 140, frameHeight: 120 });
 
-    // items
+    // atlases
     this.load.atlas('items', 'atlases/items.png', 'atlases/items.json');
+    this.load.atlas('props', 'atlases/props.png', 'atlases/props.json');
 
     // characters
     this.load.spritesheet('character', 'characters/player.png', { frameWidth: 40, frameHeight: 74 });
@@ -107,24 +106,7 @@ export class Preloader extends Scene {
     this.load.image('mayor_portrait', 'characters/mayor_portrait.png');
     this.load.image('innkeeper_portrait', 'characters/innkeeper_portrait.png');
     this.load.image('baker_portrait', 'characters/baker_portrait.png');
-
     this.load.image('clock_portrait', 'characters/clock_portrait.png');
-
-    // props
-    this.load.image('chest', 'props/chest.png');
-    this.load.image('chest_open', 'props/chest_open.png');
-    this.load.image('book', 'props/book.png');
-    this.load.image('picture', 'props/picture.png');
-    this.load.image('safe', 'props/safe.png');
-
-    this.load.image('alchemy_empty', 'props/alchemy/alchemy_empty.png');
-    this.load.image('alchemy_green', 'props/alchemy/alchemy_green.png');
-    this.load.image('alchemy_red', 'props/alchemy/alchemy_red.png');
-    this.load.image('alchemy_blue', 'props/alchemy/alchemy_blue.png');
-    this.load.image('alchemy_full', 'props/alchemy/alchemy_full.png');
-
-    this.load.image('train_sign', 'props/train_sign.png');
-    this.load.image('inn_sign', 'props/inn_sign.png');
 
     // music
     if (Config.prod) {
@@ -136,7 +118,7 @@ export class Preloader extends Scene {
     }
 
     // Main game intro
-    if (!this.load.textureManager.exists('train')) this.load.image('train', 'maps/intro/train.png');
+    this.load.image('train', 'maps/intro/train.png');
 
     // optionally preload intro
     if (!localStorage.getItem(saveKey)) {

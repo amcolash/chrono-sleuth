@@ -2,6 +2,7 @@ const { execSync } = require('child_process');
 const { readdirSync, mkdirSync, readFileSync, writeFileSync, rmdirSync } = require('fs');
 const { join } = require('path');
 
+const srcDir = 'src-assets';
 const assetsDir = 'public/assets';
 const tmp = '/tmp/chrono-sleuth-assets';
 
@@ -11,10 +12,18 @@ function exc(command) {
   execSync(command, { stdio: 'inherit' });
 }
 
-function atlas(inputPath, outputFile) {
-  exc(`npx harp-atlas-generator -i "${inputPath}/*.png" -o ${assetsDir}/atlases/${outputFile}`);
+function audioSprite(inputPath, outputFile, opts) {
+  const gap = opts?.gap ?? 0.25;
 
-  const jsonFile = join(assetsDir, outputFile + '.json');
+  exc(
+    `npx audiosprite -o ${assetsDir}/sounds/${outputFile} -u sounds/ -e mp3 -g ${gap} -b 24 -r 24000 ${inputPath}/**/*.mp3`
+  );
+}
+
+function generateAtlas(inputPath, outputFile) {
+  exc(`npx harp-atlas-generator -i "${inputPath}/**/*.png" -o ${assetsDir}/atlases/${outputFile}`);
+
+  const jsonFile = join(assetsDir, '/atlases/', outputFile + '.json');
   const data = JSON.parse(readFileSync(jsonFile).toString());
 
   const output = {
@@ -28,19 +37,18 @@ function atlas(inputPath, outputFile) {
 }
 
 // Audio
-function words() {
-  const wordsDir = 'src-assets/audio/words';
-  exc(`npx audiosprite -o ${assetsDir}/sounds/words -u sounds/ -e mp3 -g 0 -b 24 -r 24000 ${wordsDir}/*.mp3`);
-}
+const audioSprites = ['words', 'sfx'];
 
-function sfx() {
-  const sfxDir = 'src-assets/audio/sfx';
-  exc(`npx audiosprite -o ${assetsDir}/sounds/sfx -u sounds/ -e mp3 -g 0.25 -b 24 -r 24000 ${sfxDir}/*.mp3`);
+function audio() {
+  audioSprites.forEach((a) => {
+    const outDir = join(srcDir, '/audio/', a);
+    audioSprite(outDir, a);
+  });
 }
 
 // Atlases
 function icons() {
-  const iconDir = 'src-assets/icons';
+  const iconDir = join(srcDir, '/icons');
   const icons = readdirSync(iconDir);
   const iconsTmp = join(tmp, 'icons');
 
@@ -53,21 +61,25 @@ function icons() {
     exc(`inkscape -w 64 -h 64 ${icon} -o ${output}`);
   });
 
-  atlas(iconsTmp, 'icons');
+  generateAtlas(iconsTmp, 'icons');
 }
 
-function items() {
-  const itemDir = 'src-assets/items';
-  atlas(itemDir, 'items');
+const atlases = ['items', 'props'];
+
+function atlas() {
+  atlases.forEach((a) => {
+    const inputDir = join(srcDir, '/', a);
+    generateAtlas(inputDir, a);
+  });
 }
 
 // Main export
 function fullExport() {
-  words();
+  audio();
   icons();
-  sfx();
-  items();
+  atlas();
 }
 
 // fullExport();
-items();
+
+// generateAtlas(join(srcDir, '/props'), 'props');

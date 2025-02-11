@@ -47,7 +47,8 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (Config.debug) this.setInteractive({ draggable: true });
 
     this.particles = this.scene.add
-      .particles(this.x, this.y, 'warp', {
+      .particles(this.x, this.y, 'props', {
+        frame: 'warp',
         scale: { start: 0, end: 0.9 },
         alpha: { start: 0.7, end: 0 },
         delay: 500,

@@ -75,7 +75,7 @@ export class Inventory extends GameObjects.Container {
       found.used = true;
 
       this.getAll<GameObjects.Image>()
-        .find((i) => i.frame.name === ItemData[item].image)
+        .find((i) => (i.frame?.name || i.texture?.key) === ItemData[item].image)
         ?.destroy();
     }
 
