@@ -82,16 +82,14 @@ export class Preloader extends Scene {
     this.load.image('mansion_inside', 'maps/mansion_inside.jpg');
     this.load.image('alchemy_lab', 'maps/alchemy_lab.jpg');
 
-    // interactive objects
-    this.load.spritesheet('portal', 'portal.png', { frameWidth: 140, frameHeight: 120 });
+    // spritesheets
+    this.load.spritesheet('portal', 'spritesheets/portal.png', { frameWidth: 140, frameHeight: 120 });
+    this.load.spritesheet('character', 'spritesheets/player.png', { frameWidth: 40, frameHeight: 74 });
 
     // atlases
     this.load.atlas('items', 'atlases/items.png', 'atlases/items.json');
     this.load.atlas('props', 'atlases/props.png', 'atlases/props.json');
     this.load.atlas('characters', 'atlases/characters.png', 'atlases/characters.json');
-
-    // characters
-    this.load.spritesheet('character', 'player.png', { frameWidth: 40, frameHeight: 74 });
 
     // music
     if (Config.prod) {
