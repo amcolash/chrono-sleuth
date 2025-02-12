@@ -95,7 +95,13 @@ export class Message extends GameObjects.Container {
     this.text.width = this.textWidth;
     this.text.height = this.textHeight;
 
-    this.text.setOrigin(0).setMaxLines(maxMessageLines).setWrapMode('word').setDelimiters('<>');
+    this.text.setOrigin(0).setMaxLines(maxMessageLines).setWrapMode('word');
+
+    // TODO: Use official api when next version released
+    // this.text.setDelimiters('<>');
+
+    /** @ts-ignore */
+    this.text.parser.setDelimiters('<', '>');
 
     this.portrait = this.scene.add.image(padding, padding, 'characters', '').setOrigin(0).setScale(1.5);
 
