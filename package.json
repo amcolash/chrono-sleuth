@@ -20,7 +20,7 @@
     "@tauri-apps/plugin-window-state": "^2.2.1",
     "deep-equal": "^2.2.3",
     "generate-maze": "^1.1.0",
-    "phaser": "^3.87.0",
+    "phaser": "^3.88.0",
     "phaser3-rex-plugins": "^1.80.13"
   },
   "devDependencies": {
@@ -29,10 +29,10 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^22.13.1",
-    "prettier": "^3.4.2",
+    "prettier": "^3.5.0",
     "sharp": "^0.33.5",
     "svgo": "^3.3.2",
-    "terser": "^5.38.1",
+    "terser": "^5.38.2",
     "typescript": "^5.7.3",
     "vite": "^6.1.0",
     "vite-plugin-generate-file": "^0.2.0",
