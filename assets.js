@@ -124,7 +124,6 @@ async function fullExport() {
   await maps();
 }
 
-// fullExport();
+fullExport();
 // generateAtlas(join(srcDir, '/items'), 'items');
-
-maps();
+// maps();
