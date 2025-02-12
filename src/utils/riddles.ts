@@ -3,6 +3,7 @@ import { Scene } from 'phaser';
 import { NPC } from '../classes/Environment/NPC';
 import { Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
+import { Dialog } from '../data/dialog';
 import { PropData } from '../data/prop';
 import { NPCType, PropType, QuestType } from '../data/types';
 import { Game } from '../scenes/Game';
@@ -68,6 +69,14 @@ function getRiddleIndex(scene: Scene): number {
 
   return 0;
 }
+
+export const sphinxRiddle = (): Dialog<NPC> => {
+  return {
+    messages: (player) => getSphinxRiddle(player.scene),
+    options: (player) => getSphinxOptions(player.scene),
+    onSelected: handleSphinxAnswer,
+  };
+};
 
 export function getSphinxRiddle(scene: Scene): string[] {
   const index = getRiddleIndex(scene);

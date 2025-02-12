@@ -13,7 +13,7 @@ import {
   hasUsedItem,
 } from '../utils/interactionUtils';
 import { isNighttime } from '../utils/lighting';
-import { getSphinxHint, getSphinxOptions, getSphinxRiddle, handleSphinxAnswer } from '../utils/riddles';
+import { getSphinxHint, sphinxRiddle } from '../utils/riddles';
 import { xrayAlpha } from '../utils/shaders/xray';
 import { openDialog } from '../utils/util';
 import { ItemType, JournalEntry, NPCType, PropType, QuestType } from './types';
@@ -38,21 +38,6 @@ export interface Dialog<T> {
   onMessageShown?(player: Player, index: number, target?: T): void;
   onSelected?: (option: string, player: Player, target?: T) => void;
 }
-
-const sphinxRiddle = (): Dialog<NPC> => {
-  return {
-    messages: (player) => getSphinxRiddle(player.scene),
-    options: (player) => getSphinxOptions(player.scene),
-    onSelected: handleSphinxAnswer,
-  };
-};
-
-export const PipesCompletionDialog: Dialog<Prop> = {
-  messages: ['There. It looks like the alchemy set has been properly fit back together.'],
-  onCompleted: (player) => {
-    player.journal.addEntry(JournalEntry.AlchemySetFixed);
-  },
-};
 
 export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   [NPCType.Inventor]: [

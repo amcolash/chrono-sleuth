@@ -89,5 +89,5 @@ async function fullExport() {
   await atlas();
 }
 
-// fullExport();
-generateAtlas(join(srcDir, '/items'), 'items');
+fullExport();
+// generateAtlas(join(srcDir, '/items'), 'items');
