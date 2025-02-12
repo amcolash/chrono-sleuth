@@ -67,20 +67,20 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
 
     // backgrounds
-    this.load.image('station', 'maps/station.jpg');
-    this.load.image('town', 'maps/town.jpg');
-    this.load.image('town_hall', 'maps/town_hall.jpg');
-    this.load.image('inn', 'maps/inn.jpg');
+    this.load.image('station', 'maps/station.png');
+    this.load.image('town', 'maps/town.png');
+    this.load.image('town_hall', 'maps/town_hall.png');
+    this.load.image('inn', 'maps/inn.png');
 
-    this.load.image('clock_outside', 'maps/clock_outside.jpg');
-    this.load.image('clock_inner', 'maps/clock_inner.jpg');
+    this.load.image('clock_outside', 'maps/clock_outside.png');
+    this.load.image('clock_inner', 'maps/clock_inner.png');
 
-    this.load.image('forest', 'maps/forest.jpg');
-    this.load.image('lake', 'maps/lake.jpg');
+    this.load.image('forest', 'maps/forest.png');
+    this.load.image('lake', 'maps/lake.png');
 
-    this.load.image('mansion_outside', 'maps/mansion_outside.jpg');
-    this.load.image('mansion_inside', 'maps/mansion_inside.jpg');
-    this.load.image('alchemy_lab', 'maps/alchemy_lab.jpg');
+    this.load.image('mansion_outside', 'maps/mansion_outside.png');
+    this.load.image('mansion_inside', 'maps/mansion_inside.png');
+    this.load.image('alchemy_lab', 'maps/alchemy_lab.png');
 
     // spritesheets
     this.load.spritesheet('portal', 'spritesheets/portal.png', { frameWidth: 140, frameHeight: 120 });

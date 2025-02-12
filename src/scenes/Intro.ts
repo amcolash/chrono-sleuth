@@ -72,13 +72,13 @@ export class Intro extends Scene {
 
     fadeIn(this, 350);
 
-    this.add.image(Config.width, Config.height, 'layer5').setScale(5 * scale);
+    this.add.image(Config.width, Config.height, 'layer5').setScale(5.4 * scale);
 
-    const layer4_1 = this.add.image(0, Config.height, 'layer4').setScale(5 * scale);
-    const layer4_2 = this.add.image(0, Config.height, 'layer4').setScale(5 * scale);
+    const layer4_1 = this.add.image(0, Config.height, 'layer4').setScale(5.4 * scale);
+    const layer4_2 = this.add.image(0, Config.height, 'layer4').setScale(5.4 * scale);
 
-    const layer3 = this.add.image(0, 350 * scale, 'layer3').setScale(2 * scale);
-    const layer2 = this.add.image(0, Config.height * 0.7, 'layer2').setScale(5 * scale);
+    const layer3 = this.add.image(0, 350 * scale, 'layer3').setScale(2.16 * scale);
+    const layer2 = this.add.image(0, Config.height * 0.7, 'layer2').setScale(5.4 * scale);
 
     const movement = Config.width;
     let duration = 15000;
@@ -130,7 +130,7 @@ export class Intro extends Scene {
     trainContainer.add(this.player);
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1, 0, 120);
 
-    const train = this.add.image(Config.width / 2, Config.height / 2, 'train').setScale(2 * scale);
+    const train = this.add.image(Config.width / 2, Config.height / 2, 'train').setScale(2.35 * scale);
     trainContainer.add(train);
 
     this.tweens.add({
