@@ -20,7 +20,7 @@
     "@tauri-apps/plugin-window-state": "^2.2.1",
     "deep-equal": "^2.2.3",
     "generate-maze": "^1.1.0",
-    "phaser": "^3.88.0",
+    "phaser": "3.87.0",
     "phaser3-rex-plugins": "^1.80.13"
   },
   "devDependencies": {
