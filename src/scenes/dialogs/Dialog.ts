@@ -16,6 +16,8 @@ type DialogData = {
   gamepadVisible: boolean;
   childScene?: string;
 
+  skipUI?: boolean;
+
   /** Hide the top-right button that closes a dialog in the "success state" */
   hideCloseSuccess?: boolean;
 };
@@ -38,27 +40,29 @@ export abstract class Dialog extends Scene {
     this.closing = false;
     this.container = this.add.container(Config.width / 2, Config.height / 2);
 
-    this.container.add(
-      this.add
-        .rectangle(0, 0, Config.width * 0.95, Config.height * 0.95, 0x000000, 0.75)
-        .setStrokeStyle(4, getColorNumber(Colors.Tan))
-    );
-    this.container.add(
-      new Button(this, Config.width * 0.44, Config.height * -0.4, 'X', () => this.close(false), {
-        backgroundColor: `#${Colors.Warning}`,
-      })
-    );
-
-    if (!Config.prod && !this.dialogData.hideCloseSuccess) {
+    if (!this.dialogData.skipUI) {
       this.container.add(
-        new IconButton(this, Config.width * 0.38, Config.height * -0.4, 'award', () => this.startClose(true))
+        this.add
+          .rectangle(0, 0, Config.width * 0.95, Config.height * 0.95, 0x000000, 0.75)
+          .setStrokeStyle(4, getColorNumber(Colors.Tan))
       );
-    }
+      this.container.add(
+        new Button(this, Config.width * 0.44, Config.height * -0.4, 'X', () => this.close(false), {
+          backgroundColor: `#${Colors.Warning}`,
+        })
+      );
 
-    this.title = this.add
-      .text(0, Config.height * -0.4, this.dialogData.title, { ...fontStyle, fontSize: 48 })
-      .setOrigin(0.5);
-    this.container.add(this.title);
+      if (!Config.prod && !this.dialogData.hideCloseSuccess) {
+        this.container.add(
+          new IconButton(this, Config.width * 0.38, Config.height * -0.4, 'award', () => this.startClose(true))
+        );
+      }
+
+      this.title = this.add
+        .text(0, Config.height * -0.4, this.dialogData.title, { ...fontStyle, fontSize: 48 })
+        .setOrigin(0.5);
+      this.container.add(this.title);
+    }
 
     this.input.keyboard?.on('keydown-ESC', () => {
       this.startClose(false);

@@ -182,34 +182,6 @@
   "image": "bookshelf.png",
   "format": "RGBA8888",
   "size": { "w": 248, "h": 125 },
-  "scale": "1",
-  "frameTags": [
-  ],
-  "layers": [
-   { "name": "Layer", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 22", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 21", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 20", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 19", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 18", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 17", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 16", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 15", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 14", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 13", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 11", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 10", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 9", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 8", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 7", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 6", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 5", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 4", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 3", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 2", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
-  ],
-  "slices": [
-  ]
+  "scale": "1"
  }
 }

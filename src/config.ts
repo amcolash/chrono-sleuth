@@ -29,7 +29,7 @@ if (localProd !== null) prod = localProd === 'true';
 
 // Dialog to show after booting game (assets are loaded)
 let bootDialog;
-// bootDialog = 'TumblerDialog';
+bootDialog = 'Books';
 
 let useShader = prod;
 useShader = true;

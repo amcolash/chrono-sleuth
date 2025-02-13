@@ -7,6 +7,7 @@ import { Intro } from './scenes/Intro';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
 import { UITest } from './scenes/UITest';
+import { Books } from './scenes/dialogs/Books';
 import { DebugTool } from './scenes/dialogs/DebugTool';
 import { JournalDialog } from './scenes/dialogs/JournalDialog';
 import { Maze } from './scenes/dialogs/Maze';
@@ -45,23 +46,18 @@ const config: Types.Core.GameConfig = {
 
     Intro,
     MainGame,
-
     Paused,
-    JournalDialog,
-
     DebugTool,
 
+    JournalDialog,
     MazeDialog,
     Maze,
-
     PipesDialog,
     Pipes,
-
     TumblerDialog,
-
     MemoryDialog,
-
     SliderDialog,
+    Books,
 
     UITest,
   ],
