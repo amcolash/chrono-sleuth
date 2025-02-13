@@ -1,0 +1,187 @@
+{ "frames": {
+   "bookshelf (Layer).aseprite": {
+    "frame": { "x": 0, "y": 0, "w": 125, "h": 125 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 125, "h": 125 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 22).aseprite": {
+    "frame": { "x": 162, "y": 0, "w": 6, "h": 19 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 81, "y": 52, "w": 6, "h": 19 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 21).aseprite": {
+    "frame": { "x": 192, "y": 0, "w": 5, "h": 18 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 112, "y": 103, "w": 5, "h": 18 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 20).aseprite": {
+    "frame": { "x": 169, "y": 0, "w": 6, "h": 18 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 77, "y": 103, "w": 6, "h": 18 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 19).aseprite": {
+    "frame": { "x": 126, "y": 0, "w": 19, "h": 9 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 26, "y": 112, "w": 19, "h": 9 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 18).aseprite": {
+    "frame": { "x": 238, "y": 0, "w": 5, "h": 15 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 8, "y": 106, "w": 5, "h": 15 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 17).aseprite": {
+    "frame": { "x": 198, "y": 0, "w": 6, "h": 15 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 6, "y": 81, "w": 6, "h": 15 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 16).aseprite": {
+    "frame": { "x": 205, "y": 0, "w": 6, "h": 15 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 48, "y": 81, "w": 6, "h": 15 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 15).aseprite": {
+    "frame": { "x": 232, "y": 0, "w": 5, "h": 17 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 106, "y": 79, "w": 5, "h": 17 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 14).aseprite": {
+    "frame": { "x": 212, "y": 0, "w": 6, "h": 15 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 117, "y": 81, "w": 6, "h": 15 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 13).aseprite": {
+    "frame": { "x": 244, "y": 0, "w": 4, "h": 18 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 104, "y": 53, "w": 4, "h": 18 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 11).aseprite": {
+    "frame": { "x": 226, "y": 0, "w": 5, "h": 17 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 59, "y": 54, "w": 5, "h": 17 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 10).aseprite": {
+    "frame": { "x": 156, "y": 9, "w": 5, "h": 14 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 35, "y": 57, "w": 5, "h": 14 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 9).aseprite": {
+    "frame": { "x": 184, "y": 0, "w": 7, "h": 13 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 33, "w": 7, "h": 13 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 8).aseprite": {
+    "frame": { "x": 132, "y": 10, "w": 4, "h": 17 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 10, "y": 29, "w": 4, "h": 17 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 7).aseprite": {
+    "frame": { "x": 219, "y": 0, "w": 6, "h": 15 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 31, "w": 6, "h": 15 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 6).aseprite": {
+    "frame": { "x": 198, "y": 16, "w": 16, "h": 2 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 82, "y": 33, "w": 16, "h": 2 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 5).aseprite": {
+    "frame": { "x": 146, "y": 0, "w": 15, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 66, "y": 12, "w": 15, "h": 8 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 4).aseprite": {
+    "frame": { "x": 176, "y": 0, "w": 7, "h": 15 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 97, "y": 5, "w": 7, "h": 15 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 3).aseprite": {
+    "frame": { "x": 146, "y": 9, "w": 4, "h": 18 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 54, "y": 2, "w": 4, "h": 18 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 2).aseprite": {
+    "frame": { "x": 126, "y": 10, "w": 5, "h": 14 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 6, "w": 5, "h": 14 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   },
+   "bookshelf (Layer 1).aseprite": {
+    "frame": { "x": 151, "y": 9, "w": 4, "h": 18 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 16, "y": 2, "w": 4, "h": 18 },
+    "sourceSize": { "w": 125, "h": 125 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.3.12-x64",
+  "image": "bookshelf.png",
+  "format": "RGBA8888",
+  "size": { "w": 248, "h": 125 },
+  "scale": "1"
+ }
+}
