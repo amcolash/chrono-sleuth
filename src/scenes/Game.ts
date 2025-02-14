@@ -251,8 +251,6 @@ export class Game extends Scene {
       }
     }
 
-    console.log(count);
-
     if (globalStats && !this.cullingStats)
       this.cullingStats = globalStats.addPanel(Panel('Culling', '#9ad8e4', '#064b62'));
     this.cullingStats?.update(performance.now() - start);

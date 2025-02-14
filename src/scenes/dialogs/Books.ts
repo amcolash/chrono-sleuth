@@ -1,12 +1,14 @@
-import { GameObjects, Geom } from 'phaser';
+import { FX, GameObjects, Geom } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
 import { Config } from '../../config';
 import { Dialog } from './Dialog';
 
+const GLOW_STRENGTH = 4;
+
 export class Books extends Dialog {
   player: Player;
-  books: GameObjects.Image[] = [];
+  books: { image: GameObjects.Image; glow: FX.Glow; target: number }[] = [];
 
   constructor() {
     super({ key: 'Books', title: 'Books', gamepadVisible: false, hideCloseSuccess: true, skipUI: true });
@@ -14,7 +16,6 @@ export class Books extends Dialog {
 
   preload() {
     this.load.setPath('assets');
-
     this.load.atlas('bookshelf', 'atlases/bookshelf.png', 'atlases/bookshelf.json');
   }
 
@@ -35,38 +36,43 @@ export class Books extends Dialog {
 
       const source = frame[1].data.spriteSourceSize;
       const image = this.add.image(0, 0, 'bookshelf', frame[1].name).setScale(scale);
+      this.container.add(image);
 
       if (i > 1) {
         this.input.enableDebug(image, 0xffff00);
-        image.setInteractive(
-          new Geom.Rectangle(source.x * scale, source.y * scale, source.w * scale, source.h * scale),
-          Geom.Rectangle.Contains
-        );
+
+        const iScale = 1;
+        const rect = new Geom.Rectangle(source.x * iScale, source.y * iScale, source.w * iScale, source.h * iScale);
+        image.setInteractive(rect, Geom.Rectangle.Contains);
 
         const glow = image.postFX.addGlow();
-        // glow.outerStrength = 0;
+        glow.outerStrength = 0;
+
+        this.books.push({ image, glow, target: 0 });
 
         image.on('pointerover', () => {
-          // this.tweens.add({
-          //   targets: glow,
-          //   outerStrength: 4,
-          //   duration: 500,
-          // });
-          image.setTint(0x00ff00);
+          this.books[i - 2].target = GLOW_STRENGTH;
         });
 
         image.on('pointerout', () => {
-          // this.tweens.add({
-          //   targets: glow,
-          //   outerStrength: 0,
-          //   duration: 500,
-          // });
-          image.clearTint();
+          this.books[i - 2].target = 0;
         });
       }
+    }
+  }
 
-      this.container.add(image);
-      this.books.push(image);
+  update(time: number, delta: number) {
+    super.update(time, delta);
+
+    for (let i = 0; i < this.books.length; i++) {
+      const book = this.books[i];
+
+      if (book.glow.outerStrength === book.target) continue;
+
+      if (book.glow.outerStrength < book.target) book.glow.outerStrength += 0.05 * delta;
+      else if (book.glow.outerStrength > book.target) book.glow.outerStrength -= 0.05 * delta;
+
+      book.glow.outerStrength = Phaser.Math.Clamp(book.glow.outerStrength, 0, GLOW_STRENGTH);
     }
   }
 
