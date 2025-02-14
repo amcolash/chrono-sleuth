@@ -232,8 +232,14 @@ export class Game extends Scene {
 
         total++;
 
-        /* @ts-ignore */
-        this.objectBounds.setTo(child.x, child.y, child.width || 1, child.height || 1);
+        this.objectBounds.setTo(
+          child.x,
+          child.y,
+          /* @ts-ignore */
+          child.displayWidth || child.width || 1,
+          /* @ts-ignore */
+          child.displayHeight || child.height || 1
+        );
 
         if (Geom.Intersects.RectangleToRectangle(this.cameraBounds, this.objectBounds)) {
           if (child instanceof Warp) child.updateLocked();
@@ -244,6 +250,8 @@ export class Game extends Scene {
         }
       }
     }
+
+    console.log(count);
 
     if (globalStats && !this.cullingStats)
       this.cullingStats = globalStats.addPanel(Panel('Culling', '#9ad8e4', '#064b62'));
