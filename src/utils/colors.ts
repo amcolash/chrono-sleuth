@@ -55,3 +55,10 @@ export function tweenColor(
     ...config,
   });
 }
+
+export function mixColor(color1: number, color2: number, amount: number): number {
+  const c1 = getColorObject(color1);
+  const c2 = getColorObject(color2);
+
+  return colorToNumber(Display.Color.Interpolate.ColorWithColor(c1, c2, 100, amount / 100));
+}

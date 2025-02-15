@@ -153,7 +153,10 @@ export class Game extends Scene {
       if (Config.debug && duration > 300) new Notification(this, message, undefined, Colors.Warning);
       else if (!Config.debug && duration > 150) new Notification(this, message, undefined, Colors.Warning);
 
-      console.log('Total game boot time', Date.now() - (window as any).bootTime);
+      if ((window as any).bootTime > -1) {
+        console.log('Total game boot time', Date.now() - (window as any).bootTime);
+        (window as any).bootTime = -1;
+      }
     }
   }
 

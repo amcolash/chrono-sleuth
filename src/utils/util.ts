@@ -152,3 +152,9 @@ export function generateCosTable(size: number): number[] {
   }
   return cosTable;
 }
+
+const cosTable = generateCosTable(256);
+export function fastCos(angle: number): number {
+  const index = Math.floor(((angle % (Math.PI * 2)) / (Math.PI * 2)) * cosTable.length);
+  return cosTable[index];
+}
