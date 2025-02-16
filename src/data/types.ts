@@ -35,6 +35,10 @@ export interface LazyInitialize {
   lazyInit(forceInit?: boolean): void;
 }
 
+export interface PostUpdated {
+  postUpdate(): void;
+}
+
 export type DataProps<T> = {
   x: number;
   y: number;

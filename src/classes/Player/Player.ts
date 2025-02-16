@@ -99,11 +99,6 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   }
 
   update(_time: number, delta: number) {
-    if (Config.debug) {
-      this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
-      this.debug.setPosition(this.x, this.y);
-    }
-
     // Update UI
     const promptVisible = (this.interactive && !this.message.visible && this.buttonPrompt?.text?.length > 0) || false;
     if (promptVisible && !this.buttonPrompt) this.buttonPrompt = new ButtonPrompt(this.scene);
@@ -128,7 +123,9 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
       }
     }
 
-    this.light.setPosition(this.x, this.y - 20);
+    if (Config.debug) {
+      this.setTint(this.interactive ? 0xffaaaa : 0xffffff);
+    }
 
     // Update animations
     updateAnimation(this);
@@ -142,6 +139,14 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     }
 
     this.previousPosition.set(this.x, this.y);
+  }
+
+  postUpdate() {
+    this.light.setPosition(this.x, this.y - 20);
+
+    if (Config.debug) {
+      this.debug.setPosition(this.x, this.y);
+    }
   }
 
   checkInteraction(): InteractResult | undefined {
@@ -173,11 +178,16 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     if (keys[Key.Right]) this.setVelocityX(calcSpeed);
 
     if (Config.debug && !this.interactive) {
-      if (keys[Key.Up]) this.setVelocityY(-calcSpeed);
-      if (keys[Key.Down]) this.setVelocityY(calcSpeed);
+      // if (keys[Key.Up]) this.setVelocityY(-calcSpeed);
+      // if (keys[Key.Down]) this.setVelocityY(calcSpeed);
     }
 
     if (keys[Key.Left] && keys[Key.Right]) this.setVelocityX(0);
+  }
+
+  setY(y: number): this {
+    this.setPosition(this.x, y);
+    return this;
   }
 
   setPosition(x?: number, y?: number, z?: number, w?: number): this {

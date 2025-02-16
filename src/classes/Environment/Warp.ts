@@ -284,7 +284,7 @@ export function warpTo(
     (source === WarpType.TownEast || source === WarpType.TownWest || source === WarpType.Town)
   )
     canWarp = false;
-  if (!Config.prod && force) canWarp = true;
+  if ((!Config.prod && force) || Config.debug) canWarp = true;
 
   if (!canWarp) {
     player.message.setDialog(

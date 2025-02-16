@@ -26,7 +26,7 @@ import { Layer } from '../data/layers';
 import { LightData } from '../data/lights';
 import { ParallaxBackgroundData } from '../data/parallaxBackground';
 import { SlopeData } from '../data/slope';
-import { Interactive } from '../data/types';
+import { Interactive, PostUpdated } from '../data/types';
 import { Colors, getColorNumber } from '../utils/colors';
 import { isNighttime, setDaytime } from '../utils/lighting';
 import { load, loadConfig } from '../utils/save';
@@ -47,6 +47,9 @@ export class Game extends Scene {
   saveIcon: GameObjects.Image;
 
   lightData: LightData[] = [];
+
+  // Special objects that need to have update hooks after standard update
+  postUpdated: PostUpdated[] = [];
 
   cullingStats: PanelType;
 
@@ -76,6 +79,7 @@ export class Game extends Scene {
 
     // game objects
     this.player = new Player(this);
+    this.postUpdated.push(this.player);
 
     const backgrounds = this.createBackgrounds();
     const parallaxBackgrounds = this.createParallaxBackgrounds();
@@ -336,10 +340,7 @@ export class Game extends Scene {
     // debug
     if (!Config.prod) {
       this.time.delayedCall(500, () => {
-        const updated = [];
         const debugUI = new DebugUI(this, this.player);
-        updated.push(debugUI);
-
         this.add.group(debugUI, { runChildUpdate: true });
       });
 
@@ -396,6 +397,10 @@ export class Game extends Scene {
 
     this.events.on('resume', () => {
       this.player.keys.resetKeys();
+    });
+
+    this.events.on('postupdate', () => {
+      this.postUpdated.forEach((obj) => obj.postUpdate());
     });
   }
 }

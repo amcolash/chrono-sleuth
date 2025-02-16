@@ -56,6 +56,12 @@ export class DebugUI extends GameObjects.Container {
       .rectangle(0, 0, Config.width, Config.height)
       .setStrokeStyle(4, 0xdd8800)
       .setDepth(Layer.Debug);
+
+    // Lock the debug camera outline to the camera, this prevents stuttering
+    const camera = scene.cameras.main;
+    camera.on('followupdate', () => {
+      this.debugCamera.setPosition(Config.width / 2 + camera.scrollX, Config.height / 2 + camera.scrollY);
+    });
   }
 
   createEventListeners() {
@@ -214,10 +220,5 @@ export class DebugUI extends GameObjects.Container {
     } else {
       this.outline.setSize(0, 0);
     }
-
-    this.debugCamera.setPosition(
-      Config.width / 2 + this.scene.cameras.main.scrollX,
-      Config.height / 2 + this.scene.cameras.main.scrollY
-    );
   }
 }
