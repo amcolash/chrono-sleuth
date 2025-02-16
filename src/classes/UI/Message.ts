@@ -219,7 +219,7 @@ export class Message extends GameObjects.Container {
       const { promise: audioPromise, stop: stopAudio } = playMessageAudio(
         message,
         voice,
-        this.scene.sound.mute ? 0 : this.scene.sound.volume,
+        this.scene.sound.mute || this.dialog?.mute?.includes(this.messageIndex) ? 0 : this.scene.sound.volume,
         this.scene
       );
       const { promise: textPromise, stop: stopAnimation } = animateText(this.text);
@@ -300,8 +300,6 @@ export class Message extends GameObjects.Container {
     this.messageIndex++;
     this.text.setText('');
 
-    if (this.dialog.onMessageShown) this.dialog.onMessageShown(this.player, this.messageIndex, this.target);
-
     if (this.messageIndex >= messages.length) {
       if (this.dialog.onCompleted) {
         this.dialog.onCompleted(this.player, this.target);
@@ -317,6 +315,8 @@ export class Message extends GameObjects.Container {
 
       (this.scene as Game).gamepad?.resetButtons();
     } else {
+      if (this.dialog.onMessageShown) this.dialog.onMessageShown(this.player, this.messageIndex, this.target);
+
       // Wait a brief moment before showing the next message
       this.scene.time.delayedCall(150, () => this.showMessage());
     }

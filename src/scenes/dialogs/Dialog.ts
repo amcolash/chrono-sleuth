@@ -27,8 +27,10 @@ export abstract class Dialog extends Scene {
   container: GameObjects.Container;
   keys: InputManager;
   title: GameObjects.Text;
-  additionalUI: GameObjects.Components.AlphaSingle[];
   closing: boolean;
+
+  /** Used to keep track of additional fading UI that is added via `addTarget` */
+  private additionalUI: GameObjects.Components.AlphaSingle[];
 
   constructor(data: DialogData) {
     super(data.key);
@@ -96,6 +98,8 @@ export abstract class Dialog extends Scene {
   }
 
   fadeIn() {
+    this.tweens.killAll();
+
     this.tweens.add({
       targets: this.getTargets(),
       alpha: { start: 0, to: 1 },
@@ -105,6 +109,8 @@ export abstract class Dialog extends Scene {
   }
 
   fadeOut(onComplete: () => void) {
+    this.tweens.killAll();
+
     this.tweens.add({
       targets: this.getTargets(),
       alpha: { start: 1, to: 0 },

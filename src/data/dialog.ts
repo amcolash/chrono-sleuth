@@ -33,6 +33,7 @@ export interface Dialog<T> {
 
   messages: string[] | ((player: Player) => string[]);
   options?: string[] | ((player: Player) => string[]);
+  mute?: number[];
 
   onCompleted?: (player: Player, target?: T) => void;
   onMessageShown?(player: Player, index: number, target?: T): void;
@@ -321,6 +322,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       conditions: {
         hasItem: ItemType.Gear2,
       },
+      mute: [1],
       onMessageShown: (player, index) => {
         if (index === 1) player.scene.sound.playAudioSprite('sfx', 'clunk');
       },
@@ -345,6 +347,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       conditions: {
         hasItem: ItemType.Gear1,
       },
+      mute: [2],
       onMessageShown: (player, index) => {
         if (index === 2) player.scene.sound.playAudioSprite('sfx', 'clunk');
       },
@@ -376,6 +379,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       conditions: {
         hasItem: ItemType.Key,
       },
+      mute: [2],
       onMessageShown: (player, index) => {
         if (index === 2) player.scene.sound.playAudioSprite('sfx', 'door');
       },
@@ -623,6 +627,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
         'Wait a moment, something is behind this picture...',
         '<b><i>[CREAK]</i></b>',
       ],
+      mute: [2],
       onMessageShown: (player, index) => {
         if (index === 2) player.scene.sound.playAudioSprite('sfx', 'chest');
       },
