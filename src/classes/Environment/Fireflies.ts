@@ -25,6 +25,7 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
   centers: PhaserMath.Vector2[] = [];
   bounds: number[] = [1000, 400];
   biases: number[][] = [];
+  time: number = 0;
 
   initialized: boolean = false;
   debug: GameObjects.Graphics;
@@ -95,7 +96,7 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
     this.debug.strokeRect(0, 0, this.bounds[0], this.bounds[1]);
   }
 
-  update(time: number, _delta: number) {
+  update(_time: number, delta: number) {
     this.lazyInit();
 
     const near = Math.abs(this.scene.player.x - this.center.x) <= this.bounds[0];
@@ -106,8 +107,11 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
       return;
     }
 
+    // Use internal time to prevent snapping when resuming the Game scene
+    this.time += delta;
+
     const speed = 0.025;
-    const t = (time / 1000) * speed;
+    const t = (this.time / 1000) * speed;
     const cos = Math.cos(t);
     const sin = Math.sin(t);
 
