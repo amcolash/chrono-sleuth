@@ -3,6 +3,7 @@ import { FX, GameObjects, Geom } from 'phaser';
 import { Player } from '../../classes/Player/Player';
 import { Message } from '../../classes/UI/Message';
 import { Config } from '../../config';
+import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { Dialog } from './Dialog';
 
@@ -16,8 +17,8 @@ const bookNames = [
   'Surrender to the Starlit Realm',
   'The Bard’s Forbidden Melody',
   'Bound by Fate and Fire',
-  'Secrets of the Fifth Element',
   'The Creation of Time',
+  'Secrets of the Fifth Element',
   'The Enchanted Knight’s Oath',
   'A Potion for Yesterday',
   'Tome of the Lost Hours',
@@ -50,6 +51,10 @@ export class Books extends Dialog {
   answer: number[];
   hasNote: boolean;
 
+  bookshelf: GameObjects.Image;
+  door: GameObjects.Image;
+  debug: GameObjects.GameObject[];
+
   constructor() {
     super({ key: 'Books', title: 'Books', gamepadVisible: false, hideCloseSuccess: true, skipUI: true });
   }
@@ -70,6 +75,7 @@ export class Books extends Dialog {
     this.books = [];
     this.message = new Message(this);
     this.answer = [];
+    this.debug = [];
 
     this.container.add(this.add.rectangle(0, 0, Config.width, Config.height, 0));
 
@@ -79,7 +85,7 @@ export class Books extends Dialog {
     const text = this.add
       .text(
         70,
-        60,
+        50,
         'I am not quite sure where to start. Maybe something in the library will help me find the answers I seek.',
         {
           fontFamily: 'notepen',
@@ -88,15 +94,15 @@ export class Books extends Dialog {
           fontStyle: 'bold',
         }
       )
-      .setWordWrapWidth(270);
+      .setWordWrapWidth(260);
     this.addTarget(text);
 
     if (this.hasNote) {
       text.setText(
         [
-          'Time begins with "Creation" and ends in "Eternity".',
-          'A blue tome, near the center, waits before the final turn.',
           'A spiral marks the heart of the sequence.',
+          'Time begins with "Creation" and ends in "Eternity".',
+          'A blue tome, near the center, waits before the final touch.',
         ].join('\n\n')
       );
 
@@ -122,11 +128,11 @@ export class Books extends Dialog {
     const scale = 4;
     const xOffset = 150;
 
-    const bookshelf = this.add.image(xOffset, 0, 'bookshelf', 'Bookshelf-0').setScale(scale).setTint(0x666666);
-    this.container.add(bookshelf);
+    this.bookshelf = this.add.image(xOffset, 0, 'bookshelf', 'Bookshelf-0').setScale(scale).setTint(0x666666);
+    this.container.add(this.bookshelf);
 
-    const door = this.add.image(xOffset, 0, 'bookshelf', 'Door-0').setScale(scale).setTint(0x666666);
-    this.container.add(door);
+    this.door = this.add.image(xOffset, 0, 'bookshelf', 'Door-0').setScale(scale).setTint(0x666666);
+    this.container.add(this.door);
 
     const books = frames.filter((frame) => frame[1].name.startsWith('Book_'));
     for (let i = 0; i < books.length; i++) {
@@ -145,7 +151,7 @@ export class Books extends Dialog {
       );
       image.setInteractive({ hitArea: rect, hitAreaCallback: Geom.Rectangle.Contains, cursor: 'pointer' });
 
-      const glow = image.preFX?.addGlow(0x00ccee, 0);
+      const glow = image.preFX?.addGlow(getColorNumber(Colors.Tan), 0);
       if (glow) {
         this.books.push({ image, glow, strength: 0, name: bookNames[i] });
 
@@ -174,7 +180,7 @@ export class Books extends Dialog {
                 ? () => {
                     this.answer.push(i);
                     this.books[i].strength = GLOW_STRENGTH;
-                    this.books[i].glow.color = 0x00dd55;
+                    this.books[i].glow.color = getColorNumber(Colors.Success);
                     if (this.answer.length === bookOrder.length) {
                       this.close(true);
                     }
@@ -182,7 +188,7 @@ export class Books extends Dialog {
                 : () => {
                     this.answer = [];
                     this.books.forEach((book) => {
-                      book.glow.color = 0x00ccee;
+                      book.glow.color = getColorNumber(Colors.Tan);
                       book.strength = 0;
                     });
                   },
@@ -193,15 +199,17 @@ export class Books extends Dialog {
         });
 
         if (!Config.prod) {
-          if (bookOrder.includes(i))
-            this.container.add(
-              this.add.text(
-                rect.x * 4 - xOffset + 40,
-                rect.y * 4 - Config.height / 2 + 40,
-                (bookOrder.indexOf(i) + 1).toString(),
-                fontStyle
-              )
+          if (bookOrder.includes(i)) {
+            const debug = this.add.text(
+              rect.x * 4 - xOffset + 40,
+              rect.y * 4 - Config.height / 2 + 40,
+              (bookOrder.indexOf(i) + 1).toString(),
+              fontStyle
             );
+
+            this.container.add(debug);
+            this.debug.push(debug);
+          }
         }
       }
     }
@@ -234,22 +242,50 @@ export class Books extends Dialog {
   handleSuccess(): void {}
 
   close(success: boolean): void {
+    this.books.forEach((book) => {
+      book.strength = 0;
+      book.image.destroy();
+    });
+    this.debug.forEach((debug) => debug.destroy());
+
+    this.bookshelf.setTint(getColorNumber(Colors.White));
+    this.door.setTint(getColorNumber(Colors.White));
+
     if (!success) {
       super.close(success);
       return;
     }
 
-    this.sound.playAudioSprite('sfx', 'safe_open');
-
-    this.time.delayedCall(700, () => {
-      this.message.setDialog(
+    const delay = 400;
+    this.add
+      .timeline([
         {
-          messages: ['It looks like there is a secret room behind the bookshelf!'],
-          onCompleted: () => super.close(true),
+          at: delay + 0,
+          run: () => {
+            this.sound.playAudioSprite('sfx', 'safe_open');
+          },
         },
-        undefined,
-        'player_portrait'
-      );
-    });
+        {
+          at: delay + 250,
+          run: () => this.door.setFrame('Door-1'),
+        },
+        {
+          at: delay + 500,
+          run: () => this.door.setFrame('Door-2'),
+        },
+        {
+          at: delay + 1400,
+          run: () =>
+            this.message.setDialog(
+              {
+                messages: ['It looks like there is a secret room behind the bookshelf!'],
+                onCompleted: () => super.close(true),
+              },
+              undefined,
+              'player_portrait'
+            ),
+        },
+      ])
+      .play();
   }
 }
