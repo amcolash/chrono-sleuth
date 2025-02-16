@@ -48,6 +48,7 @@ export class Books extends Dialog {
   books: { image: GameObjects.Image; glow: FX.Glow; strength: number; name: string }[];
   message: Message;
   answer: number[];
+  hasNote: boolean;
 
   constructor() {
     super({ key: 'Books', title: 'Books', gamepadVisible: false, hideCloseSuccess: true, skipUI: true });
@@ -60,6 +61,7 @@ export class Books extends Dialog {
 
   init(data: { player: Player }) {
     this.player = data.player;
+    this.hasNote = true;
   }
 
   create() {
@@ -71,96 +73,9 @@ export class Books extends Dialog {
 
     this.container.add(this.add.rectangle(0, 0, Config.width, Config.height, 0));
 
-    const texture = this.textures.get('bookshelf');
-    const frames = Object.entries(texture.frames);
-    const scale = 4;
-    const xOffset = 150;
-
-    for (let i = 1; i < frames.length; i++) {
-      const frame = frames[i];
-
-      const image = this.add.image(xOffset, 0, 'bookshelf', frame[1].name).setScale(scale);
-      this.container.add(image);
-
-      if (i === 1) image.setTint(0x666666);
-
-      if (i > 1) {
-        const index = i - 2;
-        const padding = 2;
-
-        const source = frame[1].data.spriteSourceSize;
-        const rect = new Geom.Rectangle(
-          source.x - padding,
-          source.y - padding,
-          source.w + padding * 2,
-          source.h + padding * 2
-        );
-        image.setInteractive({ hitArea: rect, hitAreaCallback: Geom.Rectangle.Contains, cursor: 'pointer' });
-
-        const glow = image.preFX?.addGlow(0x00ccee, 0);
-        if (glow) {
-          this.books.push({ image, glow, strength: 0, name: bookNames[index] });
-
-          image.on('pointerover', () => {
-            this.books[index].strength = GLOW_STRENGTH;
-          });
-
-          image.on('pointerout', () => {
-            if (!this.answer.includes(index)) this.books[index].strength = 0;
-          });
-
-          image.on('pointerdown', () => {
-            const correct = bookOrder[this.answer.length] === index;
-
-            const messages = [this.books[index].name];
-            if (correct) messages.push('<b><i>[CLUNK]</i></b> The bookshelf shifts slightly.');
-
-            this.message.setDialog(
-              {
-                messages,
-                mute: correct ? [1] : undefined,
-                onMessageShown: (_player, index, _target) => {
-                  if (index === 1) this.sound.playAudioSprite('sfx', 'safe_click');
-                },
-                onCompleted: correct
-                  ? () => {
-                      this.answer.push(index);
-                      this.books[index].strength = GLOW_STRENGTH;
-                      this.books[index].glow.color = 0x00dd55;
-                      if (this.answer.length === bookOrder.length) {
-                        this.close(true);
-                      }
-                    }
-                  : () => {
-                      this.answer = [];
-                      this.books.forEach((book) => {
-                        book.glow.color = 0x00ccee;
-                        book.strength = 0;
-                      });
-                    },
-              },
-              undefined,
-              'player_portrait'
-            );
-          });
-
-          if (!Config.prod) {
-            if (bookOrder.includes(index))
-              this.container.add(
-                this.add.text(
-                  rect.x * 4 - xOffset + 40,
-                  rect.y * 4 - Config.height / 2 + 40,
-                  (bookOrder.indexOf(index) + 1).toString(),
-                  fontStyle
-                )
-              );
-          }
-        }
-      }
-    }
+    this.createBookshelf();
 
     this.addTarget(this.add.image(20, 20, 'props', 'paper').setOrigin(0).setScale(2.25, 1.6));
-
     const text = this.add
       .text(
         70,
@@ -176,7 +91,7 @@ export class Books extends Dialog {
       .setWordWrapWidth(270);
     this.addTarget(text);
 
-    if (true) {
+    if (this.hasNote) {
       text.setText(
         [
           'Time begins with "Creation" and ends in "Eternity".',
@@ -184,9 +99,112 @@ export class Books extends Dialog {
           'A spiral marks the heart of the sequence.',
         ].join('\n\n')
       );
+
+      this.time.delayedCall(200, () => {
+        this.message.setDialog(
+          {
+            messages: [
+              'This note seems to be a clue of some sort. Maybe it has to do with some sort of ordering for the books on the shelf.',
+            ],
+          },
+          undefined,
+          'player_portrait'
+        );
+      });
     }
 
     this.fadeIn();
+  }
+
+  createBookshelf() {
+    const texture = this.textures.get('bookshelf');
+    const frames = Object.entries(texture.frames);
+    const scale = 4;
+    const xOffset = 150;
+
+    const bookshelf = this.add.image(xOffset, 0, 'bookshelf', 'Bookshelf-0').setScale(scale).setTint(0x666666);
+    this.container.add(bookshelf);
+
+    const door = this.add.image(xOffset, 0, 'bookshelf', 'Door-0').setScale(scale).setTint(0x666666);
+    this.container.add(door);
+
+    const books = frames.filter((frame) => frame[1].name.startsWith('Book_'));
+    for (let i = 0; i < books.length; i++) {
+      const frame = books[i];
+
+      const image = this.add.image(xOffset, 0, 'bookshelf', frame[1].name).setScale(scale);
+      this.container.add(image);
+      const padding = 2;
+
+      const source = frame[1].data.spriteSourceSize;
+      const rect = new Geom.Rectangle(
+        source.x - padding,
+        source.y - padding,
+        source.w + padding * 2,
+        source.h + padding * 2
+      );
+      image.setInteractive({ hitArea: rect, hitAreaCallback: Geom.Rectangle.Contains, cursor: 'pointer' });
+
+      const glow = image.preFX?.addGlow(0x00ccee, 0);
+      if (glow) {
+        this.books.push({ image, glow, strength: 0, name: bookNames[i] });
+
+        image.on('pointerover', () => {
+          this.books[i].strength = GLOW_STRENGTH;
+        });
+
+        image.on('pointerout', () => {
+          if (!this.answer.includes(i)) this.books[i].strength = 0;
+        });
+
+        image.on('pointerdown', () => {
+          const correct = bookOrder[this.answer.length] === i;
+
+          const messages = [this.books[i].name];
+          if (correct) messages.push('<b><i>[CLUNK]</i></b> The bookshelf shifts slightly.');
+
+          this.message.setDialog(
+            {
+              messages,
+              mute: correct ? [1] : undefined,
+              onMessageShown: (_player, index, _target) => {
+                if (index === 1) this.sound.playAudioSprite('sfx', 'safe_click');
+              },
+              onCompleted: correct
+                ? () => {
+                    this.answer.push(i);
+                    this.books[i].strength = GLOW_STRENGTH;
+                    this.books[i].glow.color = 0x00dd55;
+                    if (this.answer.length === bookOrder.length) {
+                      this.close(true);
+                    }
+                  }
+                : () => {
+                    this.answer = [];
+                    this.books.forEach((book) => {
+                      book.glow.color = 0x00ccee;
+                      book.strength = 0;
+                    });
+                  },
+            },
+            undefined,
+            'player_portrait'
+          );
+        });
+
+        if (!Config.prod) {
+          if (bookOrder.includes(i))
+            this.container.add(
+              this.add.text(
+                rect.x * 4 - xOffset + 40,
+                rect.y * 4 - Config.height / 2 + 40,
+                (bookOrder.indexOf(i) + 1).toString(),
+                fontStyle
+              )
+            );
+        }
+      }
+    }
   }
 
   update(time: number, delta: number) {
