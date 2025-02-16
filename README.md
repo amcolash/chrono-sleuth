@@ -25,6 +25,7 @@ Bookshelf image by Ovidiu Timplaru on vecteezy: https://www.vecteezy.com/vector-
 
 - m6x11: https://managore.itch.io/m6x11
 - Bagel Fat One: https://fonts.google.com/specimen/Bagel+Fat+One
+- Notepen: https://fontenddev.com/fonts/notepen/
 
 ### SFX
 

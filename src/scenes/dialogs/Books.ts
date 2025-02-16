@@ -1,15 +1,53 @@
 import { FX, GameObjects, Geom } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
+import { Message } from '../../classes/UI/Message';
 import { Config } from '../../config';
-import { fastCos } from '../../utils/util';
+import { fontStyle } from '../../utils/fonts';
 import { Dialog } from './Dialog';
 
 const GLOW_STRENGTH = 6;
 
+const bookNames = [
+  'Chronomancer’s Dilemma',
+  'The Forgotten Aeon',
+  'Taming the Wild Griffin',
+  'Transmutation of the Soul',
+  'Surrender to the Starlit Realm',
+  'The Bard’s Forbidden Melody',
+  'Bound by Fate and Fire',
+  'Secrets of the Fifth Element',
+  'The Creation of Time',
+  'The Enchanted Knight’s Oath',
+  'A Potion for Yesterday',
+  'Tome of the Lost Hours',
+  'The Midnight Convergence',
+  'The Rogue’s Tempting Treasure',
+  'The Eternal End',
+  'Whispers of the Moonlit Grove',
+  'The Sorcerer’s Gentle Caress',
+  'The Elixir That Binds',
+  'The Philosopher’s Vice',
+  'The Silver Circle’s Curse',
+  'A Mage’s Soft Touch',
+  'The Alchemist’s Second Life',
+  'The Thaumaturge’s Gambit',
+  'Through the Alchemist’s Looking Glass',
+  'Legends of the Velvet Throne',
+];
+
+const bookOrder = [
+  bookNames.indexOf('The Creation of Time'),
+  bookNames.indexOf('Chronomancer’s Dilemma'),
+  bookNames.indexOf('Transmutation of the Soul'),
+  bookNames.indexOf('The Eternal End'),
+];
+
 export class Books extends Dialog {
   player: Player;
-  books: { image: GameObjects.Image; glow: FX.Glow; strength: number; color: number }[];
+  books: { image: GameObjects.Image; glow: FX.Glow; strength: number; name: string }[];
+  message: Message;
+  answer: number[];
 
   constructor() {
     super({ key: 'Books', title: 'Books', gamepadVisible: false, hideCloseSuccess: true, skipUI: true });
@@ -28,49 +66,127 @@ export class Books extends Dialog {
     super.create();
 
     this.books = [];
+    this.message = new Message(this);
+    this.answer = [];
 
     this.container.add(this.add.rectangle(0, 0, Config.width, Config.height, 0));
 
     const texture = this.textures.get('bookshelf');
     const frames = Object.entries(texture.frames);
     const scale = 4;
+    const xOffset = 150;
 
     for (let i = 1; i < frames.length; i++) {
       const frame = frames[i];
 
-      const source = frame[1].data.spriteSourceSize;
-      const image = this.add.image(0, 0, 'bookshelf', frame[1].name).setScale(scale);
+      const image = this.add.image(xOffset, 0, 'bookshelf', frame[1].name).setScale(scale);
       this.container.add(image);
 
-      if (i > 1) {
-        const iScale = 1;
-        const padding = 2;
-        const rect = new Geom.Rectangle(
-          source.x * iScale - padding,
-          source.y * iScale - padding,
-          source.w * iScale + padding * 2,
-          source.h * iScale + padding * 2
-        );
-        image.setInteractive(rect, Geom.Rectangle.Contains);
+      if (i === 1) image.setTint(0x666666);
 
-        const glow = image.preFX?.addGlow(0xcc0066, 0);
+      if (i > 1) {
+        const index = i - 2;
+        const padding = 2;
+
+        const source = frame[1].data.spriteSourceSize;
+        const rect = new Geom.Rectangle(
+          source.x - padding,
+          source.y - padding,
+          source.w + padding * 2,
+          source.h + padding * 2
+        );
+        image.setInteractive({ hitArea: rect, hitAreaCallback: Geom.Rectangle.Contains, cursor: 'pointer' });
+
+        const glow = image.preFX?.addGlow(0x00ccee, 0);
         if (glow) {
-          this.books.push({ image, glow, strength: 0, color: 0xcc0066 });
+          this.books.push({ image, glow, strength: 0, name: bookNames[index] });
 
           image.on('pointerover', () => {
-            const book = this.books[i - 2];
-            book.strength = GLOW_STRENGTH;
-            book.color = 0x00ccee;
+            this.books[index].strength = GLOW_STRENGTH;
           });
 
           image.on('pointerout', () => {
-            const book = this.books[i - 2];
-            book.strength = 0;
-            book.color = 0xcc0066;
+            if (!this.answer.includes(index)) this.books[index].strength = 0;
           });
+
+          image.on('pointerdown', () => {
+            const correct = bookOrder[this.answer.length] === index;
+
+            const messages = [this.books[index].name];
+            if (correct) messages.push('<b><i>[CLUNK]</i></b> The bookshelf shifts slightly.');
+
+            this.message.setDialog(
+              {
+                messages,
+                mute: correct ? [1] : undefined,
+                onMessageShown: (_player, index, _target) => {
+                  if (index === 1) this.sound.playAudioSprite('sfx', 'safe_click');
+                },
+                onCompleted: correct
+                  ? () => {
+                      this.answer.push(index);
+                      this.books[index].strength = GLOW_STRENGTH;
+                      this.books[index].glow.color = 0x00dd55;
+                      if (this.answer.length === bookOrder.length) {
+                        this.close(true);
+                      }
+                    }
+                  : () => {
+                      this.answer = [];
+                      this.books.forEach((book) => {
+                        book.glow.color = 0x00ccee;
+                        book.strength = 0;
+                      });
+                    },
+              },
+              undefined,
+              'player_portrait'
+            );
+          });
+
+          if (!Config.prod) {
+            if (bookOrder.includes(index))
+              this.container.add(
+                this.add.text(
+                  rect.x * 4 - xOffset + 40,
+                  rect.y * 4 - Config.height / 2 + 40,
+                  (bookOrder.indexOf(index) + 1).toString(),
+                  fontStyle
+                )
+              );
+          }
         }
       }
     }
+
+    this.addTarget(this.add.image(20, 20, 'props', 'paper').setOrigin(0).setScale(2.25, 1.6));
+
+    const text = this.add
+      .text(
+        70,
+        60,
+        'I am not quite sure where to start. Maybe something in the library will help me find the answers I seek.',
+        {
+          fontFamily: 'notepen',
+          color: '#222',
+          fontSize: 36,
+          fontStyle: 'bold',
+        }
+      )
+      .setWordWrapWidth(270);
+    this.addTarget(text);
+
+    if (true) {
+      text.setText(
+        [
+          'Time begins with "Creation" and ends in "Eternity".',
+          'A blue tome, near the center, waits before the final turn.',
+          'A spiral marks the heart of the sequence.',
+        ].join('\n\n')
+      );
+    }
+
+    this.fadeIn();
   }
 
   update(time: number, delta: number) {
@@ -78,21 +194,13 @@ export class Books extends Dialog {
     this.updateBooks(time, delta);
   }
 
-  updateBooks(time: number, delta: number) {
+  updateBooks(_time: number, delta: number) {
     const EPSILON = 0.001;
 
     const STRENGTH_SPEED = 0.015;
-    const COLOR_SPEED = 0.5;
-    const AMBIENT_SPEED = 1.75;
 
     for (let i = 0; i < this.books.length; i++) {
       const book = this.books[i];
-
-      if (book.strength === 0 && Math.random() > 0.999) book.strength += 0.0001;
-
-      if (book.strength > 0 && book.strength !== GLOW_STRENGTH) {
-        book.strength = ((fastCos((time / 1000 + i) * AMBIENT_SPEED) + 1) / 2) * 7;
-      }
 
       // Update glow strength
       const strengthDiff = book.strength - book.glow.outerStrength;
@@ -102,33 +210,28 @@ export class Books extends Dialog {
           Math.abs(step) > Math.abs(strengthDiff) ? book.strength : book.glow.outerStrength + step;
         book.glow.outerStrength = Phaser.Math.Clamp(book.glow.outerStrength, 0, GLOW_STRENGTH);
       }
-
-      // Extract RGB values manually (no allocations)
-      const currentColor = book.glow.color;
-      const targetColor = book.color;
-
-      const currentR = (currentColor >> 16) & 0xff;
-      const currentG = (currentColor >> 8) & 0xff;
-      const currentB = currentColor & 0xff;
-
-      const targetR = (targetColor >> 16) & 0xff;
-      const targetG = (targetColor >> 8) & 0xff;
-      const targetB = targetColor & 0xff;
-
-      const colorDiffR = targetR - currentR;
-      const colorDiffG = targetG - currentG;
-      const colorDiffB = targetB - currentB;
-
-      if (Math.abs(colorDiffR) > EPSILON || Math.abs(colorDiffG) > EPSILON || Math.abs(colorDiffB) > EPSILON) {
-        const step = COLOR_SPEED * delta; // Fixed step size
-        const newR = Math.abs(colorDiffR) > step ? currentR + Math.sign(colorDiffR) * step : targetR;
-        const newG = Math.abs(colorDiffG) > step ? currentG + Math.sign(colorDiffG) * step : targetG;
-        const newB = Math.abs(colorDiffB) > step ? currentB + Math.sign(colorDiffB) * step : targetB;
-
-        book.glow.color = (newR << 16) | (newG << 8) | newB; // Pack RGB back into integer
-      }
     }
   }
 
   handleSuccess(): void {}
+
+  close(success: boolean): void {
+    if (!success) {
+      super.close(success);
+      return;
+    }
+
+    this.sound.playAudioSprite('sfx', 'safe_open');
+
+    this.time.delayedCall(700, () => {
+      this.message.setDialog(
+        {
+          messages: ['It looks like there is a secret room behind the bookshelf!'],
+          onCompleted: () => super.close(true),
+        },
+        undefined,
+        'player_portrait'
+      );
+    });
+  }
 }

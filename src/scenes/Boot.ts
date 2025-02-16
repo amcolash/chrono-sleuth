@@ -39,6 +39,7 @@ export class Boot extends Scene {
     this.load.setPath('assets');
 
     this.load.font('m6x11', 'fonts/m6x11.ttf', 'truetype');
+    this.load.font('notepen', 'fonts/Notepen.ttf', 'truetype');
     this.load.bitmapFont('m6x11-24', 'fonts/m6x11-24.png', 'fonts/m6x11-24.xml');
 
     // icons
