@@ -32,6 +32,7 @@ export class Message extends GameObjects.Container {
 
   player: Player;
   target?: any;
+  background: GameObjects.Rectangle;
   npcName: GameObjects.Text;
   text: BBCodeText;
   portrait: GameObjects.Image;
@@ -104,6 +105,15 @@ export class Message extends GameObjects.Container {
     this.text.parser.setDelimiters('<', '>');
 
     this.portrait = this.scene.add.image(padding, padding, 'characters', '').setOrigin(0).setScale(1.5);
+    this.background = this.scene.add
+      .rectangle(0, 0, Config.width, Config.height, 0, 0)
+      .setOrigin(0)
+      .setDepth(Layer.Ui)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', () => {
+        if (!this.options) this.updateDialog();
+      })
+      .setVisible(false);
 
     const box = this.scene.add
       .rectangle(0, 0, Config.width - padding * 2, boxHeight, getColorNumber(Colors.Black), 0.9)
@@ -143,6 +153,7 @@ export class Message extends GameObjects.Container {
     }
 
     this.setVisible(true);
+    this.background.setVisible(true);
     this.scene.tweens.add({
       targets: this,
       alpha: dialog !== undefined ? 1 : 0,
@@ -312,6 +323,8 @@ export class Message extends GameObjects.Container {
         duration: fadeDuration,
         onComplete: () => this.setVisible(false),
       });
+
+      this.background.setVisible(false);
 
       (this.scene as Game).gamepad?.resetButtons();
     } else {

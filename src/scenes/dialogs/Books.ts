@@ -200,12 +200,14 @@ export class Books extends Dialog {
 
         if (!Config.prod) {
           if (bookOrder.includes(i)) {
-            const debug = this.add.text(
-              rect.x * 4 - xOffset + 40,
-              rect.y * 4 - Config.height / 2 + 40,
-              (bookOrder.indexOf(i) + 1).toString(),
-              fontStyle
-            );
+            const debug = this.add
+              .text(
+                rect.x * 4 - xOffset + 40,
+                rect.y * 4 - Config.height / 2 + 40,
+                (bookOrder.indexOf(i) + 1).toString(),
+                fontStyle
+              )
+              .setAlpha(0.5);
 
             this.container.add(debug);
             this.debug.push(debug);
@@ -221,6 +223,8 @@ export class Books extends Dialog {
   }
 
   updateBooks(_time: number, delta: number) {
+    if (this.message.visible) return;
+
     const EPSILON = 0.001;
 
     const STRENGTH_SPEED = 0.015;
