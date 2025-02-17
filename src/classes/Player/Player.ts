@@ -145,7 +145,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     this.light.setPosition(this.x, this.y - 20);
 
     if (Config.debug) {
-      this.debug.setPosition(this.x, this.y);
+      this.debug?.setPosition(this.x, this.y);
     }
   }
 

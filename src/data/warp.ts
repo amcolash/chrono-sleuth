@@ -112,7 +112,7 @@ export const WarpData: Record<WarpType, Data> = {
 
   [WarpType.ClockStairs]: {
     x: 910,
-    y: -1400,
+    y: -1418,
     range: 20,
     key: Key.Right,
     direction: Key.Up,

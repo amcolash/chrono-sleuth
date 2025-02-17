@@ -145,25 +145,6 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
       this.setInteractive({ draggable: true });
       this.graphics = this.scene.add.graphics();
 
-      // const target = WarpData[warpTo];
-
-      // const color = warpType % 2 === 0 ? 0xffff00 : 0x00ffff;
-      // graphics.fillStyle(color);
-      // graphics.lineStyle(3, color);
-
-      // let offsetX = -this.displayWidth / 2;
-      // let offsetY = -this.displayHeight / 2;
-
-      // if (target.x > x) offsetX *= -1;
-      // if (target.y > y) offsetY *= -1;
-
-      // const line = new Geom.Line(x + offsetX, y + offsetY, target.x + offsetX, target.y + offsetY);
-      // graphics.strokeLineShape(line);
-      // graphics.fillRect(x + offsetX - 7, y + offsetY - 7, 14, 14);
-      // graphics.fillRect(x - this.body?.width / 2 - 7, y - this.body?.height / 2 - 7, 14, 14);
-
-      // if (warpType === WarpType.Forest) console.log(this.body?.left, this.body.top);
-
       if (this.hasExtendedBounds()) {
         this.graphics.lineStyle(2, 0xff00ff).setPosition(this.x, this.y);
 

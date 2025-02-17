@@ -13,9 +13,12 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
   width: number;
   height: number;
   flipped: boolean;
-  upwards: boolean;
   graphics: GameObjects.Graphics;
   initialized: boolean = false;
+
+  /** If the slope has 3 directions, pass normally, go upwards and go downwards. Normally, a
+   * slope can only be moved along. This allows moving left/right w/o needing to move on the slope. */
+  upwards: boolean;
 
   constructor(
     scene: Game,
@@ -80,6 +83,8 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
     const player = this.scene.player;
     const keys = player.keys.keys;
 
+    const slopeSpeed = 0.75 * speed;
+
     if (
       this.body &&
       this.scene.physics.world.intersects(this.body as Physics.Arcade.Body, player.body as Physics.Arcade.Body)
@@ -93,9 +98,12 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
       const offset = (1 - player.originY) * player.displayHeight;
       const newY = bottom - this.height * horizontalPercent - offset;
 
+      if (keys[Key.Right]) player.setVelocityX(slopeSpeed);
+      if (keys[Key.Left]) player.setVelocityX(-slopeSpeed);
+
       // if up key pressed and player is close to the slope, move up
       if (this.upwards && keys[Key.Up] && Math.abs(player.y - newY) < 70) {
-        player.setVelocityX(this.flipped ? -speed : speed);
+        player.setVelocityX(this.flipped ? -slopeSpeed : slopeSpeed);
         player.setY(newY);
         return;
       }

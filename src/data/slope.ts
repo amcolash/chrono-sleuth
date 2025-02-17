@@ -27,5 +27,5 @@ export const SlopeData: Data[] = [
   { x: -2570, y: 1728, width: 200, height: 40, flip: true },
 
   // Inn
-  { x: 1980, y: -1492, width: 360, height: 350, upwards: true },
+  { x: 1960, y: -1492, width: 420, height: 350, upwards: true },
 ];
