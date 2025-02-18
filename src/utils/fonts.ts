@@ -7,3 +7,10 @@ export const fontStyle: Types.GameObjects.Text.TextStyle = {
   fontSize: 24,
   color: `#${Colors.White}`,
 };
+
+export const noteStyle: Types.GameObjects.Text.TextStyle = {
+  fontFamily: 'notepen, sans-serif',
+  color: `#${Colors.Note}`,
+  fontSize: 42,
+  fontStyle: 'bold',
+};

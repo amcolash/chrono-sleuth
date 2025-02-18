@@ -4,7 +4,7 @@ import { Player } from '../../classes/Player/Player';
 import { Message } from '../../classes/UI/Message';
 import { Config } from '../../config';
 import { Colors, getColorNumber } from '../../utils/colors';
-import { fontStyle } from '../../utils/fonts';
+import { fontStyle, noteStyle } from '../../utils/fonts';
 import { Dialog } from './Dialog';
 
 const GLOW_STRENGTH = 6;
@@ -88,10 +88,8 @@ export class Books extends Dialog {
         50,
         'I am not quite sure where to start. Maybe something in the library will help me find the answers I seek.',
         {
-          fontFamily: 'notepen',
-          color: '#222',
+          ...noteStyle,
           fontSize: 36,
-          fontStyle: 'bold',
         }
       )
       .setWordWrapWidth(260);

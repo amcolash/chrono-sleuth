@@ -2,6 +2,8 @@ import { Player } from '../../classes/Player/Player';
 import { TextBox } from '../../classes/UI/TextBox';
 import { Config } from '../../config';
 import { JournalData } from '../../data/journal';
+import { Colors, getColorNumber } from '../../utils/colors';
+import { noteStyle } from '../../utils/fonts';
 import { Dialog } from './Dialog';
 
 export class JournalDialog extends Dialog {
@@ -24,10 +26,8 @@ export class JournalDialog extends Dialog {
 
     const text = this.player.journal.journal.map((entry) => `${JournalData[entry].description}\n`).reverse();
     const textBox = new TextBox(this, Config.width * 0.08, Config.height * 0.2, text, {
-      fontFamily: 'notepen',
-      color: '#222',
-      fontSize: 42,
-      fontStyle: 'bold',
+      ...noteStyle,
+      scrollbarColor: getColorNumber(Colors.Note),
     });
     textBox.setBoxSize(Config.width * 0.84, Config.height * 0.62);
 

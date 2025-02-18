@@ -21,7 +21,7 @@ export class TextBox extends GameObjects.Container {
     x: number,
     y: number,
     text: string | string[],
-    style?: Types.GameObjects.Text.TextStyle,
+    style?: Types.GameObjects.Text.TextStyle & { scrollbarColor?: number; scrollbarWidth?: number },
     handleClick?: (line: number) => void
   ) {
     super(scene, x, y);
@@ -33,7 +33,7 @@ export class TextBox extends GameObjects.Container {
     // Create text object
     this.textObject = new GameObjects.Text(scene, 0, 0, text, { ...fontStyle, padding: { x: 10, y: 10 }, ...style });
     this.textObject.setOrigin(0).setScrollFactor(0);
-    this.textObject.setInteractive({ useHandCursor: true });
+    this.textObject.setInteractive({ cursor: 'ns-resize' });
     this.add(this.textObject);
 
     // Set up scroll events
@@ -66,7 +66,15 @@ export class TextBox extends GameObjects.Container {
     this.add(this.maskGraphics);
 
     // Create scrollbar
-    this.scrollbar = scene.add.rectangle(0, 0, scrollbarWidth, 0, getColorNumber(Colors.Night)).setScrollFactor(0);
+    this.scrollbar = scene.add
+      .rectangle(
+        0,
+        0,
+        style?.scrollbarWidth || scrollbarWidth,
+        0,
+        style?.scrollbarColor || getColorNumber(Colors.Night)
+      )
+      .setScrollFactor(0);
     this.add(this.scrollbar);
   }
 
@@ -100,7 +108,7 @@ export class TextBox extends GameObjects.Container {
     if (pointer.isDown) {
       clearTimeout(this.scrollTimer);
 
-      this.scrollY -= pointer.velocity.y;
+      this.scrollY -= pointer.velocity.y / 2;
       this.updateTextPosition();
     }
   }
