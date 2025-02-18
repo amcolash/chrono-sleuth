@@ -35,7 +35,7 @@ export class JournalDialog extends Dialog {
     const text = this.player.journal.journal.map((entry) => `${JournalData[entry].description}\n`).reverse();
     const textBox = new TextBox(this, Config.width * 0.08, Config.height * 0.2, text, {
       ...noteStyle,
-      scrollbarColor: getColorNumber(Colors.Note),
+      scrollbarColor: getColorNumber(Colors.Brown),
     });
     textBox.setBoxSize(Config.width * 0.84, Config.height * 0.62);
 

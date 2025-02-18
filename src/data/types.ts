@@ -85,8 +85,8 @@ export enum WarpType {
   LabHatch,
   Lab,
 
-  TownHallEntrance,
-  TownHall,
+  LibraryEntrance,
+  Library,
 
   InnEntrance,
   Inn,
@@ -173,7 +173,7 @@ export enum Location {
   MansionOutside = 'Mansion Grounds',
   MansionInside = 'Mansion',
   AlchemyLab = 'Secret Alchemy Lab',
-  TownHall = 'Town Hall',
+  Library = 'Library',
   Inn = 'Inn',
 }
 

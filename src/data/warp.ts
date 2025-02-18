@@ -207,19 +207,19 @@ export const WarpData: Record<WarpType, Data> = {
     skipLighting: true,
   },
 
-  [WarpType.TownHallEntrance]: {
-    x: 1120,
+  [WarpType.LibraryEntrance]: {
+    x: 1130,
     y: -330,
     key: Key.Right,
-    warpTo: WarpType.TownHall,
-    location: Location.TownHall,
-    visual: WarpVisual.InvisibleLocked,
+    warpTo: WarpType.Library,
+    location: Location.Library,
+    visual: WarpVisual.Invisible,
   },
-  [WarpType.TownHall]: {
+  [WarpType.Library]: {
     x: 1670,
     y: -290,
     key: Key.Left,
-    warpTo: WarpType.TownHallEntrance,
+    warpTo: WarpType.LibraryEntrance,
     location: Location.ClockOutside,
     visual: WarpVisual.Warp,
   },

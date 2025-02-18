@@ -46,9 +46,9 @@ export const WallData: Data[] = [
   { x: -1350, y: 1510 },
   { x: -730, y: 1560 },
 
-  // Town Hall
+  // Library
   { x: 1620, y: -350 },
-  { x: 2520, y: -350 },
+  { x: 3095, y: -350 },
 
   // Inn
   { x: 1790, y: -1245 },

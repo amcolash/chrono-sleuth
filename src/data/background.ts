@@ -16,7 +16,7 @@ export const BackgroundData: Data[] = [
   { x: -2200, y: -170, image: 'mansion_outside', location: Location.MansionOutside, scale: 2 },
   { x: -2000, y: -1320, image: 'mansion_inside', location: Location.MansionInside, scale: 2 },
   { x: -3200, y: 1300, image: 'alchemy_lab', location: Location.AlchemyLab, scale: 1.8, skipLighting: true },
-  { x: 1600, y: -950, image: 'town_hall', location: Location.TownHall, scale: 2, skipLighting: true },
+  { x: 1490, y: -860, image: 'library', location: Location.Library, scale: 2, skipLighting: true },
   { x: 1600, y: -1850, image: 'inn', location: Location.Inn, scale: 2, skipLighting: true },
   { x: 320, y: 1050, image: 'station', location: Location.Station, scale: 3 },
 ];

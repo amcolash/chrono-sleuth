@@ -17,7 +17,7 @@ export const MusicData: Record<MusicType, Data> = {
   },
 
   [MusicType.Town]: {
-    locations: [Location.Town, Location.TownHall, Location.Inn],
+    locations: [Location.Town, Location.Library, Location.Inn],
     volume: 0.5,
   },
 

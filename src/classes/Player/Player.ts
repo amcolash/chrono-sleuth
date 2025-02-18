@@ -178,8 +178,8 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     if (keys[Key.Right]) this.setVelocityX(calcSpeed);
 
     if (Config.debug && !this.interactive) {
-      // if (keys[Key.Up]) this.setVelocityY(-calcSpeed);
-      // if (keys[Key.Down]) this.setVelocityY(calcSpeed);
+      if (keys[Key.Up]) this.setVelocityY(-calcSpeed);
+      if (keys[Key.Down]) this.setVelocityY(calcSpeed);
     }
 
     if (keys[Key.Left] && keys[Key.Right]) this.setVelocityX(0);
