@@ -124,6 +124,25 @@ async function fullExport() {
   await maps();
 }
 
-fullExport();
-// generateAtlas(join(srcDir, '/items'), 'items');
-// maps();
+const handlers = {
+  icons: () => icons(),
+  maps: () => maps,
+
+  // Atlases
+  props: () => generateAtlas(join(srcDir, '/props'), 'props'),
+  items: () => generateAtlas(join(srcDir, '/items'), 'items'),
+  characters: () => generateAtlas(join(srcDir, '/characters'), 'characters'),
+  bookshelf: () => generateAtlas(join(srcDir, '/bookshelf'), 'bookshelf'),
+
+  // Audio
+  words: () => audioSprite(join(srcDir, '/audio/words'), 'words', { gap: 0 }),
+  sfx: () => audioSprite(join(srcDir, '/audio/sfx'), 'sfx'),
+};
+
+const handler = handlers[process.argv[2]];
+if (handler) handler();
+else {
+  // fullExport();
+  generateAtlas(join(srcDir, '/props'), 'props');
+  // maps();
+}
