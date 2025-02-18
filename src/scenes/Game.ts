@@ -11,6 +11,7 @@ import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { ParallaxBackground } from '../classes/Environment/ParallaxBackground';
 import { Prop } from '../classes/Environment/Prop';
+import { Sign } from '../classes/Environment/Sign';
 import { Slope } from '../classes/Environment/Slope';
 import { Walls } from '../classes/Environment/Walls';
 import { Warp } from '../classes/Environment/Warp';
@@ -20,7 +21,7 @@ import { Gamepad } from '../classes/UI/Gamepad';
 import { IconButton } from '../classes/UI/IconButton';
 import { Notification } from '../classes/UI/Notification';
 import { Config } from '../config';
-import { helperTextList, npcList, propList, warpList } from '../data/arrays';
+import { helperTextList, npcList, propList, signList, warpList } from '../data/arrays';
 import { BackgroundData } from '../data/background';
 import { Layer } from '../data/layers';
 import { LightData } from '../data/lights';
@@ -86,11 +87,12 @@ export class Game extends Scene {
 
     // objects without side effects
     const walls = new Walls(this, this.player);
-    const warpers = this.createWarpers();
     const slopes = this.createSlopes();
     const helperTexts = this.createHelperText();
+    const signs = this.createSigns();
 
     // objects with side effects
+    const warpers = this.createWarpers();
     const npcs = this.createNpcs();
     const items = this.createItems();
     const props = this.createProps();
@@ -126,6 +128,7 @@ export class Game extends Scene {
         smallClockHands,
         walls,
         ...slopes,
+        ...signs,
         ...backgrounds,
         ...parallaxBackgrounds,
       ],
@@ -294,6 +297,10 @@ export class Game extends Scene {
 
   createHelperText() {
     return helperTextList.map((text) => new HelperText(this, text, this.player));
+  }
+
+  createSigns() {
+    return signList.map((sign) => new Sign(this, sign, this.player));
   }
 
   createUI() {

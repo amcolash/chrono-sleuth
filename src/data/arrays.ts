@@ -1,5 +1,15 @@
 import { PipeType } from '../utils/pipes';
-import { HelperTextType, ItemType, JournalEntry, Location, NPCType, PropType, QuestType, WarpType } from './types';
+import {
+  HelperTextType,
+  ItemType,
+  JournalEntry,
+  Location,
+  NPCType,
+  PropType,
+  QuestType,
+  SignType,
+  WarpType,
+} from './types';
 
 export const itemList: ItemType[] = Object.keys(ItemType)
   .map((key: any) => ItemType[key])
@@ -35,3 +45,7 @@ export const helperTextList: HelperTextType[] = Object.keys(HelperTextType)
 export const pipeList: PipeType[] = Object.values(PipeType).filter((value) => typeof value !== 'number');
 
 export const sceneList = ['MainMenu', 'MazeDialog', 'PipesDialog', 'TumblerDialog', 'MemoryDialog', 'SliderDialog'];
+
+export const signList: SignType[] = Object.keys(SignType)
+  .map((key: any) => SignType[key])
+  .filter((k) => typeof k === 'number');

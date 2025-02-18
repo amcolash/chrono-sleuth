@@ -108,6 +108,7 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
           frames: this.scene.anims.generateFrameNumbers('portal', { start: 0, end: 63 }),
           frameRate: 10,
           repeat: -1,
+          randomFrame: true,
         });
       }
 
@@ -115,8 +116,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
         .sprite(this.x, this.y, 'portal_0')
         .setScale(0.45, 1)
         .setAlpha(0.9)
-        .play('portal')
-        .setName(`${this.name}-1`);
+        .setName(`${this.name}-1`)
+        .play('portal');
       this.portal1.postFX.addPixelate(1);
       this.portal1.postFX.addShadow(0, 0, 0.1, 2, 0x3333aa, 3, 0.5);
 
@@ -125,9 +126,9 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
         .setScale(0.35, 1)
         .setAlpha(0.65)
         .setFlipX(true)
-        .setName(`${this.name}-2`);
+        .setName(`${this.name}-2`)
+        .play('portal');
       this.portal2.postFX.addPixelate(1);
-      this.portal2.play('portal');
       this.portal2.setFrame(Math.floor(Math.random() * 30));
 
       if (!skipLighting) {

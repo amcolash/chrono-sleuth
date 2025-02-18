@@ -154,8 +154,6 @@ export enum PropType {
   MansionPicture,
   MansionHole,
   Bed,
-  InnSign,
-  TrainSign,
 }
 
 export enum HelperTextType {
@@ -184,4 +182,10 @@ export enum MusicType {
   Mansion = 'music-mansion',
   Forest = 'music-forest',
   Clock = 'music-clock',
+}
+
+export enum SignType {
+  Library,
+  Inn,
+  Train,
 }
