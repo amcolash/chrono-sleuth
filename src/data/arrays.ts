@@ -44,7 +44,15 @@ export const helperTextList: HelperTextType[] = Object.keys(HelperTextType)
 
 export const pipeList: PipeType[] = Object.values(PipeType).filter((value) => typeof value !== 'number');
 
-export const sceneList = ['MainMenu', 'MazeDialog', 'PipesDialog', 'TumblerDialog', 'MemoryDialog', 'SliderDialog'];
+export const sceneList = [
+  'MainMenu',
+  'MazeDialog',
+  'PipesDialog',
+  'TumblerDialog',
+  'MemoryDialog',
+  'SliderDialog',
+  'Books',
+];
 
 export const signList: SignType[] = Object.keys(SignType)
   .map((key: any) => SignType[key])

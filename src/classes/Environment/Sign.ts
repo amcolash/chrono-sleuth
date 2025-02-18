@@ -1,13 +1,14 @@
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, Physics, Scene } from 'phaser';
 
 import { Config } from '../../config';
 import { Layer } from '../../data/layers';
 import { SignData } from '../../data/sign';
 import { LazyInitialize, SignType } from '../../data/types';
+import { initializeObject } from '../../utils/interactionUtils';
 import { shouldInitialize } from '../../utils/util';
 import { Player } from '../Player/Player';
 
-export class Sign extends GameObjects.Image implements LazyInitialize {
+export class Sign extends Physics.Arcade.Image implements LazyInitialize {
   player: Player;
   initialized: boolean = false;
   signType: SignType;
@@ -17,17 +18,19 @@ export class Sign extends GameObjects.Image implements LazyInitialize {
     const { x, y } = SignData[type];
     super(scene, x, y, 'props', 'paper');
 
-    this.setDepth(Layer.Player).setAngle(90).setTint(0xccbbaa).setOrigin(0.5);
-    this.preFX?.addGlow(0x49320b, 1, 0, false);
     this.name = `Sign-${type}`;
     this.player = player;
     this.signType = type;
+
+    initializeObject(this, { ...SignData[type], depth: Layer.Player, origin: { x: 0.5, y: 0.5 } });
+    this.setTint(0xccbbaa);
   }
 
   lazyInit(forceInit?: boolean): void {
     if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
 
     this.scene.add.existing(this);
+    this.scene.physics.add.existing(this);
     if (Config.debug) this.setInteractive({ draggable: true });
 
     const { x, y, text } = SignData[this.signType];
@@ -41,16 +44,18 @@ export class Sign extends GameObjects.Image implements LazyInitialize {
         strokeThickness: 6,
       })
       .setOrigin(0.5)
-      .setDepth(Layer.Player + 1);
-    // .setBlendMode(Phaser.BlendModes.MULTIPLY);
+      .setDepth(Layer.Player + 1)
+      .setPipeline('Light2D');
 
     const padding = 5;
-    this.setDisplaySize(this.text.displayHeight + padding, this.text.displayWidth + padding * 8);
+    this.setDisplaySize(this.text.displayWidth + padding * 8, this.text.displayHeight + padding);
 
     this.initialized = true;
   }
 
   update() {
     this.lazyInit();
+
+    this.text?.setPosition(this.x, this.y);
   }
 }

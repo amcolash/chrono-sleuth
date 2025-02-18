@@ -21,9 +21,9 @@ export class JournalDialog extends Dialog {
   create() {
     super.create();
 
-    this.container.add(this.add.image(0, 0, 'props', 'paper').setScale(3.3, 3).setAngle(90));
+    this.container.add(this.add.image(0, 0, 'props', 'paper').setScale(2.9, 3.3));
     this.container.add(
-      new Button(this, Config.width * 0.46, Config.height * -0.37, 'X', () => this.close(false), {
+      new Button(this, Config.width * 0.44, Config.height * -0.36, 'X', () => this.close(false), {
         ...noteStyle,
         backgroundColor: undefined,
         fontSize: 54,

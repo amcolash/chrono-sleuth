@@ -81,7 +81,10 @@ export class Books extends Dialog {
 
     this.createBookshelf();
 
-    this.addTarget(this.add.image(20, 20, 'props', 'paper').setOrigin(0).setScale(2.25, 1.6));
+    const image = this.add.image(0, 0, 'props', 'paper').setScale(1.6, 2.25).setAngle(90);
+    image.setPosition(20 + image.displayHeight / 2, 5 + image.displayWidth / 2);
+    this.addTarget(image);
+
     const text = this.add
       .text(
         70,

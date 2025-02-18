@@ -212,6 +212,8 @@ export class DebugUI extends GameObjects.Container {
       this.outline.setSize(this.activeElement.displayWidth, this.activeElement.displayHeight);
       // @ts-ignore
       this.outline.setOrigin(this.activeElement.originX, this.activeElement.originY);
+      // @ts-ignore
+      this.outline.setAngle(this.activeElement.angle || 0);
 
       const body = this.activeElement.body;
       if ((body && body instanceof Physics.Arcade.Body) || body instanceof Physics.Arcade.StaticBody) {
