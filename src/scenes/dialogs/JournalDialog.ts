@@ -1,4 +1,5 @@
 import { Player } from '../../classes/Player/Player';
+import { Button } from '../../classes/UI/Button';
 import { TextBox } from '../../classes/UI/TextBox';
 import { Config } from '../../config';
 import { JournalData } from '../../data/journal';
@@ -20,7 +21,14 @@ export class JournalDialog extends Dialog {
   create() {
     super.create();
 
-    this.container.add(this.add.image(0, 0, 'props', 'paper').setScale(3).setAngle(90));
+    this.container.add(this.add.image(0, 0, 'props', 'paper').setScale(3.3, 3).setAngle(90));
+    this.container.add(
+      new Button(this, Config.width * 0.46, Config.height * -0.37, 'X', () => this.close(false), {
+        ...noteStyle,
+        backgroundColor: undefined,
+        fontSize: 54,
+      })
+    );
 
     this.player.journal.unread.setVisible(false);
 

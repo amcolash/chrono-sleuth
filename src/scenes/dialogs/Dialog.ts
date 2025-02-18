@@ -49,7 +49,7 @@ export abstract class Dialog extends Scene {
           .setStrokeStyle(4, getColorNumber(Colors.Tan))
       );
       this.container.add(
-        new Button(this, Config.width * 0.44, Config.height * -0.4, 'X', () => this.close(false), {
+        new Button(this, Config.width * 0.43, Config.height * -0.39, 'X', () => this.close(false), {
           backgroundColor: `#${Colors.Warning}`,
         })
       );
