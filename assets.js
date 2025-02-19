@@ -45,17 +45,7 @@ async function generateAtlas(inputPath, outputFile) {
   renameSync(texture + '1', texture);
 }
 
-// Audio
-const audioSprites = {
-  words: () => audioSprite(join(srcDir, '/audio/words'), 'words', { gap: 0 }),
-  sfx: () => audioSprite(join(srcDir, '/audio/sfx'), 'sfx'),
-};
-
-function audio() {
-  Object.values(audioSprites).forEach((fn) => fn());
-}
-
-// Atlases
+// Special atlases/images
 async function icons() {
   const iconDir = join(srcDir, '/icons');
   const icons = readdirSync(iconDir);
@@ -106,29 +96,26 @@ async function maps() {
   }
 }
 
-const atlases = {
-  props: () => generateAtlas(join(srcDir, '/props'), 'props'),
-  items: () => generateAtlas(join(srcDir, '/items'), 'items'),
-  characters: () => generateAtlas(join(srcDir, '/characters'), 'characters'),
-  bookshelf: () => generateAtlas(join(srcDir, '/bookshelf'), 'bookshelf'),
-  runes: () => generateAtlas(join(srcDir, '/puzzles/runes'), 'runes'),
-  tumbler: () => generateAtlas(join(srcDir, '/puzzles/tumbler'), 'tumbler'),
-};
-
-async function atlas() {
-  for (const fn of Object.values(atlases)) {
+// Main export
+async function fullExport() {
+  for (const fn of Object.values(handlers)) {
     await fn();
   }
 }
 
-// Main export
-async function fullExport() {
-  audio();
+// Export handlers
+const atlases = {
+  props: () => generateAtlas(join(srcDir, '/props'), 'props'),
+  items: () => generateAtlas(join(srcDir, '/items'), 'items'),
+  characters: () => generateAtlas(join(srcDir, '/characters'), 'characters'),
+  runes: () => generateAtlas(join(srcDir, '/puzzles/runes'), 'runes'),
+  tumbler: () => generateAtlas(join(srcDir, '/puzzles/tumbler'), 'tumbler'),
+};
 
-  await icons();
-  await atlas();
-  await maps();
-}
+const audioSprites = {
+  words: () => audioSprite(join(srcDir, '/audio/words'), 'words', { gap: 0 }),
+  sfx: () => audioSprite(join(srcDir, '/audio/sfx'), 'sfx'),
+};
 
 const handlers = {
   icons,
@@ -141,6 +128,7 @@ const handlers = {
   ...audioSprites,
 };
 
+// Main fn
 const arg = process.argv[2];
 const handler = handlers[arg];
 if (handler) handler();
