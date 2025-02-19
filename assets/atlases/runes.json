@@ -1,7 +1,7 @@
 {
   "frames": [
     {
-      "filename": "arrow-up",
+      "filename": "Stone1",
       "frame": {
         "x": 0,
         "y": 0,
@@ -10,7 +10,7 @@
       }
     },
     {
-      "filename": "award",
+      "filename": "Stone10",
       "frame": {
         "x": 65,
         "y": 0,
@@ -19,7 +19,7 @@
       }
     },
     {
-      "filename": "chevron-down",
+      "filename": "Stone11",
       "frame": {
         "x": 0,
         "y": 65,
@@ -28,7 +28,7 @@
       }
     },
     {
-      "filename": "gamepad",
+      "filename": "Stone12",
       "frame": {
         "x": 65,
         "y": 65,
@@ -37,7 +37,7 @@
       }
     },
     {
-      "filename": "maximize",
+      "filename": "Stone2",
       "frame": {
         "x": 130,
         "y": 0,
@@ -46,7 +46,7 @@
       }
     },
     {
-      "filename": "minimize",
+      "filename": "Stone3",
       "frame": {
         "x": 130,
         "y": 65,
@@ -55,7 +55,7 @@
       }
     },
     {
-      "filename": "moon",
+      "filename": "Stone4",
       "frame": {
         "x": 0,
         "y": 130,
@@ -64,7 +64,7 @@
       }
     },
     {
-      "filename": "save",
+      "filename": "Stone5",
       "frame": {
         "x": 65,
         "y": 130,
@@ -73,7 +73,7 @@
       }
     },
     {
-      "filename": "settings",
+      "filename": "Stone6",
       "frame": {
         "x": 130,
         "y": 130,
@@ -82,7 +82,7 @@
       }
     },
     {
-      "filename": "sun",
+      "filename": "Stone7",
       "frame": {
         "x": 195,
         "y": 0,
@@ -91,7 +91,7 @@
       }
     },
     {
-      "filename": "terminal",
+      "filename": "Stone8",
       "frame": {
         "x": 195,
         "y": 65,
@@ -100,55 +100,10 @@
       }
     },
     {
-      "filename": "tv",
+      "filename": "Stone9",
       "frame": {
         "x": 195,
         "y": 130,
-        "w": 64,
-        "h": 64
-      }
-    },
-    {
-      "filename": "volume-mute",
-      "frame": {
-        "x": 0,
-        "y": 195,
-        "w": 64,
-        "h": 64
-      }
-    },
-    {
-      "filename": "volume",
-      "frame": {
-        "x": 65,
-        "y": 195,
-        "w": 64,
-        "h": 64
-      }
-    },
-    {
-      "filename": "x",
-      "frame": {
-        "x": 130,
-        "y": 195,
-        "w": 64,
-        "h": 64
-      }
-    },
-    {
-      "filename": "zoom-in",
-      "frame": {
-        "x": 195,
-        "y": 195,
-        "w": 64,
-        "h": 64
-      }
-    },
-    {
-      "filename": "zoom-out",
-      "frame": {
-        "x": 260,
-        "y": 0,
         "w": 64,
         "h": 64
       }
