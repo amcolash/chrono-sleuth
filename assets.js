@@ -46,13 +46,13 @@ async function generateAtlas(inputPath, outputFile) {
 }
 
 // Audio
-const audioSprites = [{ name: 'words', opts: { gap: 0 } }, { name: 'sfx' }];
+const audioSprites = {
+  words: () => audioSprite(join(srcDir, '/audio/words'), 'words', { gap: 0 }),
+  sfx: () => audioSprite(join(srcDir, '/audio/sfx'), 'sfx'),
+};
 
 function audio() {
-  audioSprites.forEach((a) => {
-    const outDir = join(srcDir, '/audio/', a.name);
-    audioSprite(outDir, a.name, a.opts);
-  });
+  Object.values(audioSprites).forEach((fn) => fn());
 }
 
 // Atlases
@@ -106,12 +106,18 @@ async function maps() {
   }
 }
 
-const atlases = ['items', 'props', 'characters'];
+const atlases = {
+  props: () => generateAtlas(join(srcDir, '/props'), 'props'),
+  items: () => generateAtlas(join(srcDir, '/items'), 'items'),
+  characters: () => generateAtlas(join(srcDir, '/characters'), 'characters'),
+  bookshelf: () => generateAtlas(join(srcDir, '/bookshelf'), 'bookshelf'),
+  runes: () => generateAtlas(join(srcDir, '/puzzles/runes'), 'runes'),
+  tumbler: () => generateAtlas(join(srcDir, '/puzzles/tumbler'), 'tumbler'),
+};
 
 async function atlas() {
-  for (const a of atlases) {
-    const inputDir = join(srcDir, '/', a);
-    await generateAtlas(inputDir, a);
+  for (const fn of Object.values(atlases)) {
+    await fn();
   }
 }
 
@@ -125,24 +131,23 @@ async function fullExport() {
 }
 
 const handlers = {
-  icons: () => icons(),
-  maps: () => maps,
+  icons,
+  maps,
 
   // Atlases
-  props: () => generateAtlas(join(srcDir, '/props'), 'props'),
-  items: () => generateAtlas(join(srcDir, '/items'), 'items'),
-  characters: () => generateAtlas(join(srcDir, '/characters'), 'characters'),
-  bookshelf: () => generateAtlas(join(srcDir, '/bookshelf'), 'bookshelf'),
+  ...atlases,
 
   // Audio
-  words: () => audioSprite(join(srcDir, '/audio/words'), 'words', { gap: 0 }),
-  sfx: () => audioSprite(join(srcDir, '/audio/sfx'), 'sfx'),
+  ...audioSprites,
 };
 
-const handler = handlers[process.argv[2]];
+const arg = process.argv[2];
+const handler = handlers[arg];
 if (handler) handler();
 else {
-  // fullExport();
-  generateAtlas(join(srcDir, '/props'), 'props');
+  if (arg) throw new Error(`Unknown handler: ${arg}`);
+
+  // generateAtlas(join(srcDir, '/props'), 'props');
   // maps();
+  fullExport();
 }

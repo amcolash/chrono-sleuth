@@ -27,10 +27,7 @@ export class MemoryDialog extends Dialog {
 
   preload() {
     this.load.setPath('assets');
-
-    for (let i = 1; i <= 12; i++) {
-      this.load.image(`rune_${i}`, `puzzles/runes/Stone${i}.png`);
-    }
+    this.load.atlas(`runes`, 'atlases/runes.png', 'atlases/runes.json');
   }
 
   create(): void {
@@ -48,7 +45,7 @@ export class MemoryDialog extends Dialog {
       this.container.add(
         this.add
           .text(0, Config.height * 0.43, `[ ${this.sequence.map((n) => n + 1).join(', ')} ]`, {
-            fontSize: 18,
+            fontSize: 24,
             align: 'center',
           })
           .setOrigin(0.5)
@@ -73,7 +70,7 @@ export class MemoryDialog extends Dialog {
       if (regions[yIndex] === undefined) regions.push([]);
       regions[yIndex].push({ x, y });
 
-      const button = this.add.image(x, y, `rune_${i + 1}`).setInteractive({ useHandCursor: true });
+      const button = this.add.image(x, y, 'runes', `Stone${i + 1}`).setInteractive({ useHandCursor: true });
       button.on('pointerdown', () => this.onButtonPress(button, i));
 
       this.buttons.add(button);

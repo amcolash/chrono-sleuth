@@ -1,0 +1,112 @@
+{
+  "frames": [
+    {
+      "filename": "Stone1",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone10",
+      "frame": {
+        "x": 65,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone11",
+      "frame": {
+        "x": 0,
+        "y": 65,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone12",
+      "frame": {
+        "x": 65,
+        "y": 65,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone2",
+      "frame": {
+        "x": 130,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone3",
+      "frame": {
+        "x": 130,
+        "y": 65,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone4",
+      "frame": {
+        "x": 0,
+        "y": 130,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone5",
+      "frame": {
+        "x": 65,
+        "y": 130,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone6",
+      "frame": {
+        "x": 130,
+        "y": 130,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone7",
+      "frame": {
+        "x": 195,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone8",
+      "frame": {
+        "x": 195,
+        "y": 65,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "Stone9",
+      "frame": {
+        "x": 195,
+        "y": 130,
+        "w": 64,
+        "h": 64
+      }
+    }
+  ]
+}

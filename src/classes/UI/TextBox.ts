@@ -33,7 +33,7 @@ export class TextBox extends GameObjects.Container {
     // Create text object
     this.textObject = new GameObjects.Text(scene, 0, 0, text, { ...fontStyle, padding: { x: 10, y: 10 }, ...style });
     this.textObject.setOrigin(0).setScrollFactor(0);
-    this.textObject.setInteractive({ cursor: 'ns-resize' });
+    this.textObject.setInteractive({ cursor: handleClick ? 'pointer' : 'ns-resize' });
     this.add(this.textObject);
 
     // Set up scroll events

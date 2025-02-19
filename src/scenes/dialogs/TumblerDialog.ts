@@ -44,10 +44,7 @@ export class TumblerDialog extends Dialog {
 
   preload() {
     this.load.setPath('assets');
-
-    for (let i = 1; i <= 5; i++) {
-      this.load.image(`ring_${i}`, `puzzles/tumbler/ring${i}.png`);
-    }
+    this.load.atlas('rings', 'atlases/tumbler.png', 'atlases/tumbler.json');
   }
 
   create(): void {
@@ -93,7 +90,7 @@ export class TumblerDialog extends Dialog {
     const center = { x: Config.width / 2, y: Config.height / 2 };
 
     const ring = this.add
-      .image(0, 30, `ring_${index + 1}`)
+      .image(0, 30, 'rings', `ring${index + 1}`)
       .setScale(0.8)
       .setInteractive({
         draggable: true,
@@ -142,7 +139,7 @@ export class TumblerDialog extends Dialog {
         this.angles[j] = PhaserMath.Snap.To((this.angles[j] + r * movement) % (Math.PI * 2), snapThreshold);
     });
 
-    console.log(this.angles, rings);
+    // console.log(this.angles, rings);
     if (previous !== JSON.stringify(this.angles))
       this.sound.playAudioSprite('sfx', 'safe_click', { detune: PhaserMath.Between(-500, 500) });
 
