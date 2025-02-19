@@ -56,7 +56,7 @@ export abstract class Dialog extends Scene {
 
       if (!Config.prod && !this.dialogData.hideCloseSuccess) {
         this.container.add(
-          new IconButton(this, Config.width * 0.38, Config.height * -0.4, 'award', () => this.startClose(true))
+          new IconButton(this, Config.width * 0.38, Config.height * -0.4, 'award', () => this.close(true))
         );
       }
 
@@ -67,16 +67,16 @@ export abstract class Dialog extends Scene {
     }
 
     this.input.keyboard?.on('keydown-ESC', () => {
-      this.startClose(false);
+      this.close(false);
     });
 
     this.input.keyboard?.on('keydown-BACKSPACE', () => {
-      this.startClose(false);
+      this.close(false);
     });
 
     if (!Config.prod) {
       this.input.keyboard?.on('keydown-BACK_SLASH', () => {
-        this.startClose(true);
+        this.close(true);
       });
     }
 
@@ -129,15 +129,10 @@ export abstract class Dialog extends Scene {
     return [this.container, ...this.additionalUI];
   }
 
-  // Only attempt to close the dialog if not already closing
-  startClose(success?: boolean) {
-    if (!this.closing) {
-      this.closing = true;
-      this.close(success);
-    }
-  }
-
   close(success?: boolean) {
+    if (this.closing) return;
+    this.closing = true;
+
     this.preHandleSuccess(success);
 
     const game = this.scene.get('Game') as Game;

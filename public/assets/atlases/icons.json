@@ -1,9 +1,18 @@
 {
   "frames": [
     {
-      "filename": "award",
+      "filename": "arrow-up",
       "frame": {
         "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "award",
+      "frame": {
+        "x": 65,
         "y": 0,
         "w": 64,
         "h": 64
@@ -12,8 +21,8 @@
     {
       "filename": "chevron-down",
       "frame": {
-        "x": 65,
-        "y": 0,
+        "x": 0,
+        "y": 65,
         "w": 64,
         "h": 64
       }
@@ -21,7 +30,7 @@
     {
       "filename": "gamepad",
       "frame": {
-        "x": 0,
+        "x": 65,
         "y": 65,
         "w": 64,
         "h": 64
@@ -30,8 +39,8 @@
     {
       "filename": "maximize",
       "frame": {
-        "x": 65,
-        "y": 65,
+        "x": 130,
+        "y": 0,
         "w": 64,
         "h": 64
       }
@@ -40,7 +49,7 @@
       "filename": "minimize",
       "frame": {
         "x": 130,
-        "y": 0,
+        "y": 65,
         "w": 64,
         "h": 64
       }
@@ -48,8 +57,8 @@
     {
       "filename": "moon",
       "frame": {
-        "x": 130,
-        "y": 65,
+        "x": 0,
+        "y": 130,
         "w": 64,
         "h": 64
       }
@@ -57,7 +66,7 @@
     {
       "filename": "save",
       "frame": {
-        "x": 0,
+        "x": 65,
         "y": 130,
         "w": 64,
         "h": 64
@@ -66,7 +75,7 @@
     {
       "filename": "settings",
       "frame": {
-        "x": 65,
+        "x": 130,
         "y": 130,
         "w": 64,
         "h": 64
@@ -75,8 +84,8 @@
     {
       "filename": "sun",
       "frame": {
-        "x": 130,
-        "y": 130,
+        "x": 195,
+        "y": 0,
         "w": 64,
         "h": 64
       }
@@ -85,7 +94,7 @@
       "filename": "terminal",
       "frame": {
         "x": 195,
-        "y": 0,
+        "y": 65,
         "w": 64,
         "h": 64
       }
@@ -94,22 +103,13 @@
       "filename": "tv",
       "frame": {
         "x": 195,
-        "y": 65,
-        "w": 64,
-        "h": 64
-      }
-    },
-    {
-      "filename": "volume-mute",
-      "frame": {
-        "x": 195,
         "y": 130,
         "w": 64,
         "h": 64
       }
     },
     {
-      "filename": "volume",
+      "filename": "volume-mute",
       "frame": {
         "x": 0,
         "y": 195,
@@ -118,7 +118,7 @@
       }
     },
     {
-      "filename": "zoom-in",
+      "filename": "volume",
       "frame": {
         "x": 65,
         "y": 195,
@@ -127,10 +127,28 @@
       }
     },
     {
-      "filename": "zoom-out",
+      "filename": "x",
       "frame": {
         "x": 130,
         "y": 195,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "zoom-in",
+      "frame": {
+        "x": 195,
+        "y": 195,
+        "w": 64,
+        "h": 64
+      }
+    },
+    {
+      "filename": "zoom-out",
+      "frame": {
+        "x": 260,
+        "y": 0,
         "w": 64,
         "h": 64
       }

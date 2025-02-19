@@ -22,16 +22,11 @@ export class MazeDialog extends Dialog {
     this.dialogData.gamepadVisible = (data.player.scene as Game)?.gamepad?.visible;
   }
 
-  preload() {
-    this.load.setPath('assets');
-    this.load.image('arrow', 'puzzles/arrow.png');
-  }
-
   create() {
     super.create();
 
     this.arrow = this.add
-      .image(-Config.width * 0.4, -Config.height * 0.4, 'arrow')
+      .image(-Config.width * 0.4, -Config.height * 0.4, 'icons', 'arrow-up')
       .setScale(0.5)
       .setRotation(Math.PI * 0.75);
     this.container.add(this.arrow);
