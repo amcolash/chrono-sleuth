@@ -27,8 +27,8 @@ export class SliderDialog extends Dialog {
   preload() {
     this.load.setPath('assets');
 
-    const puzzleSize = Math.floor(1024 / cols);
-    this.load.spritesheet('slider', 'puzzles/slider.png', { frameWidth: puzzleSize, frameHeight: puzzleSize });
+    const puzzleSize = Math.floor(512 / cols);
+    this.load.spritesheet('slider', 'puzzles/slider.jpg', { frameWidth: puzzleSize, frameHeight: puzzleSize });
   }
 
   create() {
