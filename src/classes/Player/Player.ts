@@ -190,12 +190,6 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     return this;
   }
 
-  setPosition(x?: number, y?: number, z?: number, w?: number): this {
-    super.setPosition(x, y, z, w);
-    if (x !== undefined && y !== undefined && this.light) this.light.setPosition(x, y - 20);
-    return this;
-  }
-
   record() {
     if (this.history.length < MAX_HISTORY)
       this.history.push(new PhaserMath.Vector3(this.x, this.y, this.body?.velocity.x || 0));

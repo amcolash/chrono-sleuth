@@ -2,15 +2,11 @@ import { Player } from '../classes/Player/Player';
 import { Config } from '../config';
 
 export function createAnimation(player: Player) {
-  const duration = 1000 / (Config.prod ? 6 : 9);
-
-  const frames = player.anims.generateFrameNumbers('character', { start: 0, end: 5 });
-  frames.forEach((frame) => (frame.duration = duration));
-
   player.anims.create({
     key: 'walk',
-    frames,
+    frames: player.anims.generateFrameNumbers('character', { start: 0, end: 5 }),
     repeat: -1,
+    frameRate: Config.prod ? 6 : 9,
   });
 
   player.anims.play('walk');
