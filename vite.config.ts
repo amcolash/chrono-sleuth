@@ -38,16 +38,18 @@ export default defineConfig({
 
     // TODO: Is this the right choice?
     // This removes comments (licenses)
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        passes: 2,
-      },
-      mangle: true,
-      format: {
-        comments: false,
-      },
-    },
+    // commented out for now since it is so slow
+
+    // minify: 'terser',
+    // terserOptions: {
+    //   compress: {
+    //     passes: 2,
+    //   },
+    //   mangle: true,
+    //   format: {
+    //     comments: false,
+    //   },
+    // },
   },
   server: {
     watch: {
