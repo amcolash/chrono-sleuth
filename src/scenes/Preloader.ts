@@ -70,6 +70,7 @@ export class Preloader extends Scene {
     this.load.image('station', 'maps/station.png');
     this.load.image('town', 'maps/town.png');
     this.load.image('library', 'maps/library.png');
+    this.load.image('town_hall', 'maps/town_hall.png');
     this.load.image('inn', 'maps/inn.png');
 
     this.load.image('clock_outside', 'maps/clock_outside.png');
