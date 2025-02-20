@@ -22,6 +22,7 @@ export class DebugUI extends GameObjects.Container {
   scene: Game;
   xray: boolean = false;
   dragOffset = new PhaserMath.Vector2();
+  historyStack: { x: number; y: number; object: GameObjects.GameObject }[] = [];
   debugCamera: GameObjects.Rectangle;
 
   constructor(scene: Game, player: Player) {
@@ -90,6 +91,19 @@ export class DebugUI extends GameObjects.Container {
       this.scene.scene.restart();
     });
 
+    this.scene.input.keyboard?.on('keydown-X', () => {
+      if (this.historyStack.length > 0) {
+        const history = this.historyStack.pop();
+
+        if (history?.object instanceof DebugLight) {
+          history.object.destroy();
+        } else {
+          // @ts-ignore
+          history.object.setPosition(history.x, history.y);
+        }
+      }
+    });
+
     this.scene.input.keyboard?.on('keydown-FORWARD_SLASH', () => {
       this.scene.player.gameState.updateData({ night: !this.scene.player.gameState.data.night });
     });
@@ -126,7 +140,9 @@ export class DebugUI extends GameObjects.Container {
 
       this.scene.input.keyboard?.on('keydown-PERIOD', () => {
         const pointer = this.scene.input.activePointer;
-        new DebugLight(this.scene, pointer.worldX, pointer.worldY, 100, getColorNumber(Colors.Lights), 1);
+        const light = new DebugLight(this.scene, pointer.worldX, pointer.worldY, 100, getColorNumber(Colors.Lights), 1);
+
+        this.historyStack.push({ x: light.x, y: light.y, object: light });
       });
 
       // Dragging
@@ -139,6 +155,8 @@ export class DebugUI extends GameObjects.Container {
           this.activeElement = gameObject;
           // @ts-ignore
           this.dragOffset.set(gameObject.x - pointer.worldX, gameObject.y - pointer.worldY);
+          // @ts-ignore
+          this.historyStack.push({ x: gameObject.x, y: gameObject.y, object: gameObject });
         } else {
           this.activeElement = undefined;
           this.dragOffset.set(0, 0);
