@@ -1,7 +1,8 @@
-import { FX, GameObjects, Geom } from 'phaser';
+import { FX, GameObjects, Geom, Types } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
 import { Button } from '../../classes/UI/Button';
+import { Cursor } from '../../classes/UI/Cursor';
 import { Message } from '../../classes/UI/Message';
 import { Config } from '../../config';
 import { ItemType } from '../../data/types';
@@ -132,6 +133,8 @@ export class Books extends Dialog {
   createBookshelf(hasNote: boolean) {
     const texture = this.textures.get('bookshelf');
     const frames = Object.entries(texture.frames);
+    const regions: Types.Math.RectangleLike[][] = [];
+
     const scale = 4;
     const xOffset = hasNote ? 150 : 0;
 
@@ -153,10 +156,16 @@ export class Books extends Dialog {
       const rect = new Geom.Rectangle(
         source.x - padding,
         source.y - padding,
-        source.w + padding * 2,
-        source.h + padding * 2
+        source.w * scale + padding * 2,
+        source.h * scale + padding * 2
       );
       image.setInteractive({ hitArea: rect, hitAreaCallback: Geom.Rectangle.Contains, cursor: 'pointer' });
+
+      const x = i % 4;
+      const y = Math.floor(i / 5);
+
+      regions[x] = regions[x] || [];
+      regions[x][y] = rect;
 
       const glow = image.preFX?.addGlow(getColorNumber(Colors.Tan), 0);
       if (glow) {
@@ -171,38 +180,7 @@ export class Books extends Dialog {
         });
 
         image.on('pointerdown', () => {
-          const correct = bookOrder[this.answer.length] === i && hasNote;
-
-          const messages = [this.books[i].name];
-          if (correct) messages.push('<b><i>[CLUNK]</i></b> The bookshelf shifts slightly.');
-
-          this.message.setDialog(
-            {
-              messages,
-              mute: correct ? [1] : undefined,
-              onMessageShown: (_player, index, _target) => {
-                if (index === 1) this.sound.playAudioSprite('sfx', 'safe_click');
-              },
-              onCompleted: correct
-                ? () => {
-                    this.answer.push(i);
-                    this.books[i].strength = GLOW_STRENGTH;
-                    this.books[i].glow.color = getColorNumber(Colors.Success);
-                    if (this.answer.length === bookOrder.length) {
-                      this.close(true);
-                    }
-                  }
-                : () => {
-                    this.answer = [];
-                    this.books.forEach((book) => {
-                      book.glow.color = getColorNumber(Colors.Tan);
-                      book.strength = 0;
-                    });
-                  },
-            },
-            undefined,
-            'player_portrait'
-          );
+          this.handleClick(i);
         });
 
         if (!Config.prod && hasNote) {
@@ -222,6 +200,69 @@ export class Books extends Dialog {
         }
       }
     }
+
+    // let i = 0;
+    // for (let x = 0; x < 4; x++) {
+    //   regions.push([]);
+    //   for (let y = 0; y < 5; y++) {
+    //     const book = this.books[i].image;
+    //     regions[x].push({
+    //       x: book.interactive.hitArea.x * scale + xOffset,
+    //     });
+    //     i++;
+    //   }
+    // }
+
+    console.log(this.books, regions);
+
+    const cursor = new Cursor(
+      this,
+      {
+        regions,
+        keyHandler: (_pos, region) => {
+          const index = this.books.findIndex((book) => book.image.x === region?.x && book.image.y === region?.y);
+          if (index >= 0) this.handleClick(index);
+        },
+      },
+      this.keys
+    );
+    this.container.add(cursor);
+  }
+
+  handleClick(i: number) {
+    const hasNote = hasItem(this.player, ItemType.Note);
+    const correct = bookOrder[this.answer.length] === i && hasNote;
+
+    const messages = [this.books[i].name];
+    if (correct) messages.push('<b><i>[CLUNK]</i></b> The bookshelf shifts slightly.');
+
+    this.message.setDialog(
+      {
+        messages,
+        mute: correct ? [1] : undefined,
+        onMessageShown: (_player, index, _target) => {
+          if (index === 1) this.sound.playAudioSprite('sfx', 'safe_click');
+        },
+        onCompleted: correct
+          ? () => {
+              this.answer.push(i);
+              this.books[i].strength = GLOW_STRENGTH;
+              this.books[i].glow.color = getColorNumber(Colors.Success);
+              if (this.answer.length === bookOrder.length) {
+                this.close(true);
+              }
+            }
+          : () => {
+              this.answer = [];
+              this.books.forEach((book) => {
+                book.glow.color = getColorNumber(Colors.Tan);
+                book.strength = 0;
+              });
+            },
+      },
+      undefined,
+      'player_portrait'
+    );
   }
 
   update(time: number, delta: number) {

@@ -1,11 +1,12 @@
 import { GameObjects, Math as PhaserMath, Scene, Types } from 'phaser';
 
+import { Layer } from '../../data/layers';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { InputManager, Key } from './InputManager';
 
 export interface CursorData {
   regions: Types.Math.RectangleLike[][];
-  keyHandler: (position: PhaserMath.Vector2) => void;
+  keyHandler: (position: PhaserMath.Vector2, region?: Types.Math.RectangleLike) => void;
 }
 
 export class Cursor extends GameObjects.Rectangle {
@@ -19,7 +20,7 @@ export class Cursor extends GameObjects.Rectangle {
     scene.add.group(this, { runChildUpdate: true });
 
     this.setStrokeStyle(3, getColorNumber(Colors.Tan), 0.75);
-    this.setVisible(false);
+    this.setVisible(false).setDepth(Layer.Shader);
 
     this.cursorData = cursorData;
     this.keys = keys;
@@ -33,8 +34,12 @@ export class Cursor extends GameObjects.Rectangle {
     if (time < this.nextUpdate) return;
     let moved = true;
 
+    let initialRegion;
+    if (this.cursorData.regions[this.position.y])
+      initialRegion = this.cursorData.regions[this.position.y][this.position.x];
+
     const keys = this.keys.keys;
-    if (keys[Key.Continue]) this.cursorData.keyHandler(this.position);
+    if (keys[Key.Continue]) this.cursorData.keyHandler(this.position, initialRegion);
     else if (keys[Key.Left]) this.position.x--;
     else if (keys[Key.Right]) this.position.x++;
     else if (keys[Key.Up]) this.position.y--;
