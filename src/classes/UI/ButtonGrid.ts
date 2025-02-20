@@ -124,10 +124,10 @@ export class ButtonGrid extends GameObjects.Container {
   }
 
   updateButtonSize(button: Button | IconButton | undefined) {
-    const offset = 1.2;
+    const padding = 8;
 
-    if (button instanceof Button) this.cursor.setSize(button.displayWidth * offset, button.displayHeight * offset);
+    if (button instanceof Button) this.cursor.setSize(button.displayWidth + padding, button.displayHeight + padding);
     if (button instanceof IconButton)
-      this.cursor.setSize(button.rect.displayWidth * offset, button.rect.displayHeight * offset);
+      this.cursor.setSize(button.rect.displayWidth + padding, button.rect.displayHeight + padding);
   }
 }

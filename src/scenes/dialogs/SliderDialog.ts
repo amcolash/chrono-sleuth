@@ -33,7 +33,7 @@ export class SliderDialog extends Dialog {
 
   create() {
     super.create();
-    const regions: Types.Math.Vector2Like[][] = [];
+    const regions: Types.Math.RectangleLike[][] = [];
 
     this.solution = Array.from({ length: cols * cols }, (_, i) => i);
     this.layout = [...this.solution];
@@ -53,7 +53,7 @@ export class SliderDialog extends Dialog {
       const yPos = (y - (cols - 1) / 2) * size + topOffset;
 
       if (regions[y] === undefined) regions[y] = [];
-      regions[y].push({ x: xPos, y: yPos });
+      regions[y].push({ x: xPos, y: yPos, width: size * 1.1, height: size * 1.1 });
 
       const tile = this.add
         .image(xPos, yPos, 'slider', index)
@@ -74,7 +74,6 @@ export class SliderDialog extends Dialog {
       this,
       {
         regions,
-        size: size * 1.1,
         keyHandler: (pos) => {
           const index = pos.y * cols + pos.x;
           this.moveTile(index);

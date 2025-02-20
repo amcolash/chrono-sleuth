@@ -4,8 +4,7 @@ import { Colors, getColorNumber } from '../../utils/colors';
 import { InputManager, Key } from './InputManager';
 
 export interface CursorData {
-  regions: Types.Math.Vector2Like[][];
-  size: number;
+  regions: Types.Math.RectangleLike[][];
   keyHandler: (position: PhaserMath.Vector2) => void;
 }
 
@@ -16,10 +15,10 @@ export class Cursor extends GameObjects.Rectangle {
   position: PhaserMath.Vector2 = new PhaserMath.Vector2(-1, -1);
 
   constructor(scene: Scene, cursorData: CursorData, keys: InputManager) {
-    super(scene, 0, 0, cursorData.size, cursorData.size);
+    super(scene, 0, 0);
     scene.add.group(this, { runChildUpdate: true });
 
-    this.setStrokeStyle(2, getColorNumber(Colors.Tan), 0.75);
+    this.setStrokeStyle(3, getColorNumber(Colors.Tan), 0.75);
     this.setVisible(false);
 
     this.cursorData = cursorData;
@@ -49,12 +48,12 @@ export class Cursor extends GameObjects.Rectangle {
       this.position.x = PhaserMath.Clamp(this.position.x, 0, width - 1);
       this.position.y = PhaserMath.Clamp(this.position.y, 0, height - 1);
 
-      this.nextUpdate = time + 170;
+      const region = this.cursorData.regions[this.position.y][this.position.x];
       this.setVisible(true);
-      this.setPosition(
-        this.cursorData.regions[this.position.y][this.position.x].x,
-        this.cursorData.regions[this.position.y][this.position.x].y
-      );
+      this.setPosition(region.x, region.y);
+      this.setDisplaySize(region.width, region.height);
+
+      this.nextUpdate = time + 170;
     }
   }
 }

@@ -102,6 +102,9 @@ export class Boot extends Scene {
       return;
     }
 
+    this.scene.start('MainMenu');
+    return;
+
     // Skip menu if there is no save
     if (!Config.prod || !localStorage.getItem(saveKey)) this.scene.start('Preloader');
     else this.scene.start('MainMenu');

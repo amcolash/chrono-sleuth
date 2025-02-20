@@ -59,7 +59,7 @@ export class MemoryDialog extends Dialog {
     const sizePadded = size * 1.2;
 
     // make double nested array of buttons
-    const regions: Types.Math.Vector2Like[][] = [];
+    const regions: Types.Math.RectangleLike[][] = [];
 
     for (let i = 0; i < total; i++) {
       const x = -sizePadded + (i % 3) * sizePadded;
@@ -68,7 +68,7 @@ export class MemoryDialog extends Dialog {
       const yIndex = Math.floor(i / 3);
 
       if (regions[yIndex] === undefined) regions.push([]);
-      regions[yIndex].push({ x, y });
+      regions[yIndex].push({ x, y, width: sizePadded, height: sizePadded });
 
       const button = this.add.image(x, y, 'runes', `Stone${i + 1}`).setInteractive({ useHandCursor: true });
       button.on('pointerdown', () => this.onButtonPress(button, i));
@@ -80,7 +80,6 @@ export class MemoryDialog extends Dialog {
       this,
       {
         regions,
-        size: sizePadded,
         keyHandler: (pos) => {
           const index = pos.y * 3 + pos.x;
           const btn = this.buttons.getAt(index) as GameObjects.Image;

@@ -72,11 +72,16 @@ export class Pipes extends Scene {
     this.container = this.add.container();
     this.createPipes();
 
-    const regions: Types.Math.Vector2Like[][] = [];
+    const regions: Types.Math.RectangleLike[][] = [];
     for (let y = 0; y < height - 2; y++) {
       regions.push([]);
       for (let x = 0; x < width - 2; x++) {
-        regions[y].push({ x: (x + 1) * this.pipeSize, y: (y + 1) * this.pipeSize });
+        regions[y].push({
+          x: (x + 1) * this.pipeSize,
+          y: (y + 1) * this.pipeSize,
+          width: this.pipeSize,
+          height: this.pipeSize,
+        });
       }
     }
 
@@ -84,7 +89,6 @@ export class Pipes extends Scene {
       this,
       {
         regions,
-        size: this.pipeSize,
         keyHandler: (pos) => this.rotatePipe(pos.x + 1, pos.y + 1),
       },
       this.keys
