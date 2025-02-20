@@ -64,6 +64,15 @@
       }
     },
     {
+      "filename": "note",
+      "frame": {
+        "x": 500,
+        "y": 133,
+        "w": 80,
+        "h": 120
+      }
+    },
+    {
       "filename": "potion",
       "frame": {
         "x": 417,
@@ -76,7 +85,7 @@
       "filename": "watch",
       "frame": {
         "x": 500,
-        "y": 133,
+        "y": 254,
         "w": 47,
         "h": 70
       }

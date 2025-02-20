@@ -14,4 +14,5 @@ export const ItemData: Record<ItemType, Data> = {
   [ItemType.HerbBlue]: { x: 1535, y: 875, image: 'herb_blue', name: 'Blue Plumed Frond' },
   [ItemType.Potion]: { x: 0, y: 0, image: 'potion', name: 'Strange Potion' },
   [ItemType.Gear2]: { x: 0, y: 0, image: 'gear2', name: 'Old Gear' },
+  [ItemType.Note]: { x: 0, y: 0, image: 'note', name: 'Old Note' },
 };

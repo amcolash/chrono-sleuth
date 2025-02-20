@@ -104,6 +104,7 @@ export enum ItemType {
   HerbBlue,
   Potion,
   Gear2,
+  Note,
 }
 
 export enum QuestType {

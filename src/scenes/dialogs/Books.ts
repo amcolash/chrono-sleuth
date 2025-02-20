@@ -1,10 +1,13 @@
 import { FX, GameObjects, Geom } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
+import { Button } from '../../classes/UI/Button';
 import { Message } from '../../classes/UI/Message';
 import { Config } from '../../config';
+import { ItemType } from '../../data/types';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle, noteStyle } from '../../utils/fonts';
+import { hasItem } from '../../utils/interactionUtils';
 import { Dialog } from './Dialog';
 
 const GLOW_STRENGTH = 6;
@@ -49,7 +52,6 @@ export class Books extends Dialog {
   books: { image: GameObjects.Image; glow: FX.Glow; strength: number; name: string }[];
   message: Message;
   answer: number[];
-  hasNote: boolean;
 
   bookshelf: GameObjects.Image;
   door: GameObjects.Image;
@@ -66,7 +68,6 @@ export class Books extends Dialog {
 
   init(data: { player: Player }) {
     this.player = data.player;
-    this.hasNote = true;
   }
 
   create() {
@@ -79,34 +80,18 @@ export class Books extends Dialog {
 
     this.container.add(this.add.rectangle(0, 0, Config.width, Config.height, 0));
 
-    this.createBookshelf();
+    const hasNote = hasItem(this.player, ItemType.Note);
+    this.createBookshelf(hasNote);
 
-    const image = this.add.image(0, 0, 'props', 'paper').setScale(1.6, 2.25).setAngle(90);
-    image.setPosition(20 + image.displayHeight / 2, 5 + image.displayWidth / 2);
-    this.addTarget(image);
+    this.container.add(
+      new Button(this, Config.width * 0.47, Config.height * -0.43, 'X', () => this.close(false), {
+        ...fontStyle,
+        backgroundColor: undefined,
+        fontSize: 54,
+      })
+    );
 
-    const text = this.add
-      .text(
-        70,
-        50,
-        'I am not quite sure where to start. Maybe something in the library will help me find the answers I seek.',
-        {
-          ...noteStyle,
-          fontSize: 36,
-        }
-      )
-      .setWordWrapWidth(260);
-    this.addTarget(text);
-
-    if (this.hasNote) {
-      text.setText(
-        [
-          'A spiral marks the heart of the sequence.',
-          'Time begins with "Creation" and ends in "Eternity".',
-          'A blue tome, near the center, waits before the final touch.',
-        ].join('\n\n')
-      );
-
+    if (hasNote) {
       this.time.delayedCall(200, () => {
         this.message.setDialog(
           {
@@ -118,16 +103,37 @@ export class Books extends Dialog {
           'player_portrait'
         );
       });
+
+      const image = this.add.image(0, 0, 'props', 'paper').setScale(1.6, 2.25).setAngle(90);
+      image.setPosition(20 + image.displayHeight / 2, 5 + image.displayWidth / 2);
+      this.addTarget(image);
+
+      const text = this.add
+        .text(
+          70,
+          50,
+          [
+            'A spiral marks the heart of the sequence.',
+            'Time begins with "Creation" and ends in "Eternity".',
+            'A blue tome, near the center, waits before the final touch.',
+          ].join('\n\n'),
+          {
+            ...noteStyle,
+            fontSize: 36,
+          }
+        )
+        .setWordWrapWidth(260);
+      this.addTarget(text);
     }
 
     this.fadeIn();
   }
 
-  createBookshelf() {
+  createBookshelf(hasNote: boolean) {
     const texture = this.textures.get('bookshelf');
     const frames = Object.entries(texture.frames);
     const scale = 4;
-    const xOffset = 150;
+    const xOffset = hasNote ? 150 : 0;
 
     this.bookshelf = this.add.image(xOffset, 0, 'bookshelf', 'Bookshelf-0').setScale(scale).setTint(0x666666);
     this.container.add(this.bookshelf);
@@ -165,7 +171,7 @@ export class Books extends Dialog {
         });
 
         image.on('pointerdown', () => {
-          const correct = bookOrder[this.answer.length] === i;
+          const correct = bookOrder[this.answer.length] === i && hasNote;
 
           const messages = [this.books[i].name];
           if (correct) messages.push('<b><i>[CLUNK]</i></b> The bookshelf shifts slightly.');
@@ -199,7 +205,7 @@ export class Books extends Dialog {
           );
         });
 
-        if (!Config.prod) {
+        if (!Config.prod && hasNote) {
           if (bookOrder.includes(i)) {
             const debug = this.add
               .text(
