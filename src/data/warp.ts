@@ -235,7 +235,7 @@ export const WarpData: Record<WarpType, Data> = {
 
   [WarpType.TownHall]: {
     x: 3560,
-    y: -290,
+    y: -250,
     key: Key.Down,
     warpTo: WarpType.TownHallEntrance,
     location: Location.Library,

@@ -157,6 +157,7 @@ export enum PropType {
   MansionPicture,
   MansionHole,
   Bed,
+  LibraryShelf,
 }
 
 export enum HelperTextType {

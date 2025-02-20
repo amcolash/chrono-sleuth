@@ -97,4 +97,9 @@ export const PropData: Record<PropType, Data> = {
     y: -1530,
     scale: { x: 7, y: 2 },
   },
+  [PropType.LibraryShelf]: {
+    x: 2100,
+    y: -290,
+    name: 'Library Shelf',
+  },
 };

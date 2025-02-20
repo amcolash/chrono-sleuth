@@ -669,6 +669,12 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       messages: ['A comfortable bed.', 'I should rest here if I need to.'],
     },
   ],
+  [PropType.LibraryShelf]: [
+    {
+      messages: ['A library shelf, maybe I can find something interesting here.'],
+      onCompleted: (player) => openDialog(player.scene, 'Books'),
+    },
+  ],
 };
 
 export function getDialog<T>(dialogs: Dialog<T>[], player: Player, target: T): Dialog<T> | undefined {
