@@ -671,6 +671,9 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
   ],
   [PropType.LibraryShelf]: [
     {
+      conditions: {
+        hasUnusedItem: ItemType.Note,
+      },
       messages: ['A library shelf, maybe I can find something interesting here.'],
       onCompleted: (player) => openDialog(player.scene, 'Books'),
     },

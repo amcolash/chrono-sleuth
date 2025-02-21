@@ -14,24 +14,24 @@ import { Dialog } from './Dialog';
 const GLOW_STRENGTH = 6;
 
 const bookNames = [
-  'Chronomancer’s Dilemma',
   'The Forgotten Aeon',
   'Taming the Wild Griffin',
-  'Transmutation of the Soul',
   'Surrender to the Starlit Realm',
+  'The Creation of Time',
+  'The Eternal End',
   'The Bard’s Forbidden Melody',
   'Bound by Fate and Fire',
   'Secrets of the Fifth Element',
   'The Enchanted Knight’s Oath',
   'A Potion for Yesterday',
-  'The Creation of Time',
+  'Chronomancer’s Dilemma',
   'Tome of the Lost Hours',
   'The Midnight Convergence',
   'The Rogue’s Tempting Treasure',
-  'The Eternal End',
   'Whispers of the Moonlit Grove',
   'The Sorcerer’s Gentle Caress',
   'The Elixir That Binds',
+  'Transmutation of the Soul',
   'The Philosopher’s Vice',
   'The Silver Circle’s Curse',
   'A Mage’s Soft Touch',
@@ -164,8 +164,8 @@ export class Books extends Dialog {
       const rect = new Geom.Rectangle(
         source.x - padding,
         source.y - padding,
-        source.w * scale + padding * 2,
-        source.h * scale + padding * 2
+        source.w + padding * 2,
+        source.h + padding * 2
       );
       image.setInteractive({ hitArea: rect, hitAreaCallback: Geom.Rectangle.Contains, cursor: 'pointer' });
 
@@ -195,7 +195,7 @@ export class Books extends Dialog {
           this.handleClick(i);
         });
 
-        if (!Config.prod && hasNote) {
+        if (!Config.prod && hasNote && false) {
           if (bookOrder.includes(i)) {
             const debug = this.add
               .text(
@@ -244,7 +244,7 @@ export class Books extends Dialog {
     const correct = bookOrder[this.answer.length] === i && hasNote;
 
     const messages = [this.books[i].name];
-    if (correct) messages.push('<b><i>[CLUNK]</i></b> The bookshelf shifts slightly.');
+    if (correct) messages.push('<b><i>[CLUNK]</i></b> The book shifts slightly.');
 
     this.message.setDialog(
       {
@@ -301,7 +301,9 @@ export class Books extends Dialog {
     }
   }
 
-  handleSuccess(): void {}
+  handleSuccess(success: boolean): void {
+    if (success) this.player.inventory.useItem(ItemType.Note);
+  }
 
   close(success: boolean): void {
     this.books.forEach((book) => {
@@ -314,7 +316,7 @@ export class Books extends Dialog {
     this.door.setTint(getColorNumber(Colors.White));
 
     if (!success) {
-      super.close(success);
+      super.close(false);
       return;
     }
 
