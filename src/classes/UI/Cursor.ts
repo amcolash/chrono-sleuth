@@ -64,7 +64,7 @@ export class Cursor extends GameObjects.Rectangle {
 
       if (this.cursorData.onChange) this.cursorData.onChange(this.position, region);
 
-      this.nextUpdate = time + 170;
+      this.nextUpdate = time + 200;
     }
   }
 }

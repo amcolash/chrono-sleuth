@@ -1,8 +1,8 @@
-import { FX, GameObjects, Geom, Types } from 'phaser';
+import { FX, GameObjects, Geom } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
 import { Button } from '../../classes/UI/Button';
-import { Cursor } from '../../classes/UI/Cursor';
+import { Cursor, Region } from '../../classes/UI/Cursor';
 import { Message } from '../../classes/UI/Message';
 import { Config } from '../../config';
 import { ItemType } from '../../data/types';
@@ -21,10 +21,10 @@ const bookNames = [
   'Surrender to the Starlit Realm',
   'The Bard’s Forbidden Melody',
   'Bound by Fate and Fire',
-  'The Creation of Time',
   'Secrets of the Fifth Element',
   'The Enchanted Knight’s Oath',
   'A Potion for Yesterday',
+  'The Creation of Time',
   'Tome of the Lost Hours',
   'The Midnight Convergence',
   'The Rogue’s Tempting Treasure',
@@ -133,7 +133,7 @@ export class Books extends Dialog {
   createBookshelf(hasNote: boolean) {
     const texture = this.textures.get('bookshelf');
     const frames = Object.entries(texture.frames);
-    const regions: Types.Math.RectangleLike[][] = [];
+    const regions: Region[][] = [];
 
     const scale = 4;
     const xOffset = hasNote ? 150 : 0;
@@ -144,11 +144,19 @@ export class Books extends Dialog {
     this.door = this.add.image(xOffset, 0, 'bookshelf', 'Door-0').setScale(scale).setTint(0x666666);
     this.container.add(this.door);
 
-    const books = frames.filter((frame) => frame[1].name.startsWith('Book_'));
+    const books = frames
+      .filter((frame) => frame[1].name.startsWith('Book_'))
+      .sort((a, b) => {
+        const aName = Number(a[1].name.replace('Book_', '').replace('-0', ''));
+        const bName = Number(b[1].name.replace('Book_', '').replace('-0', ''));
+
+        return aName - bName;
+      });
     for (let i = 0; i < books.length; i++) {
       const frame = books[i];
 
       const image = this.add.image(xOffset, 0, 'bookshelf', frame[1].name).setScale(scale);
+      image.setData({ index: i });
       this.container.add(image);
       const padding = 2;
 
@@ -161,11 +169,15 @@ export class Books extends Dialog {
       );
       image.setInteractive({ hitArea: rect, hitAreaCallback: Geom.Rectangle.Contains, cursor: 'pointer' });
 
-      const x = i % 4;
-      const y = Math.floor(i / 5);
-
-      regions[x] = regions[x] || [];
-      regions[x][y] = rect;
+      const y = Math.floor(i / 4);
+      if (regions[y] === undefined) regions.push([]);
+      regions[y].push({
+        x: -1,
+        y: -1,
+        width: -1,
+        height: -1,
+        object: image,
+      });
 
       const glow = image.preFX?.addGlow(getColorNumber(Colors.Tan), 0);
       if (glow) {
@@ -201,28 +213,26 @@ export class Books extends Dialog {
       }
     }
 
-    // let i = 0;
-    // for (let x = 0; x < 4; x++) {
-    //   regions.push([]);
-    //   for (let y = 0; y < 5; y++) {
-    //     const book = this.books[i].image;
-    //     regions[x].push({
-    //       x: book.interactive.hitArea.x * scale + xOffset,
-    //     });
-    //     i++;
-    //   }
-    // }
-
-    console.log(this.books, regions);
-
     const cursor = new Cursor(
       this,
       {
         regions,
-        keyHandler: (_pos, region) => {
-          const index = this.books.findIndex((book) => book.image.x === region?.x && book.image.y === region?.y);
-          if (index >= 0) this.handleClick(index);
+        onSelect: (_pos, region) => {
+          if (region?.object && !this.message.visible) {
+            const index = region.object.getData('index');
+            this.handleClick(index);
+          }
         },
+        onChange: (_pos, region) => {
+          if (region?.object) {
+            const index = region.object.getData('index');
+
+            this.books.forEach((book, i) => {
+              if (!this.answer.includes(i)) book.strength = i === index ? GLOW_STRENGTH : 0;
+            });
+          }
+        },
+        hidden: true,
       },
       this.keys
     );
