@@ -4,9 +4,13 @@ import { Layer } from '../../data/layers';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { InputManager, Key } from './InputManager';
 
+export type Region = Types.Math.RectangleLike & { object?: GameObjects.GameObject };
+
 export interface CursorData {
-  regions: Types.Math.RectangleLike[][];
-  keyHandler: (position: PhaserMath.Vector2, region?: Types.Math.RectangleLike) => void;
+  regions: Region[][];
+  onSelect: (position: PhaserMath.Vector2, region?: Region) => void;
+  onChange?: (position: PhaserMath.Vector2, region?: Region) => void;
+  hidden?: boolean;
 }
 
 export class Cursor extends GameObjects.Rectangle {
@@ -39,7 +43,7 @@ export class Cursor extends GameObjects.Rectangle {
       initialRegion = this.cursorData.regions[this.position.y][this.position.x];
 
     const keys = this.keys.keys;
-    if (keys[Key.Continue]) this.cursorData.keyHandler(this.position, initialRegion);
+    if (keys[Key.Continue]) this.cursorData.onSelect(this.position, initialRegion);
     else if (keys[Key.Left]) this.position.x--;
     else if (keys[Key.Right]) this.position.x++;
     else if (keys[Key.Up]) this.position.y--;
@@ -54,9 +58,11 @@ export class Cursor extends GameObjects.Rectangle {
       this.position.y = PhaserMath.Clamp(this.position.y, 0, height - 1);
 
       const region = this.cursorData.regions[this.position.y][this.position.x];
-      this.setVisible(true);
+      if (!this.cursorData.hidden) this.setVisible(true);
       this.setPosition(region.x, region.y);
       this.setDisplaySize(region.width, region.height);
+
+      if (this.cursorData.onChange) this.cursorData.onChange(this.position, region);
 
       this.nextUpdate = time + 170;
     }

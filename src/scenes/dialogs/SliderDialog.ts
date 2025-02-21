@@ -74,7 +74,7 @@ export class SliderDialog extends Dialog {
       this,
       {
         regions,
-        keyHandler: (pos) => {
+        onSelect: (pos) => {
           const index = pos.y * cols + pos.x;
           this.moveTile(index);
         },

@@ -89,7 +89,7 @@ export class Pipes extends Scene {
       this,
       {
         regions,
-        keyHandler: (pos) => this.rotatePipe(pos.x + 1, pos.y + 1),
+        onSelect: (pos) => this.rotatePipe(pos.x + 1, pos.y + 1),
       },
       this.keys
     );

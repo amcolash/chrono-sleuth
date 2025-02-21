@@ -80,7 +80,7 @@ export class MemoryDialog extends Dialog {
       this,
       {
         regions,
-        keyHandler: (pos) => {
+        onSelect: (pos) => {
           const index = pos.y * 3 + pos.x;
           const btn = this.buttons.getAt(index) as GameObjects.Image;
 
