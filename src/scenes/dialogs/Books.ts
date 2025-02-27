@@ -3,6 +3,7 @@ import { FX, GameObjects, Geom } from 'phaser';
 import { Player } from '../../classes/Player/Player';
 import { Button } from '../../classes/UI/Button';
 import { Cursor, Region } from '../../classes/UI/Cursor';
+import { IconButton } from '../../classes/UI/IconButton';
 import { Message } from '../../classes/UI/Message';
 import { Config } from '../../config';
 import { ItemType } from '../../data/types';
@@ -59,7 +60,7 @@ export class Books extends Dialog {
   debug: GameObjects.GameObject[];
 
   constructor() {
-    super({ key: 'Books', title: 'Books', gamepadVisible: false, hideCloseSuccess: true, skipUI: true });
+    super({ key: 'Books', title: 'Books', gamepadVisible: false, skipUI: true });
   }
 
   preload() {
@@ -91,6 +92,13 @@ export class Books extends Dialog {
         fontSize: 54,
       })
     );
+
+    if (!Config.prod && !this.dialogData.hideCloseSuccess) {
+      const button = new IconButton(this, Config.width * 0.467, Config.height * -0.3, 'award', () => this.close(true));
+      button.rect.fillColor = 0x00000000;
+      button.rect.strokeColor = 0x000000;
+      this.container.add(button);
+    }
 
     if (hasNote) {
       this.time.delayedCall(200, () => {
@@ -195,7 +203,7 @@ export class Books extends Dialog {
           this.handleClick(i);
         });
 
-        if (!Config.prod && hasNote && false) {
+        if (!Config.prod && hasNote) {
           if (bookOrder.includes(i)) {
             const debug = this.add
               .text(
