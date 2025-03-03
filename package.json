@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@here/harp-atlas-tools": "^0.28.0",
-    "@tauri-apps/cli": "^2.2.7",
+    "@tauri-apps/cli": "^2.3.1",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^22.13.4",
