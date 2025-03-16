@@ -85,7 +85,12 @@ async function maps() {
 
       const size = Math.max(300, Math.floor(Math.min((dims.width || 1000) / 2, (dims.height || 1000) / 2)));
 
-      console.log({ width: dims.width, height: dims.height, size, ratio: Math.min(dims.width, dims.height) / size });
+      console.log({
+        width: dims.width,
+        height: dims.height,
+        size,
+        ratio: Math.min(dims.width || 1000, dims.height || 1000) / size,
+      });
 
       await image
         .resize({ width: size, height: size, fit: 'outside', kernel: 'nearest' })

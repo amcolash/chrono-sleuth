@@ -20,11 +20,12 @@ export class Journal extends GameObjects.Image {
   journal: JournalEntry[] = [];
   unread: GameObjects.Ellipse;
 
-  initialized: boolean = false;
+  initialized: boolean;
 
   constructor(scene: Scene, player: Player) {
     super(scene, Config.width - 50, Config.height - 55, 'items', 'journal');
     this.player = player;
+    this.initialized = false;
   }
 
   createUI() {

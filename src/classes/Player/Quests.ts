@@ -21,11 +21,12 @@ export class Quests extends GameObjects.Container {
   quests: Quest[] = [];
   questRectangle: GameObjects.Rectangle;
 
-  initialized: boolean = false;
+  initialized: boolean;
 
   constructor(scene: Scene, player: Player) {
     super(scene, Config.width - size - 20, 120);
     this.player = player;
+    this.initialized = false;
   }
 
   createUI() {

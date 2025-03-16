@@ -25,11 +25,13 @@ export class GameState {
   scene: Game;
   player: Player;
 
+  initialized: boolean;
   data: GameData;
 
   constructor(scene: Game, player: Player) {
     this.scene = scene;
     this.player = player;
+    this.initialized = false;
 
     this.data = { ...defaultState };
   }
@@ -42,6 +44,7 @@ export class GameState {
     });
 
     if (!silent) autosave(this.scene);
+    this.initialized = true;
   }
 
   handleSideEffects(key: keyof GameData, value: any, silent?: boolean) {

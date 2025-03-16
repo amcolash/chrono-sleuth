@@ -7,7 +7,7 @@ import { Data, NPCData } from '../../data/npc';
 import { InteractResult, Interactive, LazyInitialize, NPCType } from '../../data/types';
 import { initializeObject } from '../../utils/interactionUtils';
 import { isDaytime, isNighttime } from '../../utils/lighting';
-import { shouldInitialize } from '../../utils/util';
+import { gameInitialized, nearby } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
@@ -40,16 +40,14 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   }
 
   lazyInit() {
-    // if (!forceInit && this.initialized) return;
+    if (this.initialized || !gameInitialized(this.player)) return;
 
-    if (this.initialized || !shouldInitialize(this, this.player)) return;
+    let shouldInitialize = nearby(this, this.player, 1000);
+    this.npcData.positionData?.forEach((pos) => {
+      if (nearby(pos.pos, this.player, 1000)) shouldInitialize = true;
+    });
 
-    // let nearbyAnyPos = shouldInitialize(this, this.player);
-    // this.npcData.positionData?.forEach((pos) => {
-    //   if (nearby(pos.pos, this.player, 1000)) {
-    //     nearbyAnyPos = true;
-    //   }
-    // });
+    if (!shouldInitialize) return;
 
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);

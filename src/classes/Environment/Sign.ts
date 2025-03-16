@@ -52,7 +52,7 @@ export class Sign extends Physics.Arcade.Image implements LazyInitialize {
       .setPipeline('Light2D');
 
     const padding = 5;
-    this.setDisplaySize(this.text.displayWidth + padding * 8, this.text.displayHeight + padding);
+    this.setDisplaySize(this.text.displayWidth + padding * 5, this.text.displayHeight + padding);
 
     this.initialized = true;
 

@@ -20,11 +20,12 @@ export class Inventory extends GameObjects.Container {
   inventory: InventoryData[] = [];
   text: GameObjects.Text;
   rect: GameObjects.Rectangle;
-  initialized: boolean = false;
+  initialized: boolean;
 
   constructor(scene: Scene) {
     super(scene, 0, 0);
     this.setScrollFactor(0).setDepth(Layer.Ui).setVisible(false);
+    this.initialized = false;
   }
 
   createUI() {

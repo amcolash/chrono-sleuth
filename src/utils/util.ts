@@ -85,8 +85,17 @@ export function nearby(obj1: Types.Math.Vector2Like, obj2: Types.Math.Vector2Lik
   return PhaserMath.Distance.BetweenPointsSquared(obj1, obj2) < distance * distance;
 }
 
+export function gameInitialized(player: Player): boolean {
+  return (
+    player.inventory.initialized &&
+    player.quests.initialized &&
+    player.journal.initialized &&
+    player.gameState.initialized
+  );
+}
+
 export function shouldInitialize(obj: Types.Math.Vector2Like, player: Player, distance?: number): boolean {
-  if (!player.inventory.initialized || !player.quests.initialized || !player.journal.initialized) return false;
+  if (!gameInitialized) return false;
   return nearby(obj, player, distance || 1000);
 }
 
