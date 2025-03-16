@@ -33,8 +33,8 @@ export class Item extends Physics.Arcade.Image implements Interactive, LazyIniti
     initializeObject(this, ItemData[type]);
   }
 
-  lazyInit(forceInit?: boolean) {
-    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
+  lazyInit() {
+    if (this.initialized || !shouldInitialize(this, this.player)) return;
 
     // Check if player already has item, if so, destroy this item
     if (hasItem(this.player, this.itemType)) {

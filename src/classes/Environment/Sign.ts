@@ -30,8 +30,8 @@ export class Sign extends Physics.Arcade.Image implements LazyInitialize {
     this.setTint(0xccbbaa);
   }
 
-  lazyInit(forceInit?: boolean): void {
-    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
+  lazyInit(): void {
+    if (this.initialized || !shouldInitialize(this, this.player)) return;
 
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);

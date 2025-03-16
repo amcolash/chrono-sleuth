@@ -59,8 +59,8 @@ export class Fireflies extends GameObjects.GameObject implements LazyInitialize 
     }
   }
 
-  lazyInit(forceInit?: boolean) {
-    if (!forceInit && (this.initialized || !shouldInitialize(this.center, this.scene.player))) return;
+  lazyInit() {
+    if (this.initialized || !shouldInitialize(this.center, this.scene.player)) return;
 
     for (let i = 0; i < this.count; i++) {
       const c = new Display.Color(Math.random() * 40 + 50, Math.random() * 60 + 190, Math.random() * 20 + 10);

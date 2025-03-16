@@ -39,8 +39,8 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
     this.upwards = upwards;
   }
 
-  lazyInit(forceInit?: boolean) {
-    if (!forceInit && (this.initialized || !shouldInitialize(this, this.scene.player))) return;
+  lazyInit() {
+    if (this.initialized || !shouldInitialize(this, this.scene.player)) return;
 
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);

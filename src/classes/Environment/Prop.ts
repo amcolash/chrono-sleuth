@@ -36,8 +36,8 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (type === PropType.MansionPicture) this.resetPostPipeline();
   }
 
-  lazyInit(forceInit?: boolean) {
-    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
+  lazyInit() {
+    if (this.initialized || !shouldInitialize(this, this.player)) return;
 
     if (this.checkDestroyed()) return;
 

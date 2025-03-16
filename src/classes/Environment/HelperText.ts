@@ -21,8 +21,8 @@ export class HelperText extends GameObjects.Image implements Interactive, LazyIn
     this.player = player;
   }
 
-  lazyInit(forceInit?: boolean): void {
-    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
+  lazyInit(): void {
+    if (this.initialized || !shouldInitialize(this, this.player)) return;
 
     const { size } = HelperTextData[HelperTextType.LabStairs];
 

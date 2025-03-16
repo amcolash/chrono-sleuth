@@ -69,8 +69,8 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     if (forcedInitializations.includes(warpType)) scene.add.existing(this);
   }
 
-  lazyInit(forceInit?: boolean) {
-    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
+  lazyInit() {
+    if (this.initialized || !shouldInitialize(this, this.player)) return;
 
     // Only add warps which were not previously added
     if (!forcedInitializations.includes(this.warpType)) this.scene.add.existing(this);

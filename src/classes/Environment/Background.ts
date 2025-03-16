@@ -46,8 +46,8 @@ export class Background extends Physics.Arcade.Image implements LazyInitialize {
     }
   }
 
-  lazyInit(forceInit?: boolean) {
-    if (!forceInit && (this.initialized || !shouldInitialize(this.center, this.player, 2000))) return;
+  lazyInit() {
+    if (this.initialized || !shouldInitialize(this.center, this.player, 2000)) return;
 
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);

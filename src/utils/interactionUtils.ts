@@ -89,7 +89,7 @@ export function getClockRewind(scene: Game): number {
 }
 
 export function initializeObject<T>(obj: Physics.Arcade.Image & LazyInitialize, config: DataProps<T>) {
-  const { scale, alpha, angle, depth, skipLighting, origin, initializeOnStart } = config;
+  const { scale, alpha, angle, depth, skipLighting, origin } = config;
 
   if (scale) {
     if (typeof scale === 'object') obj.setScale(scale.x, scale.y);
@@ -103,6 +103,4 @@ export function initializeObject<T>(obj: Physics.Arcade.Image & LazyInitialize, 
 
   if (!skipLighting) obj.setPipeline('Light2D');
   obj.setPostPipeline('XRayPipeline');
-
-  if (initializeOnStart) obj.lazyInit(true);
 }

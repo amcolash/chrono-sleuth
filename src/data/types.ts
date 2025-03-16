@@ -32,7 +32,7 @@ export interface Rewindable {
 
 export interface LazyInitialize {
   initialized: boolean;
-  lazyInit(forceInit?: boolean): void;
+  lazyInit(): void;
 }
 
 export interface PostUpdated {
@@ -53,7 +53,6 @@ export type DataProps<T> = {
   skipLighting?: boolean;
   particles?: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig;
   origin?: Types.Math.Vector2Like;
-  initializeOnStart?: boolean;
   onCreate?: (obj: T) => void;
 };
 

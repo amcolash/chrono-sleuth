@@ -39,8 +39,17 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     initializeObject(this, data);
   }
 
-  lazyInit(forceInit?: boolean) {
-    if (!forceInit && (this.initialized || !shouldInitialize(this, this.player))) return;
+  lazyInit() {
+    // if (!forceInit && this.initialized) return;
+
+    if (this.initialized || !shouldInitialize(this, this.player)) return;
+
+    // let nearbyAnyPos = shouldInitialize(this, this.player);
+    // this.npcData.positionData?.forEach((pos) => {
+    //   if (nearby(pos.pos, this.player, 1000)) {
+    //     nearbyAnyPos = true;
+    //   }
+    // });
 
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
