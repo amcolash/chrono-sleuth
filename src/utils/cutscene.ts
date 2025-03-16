@@ -221,7 +221,7 @@ export function townIntro(scene: Game) {
     .play();
 }
 
-export function updateSphinx(scene: Scene, complete?: boolean) {
+export function updateSphinxWallAndWarp(scene: Scene, complete?: boolean) {
   const wall = getWall(scene, WallType.Sphinx);
   if (wall) {
     const x = WallData.find((data) => data.id === WallType.Sphinx)?.x || 0;

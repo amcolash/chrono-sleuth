@@ -1,19 +1,19 @@
+import { Types } from 'phaser';
+
 import { NPC } from '../classes/Environment/NPC';
 import { Game } from '../scenes/Game';
-import { updateSphinx } from '../utils/cutscene';
+import { updateSphinxWallAndWarp } from '../utils/cutscene';
 import { isNighttime } from '../utils/lighting';
 import { DataProps, NPCType } from './types';
 
 type PositionData = {
-  x: number;
-  y: number;
+  pos: Types.Math.Vector2Like;
   condition: (target: NPC) => boolean;
   onMove?: (target: NPC) => void;
 };
 
 export const nighttimeVillager: PositionData = {
-  x: 0,
-  y: 0,
+  pos: { x: 0, y: 0 },
   condition: (target) => isNighttime(target.scene),
 };
 
@@ -53,17 +53,15 @@ export const NPCData: Record<NPCType, Data> = {
     positionData: [
       {
         // Position after sphinx allows player to pass
-        x: 3720,
-        y: 700,
+        pos: { x: 3720, y: 700 },
         condition: (sphinx) => (sphinx.scene as Game).player.gameState.data.sphinxMoved,
-        onMove: (sphinx) => updateSphinx(sphinx.scene, true),
+        onMove: (sphinx) => updateSphinxWallAndWarp(sphinx.scene, true),
       },
       {
-        // Duplicated default position - used to trigger updateSphinx
-        x: 3520,
-        y: 790,
+        // Duplicated default position - used to trigger updateSphinxWallAndWarp
+        pos: { x: 3520, y: 790 },
         condition: () => true,
-        onMove: (sphinx) => updateSphinx(sphinx.scene, false),
+        onMove: (sphinx) => updateSphinxWallAndWarp(sphinx.scene, false),
       },
     ],
   },
@@ -93,6 +91,9 @@ export const NPCData: Record<NPCType, Data> = {
     portrait: 'baker_portrait',
     name: 'Amanda the Baker',
     skipLighting: true,
-    positionData: [nighttimeVillager],
+    positionData: [
+      { condition: (baker) => (baker.scene as Game).player.gameState.data.day > 1, pos: { x: 2380, y: -320 } },
+      nighttimeVillager,
+    ],
   },
 };

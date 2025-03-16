@@ -87,10 +87,10 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
       let onMove: ((target: NPC) => void) | undefined;
 
       for (let i = 0; i < posData.length; i++) {
-        const { x, y, condition } = posData[i];
+        const { pos, condition } = posData[i];
         if (condition(this)) {
-          nextPos.x = x;
-          nextPos.y = y;
+          nextPos.x = pos.x;
+          nextPos.y = pos.y;
           onMove = posData[i].onMove;
           break;
         }
