@@ -284,7 +284,14 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
   ],
   [NPCType.Baker]: [
     {
-      messages: ['Welcome! I bake the best bread in town.'],
+      messages: [
+        'I see you found my favorite spot to get away from the bustle of our little town. Getting lost in a far away land is one of my favorite pastimes.',
+        'I come here most afternoons after early mornings of baking.',
+      ],
+      conditions: { custom: (player) => player.gameState.data.day === 2 },
+    },
+    {
+      messages: ["Welcome to town! I bake the best bread around. I have a feeling I'll be seeing you again."],
     },
   ],
 };

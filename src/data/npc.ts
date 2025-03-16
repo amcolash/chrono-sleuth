@@ -67,7 +67,7 @@ export const NPCData: Record<NPCType, Data> = {
   },
   [NPCType.Mayor]: {
     x: 790,
-    y: -340,
+    y: -350,
     scale: 0.9,
     image: 'mayor',
     portrait: 'mayor_portrait',
@@ -92,8 +92,8 @@ export const NPCData: Record<NPCType, Data> = {
     name: 'Amanda the Baker',
     skipLighting: true,
     positionData: [
-      { condition: (baker) => (baker.scene as Game).player.gameState.data.day > 1, pos: { x: 2380, y: -320 } },
       nighttimeVillager,
+      { condition: (baker) => (baker.scene as Game).player.gameState.data.day > 1, pos: { x: 2470, y: -320 } },
     ],
   },
 };
