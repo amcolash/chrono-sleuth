@@ -9,7 +9,7 @@ interface Data {
 
 export const SlopeData: Data[] = [
   // Station
-  { x: 430, y: 1390, width: 180, height: 160, flip: true },
+  { x: 420, y: 1390, width: 180, height: 160, flip: true },
 
   // Clock
   { x: 740, y: -1380, width: 170, height: 95 },

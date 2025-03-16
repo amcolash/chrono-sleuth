@@ -26,6 +26,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   scene: Game;
 
   keys: InputManager;
+  shadow: GameObjects.Image;
   light: GameObjects.Light | DebugLight;
   debug: GameObjects.Arc;
 
@@ -73,6 +74,12 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     } else {
       this.light = scene.lights.addLight(this.x, this.y, 200, 0xffddbb, 1);
     }
+
+    this.shadow = this.scene.add
+      .image(this.x, this.y, 'props', 'warp')
+      .setPipeline('Light2D')
+      .setScale(0.7, 0.15)
+      .setTint(0x000000);
 
     createAnimation(this);
 
@@ -139,10 +146,15 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
     }
 
     this.previousPosition.set(this.x, this.y);
+
+    if (this.shadow.rotation > 0) this.shadow.setRotation(Math.max(0, this.shadow.rotation - 0.075));
+    if (this.shadow.rotation < 0) this.shadow.setRotation(Math.min(0, this.shadow.rotation + 0.075));
+    this.shadow.setAlpha(this.rotation !== 0 ? 0.25 : 0.5);
   }
 
   postUpdate() {
     this.light.setPosition(this.x, this.y - 20);
+    this.shadow.setPosition(this.x, this.y + this.displayHeight / 2);
 
     if (Config.debug) {
       this.debug?.setPosition(this.x, this.y);

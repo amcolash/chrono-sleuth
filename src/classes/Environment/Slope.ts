@@ -101,6 +101,9 @@ export class Slope extends Physics.Arcade.Image implements LazyInitialize {
       if (keys[Key.Right]) player.setVelocityX(slopeSpeed);
       if (keys[Key.Left]) player.setVelocityX(-slopeSpeed);
 
+      if (horizontalPercent > 0.1 && horizontalPercent < 0.9)
+        player.shadow.setRotation(Math.atan2(this.height, this.width) * (this.flipped ? 1 : -1));
+
       // if up key pressed and player is close to the slope, move up
       if (this.upwards && keys[Key.Up] && Math.abs(player.y - newY) < 70) {
         player.setVelocityX(this.flipped ? -slopeSpeed : slopeSpeed);

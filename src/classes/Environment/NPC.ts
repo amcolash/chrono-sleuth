@@ -18,6 +18,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
   player: Player;
   light: GameObjects.Light | DebugLight;
   particles: GameObjects.Particles.ParticleEmitter;
+  shadow: GameObjects.Image;
   moveTimeline?: Time.Timeline;
 
   disabled: boolean = false;
@@ -70,6 +71,12 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
         .particles(x, y, 'props', { frame: 'warp', ...particles })
         .setName(`NPC-${this.npcType}-Particles`);
     }
+
+    this.shadow = this.scene.add
+      .image(this.x, this.y, 'props', 'warp')
+      .setScale(0.75, 0.15)
+      .setTint(0x000000)
+      .setAlpha(0.5);
 
     if (onCreate) onCreate(this);
     this.initialized = true;
@@ -150,8 +157,9 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
       }
     }
 
-    // Always update light position
+    // Always update light/shadow position
     this.light?.setPosition(this.x, this.y);
+    this.shadow?.setPosition(this.x, this.y + this.displayHeight / 2);
   }
 
   setPosition(x?: number, y?: number, z?: number, w?: number): this {
