@@ -15,11 +15,6 @@ export class Walls extends Physics.Arcade.StaticGroup {
     super(scene.physics.world, scene);
 
     this.player = player;
-
-    // Only initialize walls on scene start if they have an id. Otherwise, wait until later
-    WallData.forEach((wall, i) => {
-      if (wall.id !== undefined) this.createWall(wall, i);
-    });
   }
 
   createWall(data: WallInfo, index: number) {
@@ -30,6 +25,8 @@ export class Walls extends Physics.Arcade.StaticGroup {
     if (Config.debug) wall.setInteractive({ draggable: true });
     this.add(wall);
     this.initialized.push(index);
+
+    data.onCreate?.(wall);
   }
 
   update() {

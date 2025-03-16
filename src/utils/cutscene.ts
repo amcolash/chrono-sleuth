@@ -13,7 +13,7 @@ import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
 import { rotationCorrection, updateAnimation } from './animations';
 import { fontStyle } from './fonts';
-import { getProp, getWall, hasUsedItem, updateWarpLocked } from './interactionUtils';
+import { getProp, getWall, hasItem, hasUsedItem, updateWarpLocked } from './interactionUtils';
 import { toggleXRay } from './shaders/xray';
 import { fadeIn, fadeOut } from './util';
 
@@ -221,15 +221,12 @@ export function townIntro(scene: Game) {
     .play();
 }
 
+export const sphinxWallOffset = 150;
 export function updateSphinxWallAndWarp(scene: Scene, complete?: boolean) {
   const wall = getWall(scene, WallType.Sphinx);
   if (wall) {
     const x = WallData.find((data) => data.id === WallType.Sphinx)?.x || 0;
-    if (complete) {
-      wall.setX(x);
-    } else {
-      wall.setX(x - 150);
-    }
+    wall.setX(x - (complete ? 0 : sphinxWallOffset));
     (wall.body as Physics.Arcade.Body)?.updateFromGameObject();
   }
 
@@ -299,12 +296,14 @@ export function updateAlchemySet(player: Player) {
   if (!alchemySet) return;
   alchemySet.setFrame('alchemy_empty');
 
-  if (hasUsedItem(player, ItemType.HerbBlue)) {
-    alchemySet.setFrame(herbData[ItemType.HerbBlue].frame);
-  } else if (hasUsedItem(player, ItemType.HerbRed)) {
-    alchemySet.setFrame(herbData[ItemType.HerbRed].frame);
-  } else if (hasUsedItem(player, ItemType.HerbGreen)) {
-    alchemySet.setFrame(herbData[ItemType.HerbGreen].frame);
+  if (!hasItem(player, ItemType.Potion)) {
+    if (hasUsedItem(player, ItemType.HerbBlue)) {
+      alchemySet.setFrame(herbData[ItemType.HerbBlue].frame);
+    } else if (hasUsedItem(player, ItemType.HerbRed)) {
+      alchemySet.setFrame(herbData[ItemType.HerbRed].frame);
+    } else if (hasUsedItem(player, ItemType.HerbGreen)) {
+      alchemySet.setFrame(herbData[ItemType.HerbGreen].frame);
+    }
   }
 }
 

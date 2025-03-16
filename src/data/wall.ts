@@ -1,9 +1,14 @@
+import { GameObjects, Physics } from 'phaser';
+
+import { Game } from '../scenes/Game';
+import { sphinxWallOffset } from '../utils/cutscene';
 import { WallType } from './types';
 
 export interface Data {
   x: number;
   y: number;
   id?: WallType;
+  onCreate?: (target: GameObjects.Rectangle) => void;
 }
 
 export const WallData: Data[] = [
@@ -27,7 +32,16 @@ export const WallData: Data[] = [
 
   // Forest
   { x: 2600, y: 760 },
-  { x: 3610, y: 760, id: WallType.Sphinx },
+  {
+    x: 3610,
+    y: 760,
+    id: WallType.Sphinx,
+    onCreate: (wall: GameObjects.Rectangle) => {
+      const moved = (wall.scene as Game).player.gameState.data.sphinxMoved;
+      if (!moved) wall.setX(wall.x - sphinxWallOffset);
+      (wall.body as Physics.Arcade.Body)?.updateFromGameObject();
+    },
+  },
 
   // Lake
   { x: 4455, y: 850 },

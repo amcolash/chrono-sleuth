@@ -1,5 +1,6 @@
 import { Warp } from '../classes/Environment/Warp';
 import { Key } from '../classes/UI/InputManager';
+import { Game } from '../scenes/Game';
 import { DataProps, Location, WarpType } from './types';
 
 export enum WarpVisual {
@@ -142,7 +143,7 @@ export const WarpData: Record<WarpType, Data> = {
     warpTo: WarpType.Lake,
     location: Location.Lake,
     visual: WarpVisual.WarpLocked,
-    initializeOnStart: true,
+    onCreate: (warp) => warp.updateLocked(!(warp.scene as Game).player.gameState.data.sphinxMoved),
   },
   [WarpType.Lake]: {
     x: 4510,

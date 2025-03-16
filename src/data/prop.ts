@@ -1,5 +1,8 @@
 import { Prop } from '../classes/Environment/Prop';
-import { DataProps, PropType } from './types';
+import { Game } from '../scenes/Game';
+import { revealSafe, updateAlchemySet } from '../utils/cutscene';
+import { hasJournalEntry } from '../utils/interactionUtils';
+import { DataProps, JournalEntry, PropType } from './types';
 
 type Data = DataProps<Prop> & {
   portrait?: string;
@@ -45,7 +48,6 @@ export const PropData: Record<PropType, Data> = {
     y: 1600,
     scale: 0.7,
     image: 'alchemy_empty',
-    initializeOnStart: true,
     skipLighting: true,
     particles: {
       scale: { min: 0.05, max: 0.15 },
@@ -56,6 +58,7 @@ export const PropData: Record<PropType, Data> = {
       emitting: false,
       stopAfter: 60,
     },
+    onCreate: (prop) => updateAlchemySet((prop.scene as Game).player),
   },
   [PropType.LabBookshelf1]: {
     x: -2025,
@@ -85,7 +88,10 @@ export const PropData: Record<PropType, Data> = {
     name: 'Picture',
     image: 'picture',
     origin: { x: 0, y: 0 },
-    initializeOnStart: true,
+    onCreate: (prop) => {
+      const player = (prop.scene as Game).player;
+      if (hasJournalEntry(player, JournalEntry.SafeDiscovered)) revealSafe(player, true);
+    },
   },
   [PropType.MansionHole]: {
     x: -1870,
