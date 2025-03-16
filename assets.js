@@ -24,16 +24,15 @@ function audioSprite(inputPath, outputFile, opts) {
 async function generateAtlas(inputPath, outputFile) {
   exc(`npx harp-atlas-generator -i "${inputPath}/**/*.png" -o ${assetsDir}/atlases/${outputFile}`);
 
+  // Fix atlas json to work with Phaser
   const jsonFile = join(assetsDir, '/atlases/', outputFile + '.json');
   const data = JSON.parse(readFileSync(jsonFile).toString());
-
   const output = {
     frames: Object.entries(data).map((f) => ({
       filename: f[0],
       frame: { x: f[1].x, y: f[1].y, w: f[1].width, h: f[1].height },
     })),
   };
-
   writeFileSync(jsonFile, JSON.stringify(output, undefined, 2));
 
   // reduce texture quality to improve size
