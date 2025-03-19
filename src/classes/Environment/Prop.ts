@@ -112,7 +112,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     let action = 'Inspect';
     if (this.propType === PropType.Bed) action = 'Rest in';
 
-    return dialog && dialog?.messages.length > 0 ? [`${action} ${prop}`, 'Press [CONTINUE]'] : '';
+    return dialog && dialog?.messages.length > 0 ? [`${action} ${prop}\nPress [img=gamepad]`] : '';
   }
 
   update(time: number) {

@@ -29,7 +29,7 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   light: GameObjects.Light | DebugLight;
   debug: GameObjects.Arc;
 
-  buttonPrompt: GameObjects.Text;
+  buttonPrompt: ButtonPrompt;
   interactive?: Interactive;
   interactionTimeout: number = 0;
 
