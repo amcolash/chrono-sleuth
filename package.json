@@ -36,6 +36,6 @@
     "typescript": "^5.8.2",
     "vite": "^6.2.2",
     "vite-plugin-generate-file": "^0.2.0",
-    "vite-plugin-pwa": "^0.21.1"
+    "vite-plugin-pwa": "^0.21.2"
   }
 }
