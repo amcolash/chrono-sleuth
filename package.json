@@ -15,7 +15,7 @@
     "assets": "node assets.js"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.3.0",
+    "@tauri-apps/api": "^2.4.0",
     "@tauri-apps/plugin-process": "^2.2.0",
     "@tauri-apps/plugin-window-state": "^2.2.1",
     "deep-equal": "^2.2.3",
