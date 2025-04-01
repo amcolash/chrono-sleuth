@@ -197,7 +197,9 @@ export class Warp extends Physics.Arcade.Image implements Interactive, LazyIniti
     let destination: string = name || location;
     destination = splitTitleCase(destination);
 
-    return [`Travel to ${destination}`, 'Press ' + prompt];
+    const debug = Config.debug ? `(WarpType.${WarpType[this.warpType]})` : undefined;
+
+    return [debug, `Travel to ${destination}`, 'Press ' + prompt].filter((s) => s) as string[];
   }
 
   setPosition(x?: number, y?: number, z?: number, w?: number): this {
@@ -263,14 +265,19 @@ export function warpTo(
   let canWarp = true;
   if (
     isNighttime(player.scene) &&
-    (source === WarpType.TownEast || source === WarpType.TownWest || source === WarpType.Town)
+    (source === WarpType.TownEast ||
+      source === WarpType.TownWest ||
+      source === WarpType.Town ||
+      source === WarpType.LibraryEntrance ||
+      source === WarpType.TownNorth ||
+      source === WarpType.ClockSquareNorth)
   )
     canWarp = false;
   if ((!Config.prod && force) || Config.debug) canWarp = true;
 
   if (!canWarp) {
     player.message.setDialog(
-      { messages: ['It is too late to leave town now.', 'I should rest at the inn until tomorrow.'] },
+      { messages: ['It is too late to venture off now.', 'I should rest at the inn until tomorrow.'] },
       player
     );
     return;
