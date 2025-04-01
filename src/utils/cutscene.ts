@@ -1,4 +1,4 @@
-import { GameObjects, Physics, Scene } from 'phaser';
+import { GameObjects, Physics, Scene, Time } from 'phaser';
 
 import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
@@ -8,12 +8,12 @@ import { Message } from '../classes/UI/Message';
 import { Config } from '../config';
 import { Layer } from '../data/layers';
 import { PropData } from '../data/prop';
-import { ItemType, MusicType, PropType, QuestType, WallType, WarpType } from '../data/types';
+import { ItemType, MusicType, NPCType, PropType, QuestType, WallType, WarpType } from '../data/types';
 import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
 import { rotationCorrection, updateAnimation } from './animations';
 import { fontStyle } from './fonts';
-import { getProp, getWall, hasItem, hasUsedItem, updateWarpLocked } from './interactionUtils';
+import { getNPC, getProp, getWall, hasItem, hasUsedItem, updateWarpLocked } from './interactionUtils';
 import { toggleXRay } from './shaders/xray';
 import { fadeIn, fadeOut } from './util';
 
@@ -449,6 +449,106 @@ export function bedtime(player: Player) {
     .play();
 }
 
-export function townMeeting1(player: Player) {}
+export async function delay(time: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+export function timelineDialog(message: Message, timeline: Time.Timeline, messages: string[], target: any) {
+  timeline.pause();
+  message.setDialog({ messages, onCompleted: () => timeline.resume() }, target);
+}
+
+export async function townMeeting1(player: Player) {
+  const scene = player.scene;
+  player.setActive(false);
+
+  const villager1 = scene.add
+    .image(480, 635, 'npcs', 'villager1')
+    .setDisplaySize(50, 120)
+    .setDepth(Layer.Npcs)
+    .setPipeline('Light2D');
+  const villager2 = scene.add
+    .image(400, 640, 'npcs', 'villager2')
+    .setDisplaySize(50, 120)
+    .setDepth(Layer.Npcs)
+    .setPipeline('Light2D');
+  const villager3 = scene.add
+    .image(1010, 645, 'npcs', 'villager3')
+    .setDisplaySize(50, 120)
+    .setDepth(Layer.Npcs)
+    .setPipeline('Light2D');
+
+  const message = player.message;
+
+  const mayor = getNPC(scene, NPCType.Mayor);
+  const innkeeper = getNPC(scene, NPCType.Innkeeper);
+
+  // TODO: Get this SFX
+  scene.sound.playAudioSprite('sfx', 'town_chatter');
+
+  const timeline = scene.add
+    .timeline([
+      {
+        from: 1500,
+
+        run: () => {
+          timelineDialog(
+            message,
+            timeline,
+            [
+              'It looks like the town is having a meeting. I should listen in to see if I can learn anything else about the clocktower.',
+            ],
+            player
+          );
+        },
+      },
+      {
+        from: 2500,
+        run: () => {
+          timelineDialog(
+            message,
+            timeline,
+            [
+              "Alright everyone, let's get started with the meeting tonight.",
+              'For those unaware, we have a new person joining tonight. Rosie has been investigating the clocktower mystery.',
+              'Today, she found a missing gear and installed it back into the clock! Thank you Rosie.',
+            ],
+            mayor
+          );
+        },
+      },
+      {
+        from: 500,
+        run: () => {
+          timelineDialog(
+            message,
+            timeline,
+            [
+              'Welcome Rosie! We are thrilled to have you here. Great job on investigating the mystery of the clock tower!',
+            ],
+            innkeeper
+          );
+        },
+      },
+      {
+        from: 750,
+        run: () => {
+          timelineDialog(
+            message,
+            timeline,
+            [
+              "Now, let's get to the main topic of the evening. Has anyone noticed any oddities? Yesterday, the clock stopped and today I heard from Johan that some of his tools were missing.",
+            ],
+            mayor
+          );
+        },
+      },
+      {
+        from: 500,
+        run: () => player.setActive(true),
+      },
+    ])
+    .play();
+}
 
 export function townMeeting2(player: Player) {}

@@ -18,6 +18,11 @@ export const LightData: Data[] = [
   { x: 791, y: 472, intensity: 0.75 },
   { x: 962, y: 469, intensity: 0.75 },
 
+  // Villagers
+  { x: 400, y: 640 },
+  { x: 485, y: 635 },
+  { x: 1010, y: 645 },
+
   // Underground (?)
 
   { x: 560, y: 1353, radius: 70, intensity: 0.75 },

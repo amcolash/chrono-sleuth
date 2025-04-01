@@ -38,7 +38,7 @@ type Data = DataProps<Warp> & {
   warpTo: WarpType;
   visual: WarpVisual;
   sound?: WarpSound;
-  onWarp?: (player: Player) => void;
+  onWarpStart?: (player: Player) => void;
 };
 
 export const WarpData: Record<WarpType, Data> = {
@@ -94,10 +94,10 @@ export const WarpData: Record<WarpType, Data> = {
     warpTo: WarpType.TownNorth,
     location: Location.Town,
     visual: WarpVisual.Warp,
-    onWarp(player) {
+    onWarpStart(player) {
       if (isNighttime(player.scene)) {
         if (hasItem(player, ItemType.Gear2)) townMeeting2(player);
-        else if (hasItem(player, ItemType.Gear2)) townMeeting1(player);
+        else if (hasItem(player, ItemType.Gear1)) townMeeting1(player);
       }
     },
   },

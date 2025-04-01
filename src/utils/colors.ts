@@ -14,7 +14,7 @@ export const Colors = {
   Success: '339933',
 
   Lights: 'ffccaa',
-  Night: '335588',
+  Night: 'aa99cc',
 
   Background: '111111',
   ButtonActive: 'ddaaee',

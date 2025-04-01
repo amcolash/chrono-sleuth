@@ -259,7 +259,7 @@ export function warpTo(
   offset?: Types.Math.Vector2Like,
   force?: boolean
 ) {
-  const { direction, key, sound, visual, location, onWarp } = WarpData[source];
+  const { direction, key, sound, visual, location, onWarpStart } = WarpData[source];
   let { x, y } = WarpData[destination];
 
   let canWarp = true;
@@ -309,6 +309,8 @@ export function warpTo(
 
   const music = Music.getLocationMusic(location);
   if (music) Music.start(music);
+
+  onWarpStart?.(player);
 
   scene.add
     .timeline([
@@ -360,7 +362,6 @@ export function warpTo(
             camera.startFollow(player, true);
             camera.setFollowOffset(0, Config.cameraOffset);
             player.setActive(true);
-            onWarp?.(player);
           }),
       },
     ])
