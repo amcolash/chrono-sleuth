@@ -95,7 +95,7 @@ export function gameInitialized(player: Player): boolean {
 }
 
 export function shouldInitialize(obj: Types.Math.Vector2Like, player: Player, distance?: number): boolean {
-  if (!gameInitialized) return false;
+  if (!gameInitialized(player)) return false;
   return nearby(obj, player, distance || 1000);
 }
 

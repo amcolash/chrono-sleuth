@@ -141,25 +141,27 @@ export function load(scene: Game) {
     // Delay loading this data as it can make UI which slows down initial game load
     scene.time.delayedCall(50, () => {
       try {
+        const { inventory, quests, journal, gameState } = scene.player;
+
         scene.player.inventory.createUI();
         scene.player.quests.createUI();
         scene.player.journal.createUI();
 
         if (newGame) townIntro(scene);
+        else {
+          savedata.inventory.sort((a, b) => a.type - b.type).forEach((item) => inventory.addItem(item, true));
 
-        savedata.inventory
-          .sort((a, b) => a.type - b.type)
-          .forEach((item) => scene.player.inventory.addItem(item, true));
+          // Journals are second, quests third. Both have side-effects, but quests always happen last
+          savedata.journal
+            .sort()
+            .reverse()
+            .forEach((entry) => journal.addEntry(entry, true));
 
-        // Journals are second, quests third. Both have side-effects, but quests always happen last
-        savedata.journal
-          .sort()
-          .reverse()
-          .forEach((entry) => scene.player.journal.addEntry(entry, true));
-        savedata.quests.sort((a, b) => a.id - b.id).forEach((quest) => scene.player.quests.addQuest(quest, true));
+          savedata.quests.sort((a, b) => a.id - b.id).forEach((quest) => quests.addQuest(quest, true));
 
-        // Side effects of data are always last
-        scene.player.gameState.updateData(savedata.gameState, true);
+          // Side effects of data are always last
+          gameState.updateData(savedata.gameState, true);
+        }
       } catch (err) {
         console.error(err);
         new Notification(

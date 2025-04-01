@@ -1,8 +1,8 @@
 import { Prop } from '../classes/Environment/Prop';
 import { Game } from '../scenes/Game';
 import { revealSafe, updateAlchemySet } from '../utils/cutscene';
-import { hasJournalEntry } from '../utils/interactionUtils';
-import { DataProps, JournalEntry, PropType } from './types';
+import { hasItem, hasJournalEntry } from '../utils/interactionUtils';
+import { DataProps, ItemType, JournalEntry, PropType } from './types';
 
 type Data = DataProps<Prop> & {
   portrait?: string;
@@ -29,6 +29,9 @@ export const PropData: Record<PropType, Data> = {
     y: 915,
     image: 'chest',
     scale: { x: 4.5, y: 3 },
+    onCreate(obj) {
+      if (hasItem((obj.scene as Game).player, ItemType.Gear1)) obj.setFrame('chest_open');
+    },
   },
   [PropType.LabHatch]: {
     x: -1910,

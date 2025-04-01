@@ -4,9 +4,9 @@ import { Config } from '../../config';
 import { PropDialogs, getDialog } from '../../data/dialog';
 import { Layer } from '../../data/layers';
 import { PropData } from '../../data/prop';
-import { InteractResult, Interactive, ItemType, JournalEntry, LazyInitialize, PropType } from '../../data/types';
-import { hasItem, hasJournalEntry, initializeObject } from '../../utils/interactionUtils';
-import { shouldInitialize, splitTitleCase } from '../../utils/util';
+import { InteractResult, Interactive, JournalEntry, LazyInitialize, PropType } from '../../data/types';
+import { hasJournalEntry, initializeObject } from '../../utils/interactionUtils';
+import { gameInitialized, shouldInitialize, splitTitleCase } from '../../utils/util';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
 import { ClockHands } from './ClockHands';
@@ -37,6 +37,12 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
   }
 
   lazyInit() {
+    if (this.propType === PropType.Chest && !this.initialized) {
+      const shouldInit = shouldInitialize(this, this.player);
+      const ready = gameInitialized(this.player);
+      const init = this.player.inventory.initialized;
+      // debugger;
+    }
     if (this.initialized || !shouldInitialize(this, this.player)) return;
 
     if (this.checkDestroyed()) return;
@@ -92,7 +98,7 @@ export class Prop extends Physics.Arcade.Image implements Interactive, LazyIniti
     // Remove this prop if player has already interacted with it
     if (this.propType === PropType.LabHatch && hasJournalEntry(this.player, JournalEntry.AlchemyLabFound))
       destroyed = true;
-    if (this.propType === PropType.Chest && hasItem(this.player, ItemType.Gear1)) destroyed = true;
+    // if (this.propType === PropType.Chest && hasItem(this.player, ItemType.Gear1)) destroyed = true;
 
     if (destroyed) this.destroy();
 
