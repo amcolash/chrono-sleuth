@@ -9,6 +9,7 @@ import { save } from '../../utils/save';
 import { toggleXRay } from '../../utils/shaders/xray';
 import { openDialog } from '../../utils/util';
 import { DebugLight } from '../Debug/DebugLight';
+import { NPC } from '../Environment/NPC';
 import { Player } from '../Player/Player';
 
 const alwaysShowInfo = false;
@@ -167,6 +168,7 @@ export class DebugUI extends GameObjects.Container {
         if (this.activeElement === gameObject) {
           // @ts-ignore
           gameObject.setPosition(this.dragOffset.x + pointer.worldX, this.dragOffset.y + pointer.worldY);
+          if (gameObject instanceof NPC) (gameObject as NPC).debugPosition = true;
         }
       });
 

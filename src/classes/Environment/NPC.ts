@@ -23,6 +23,7 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
 
   disabled: boolean = false;
   initialized: boolean = false;
+  debugPosition: boolean = false;
 
   constructor(scene: Scene, npcType: NPCType, player: Player) {
     const data = NPCData[npcType];
@@ -93,6 +94,9 @@ export class NPC extends Physics.Arcade.Image implements Interactive, LazyInitia
     if (!this.initialized) return;
 
     const posData = this.npcData.positionData;
+
+    // Don't move if already moved via debug
+    if (this.debugPosition) return;
 
     // Update NPC position, regardless of if it is initialized. Use a smooth
     // tween + fade out/in npc

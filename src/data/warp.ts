@@ -1,7 +1,11 @@
 import { Warp } from '../classes/Environment/Warp';
+import { Player } from '../classes/Player/Player';
 import { Key } from '../classes/UI/InputManager';
 import { Game } from '../scenes/Game';
-import { DataProps, Location, WarpType } from './types';
+import { townMeeting1, townMeeting2 } from '../utils/cutscene';
+import { hasItem } from '../utils/interactionUtils';
+import { isNighttime } from '../utils/lighting';
+import { DataProps, ItemType, Location, WarpType } from './types';
 
 export enum WarpVisual {
   /** Show a ladder, instead of standard warp */
@@ -34,6 +38,7 @@ type Data = DataProps<Warp> & {
   warpTo: WarpType;
   visual: WarpVisual;
   sound?: WarpSound;
+  onWarp?: (player: Player) => void;
 };
 
 export const WarpData: Record<WarpType, Data> = {
@@ -89,6 +94,12 @@ export const WarpData: Record<WarpType, Data> = {
     warpTo: WarpType.TownNorth,
     location: Location.Town,
     visual: WarpVisual.Warp,
+    onWarp(player) {
+      if (isNighttime(player.scene)) {
+        if (hasItem(player, ItemType.Gear2)) townMeeting2(player);
+        else if (hasItem(player, ItemType.Gear2)) townMeeting1(player);
+      }
+    },
   },
 
   [WarpType.ClockSquareNorth]: {

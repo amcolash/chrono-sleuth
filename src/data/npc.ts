@@ -32,7 +32,12 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'inventor',
     portrait: 'inventor_portrait',
     name: 'Johan the Inventor',
-    positionData: [nighttimeVillager],
+    positionData: [
+      {
+        pos: { x: 560, y: 635 },
+        condition: (target) => isNighttime(target.scene),
+      },
+    ],
   },
   [NPCType.Stranger]: {
     x: 1340,
@@ -72,16 +77,27 @@ export const NPCData: Record<NPCType, Data> = {
     image: 'mayor',
     portrait: 'mayor_portrait',
     name: 'Joleen the Mayor',
-    positionData: [nighttimeVillager],
+    positionData: [
+      {
+        pos: { x: 855, y: 640 },
+        condition: (target) => isNighttime(target.scene),
+      },
+    ],
   },
   [NPCType.Innkeeper]: {
     x: 2300,
     y: -1240,
-    scale: 1.1,
+    scale: 1.05,
     image: 'innkeeper',
     portrait: 'innkeeper_portrait',
     name: 'Bart the Innkeeper',
     skipLighting: true,
+    positionData: [
+      {
+        pos: { x: 640, y: 630 },
+        condition: (target) => isNighttime(target.scene),
+      },
+    ],
   },
   [NPCType.Baker]: {
     x: 1836,
@@ -92,8 +108,10 @@ export const NPCData: Record<NPCType, Data> = {
     name: 'Amanda the Baker',
     skipLighting: true,
     positionData: [
-      nighttimeVillager,
-      { condition: (baker) => (baker.scene as Game).player.gameState.data.day > 1, pos: { x: 2470, y: -320 } },
+      {
+        pos: { x: 940, y: 630 },
+        condition: (target) => isNighttime(target.scene),
+      },
     ],
   },
 };

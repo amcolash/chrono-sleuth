@@ -259,7 +259,7 @@ export function warpTo(
   offset?: Types.Math.Vector2Like,
   force?: boolean
 ) {
-  const { direction, key, sound, visual, location } = WarpData[source];
+  const { direction, key, sound, visual, location, onWarp } = WarpData[source];
   let { x, y } = WarpData[destination];
 
   let canWarp = true;
@@ -360,6 +360,7 @@ export function warpTo(
             camera.startFollow(player, true);
             camera.setFollowOffset(0, Config.cameraOffset);
             player.setActive(true);
+            onWarp?.(player);
           }),
       },
     ])

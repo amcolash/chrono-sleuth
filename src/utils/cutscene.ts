@@ -448,3 +448,7 @@ export function bedtime(player: Player) {
     ])
     .play();
 }
+
+export function townMeeting1(player: Player) {}
+
+export function townMeeting2(player: Player) {}

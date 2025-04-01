@@ -1,6 +1,9 @@
 import { Display, GameObjects, Scene } from 'phaser';
 
+import { Config } from '../config';
+import { WarpType } from '../data/types';
 import { Colors, fromRGB, getColorNumber, tweenColor } from './colors';
+import { getWarper } from './interactionUtils';
 
 const duration = 1200;
 let currentlyChanging = false;
@@ -50,6 +53,9 @@ export function setDaytime(scene: Scene, tween: boolean = true) {
       light.setVisible(false);
     }
   });
+
+  const townWarp = getWarper(scene, WarpType.TownNorth);
+  townWarp?.updateLocked(false);
 }
 
 export function setNighttime(scene: Scene, tween: boolean = true) {
@@ -72,6 +78,9 @@ export function setNighttime(scene: Scene, tween: boolean = true) {
       });
     }
   });
+
+  const townWarp = getWarper(scene, WarpType.TownNorth);
+  if (!Config.debug) townWarp?.updateLocked(true);
 }
 
 export function fadeAmbient(scene: Scene, target: string, tween: boolean) {
