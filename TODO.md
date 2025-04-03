@@ -53,3 +53,9 @@
 - Add more to intro
   - controls intro
   - introduce character instead of just dropping into town
+
+## New TODO
+
+- Find inventor's wrench after puzzle, instead of it being given to you. Once found, he says you can keep it to fix the clock
+- Go back and rewrite dialog for day 2 - people forget who you are, but you still remember
+  - Day 2/3 town hall meetings get weirder and weirder

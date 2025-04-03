@@ -92,12 +92,6 @@ export const NPCData: Record<NPCType, Data> = {
     portrait: 'innkeeper_portrait',
     name: 'Bart the Innkeeper',
     skipLighting: true,
-    positionData: [
-      {
-        pos: { x: 640, y: 630 },
-        condition: (target) => isNighttime(target.scene),
-      },
-    ],
   },
   [NPCType.Baker]: {
     x: 1836,

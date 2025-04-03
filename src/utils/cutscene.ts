@@ -2,6 +2,7 @@ import { GameObjects, Physics, Scene, Time } from 'phaser';
 
 import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
+import { warpTo } from '../classes/Environment/Warp';
 import { Music } from '../classes/Music';
 import { Player } from '../classes/Player/Player';
 import { Message } from '../classes/UI/Message';
@@ -458,97 +459,113 @@ export function timelineDialog(message: Message, timeline: Time.Timeline, messag
   message.setDialog({ messages, onCompleted: () => timeline.resume() }, target);
 }
 
-export async function townMeeting1(player: Player) {
+class DialogTimeline {
+  scene: Scene;
+  message: Message;
+  timeline: Time.Timeline;
+
+  constructor(scene: Scene, message: Message) {
+    this.scene = scene;
+    this.message = message;
+    this.timeline = scene.add.timeline({});
+  }
+
+  add(m: string | string[], target: any, time: number = 500) {
+    const messages: string[] = typeof m === 'string' ? [m] : m;
+    this.timeline.add({
+      from: time,
+      run: () => {
+        this.timeline.pause();
+        this.message.setDialog({ messages, onCompleted: () => this.timeline.resume() }, target);
+      },
+    });
+  }
+}
+
+function initTownMeeting(player: Player) {
   const scene = player.scene;
   player.setActive(false);
 
-  const villager1 = scene.add
-    .image(480, 635, 'npcs', 'villager1')
-    .setDisplaySize(50, 120)
-    .setDepth(Layer.Npcs)
-    .setPipeline('Light2D');
-  const villager2 = scene.add
-    .image(400, 640, 'npcs', 'villager2')
-    .setDisplaySize(50, 120)
-    .setDepth(Layer.Npcs)
-    .setPipeline('Light2D');
-  const villager3 = scene.add
-    .image(1010, 645, 'npcs', 'villager3')
-    .setDisplaySize(50, 120)
-    .setDepth(Layer.Npcs)
-    .setPipeline('Light2D');
+  // Add innkeeper, so there is not any complex logic on where he should be positioned
+  const innkeeper = scene.add.image(640, 630, 'characters', 'innkeeper').setPipeline('Light2D');
+
+  const villager1 = scene.add.image(480, 635, 'TODO').setDisplaySize(50, 120).setPipeline('Light2D');
+  const villager2 = scene.add.image(400, 640, 'TODO').setDisplaySize(50, 120).setPipeline('Light2D');
+  const villager3 = scene.add.image(1010, 645, 'TODO').setDisplaySize(50, 120).setPipeline('Light2D');
 
   const message = player.message;
-
-  const mayor = getNPC(scene, NPCType.Mayor);
-  const innkeeper = getNPC(scene, NPCType.Innkeeper);
 
   // TODO: Get this SFX
   scene.sound.playAudioSprite('sfx', 'town_chatter');
 
-  const timeline = scene.add
-    .timeline([
-      {
-        from: 1500,
+  const dialog = new DialogTimeline(scene, message);
 
-        run: () => {
-          timelineDialog(
-            message,
-            timeline,
-            [
-              'It looks like the town is having a meeting. I should listen in to see if I can learn anything else about the clocktower.',
-            ],
-            player
-          );
-        },
-      },
-      {
-        from: 2500,
-        run: () => {
-          timelineDialog(
-            message,
-            timeline,
-            [
-              "Alright everyone, let's get started with the meeting tonight.",
-              'For those unaware, we have a new person joining tonight. Rosie has been investigating the clocktower mystery.',
-              'Today, she found a missing gear and installed it back into the clock! Thank you Rosie.',
-            ],
-            mayor
-          );
-        },
-      },
-      {
-        from: 500,
-        run: () => {
-          timelineDialog(
-            message,
-            timeline,
-            [
-              'Welcome Rosie! We are thrilled to have you here. Great job on investigating the mystery of the clock tower!',
-            ],
-            innkeeper
-          );
-        },
-      },
-      {
-        from: 750,
-        run: () => {
-          timelineDialog(
-            message,
-            timeline,
-            [
-              "Now, let's get to the main topic of the evening. Has anyone noticed any oddities? Yesterday, the clock stopped and today I heard from Johan that some of his tools were missing.",
-            ],
-            mayor
-          );
-        },
-      },
-      {
-        from: 500,
-        run: () => player.setActive(true),
-      },
-    ])
-    .play();
+  // Lok back and forth
+  dialog.timeline.add({ from: 1800, run: () => (player.previousPosition.x = player.x - 1) });
+  dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x + 1) });
+  dialog.timeline.add({ from: 700, run: () => (player.previousPosition.x = player.x - 1) });
+  dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x - 1) });
+  dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x - 1) });
+
+  return { villagers: [innkeeper, villager1, villager2, villager3], dialog };
 }
 
-export function townMeeting2(player: Player) {}
+function completeTownMeeting(player: Player, dialog: DialogTimeline, villagers: GameObjects.Image[]) {
+  dialog.add('Well, it is getting late. I should head to the inn and turn in for the night.', player);
+
+  dialog.timeline.add({
+    from: 500,
+    run: () => {
+      fadeOut(player.scene, 250, () => {
+        warpTo(WarpType.InnEntrance, WarpType.Inn, player);
+        villagers.forEach((v) => v.destroy());
+      });
+    },
+  });
+  dialog.timeline.play();
+}
+
+export function townMeeting1(player: Player) {
+  const { dialog, villagers } = initTownMeeting(player);
+
+  const mayor = getNPC(player.scene, NPCType.Mayor);
+  const innkeeper = getNPC(player.scene, NPCType.Innkeeper);
+
+  dialog.add(
+    'It looks like the town is having a meeting. I should listen in to see if I can learn anything else about the clocktower.',
+    player,
+    1500
+  );
+
+  dialog.add(
+    [
+      "Alright everyone, let's get started with the meeting tonight.",
+      'For those unaware, we have a new person joining tonight. Rosie has been investigating the clocktower mystery.',
+      'Today, she found a missing gear and installed it back into the clock! Thank you Rosie.',
+    ],
+    mayor,
+    2500
+  );
+
+  dialog.add(
+    'Welcome Rosie! We are thrilled to have you here. Great job on investigating the mystery of the clock tower!',
+    innkeeper // TODO: Fix this to allow strings to make life simpler
+  );
+
+  dialog.add(
+    "Now, let's get to the main topic of the evening. Has anyone noticed any oddities? Yesterday, the clock stopped and today I heard from Johan that some of his tools were missing.",
+    mayor
+  );
+
+  dialog.add('TODO MORE DIALOG', player);
+
+  completeTownMeeting(player, dialog, villagers);
+}
+
+export function townMeeting2(player: Player) {
+  const { dialog, villagers } = initTownMeeting(player);
+
+  dialog.add('TODO MORE DIALOG', player);
+
+  completeTownMeeting(player, dialog, villagers);
+}
