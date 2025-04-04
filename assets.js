@@ -100,6 +100,24 @@ async function maps() {
   }
 }
 
+async function spritesheets() {
+  const inputDir = join(srcDir, '/spritesheets');
+  const outputDir = join(assetsDir, '/spritesheets');
+
+  const spritesheets = readdirSync(inputDir, { recursive: true }).map((f) => f.toString());
+
+  if (existsSync(outputDir)) rmdirSync(outputDir, { recursive: true });
+  mkdirSync(outputDir, { recursive: true });
+
+  // reduce texture quality to improve size
+  for (const sheet of spritesheets) {
+    const input = join(inputDir, sheet);
+    const output = join(outputDir, sheet);
+
+    await sharp(input).png({ quality: 10, compressionLevel: 9 }).toFile(output);
+  }
+}
+
 // Main export
 async function fullExport() {
   for (const fn of Object.values(handlers)) {
@@ -124,6 +142,7 @@ const audioSprites = {
 const handlers = {
   icons,
   maps,
+  spritesheets,
 
   // Atlases
   ...atlases,
