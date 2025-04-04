@@ -10,6 +10,7 @@ import { UITest } from './scenes/UITest';
 import { Books } from './scenes/dialogs/Books';
 import { DebugTool } from './scenes/dialogs/DebugTool';
 import { JournalDialog } from './scenes/dialogs/JournalDialog';
+import { LockpickDialog } from './scenes/dialogs/LockpickDialog';
 import { Maze } from './scenes/dialogs/Maze';
 import { MazeDialog } from './scenes/dialogs/MazeDialog';
 import { MemoryDialog } from './scenes/dialogs/MemoryDialog';
@@ -58,6 +59,7 @@ const config: Types.Core.GameConfig = {
     MemoryDialog,
     SliderDialog,
     Books,
+    LockpickDialog,
 
     UITest,
   ],
