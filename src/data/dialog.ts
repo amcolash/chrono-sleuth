@@ -1,7 +1,7 @@
 import { Item } from '../classes/Environment/Item';
 import { NPC } from '../classes/Environment/NPC';
 import { Prop } from '../classes/Environment/Prop';
-import { Player } from '../classes/Player/Player';
+import { Player, playerFirstName } from '../classes/Player/Player';
 import { addHerb, bedtime, makePotion } from '../utils/cutscene';
 import {
   getItem,
@@ -275,6 +275,13 @@ export const NPCDialogs: Record<NPCType, Dialog<NPC>[]> = {
     },
   ],
   [NPCType.Innkeeper]: [
+    {
+      messages: [
+        `Good evening ${playerFirstName}! Welcome to the inn.`,
+        'Feel free to lie your head here for helping out the town!',
+      ],
+      conditions: { custom: (player) => isNighttime(player.scene) },
+    },
     {
       messages: [
         'Welcome to our humble inn. I hope you find peace here.',

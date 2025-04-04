@@ -19,7 +19,10 @@ const size = 1.35;
 export const speed = (Config.fastMode ? 350 : 175) * size;
 const MAX_HISTORY = 1000;
 
-export const playerName = 'Rosie Vale';
+export const playerFirstName = 'Rosie';
+export const playerLastName = 'Vale';
+export const playerName = playerFirstName + ' ' + playerLastName;
+
 export const playerStart = new PhaserMath.Vector2(920, 1500);
 
 export class Player extends Physics.Arcade.Sprite implements Rewindable {

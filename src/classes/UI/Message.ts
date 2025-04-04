@@ -195,6 +195,9 @@ export class Message extends GameObjects.Container {
         name = NPCData[(target as NPC).npcType].name;
       } else if (target instanceof Prop) {
         name = PropData[(target as Prop).propType].name;
+      } else {
+        const npc = Object.entries(NPCData).find((n) => n[1].portrait === finalPortrait);
+        if (npc) name = npc[1].name;
       }
 
       if (name) {

@@ -4,17 +4,17 @@ import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
 import { warpTo } from '../classes/Environment/Warp';
 import { Music } from '../classes/Music';
-import { Player } from '../classes/Player/Player';
+import { Player, playerFirstName } from '../classes/Player/Player';
 import { Message } from '../classes/UI/Message';
 import { Config } from '../config';
 import { Layer } from '../data/layers';
 import { PropData } from '../data/prop';
-import { ItemType, MusicType, NPCType, PropType, QuestType, WallType, WarpType } from '../data/types';
+import { ItemType, MusicType, PropType, QuestType, WallType, WarpType } from '../data/types';
 import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
 import { rotationCorrection, updateAnimation } from './animations';
 import { fontStyle } from './fonts';
-import { getNPC, getProp, getWall, hasItem, hasUsedItem, updateWarpLocked } from './interactionUtils';
+import { getProp, getWall, hasItem, hasUsedItem, updateWarpLocked } from './interactionUtils';
 import { toggleXRay } from './shaders/xray';
 import { fadeIn, fadeOut } from './util';
 
@@ -463,21 +463,37 @@ class DialogTimeline {
   scene: Scene;
   message: Message;
   timeline: Time.Timeline;
+  onComplete: () => void;
 
   constructor(scene: Scene, message: Message) {
     this.scene = scene;
     this.message = message;
     this.timeline = scene.add.timeline({});
+
+    scene.input.keyboard?.on('keydown-BACK_SLASH', () => {
+      this.timeline.stop();
+      this.message.setDialog();
+      this.onComplete();
+    });
   }
 
-  add(m: string | string[], target: any, time: number = 500) {
+  add(m: string | string[], portrait: string, time: number = 500) {
     const messages: string[] = typeof m === 'string' ? [m] : m;
     this.timeline.add({
       from: time,
       run: () => {
         this.timeline.pause();
-        this.message.setDialog({ messages, onCompleted: () => this.timeline.resume() }, target);
+        this.message.setDialog({ messages, onCompleted: () => this.timeline.resume() }, undefined, portrait);
       },
+    });
+  }
+
+  setComplete(fn: () => void) {
+    this.onComplete = fn;
+
+    this.timeline.add({
+      from: 500,
+      run: fn,
     });
   }
 }
@@ -511,53 +527,47 @@ function initTownMeeting(player: Player) {
 }
 
 function completeTownMeeting(player: Player, dialog: DialogTimeline, villagers: GameObjects.Image[]) {
-  dialog.add('Well, it is getting late. I should head to the inn and turn in for the night.', player);
-
-  dialog.timeline.add({
-    from: 500,
-    run: () => {
-      fadeOut(player.scene, 250, () => {
-        warpTo(WarpType.InnEntrance, WarpType.Inn, player);
-        villagers.forEach((v) => v.destroy());
-      });
-    },
+  dialog.add('Well, it is getting late. I should head to the inn and turn in for the night.', 'player_portrait', 1500);
+  dialog.setComplete(() => {
+    fadeOut(player.scene, 250, () => {
+      warpTo(WarpType.InnEntrance, WarpType.Inn, player);
+      villagers.forEach((v) => v.destroy());
+    });
   });
+
   dialog.timeline.play();
 }
 
 export function townMeeting1(player: Player) {
   const { dialog, villagers } = initTownMeeting(player);
 
-  const mayor = getNPC(player.scene, NPCType.Mayor);
-  const innkeeper = getNPC(player.scene, NPCType.Innkeeper);
-
   dialog.add(
     'It looks like the town is having a meeting. I should listen in to see if I can learn anything else about the clocktower.',
-    player,
+    'player_portrait',
     1500
   );
 
   dialog.add(
     [
       "Alright everyone, let's get started with the meeting tonight.",
-      'For those unaware, we have a new person joining tonight. Rosie has been investigating the clocktower mystery.',
+      `For those unaware, we have a new person joining tonight. ${playerFirstName} has been investigating the clocktower mystery.`,
       'Today, she found a missing gear and installed it back into the clock! Thank you Rosie.',
     ],
-    mayor,
+    'mayor_portrait',
     2500
   );
 
   dialog.add(
     'Welcome Rosie! We are thrilled to have you here. Great job on investigating the mystery of the clock tower!',
-    innkeeper // TODO: Fix this to allow strings to make life simpler
+    'innkeeper_portrait'
   );
 
   dialog.add(
     "Now, let's get to the main topic of the evening. Has anyone noticed any oddities? Yesterday, the clock stopped and today I heard from Johan that some of his tools were missing.",
-    mayor
+    'mayor_portrait'
   );
 
-  dialog.add('TODO MORE DIALOG', player);
+  dialog.add('TODO MORE DIALOG', 'player_portrait');
 
   completeTownMeeting(player, dialog, villagers);
 }
@@ -565,7 +575,7 @@ export function townMeeting1(player: Player) {
 export function townMeeting2(player: Player) {
   const { dialog, villagers } = initTownMeeting(player);
 
-  dialog.add('TODO MORE DIALOG', player);
+  dialog.add('TODO MORE DIALOG', 'player_portrait');
 
   completeTownMeeting(player, dialog, villagers);
 }

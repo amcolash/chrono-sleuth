@@ -265,12 +265,7 @@ export function warpTo(
   let canWarp = true;
   if (
     isNighttime(player.scene) &&
-    (source === WarpType.TownEast ||
-      source === WarpType.TownWest ||
-      source === WarpType.Town ||
-      source === WarpType.LibraryEntrance ||
-      source === WarpType.TownNorth ||
-      source === WarpType.ClockSquareNorth)
+    (source === WarpType.LibraryEntrance || source === WarpType.ClockSquareNorth || source === WarpType.Inn)
   )
     canWarp = false;
   if ((!Config.prod && force) || Config.debug) canWarp = true;
