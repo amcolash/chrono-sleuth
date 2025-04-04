@@ -9,6 +9,7 @@ import { InputManager } from '../classes/UI/InputManager';
 import { Config } from '../config';
 import { saveKey } from '../data/saves';
 import { MusicType } from '../data/types';
+import { preloadMain } from './Preloader';
 
 export class MainMenu extends Scene {
   constructor() {
@@ -69,5 +70,11 @@ export class MainMenu extends Scene {
     );
 
     buttonGroup.setActiveButton(1);
+
+    // Preload game assets after a small moment on the title screen
+    this.time.delayedCall(1500, () => {
+      preloadMain(this);
+      this.load.start();
+    });
   }
 }

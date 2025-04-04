@@ -306,6 +306,22 @@ export class DebugTool extends Dialog {
       { backgroundColor: '#111' }
     );
     this.miscContainer.add(toggleLights);
+
+    const toggleLocalProd = new CenteredButton(
+      this,
+      350,
+      (y += 60),
+      'Toggle Local Prod',
+      () => {
+        const key = 'chrono-sleuth-prod';
+        if (localStorage.getItem(key)) localStorage.removeItem(key);
+        else localStorage.setItem(key, 'true');
+
+        window.location.reload();
+      },
+      { backgroundColor: '#111' }
+    );
+    this.miscContainer.add(toggleLocalProd);
   }
 
   makeTab(title: string, index: number): Button {
