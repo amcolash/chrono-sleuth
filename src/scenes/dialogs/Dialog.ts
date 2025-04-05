@@ -62,10 +62,9 @@ export abstract class Dialog extends Scene {
 
     if (!data.skipUI) {
       this.container.add(
-        this.add
-          .rectangle(0, 0, Config.width * dialogRatio, Config.height * dialogRatio, 0x000000, 0.75)
-          .setStrokeStyle(stroke, getColorNumber(Colors.Tan))
+        this.add.rectangle(0, 0, Config.width * dialogRatio, Config.height * dialogRatio, 0x000000, 0.75)
       );
+
       this.container.add(
         new Button(this, Config.width * 0.43, Config.height * -0.39, 'X', () => this.close(false), {
           backgroundColor: `#${Colors.Warning}`,
@@ -85,6 +84,13 @@ export abstract class Dialog extends Scene {
         this.helpText = this.add.text(-Config.width * 0.45, Config.height * 0.2, data.helpText, fontStyle);
         this.container.add(this.helpText);
       }
+
+      // Add stroke overlaid on top of the dialog
+      this.add.container(Config.width / 2, Config.height / 2, [
+        this.add
+          .rectangle(0, 0, Config.width * dialogRatio, Config.height * dialogRatio)
+          .setStrokeStyle(stroke, getColorNumber(Colors.Tan)),
+      ]);
     }
 
     this.input.keyboard?.on('keydown-ESC', () => {
