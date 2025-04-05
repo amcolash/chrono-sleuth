@@ -199,7 +199,10 @@ export class LockpickDialog extends Dialog {
             else this.target[index] = INITIAL_TARGET;
 
             this.answer.push(index);
+            this.sound.playAudioSprite('sfx', 'button');
           } else {
+            this.sound.playAudioSprite('sfx', this.answer.length === 0 ? 'button' : 'safe_click');
+
             for (let i = 0; i < PINS; i++) {
               this.target[i] = INITIAL_TARGET;
             }
@@ -228,10 +231,7 @@ export class LockpickDialog extends Dialog {
       }
     }
 
-    if (success) {
-      this.active = false;
-      this.time.delayedCall(500, () => this.close(true));
-    }
+    if (success) this.close(true);
   }
 
   handleKeys(time: number) {
@@ -256,6 +256,21 @@ export class LockpickDialog extends Dialog {
     }
 
     if (moved) this.nextUpdate = time + 200;
+  }
+
+  close(success: boolean) {
+    this.active = false;
+
+    if (success) {
+      for (let i = 0; i < PINS; i++) {
+        this.target[i] = this.offsets[i];
+      }
+      this.sound.playAudioSprite('sfx', 'unlock');
+
+      this.time.delayedCall(1000, () => super.close(true));
+    } else {
+      super.close(false);
+    }
   }
 
   handleSuccess(success?: boolean): void {
