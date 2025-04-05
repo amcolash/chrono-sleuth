@@ -5,7 +5,6 @@ import { Key } from '../../classes/UI/InputManager';
 import { Config } from '../../config';
 import { Colors, getColorNumber } from '../../utils/colors';
 import { openSafe } from '../../utils/cutscene';
-import { fontStyle } from '../../utils/fonts';
 import { Dialog } from './Dialog';
 
 const rings = [
@@ -35,7 +34,12 @@ export class TumblerDialog extends Dialog {
   disabled: boolean;
 
   constructor() {
-    super({ key: 'TumblerDialog', title: 'Open the lock by aligning all rings', gamepadVisible: false });
+    super({
+      key: 'TumblerDialog',
+      title: 'Open the lock by aligning all rings',
+      helpText: 'Use [Left]/[Right]\nto select a ring\n\nUse [Up]/[Down]\nto rotate a ring',
+      gamepadVisible: false,
+    });
   }
 
   init(data: { player: Player }) {
@@ -64,15 +68,6 @@ export class TumblerDialog extends Dialog {
       .setOrigin(0, 0)
       .setLineWidth(5);
     this.container.add(this.line);
-
-    this.container.add(
-      this.add.text(
-        -Config.width * 0.45,
-        Config.height * 0.2,
-        'Use [Left]/[Right]\nto select a ring\n\nUse [Up]/[Down]\nto rotate a ring',
-        { ...fontStyle }
-      )
-    );
 
     for (let i = 0; i < rings.length; i++) {
       let angle = Math.floor(Math.random() * Math.PI * 2);

@@ -13,6 +13,7 @@ import { Game } from '../Game';
 type DialogData = {
   key: string;
   title: string;
+  helpText?: string;
   gamepadVisible: boolean;
   childScene?: string;
 
@@ -27,6 +28,7 @@ export abstract class Dialog extends Scene {
   container: GameObjects.Container;
   keys: InputManager;
   title: GameObjects.Text;
+  helpText: GameObjects.Text;
   closing: boolean;
 
   /** Used to keep track of additional fading UI that is added via `addTarget` */
@@ -42,7 +44,9 @@ export abstract class Dialog extends Scene {
     this.closing = false;
     this.container = this.add.container(Config.width / 2, Config.height / 2);
 
-    if (!this.dialogData.skipUI) {
+    const data = this.dialogData;
+
+    if (!data.skipUI) {
       this.container.add(
         this.add
           .rectangle(0, 0, Config.width * 0.95, Config.height * 0.95, 0x000000, 0.75)
@@ -54,16 +58,19 @@ export abstract class Dialog extends Scene {
         })
       );
 
-      if (!Config.prod && !this.dialogData.hideCloseSuccess) {
+      if (!Config.prod && !data.hideCloseSuccess) {
         this.container.add(
           new IconButton(this, Config.width * 0.38, Config.height * -0.4, 'award', () => this.close(true))
         );
       }
 
-      this.title = this.add
-        .text(0, Config.height * -0.4, this.dialogData.title, { ...fontStyle, fontSize: 48 })
-        .setOrigin(0.5);
+      this.title = this.add.text(0, Config.height * -0.4, data.title, { ...fontStyle, fontSize: 48 }).setOrigin(0.5);
       this.container.add(this.title);
+
+      if (data.helpText) {
+        this.helpText = this.add.text(-Config.width * 0.45, Config.height * 0.2, data.helpText, fontStyle);
+        this.container.add(this.helpText);
+      }
     }
 
     this.input.keyboard?.on('keydown-ESC', () => {

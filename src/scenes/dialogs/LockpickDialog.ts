@@ -2,6 +2,7 @@ import { GameObjects, Geom, Math as PhaserMath } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
 import { Key } from '../../classes/UI/InputManager';
+import { Colors, getColorNumber } from '../../utils/colors';
 import { fontStyle } from '../../utils/fonts';
 import { openDialog } from '../../utils/util';
 import { Dialog } from './Dialog';
@@ -39,6 +40,7 @@ export class LockpickDialog extends Dialog {
     super({
       key: 'LockpickDialog',
       title: 'Pick the lock to open the sewer',
+      helpText: 'Use [Left]/[Right]\nto select a lock pin\n\n[UP]/[CONTINUE] to pick',
       gamepadVisible: false,
     });
   }
@@ -60,6 +62,9 @@ export class LockpickDialog extends Dialog {
     this.pins = [];
     this.active = true;
 
+    this.helpText.setX(-this.helpText.x).setOrigin(1, 0);
+    this.helpText.setStyle({ ...fontStyle, align: 'right' });
+
     this.lockpick = this.add.graphics();
     this.container.add(this.lockpick);
 
@@ -70,7 +75,7 @@ export class LockpickDialog extends Dialog {
 
     const line = this.add.graphics();
     this.container.add(line);
-    line.lineStyle(3, 0x494a4a);
+    line.lineStyle(2, getColorNumber(Colors.Tan));
     line.lineBetween(
       -TOTAL_WIDTH * (PINS / 2 + 0.5),
       Y + MIN_OFFSET - 2,
@@ -108,7 +113,7 @@ export class LockpickDialog extends Dialog {
       // this.input.enableDebug(graphics, 0xff0000);
 
       graphics.on('pointerdown', () => this.handlePinClick(i));
-      graphics.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+      graphics.on('pointermove', () => {
         if (!this.active) return;
         this.closest = i;
       });
@@ -250,7 +255,7 @@ export class LockpickDialog extends Dialog {
       moved = true;
     }
 
-    if (keys[Key.Continue]) {
+    if (keys[Key.Continue] || keys[Key.Up]) {
       this.handlePinClick(this.closest);
       moved = true;
     }

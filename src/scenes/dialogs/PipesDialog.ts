@@ -11,7 +11,8 @@ export class PipesDialog extends Dialog {
   constructor() {
     super({
       key: 'PipesDialog',
-      title: 'Attach all of the pipes to fix the alchemy set.\n[CONTINUE/CLICK] to rotate',
+      title: 'Attach all of the pipes to fix the alchemy set',
+      helpText: 'Use [Left]/[Right]/[UP]/[DOWN]\nto select a pipe\n\n[CONTINUE]/[CLICK] to rotate',
       gamepadVisible: false,
       childScene: 'Pipes',
     });
