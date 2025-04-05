@@ -42,15 +42,29 @@ export abstract class Dialog extends Scene {
   create() {
     this.additionalUI = [];
     this.closing = false;
+
+    const dialogRatio = 0.95;
+    const stroke = 4;
+
+    const maskWidth = Config.width * dialogRatio + stroke;
+    const maskHeight = Config.height * dialogRatio + stroke;
+    const maskRect = this.add
+      .rectangle(Config.width / 2, Config.height / 2, maskWidth, maskHeight, 0xffffff)
+      .setOrigin(0.5)
+      .setVisible(false);
+
+    const mask = maskRect.createGeometryMask();
+
     this.container = this.add.container(Config.width / 2, Config.height / 2);
+    this.container.setMask(mask);
 
     const data = this.dialogData;
 
     if (!data.skipUI) {
       this.container.add(
         this.add
-          .rectangle(0, 0, Config.width * 0.95, Config.height * 0.95, 0x000000, 0.75)
-          .setStrokeStyle(4, getColorNumber(Colors.Tan))
+          .rectangle(0, 0, Config.width * dialogRatio, Config.height * dialogRatio, 0x000000, 0.75)
+          .setStrokeStyle(stroke, getColorNumber(Colors.Tan))
       );
       this.container.add(
         new Button(this, Config.width * 0.43, Config.height * -0.39, 'X', () => this.close(false), {

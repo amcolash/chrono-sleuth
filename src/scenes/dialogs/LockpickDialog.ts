@@ -2,7 +2,7 @@ import { GameObjects, Geom, Math as PhaserMath } from 'phaser';
 
 import { Player } from '../../classes/Player/Player';
 import { Key } from '../../classes/UI/InputManager';
-import { Colors, getColorNumber } from '../../utils/colors';
+import { Config } from '../../config';
 import { fontStyle } from '../../utils/fonts';
 import { openDialog } from '../../utils/util';
 import { Dialog } from './Dialog';
@@ -12,7 +12,7 @@ const PINS = 5;
 const HALF = PINS / 2;
 const PADDING = 5;
 const PIN_WIDTH = 20;
-const TOTAL_WIDTH = 80;
+const TOTAL_WIDTH = 70;
 const TOTAL_HEIGHT = 150;
 const SPRING_SIZE = 15;
 const MIN_OFFSET = 15;
@@ -62,26 +62,12 @@ export class LockpickDialog extends Dialog {
     this.pins = [];
     this.active = true;
 
-    this.helpText.setX(-this.helpText.x).setOrigin(1, 0);
+    this.helpText.setPosition(-this.helpText.x, this.helpText.y + 15).setOrigin(1, 0);
     this.helpText.setStyle({ ...fontStyle, align: 'right' });
 
-    this.lockpick = this.add.graphics();
-    this.container.add(this.lockpick);
-
-    this.lockpick.lineStyle(6, 0x994a7a);
-    this.lockpick.lineBetween(-200, Y + 105, 200, Y + 105);
-    this.lockpick.lineBetween(200, Y + 105, 225, Y + 95);
-    this.lockpick.lineBetween(225, Y + 95, 225, Y + 85);
-
-    const line = this.add.graphics();
-    this.container.add(line);
-    line.lineStyle(2, getColorNumber(Colors.Tan));
-    line.lineBetween(
-      -TOTAL_WIDTH * (PINS / 2 + 0.5),
-      Y + MIN_OFFSET - 2,
-      TOTAL_WIDTH * (PINS / 2 + 0.5),
-      Y + MIN_OFFSET - 2
-    );
+    this.container.add(this.add.rectangle(0, 0, TOTAL_WIDTH * (PINS + 0.5), TOTAL_HEIGHT * 2, 0x494a4a));
+    this.container.add(this.add.rectangle(0, 77, TOTAL_WIDTH * (PINS + 0.5), 90, 0x393a3a));
+    this.container.add(this.add.rectangle(0, 117, TOTAL_WIDTH * (PINS + 0.5), 40, 0x292a2a));
 
     for (let i = 0; i < PINS; i++) {
       this.order.push(i);
@@ -95,15 +81,25 @@ export class LockpickDialog extends Dialog {
 
     for (let i = 0; i < PINS; i++) {
       const x = -(TOTAL_WIDTH * HALF) + i * TOTAL_WIDTH + PIN_WIDTH * 1.5;
-      const graphics = this.add.graphics({ x });
-      this.container.add(graphics);
-
-      this.container.add(
-        this.add.text(x + 8, TOTAL_HEIGHT, (this.order.indexOf(i) + 1).toString(), { ...fontStyle, fontSize: 16 })
-      );
 
       const padding = 48;
       const bounds = new Geom.Rectangle(-padding / 2, -TOTAL_HEIGHT, PIN_WIDTH + padding, TOTAL_HEIGHT * 2.5);
+
+      this.container.add(
+        this.add.rectangle(x + PIN_WIDTH / 2, 0, PIN_WIDTH + padding / 3, TOTAL_HEIGHT * 1.5, 0x292a2a)
+      );
+
+      const graphics = this.add.graphics({ x });
+      this.container.add(graphics);
+
+      if (!Config.prod) {
+        this.container.add(
+          this.add.text(x + 8, TOTAL_HEIGHT + 20, (this.order.indexOf(i) + 1).toString(), {
+            ...fontStyle,
+            fontSize: 16,
+          })
+        );
+      }
 
       graphics.setInteractive({
         draggable: true,
@@ -120,6 +116,14 @@ export class LockpickDialog extends Dialog {
 
       this.pins.push(graphics);
     }
+
+    this.lockpick = this.add.graphics();
+    this.container.add(this.lockpick);
+
+    this.lockpick.lineStyle(6, 0x994a7a);
+    this.lockpick.lineBetween(-200, Y + 105, 200, Y + 105);
+    this.lockpick.lineBetween(200, Y + 105, 225, Y + 95);
+    this.lockpick.lineBetween(225, Y + 95, 225, Y + 85);
 
     this.updateLayout(1);
   }
@@ -165,13 +169,14 @@ export class LockpickDialog extends Dialog {
     graphics.fillStyle(0xaa7f40);
     graphics.fillRect(x, y2, PIN_WIDTH, offset);
 
+    // Pin tip
     graphics.fillTriangle(x, y3, x + PIN_WIDTH, y3, x + PIN_WIDTH / 2, y3 + 7);
 
+    // Draw a spring
     const springStart = y - TOTAL_HEIGHT + SPRING_SIZE;
     const springEnd = y1 + 8;
     const springHeight = springEnd - springStart;
 
-    // Draw a spring
     const coils = Math.floor((TOTAL_HEIGHT - offset - 20) / SPRING_SIZE);
     const coilHeight = springHeight / coils;
 
