@@ -184,3 +184,17 @@ function randomGibberishWord(length = 5) {
 export function randomGibberishSentence(wordCount = 5) {
   return Array.from({ length: wordCount }, () => randomGibberishWord()).join(' ') + '.';
 }
+
+export function unlockCamera(player: Player) {
+  const camera = player.scene.cameras.main;
+  camera.stopFollow();
+  camera.removeBounds();
+  player.unlockCamera = true;
+}
+
+export function lockCamera(player: Player) {
+  const camera = player.scene.cameras.main;
+  camera.startFollow(player, true);
+  camera.setFollowOffset(0, Config.cameraOffset);
+  player.unlockCamera = false;
+}

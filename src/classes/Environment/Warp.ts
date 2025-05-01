@@ -9,7 +9,16 @@ import { WarpData, WarpVisual } from '../../data/warp';
 import { Game } from '../../scenes/Game';
 import { initializeObject } from '../../utils/interactionUtils';
 import { isNighttime } from '../../utils/lighting';
-import { fadeIn, fadeOut, nearby, openDialog, shouldInitialize, splitTitleCase } from '../../utils/util';
+import {
+  fadeIn,
+  fadeOut,
+  lockCamera,
+  nearby,
+  openDialog,
+  shouldInitialize,
+  splitTitleCase,
+  unlockCamera,
+} from '../../utils/util';
 import { Music } from '../Music';
 import { Player } from '../Player/Player';
 import { Key } from '../UI/InputManager';
@@ -297,11 +306,7 @@ export function warpTo(
   if (visual === WarpVisual.Invisible || visual === WarpVisual.InvisibleLocked) warpSound = 'door';
   if (sound) warpSound = sound;
 
-  camera.stopFollow();
-  camera.removeBounds();
-  player.unlockCamera = true;
-  player.setActive(false);
-
+  unlockCamera(player);
   const music = Music.getLocationMusic(location);
   if (music) Music.start(music);
 
@@ -354,9 +359,7 @@ export function warpTo(
         },
         run: () =>
           fadeIn(scene, 400, () => {
-            camera.startFollow(player, true);
-            camera.setFollowOffset(0, Config.cameraOffset);
-            player.setActive(true);
+            lockCamera(player);
           }),
       },
     ])

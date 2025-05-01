@@ -19,7 +19,7 @@ import { getProp, getWall, hasItem, hasUsedItem, updateWarpLocked } from './inte
 import { setNighttime } from './lighting';
 import { playMessageAudio } from './message';
 import { toggleXRay } from './shaders/xray';
-import { fadeIn, fadeOut, randomGibberishSentence } from './util';
+import { fadeIn, fadeOut, lockCamera, randomGibberishSentence, unlockCamera } from './util';
 
 export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
   const scale = Config.zoomed ? 0.75 : 1;
@@ -508,7 +508,8 @@ function initTownMeeting(player: Player) {
 
   player.disabled = true;
   player.setPosition(775, 650);
-  player.previousPosition.set(775 - 1, 650);
+  unlockCamera(player);
+  player.scene.cameras.main.centerOn(775, 625);
 
   // Add innkeeper, so there is not any complex logic on where he should be positioned
   const innkeeper = scene.add.image(640, 630, 'characters', 'innkeeper').setPipeline('Light2D');
@@ -519,10 +520,6 @@ function initTownMeeting(player: Player) {
   const villager3 = scene.add.image(1010, 645, 'TODO').setDisplaySize(50, 120).setPipeline('Light2D');
 
   const message = player.message;
-
-  // TODO: Get this SFX
-  scene.sound.playAudioSprite('sfx', 'town_chatter'); // TODO: Generate chatter from a
-
   const dialog = new DialogTimeline(scene, message);
 
   // Lok back and forth
@@ -536,7 +533,7 @@ function initTownMeeting(player: Player) {
   const chatter = scene.add.timeline([]);
   for (let i = 0; i < 10; i++) {
     chatter.add({
-      at: PhaserMath.Between(500, 5500),
+      at: PhaserMath.Between(500, 4500),
       run: () =>
         playMessageAudio(
           randomGibberishSentence(PhaserMath.Between(5, 20)),
@@ -555,6 +552,7 @@ function completeTownMeeting(player: Player, dialog: DialogTimeline, villagers: 
   dialog.add('Well, it is getting late. I should head to the inn and turn in for the night.', 'player_portrait', 1500);
   dialog.setComplete(() => {
     fadeOut(player.scene, 250, () => {
+      lockCamera(player);
       warpTo(WarpType.InnEntrance, WarpType.Inn, player);
       villagers.forEach((v) => v.destroy());
     });
@@ -566,11 +564,6 @@ function completeTownMeeting(player: Player, dialog: DialogTimeline, villagers: 
 export function townMeeting1(player: Player) {
   const { dialog, villagers } = initTownMeeting(player);
 
-  let start = Date.now();
-  dialog.timeline.add({
-    from: 1500,
-    run: () => console.log('Dialog started', Date.now() - start),
-  });
   dialog.add(
     'It looks like the town is having a meeting. I should listen in to see if I can learn anything else about the clocktower.',
     'player_portrait',
@@ -581,14 +574,14 @@ export function townMeeting1(player: Player) {
     [
       "Alright everyone, let's get started with the meeting tonight.",
       `For those unaware, we have a new person joining tonight. ${playerFirstName} has been investigating the clocktower mystery.`,
-      'Today, she found a missing gear and installed it back into the clock! Thank you Rosie.',
+      `Today, she found a missing gear and installed it back into the clock! Thank you ${playerFirstName}.`,
     ],
     'mayor_portrait',
     2500
   );
 
   dialog.add(
-    'Welcome Rosie! We are thrilled to have you here. Great job on investigating the mystery of the clock tower!',
+    `Welcome ${playerFirstName}! We are thrilled to have you here. Great job on investigating the mystery of the clock tower!`,
     'innkeeper_portrait'
   );
 
