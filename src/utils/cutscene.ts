@@ -506,7 +506,7 @@ function initTownMeeting(player: Player) {
 
   setNighttime(scene, false);
 
-  player.setActive(false);
+  player.disabled = true;
   player.setPosition(775, 650);
   player.previousPosition.set(775 - 1, 650);
 

@@ -52,6 +52,9 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   history: PhaserMath.Vector3[] = [];
   rewinding: boolean = false;
 
+  /** Disabled prevents player interactions, but does not stop updates. It is usually better to use setActive(false); */
+  disabled: boolean = false;
+
   // Prevents camera from being locked when warping
   unlockCamera: boolean = false;
 
@@ -165,6 +168,8 @@ export class Player extends Physics.Arcade.Sprite implements Rewindable {
   }
 
   checkInteraction(): InteractResult | undefined {
+    if (this.disabled) return undefined;
+
     let ret = undefined;
 
     if (this.interactive && Date.now() > this.interactionTimeout) {
