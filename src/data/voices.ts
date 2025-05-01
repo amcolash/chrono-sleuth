@@ -52,3 +52,5 @@ export const PropVoiceData: Partial<Record<PropType, Voice>> = {
     type: 'sawtooth',
   },
 };
+
+export const voices = [DefaultVoice, PlayerVoice, ...Object.values(NPCVoiceData), ...Object.values(PropVoiceData)];

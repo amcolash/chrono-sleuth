@@ -1,4 +1,4 @@
-import { GameObjects, Physics, Scene, Time } from 'phaser';
+import { GameObjects, Math as PhaserMath, Physics, Scene, Time } from 'phaser';
 
 import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
@@ -10,13 +10,16 @@ import { Config } from '../config';
 import { Layer } from '../data/layers';
 import { PropData } from '../data/prop';
 import { ItemType, MusicType, PropType, QuestType, WallType, WarpType } from '../data/types';
+import { voices } from '../data/voices';
 import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
 import { rotationCorrection, updateAnimation } from './animations';
 import { fontStyle } from './fonts';
 import { getProp, getWall, hasItem, hasUsedItem, updateWarpLocked } from './interactionUtils';
+import { setNighttime } from './lighting';
+import { playMessageAudio } from './message';
 import { toggleXRay } from './shaders/xray';
-import { fadeIn, fadeOut } from './util';
+import { fadeIn, fadeOut, randomGibberishSentence } from './util';
 
 export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
   const scale = Config.zoomed ? 0.75 : 1;
@@ -468,7 +471,7 @@ class DialogTimeline {
   constructor(scene: Scene, message: Message) {
     this.scene = scene;
     this.message = message;
-    this.timeline = scene.add.timeline({});
+    this.timeline = scene.add.timeline([]);
 
     scene.input.keyboard?.on('keydown-BACK_SLASH', () => {
       this.timeline.stop();
@@ -500,11 +503,17 @@ class DialogTimeline {
 
 function initTownMeeting(player: Player) {
   const scene = player.scene;
+
+  setNighttime(scene, false);
+
   player.setActive(false);
+  player.setPosition(775, 650);
+  player.previousPosition.set(775 - 1, 650);
 
   // Add innkeeper, so there is not any complex logic on where he should be positioned
   const innkeeper = scene.add.image(640, 630, 'characters', 'innkeeper').setPipeline('Light2D');
 
+  // Maybe even more villagers that are not normally in the game - the NPCs are already moved around
   const villager1 = scene.add.image(480, 635, 'TODO').setDisplaySize(50, 120).setPipeline('Light2D');
   const villager2 = scene.add.image(400, 640, 'TODO').setDisplaySize(50, 120).setPipeline('Light2D');
   const villager3 = scene.add.image(1010, 645, 'TODO').setDisplaySize(50, 120).setPipeline('Light2D');
@@ -512,7 +521,7 @@ function initTownMeeting(player: Player) {
   const message = player.message;
 
   // TODO: Get this SFX
-  scene.sound.playAudioSprite('sfx', 'town_chatter');
+  scene.sound.playAudioSprite('sfx', 'town_chatter'); // TODO: Generate chatter from a
 
   const dialog = new DialogTimeline(scene, message);
 
@@ -520,8 +529,24 @@ function initTownMeeting(player: Player) {
   dialog.timeline.add({ from: 1800, run: () => (player.previousPosition.x = player.x - 1) });
   dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x + 1) });
   dialog.timeline.add({ from: 700, run: () => (player.previousPosition.x = player.x - 1) });
+  dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x + 1) });
   dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x - 1) });
-  dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x - 1) });
+
+  // Play some crowd chatter
+  const chatter = scene.add.timeline([]);
+  for (let i = 0; i < 10; i++) {
+    chatter.add({
+      at: PhaserMath.Between(500, 5500),
+      run: () =>
+        playMessageAudio(
+          randomGibberishSentence(PhaserMath.Between(5, 20)),
+          voices[i % voices.length],
+          scene.sound.mute ? 0 : scene.sound.volume,
+          scene
+        ),
+    });
+  }
+  chatter.play();
 
   return { villagers: [innkeeper, villager1, villager2, villager3], dialog };
 }
@@ -541,6 +566,11 @@ function completeTownMeeting(player: Player, dialog: DialogTimeline, villagers: 
 export function townMeeting1(player: Player) {
   const { dialog, villagers } = initTownMeeting(player);
 
+  let start = Date.now();
+  dialog.timeline.add({
+    from: 1500,
+    run: () => console.log('Dialog started', Date.now() - start),
+  });
   dialog.add(
     'It looks like the town is having a meeting. I should listen in to see if I can learn anything else about the clocktower.',
     'player_portrait',

@@ -167,3 +167,20 @@ export function fastCos(angle: number): number {
   const index = Math.floor(((angle % (Math.PI * 2)) / (Math.PI * 2)) * cosTable.length);
   return cosTable[index];
 }
+
+function randomGibberishWord(length = 5) {
+  const consonants = 'bcdfghjklmnpqrstvwxyz';
+  const vowels = 'aeiou';
+  let word = '';
+  for (let i = 0; i < length; i++) {
+    word +=
+      i % 2 === 0
+        ? consonants[Math.floor(Math.random() * consonants.length)]
+        : vowels[Math.floor(Math.random() * vowels.length)];
+  }
+  return word;
+}
+
+export function randomGibberishSentence(wordCount = 5) {
+  return Array.from({ length: wordCount }, () => randomGibberishWord()).join(' ') + '.';
+}

@@ -141,8 +141,12 @@ export function playMessageAudio(
         if (stopRequested) break;
 
         const letter = words[i][0];
-        if (letter.charCodeAt(0) >= 97 && letter.charCodeAt(0) <= 122) {
+        const char = letter.charCodeAt(0);
+        if (char >= 97 && char <= 122) {
           await playAudio(letter);
+        } else {
+          // Choose letters for non-alphabetic characters
+          await playAudio(String.fromCharCode((char % 25) + 97));
         }
       }
       resolve(); // Resolve the promise once all playback is complete
