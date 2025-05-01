@@ -166,13 +166,14 @@ export class LockpickDialog extends Dialog {
     const y2 = y - offset + current;
     const y3 = y + current;
 
+    // Pin body
     graphics.fillStyle(0xaa7f40);
     graphics.fillRect(x, y2, PIN_WIDTH, offset);
 
     // Pin tip
     graphics.fillTriangle(x, y3, x + PIN_WIDTH, y3, x + PIN_WIDTH / 2, y3 + 7);
 
-    // Draw a spring
+    // Spring math
     const springStart = y - TOTAL_HEIGHT + SPRING_SIZE;
     const springEnd = y1 + 8;
     const springHeight = springEnd - springStart;
@@ -180,8 +181,8 @@ export class LockpickDialog extends Dialog {
     const coils = Math.floor((TOTAL_HEIGHT - offset - 20) / SPRING_SIZE);
     const coilHeight = springHeight / coils;
 
+    // Draw the spring
     graphics.lineStyle(3, 0x696a6a);
-
     for (let c = 0; c < coils; c++) {
       graphics.lineBetween(x, springStart + (c + 1) * coilHeight, x + PIN_WIDTH, springStart + c * coilHeight);
       graphics.lineBetween(x, springStart + c * coilHeight, x + PIN_WIDTH, springStart + c * coilHeight);
@@ -195,7 +196,9 @@ export class LockpickDialog extends Dialog {
     if (!this.active) return;
     this.active = false;
 
-    let first = true;
+    const correct = this.order[this.answer.length] === index;
+
+    let firstYoyo = true;
     this.tweens.add({
       targets: this.lockpick,
       angle: -1,
@@ -203,31 +206,34 @@ export class LockpickDialog extends Dialog {
       duration: 100,
       yoyo: true,
       onYoyo: () => {
-        if (first) {
-          if (this.order[this.answer.length] === index) {
-            if (this.target[index] === INITIAL_TARGET) this.target[index] = this.offsets[index];
-            else this.target[index] = INITIAL_TARGET;
-
-            this.answer.push(index);
+        if (firstYoyo) {
+          if (correct) {
             this.sound.playAudioSprite('sfx', 'button');
+
+            this.target[index] = this.offsets[index];
+            this.answer.push(index);
           } else {
             this.sound.playAudioSprite('sfx', this.answer.length === 0 ? 'button' : 'safe_click');
 
-            for (let i = 0; i < PINS; i++) {
-              this.target[i] = INITIAL_TARGET;
-            }
+            this.target[index] = MIN_OFFSET;
             this.answer = [];
           }
 
           this.checkPins();
         }
 
-        first = false;
+        firstYoyo = false;
       },
       onComplete: () => {
         this.lockpick.setAngle(0);
         this.lockpick.y = 0;
         this.active = true;
+
+        if (!correct) {
+          for (let i = 0; i < PINS; i++) {
+            this.target[i] = INITIAL_TARGET;
+          }
+        }
       },
     });
   }
