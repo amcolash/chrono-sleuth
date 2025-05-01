@@ -52,6 +52,7 @@ export const sceneList = [
   'MemoryDialog',
   'SliderDialog',
   'Books',
+  'LockpickDialog',
 ];
 
 export const signList: SignType[] = Object.keys(SignType)

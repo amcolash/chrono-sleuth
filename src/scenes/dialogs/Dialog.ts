@@ -86,11 +86,11 @@ export abstract class Dialog extends Scene {
       }
 
       // Add stroke overlaid on top of the dialog
-      this.add.container(Config.width / 2, Config.height / 2, [
+      this.container.add(
         this.add
           .rectangle(0, 0, Config.width * dialogRatio, Config.height * dialogRatio)
-          .setStrokeStyle(stroke, getColorNumber(Colors.Tan)),
-      ]);
+          .setStrokeStyle(stroke, getColorNumber(Colors.Tan))
+      );
     }
 
     this.input.keyboard?.on('keydown-ESC', () => {

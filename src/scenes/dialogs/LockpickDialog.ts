@@ -72,7 +72,7 @@ export class LockpickDialog extends Dialog {
     for (let i = 0; i < PINS; i++) {
       this.order.push(i);
       this.offsets.push(PhaserMath.Between(MIN_OFFSET, MAX_OFFSET));
-      this.current.push(0);
+      this.current.push(PhaserMath.Between(-20, 20));
       this.target.push(INITIAL_TARGET);
     }
 
@@ -125,6 +125,9 @@ export class LockpickDialog extends Dialog {
     this.lockpick.lineBetween(200, Y + 105, 225, Y + 95);
     this.lockpick.lineBetween(225, Y + 95, 225, Y + 85);
 
+    // Start lockpick at the left
+    this.lockpick.setX(-360);
+
     this.updateLayout(1);
   }
 
@@ -159,6 +162,7 @@ export class LockpickDialog extends Dialog {
     const current = this.current[index];
     const offset = this.offsets[index];
 
+    // Pin position math
     const x = 0;
     const y = Y + MIN_OFFSET;
 
@@ -295,6 +299,9 @@ export class LockpickDialog extends Dialog {
 
   update(time: number, delta: number) {
     super.update(time, delta);
+
+    if (this.container.alpha < 1) return;
+    console.log(this.lockpick.x);
 
     this.handleKeys(time);
     this.updateLayout(delta);
