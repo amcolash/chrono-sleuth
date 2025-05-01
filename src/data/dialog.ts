@@ -680,7 +680,7 @@ export const PropDialogs: { [key in PropType]?: Dialog<Prop>[] } = {
       onCompleted: (player) => bedtime(player),
     },
     {
-      messages: ['A comfortable bed.', 'I should rest here if I need to.'],
+      messages: ['This looks like a comfortable bed.', 'I should rest here tonight after investigating.'],
     },
   ],
   [PropType.LibraryShelf]: [
