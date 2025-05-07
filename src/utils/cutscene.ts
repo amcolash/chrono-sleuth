@@ -522,18 +522,21 @@ function initTownMeeting(player: Player) {
   const message = player.message;
   const dialog = new DialogTimeline(scene, message);
 
-  // Lok back and forth
-  dialog.timeline.add({ from: 1800, run: () => (player.previousPosition.x = player.x - 1) });
-  dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x + 1) });
-  dialog.timeline.add({ from: 700, run: () => (player.previousPosition.x = player.x - 1) });
-  dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x + 1) });
-  dialog.timeline.add({ from: 500, run: () => (player.previousPosition.x = player.x - 1) });
+  // Look back and forth with dynamic duration between each time
+  const durations = [1800, 500, 700, 500, 500];
+  const duration = durations.reduce((prev, cur) => prev + cur);
+  for (let i = 0; i < durations.length; i++) {
+    dialog.timeline.add({
+      from: durations[i],
+      run: () => (player.previousPosition.x = player.x - (i % 2 === 0 ? 1 : -1)),
+    });
+  }
 
   // Play some crowd chatter
   const chatter = scene.add.timeline([]);
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < Math.floor(duration / 450); i++) {
     chatter.add({
-      at: PhaserMath.Between(500, 4500),
+      at: PhaserMath.Between(500, duration - 500),
       run: () =>
         playMessageAudio(
           randomGibberishSentence(PhaserMath.Between(5, 20)),
