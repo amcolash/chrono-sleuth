@@ -237,7 +237,7 @@ export const WarpData: Record<WarpType, Data> = {
   },
 
   [WarpType.InnEntrance]: {
-    x: 1300,
+    x: 1345,
     y: 650,
     key: Key.Up,
     warpTo: WarpType.Inn,

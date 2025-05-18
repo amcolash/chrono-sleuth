@@ -5,6 +5,7 @@ import { Layer } from '../../data/layers';
 import { SignData } from '../../data/sign';
 import { LazyInitialize, SignType } from '../../data/types';
 import { Game } from '../../scenes/Game';
+import { Colors, getColorNumber } from '../../utils/colors';
 import { initializeObject } from '../../utils/interactionUtils';
 import { isDaytime } from '../../utils/lighting';
 import { shouldInitialize } from '../../utils/util';
@@ -74,5 +75,11 @@ export class Sign extends Physics.Arcade.Image implements LazyInitialize {
 
     this.text?.setPosition(this.x, this.y);
     this.light?.setPosition(this.x, this.y);
+
+    if (this.initialized && Math.abs(this.player.x - this.x) < 100) {
+      this.setTint(getColorNumber(Colors.ButtonActive));
+    } else {
+      this.setTint(0xffffff);
+    }
   }
 }

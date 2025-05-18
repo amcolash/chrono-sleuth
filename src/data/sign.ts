@@ -18,7 +18,7 @@ export const SignData: Record<SignType, Data> = {
     text: 'Inn',
   },
   [SignType.Train]: {
-    x: 235,
+    x: 270,
     y: 555,
     text: 'Train',
   },
