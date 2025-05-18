@@ -72,7 +72,7 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
     {
       at: 12000,
       run: () => {
-        if (scene.textures.exists('warp')) {
+        if (scene.textures.exists('props')) {
           scene.scene.start('Game');
         } else {
           scene.scene.start('Preloader');

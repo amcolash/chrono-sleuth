@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, Scene, Tweens } from 'phaser';
 import BBCodeText from 'phaser3-rex-plugins/plugins/bbcodetext';
 
 import { maxMessageLines } from '../classes/UI/Message';
@@ -31,6 +31,8 @@ export function animateText(
     loop: true,
   });
 
+  let tween: Tweens.Tween;
+
   // use a Promise to wait for the animation to complete
   return {
     promise: new Promise<void>((resolve) => {
@@ -58,12 +60,15 @@ export function animateText(
         // target.text = visibleText;
 
         // animate each letter by changing the font size from normal, to large and back to normal size
-        animateLetter(target, message, visibleText, lastLetterIndex, fontSize, speedInMs);
+        tween = animateLetter(target, message, visibleText, lastLetterIndex, fontSize, speedInMs);
       };
     }),
     stop: () => {
       timer.destroy();
-      target.text = message;
+      if (tween) tween.destroy();
+
+      // Tween sometimes doesn't seem to actually stop properly. This ensures the text is set to final value even if tween happens again
+      target.scene.time.addEvent({ delay: 50, callback: () => (target.text = message) });
 
       if (target.getWrappedText().length > maxMessageLines) console.error('Message too long!', message);
     },
@@ -77,9 +82,9 @@ function animateLetter(
   lastLetterIndex: number,
   fontSize: number,
   speedInMs: number
-) {
+): Tweens.Tween {
   let yoyo = false;
-  target.scene.tweens.addCounter({
+  const tween = target.scene.tweens.addCounter({
     duration: speedInMs / 2,
     from: fontSize,
     to: fontSize * 1.25,
@@ -101,6 +106,8 @@ function animateLetter(
       if (yoyo) target.text = visibleText;
     },
   });
+
+  return tween;
 }
 
 function getVisibleTextWithBBCode(message: string, visibleLength: number) {
