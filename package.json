@@ -32,7 +32,7 @@
     "svgo": "^3.3.2",
     "terser": "^5.39.0",
     "typescript": "^5.8.3",
-    "vite": "^6.3.4",
+    "vite": "^6.3.5",
     "vite-plugin-generate-file": "^0.3.1",
     "vite-plugin-pwa": "^1.0.0"
   },
