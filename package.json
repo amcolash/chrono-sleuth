@@ -24,7 +24,6 @@
     "phaser3-rex-plugins": "^1.80.15"
   },
   "devDependencies": {
-    "@here/harp-atlas-tools": "^0.28.0",
     "@tauri-apps/cli": "^2.5.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/deep-equal": "^1.0.4",
@@ -38,6 +37,7 @@
     "vite-plugin-pwa": "^1.0.0"
   },
   "optionalDependencies": {
+    "@here/harp-atlas-tools": "^0.28.0",
     "sharp": "^0.34.1"
   }
 }
