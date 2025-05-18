@@ -147,8 +147,10 @@ export function load(scene: Game) {
         scene.player.quests.createUI();
         scene.player.journal.createUI();
 
-        if (newGame) townIntro(scene);
-        else {
+        if (newGame) {
+          scene.player.gameState.initialized = true;
+          townIntro(scene);
+        } else {
           savedata.inventory.sort((a, b) => a.type - b.type).forEach((item) => inventory.addItem(item, true));
 
           // Journals are second, quests third. Both have side-effects, but quests always happen last
