@@ -1,4 +1,4 @@
-import { GameObjects, Math as PhaserMath, Physics, Scene, Time } from 'phaser';
+import { GameObjects, Math as PhaserMath, Physics, Scene, Time, Types } from 'phaser';
 
 import { Item } from '../classes/Environment/Item';
 import { Prop } from '../classes/Environment/Prop';
@@ -13,6 +13,7 @@ import { ItemType, MusicType, PropType, QuestType, WallType, WarpType } from '..
 import { voices } from '../data/voices';
 import { WallData } from '../data/wall';
 import { Game } from '../scenes/Game';
+import { DialogTimeline } from './DialogTimeline';
 import { rotationCorrection, updateAnimation } from './animations';
 import { fontStyle } from './fonts';
 import { getProp, getWall, hasItem, hasUsedItem, updateWarpLocked } from './interactionUtils';
@@ -34,9 +35,86 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
 
   player.setAngle(rotationCorrection);
 
-  const timeline3 = scene.add.timeline([
+  const timeline = new DialogTimeline(scene, message);
+
+  timeline.add([
     {
-      at: 1500,
+      from: 2500,
+      tween: { targets: player, x: 850 * scale, duration: 3000, onComplete: () => player.anims.pause() },
+      run: () => {
+        player.anims.resume();
+        scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 });
+      },
+    },
+    {
+      from: 1600,
+      run: () => scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 }),
+    },
+    {
+      from: 3900,
+      run: () => {
+        player.setFlipX(true);
+        player.setAngle(-rotationCorrection);
+      },
+    },
+    {
+      from: 1000,
+      run: () => {
+        player.setFlipX(false);
+        player.setAngle(rotationCorrection);
+      },
+    },
+  ]);
+
+  timeline.addDialog(
+    [
+      'What a beautiful mountain-scape. I almost forgot where I am headed.',
+      'It’s been three days since the letter arrived... It has been many years since I last visited that sleepy old town.',
+      'Rumors swirl of strange occurrences. People disappearing, clocks that never strike the hour, and a darkness that lingers beneath the surface.',
+    ],
+    'player_portrait',
+    1000
+  );
+
+  timeline.add([
+    {
+      from: 1500,
+      tween: {
+        targets: player,
+        x: 1200 * scale,
+        duration: 2500,
+        onComplete: () => player.anims.pause(),
+      },
+      run: () => {
+        player.anims.resume();
+        scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 });
+      },
+    },
+    {
+      from: 1600,
+      run: () => scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 }),
+    },
+    {
+      from: 2400,
+      run: () => {
+        player.setFlipX(true);
+        player.setAngle(-rotationCorrection);
+      },
+    },
+  ]);
+
+  timeline.addDialog(
+    [
+      'No doubt about it, this will be a strange journey.',
+      'Whatever awaits me in this town, it’s certain that nothing will ever be the same again.',
+    ],
+    'player_portrait',
+    1000
+  );
+
+  timeline.add([
+    {
+      from: 1500,
       tween: { targets: player, x: 850 * scale, duration: 2500, onComplete: () => player.anims.pause() },
       run: () => {
         player.anims.resume();
@@ -44,15 +122,15 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
       },
     },
     {
-      at: 3100,
+      from: 1600,
       run: () => scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 }),
     },
     {
-      at: 6000,
+      from: 2900,
       run: () => fadeOut(scene, 500),
     },
     {
-      at: 7500,
+      from: 1500,
       run: () => {
         // Somewhat silly hack to fade in/out text, since camera had just faded out.
         // Move camera to a completely different area (text is fixed), then fade in camera which fades text
@@ -66,11 +144,11 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
       },
     },
     {
-      at: 10000,
+      from: 2500,
       run: () => fadeOut(scene, 500),
     },
     {
-      at: 12000,
+      from: 2000,
       run: () => {
         if (scene.textures.exists('props')) {
           scene.scene.start('Game');
@@ -81,97 +159,7 @@ export function trainIntro(scene: Scene, player: GameObjects.Sprite) {
     },
   ]);
 
-  const timeline2 = scene.add.timeline([
-    {
-      at: 1500,
-      tween: {
-        targets: player,
-        x: 1200 * scale,
-        duration: 2500,
-        onComplete: () => player.anims.pause(),
-      },
-      run: () => {
-        player.anims.resume();
-        scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 });
-      },
-    },
-    {
-      at: 3100,
-      run: () => scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 }),
-    },
-    {
-      at: 5500,
-      run: () => {
-        player.setFlipX(true);
-        player.setAngle(-rotationCorrection);
-      },
-    },
-
-    {
-      at: 6500,
-      run: () => {
-        message.setDialog(
-          {
-            messages: [
-              'No doubt about it, this will be a strange journey.',
-              'Whatever awaits me in this town, it’s certain that nothing will ever be the same again.',
-            ],
-            onCompleted: () => timeline3.play(),
-          },
-          undefined,
-          'player_portrait'
-        );
-      },
-    },
-  ]);
-
-  const timeline1 = scene.add.timeline([
-    {
-      at: 2500,
-      tween: { targets: player, x: 850 * scale, duration: 3000, onComplete: () => player.anims.pause() },
-      run: () => {
-        player.anims.resume();
-        scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 });
-      },
-    },
-    {
-      at: 4100,
-      run: () => scene.sound.playAudioSprite('sfx', 'ladder', { rate: 0.6 }),
-    },
-    {
-      at: 7000,
-      run: () => {
-        player.setFlipX(true);
-        player.setAngle(-rotationCorrection);
-      },
-    },
-    {
-      at: 8000,
-      run: () => {
-        player.setFlipX(false);
-        player.setAngle(rotationCorrection);
-      },
-    },
-    {
-      at: 9000,
-      run: () => {
-        message.setDialog(
-          {
-            messages: [
-              'What a beautiful mountain-scape. I almost forgot where I am headed.',
-              'It’s been three days since the letter arrived... It has been many years since I last visited that sleepy old town.',
-              'Rumors swirl of strange occurrences. People disappearing, clocks that never strike the hour, and a darkness that lingers beneath the surface.',
-            ],
-            onCompleted: () => timeline2.play(),
-          },
-          undefined,
-          'player_portrait'
-        );
-      },
-    },
-  ]);
-
-  timeline1.play();
+  timeline.start();
 }
 
 export function townIntro(scene: Game) {
@@ -453,54 +441,6 @@ export function bedtime(player: Player) {
     .play();
 }
 
-export async function delay(time: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, time));
-}
-
-export function timelineDialog(message: Message, timeline: Time.Timeline, messages: string[], target: any) {
-  timeline.pause();
-  message.setDialog({ messages, onCompleted: () => timeline.resume() }, target);
-}
-
-class DialogTimeline {
-  scene: Scene;
-  message: Message;
-  timeline: Time.Timeline;
-  onComplete: () => void;
-
-  constructor(scene: Scene, message: Message) {
-    this.scene = scene;
-    this.message = message;
-    this.timeline = scene.add.timeline([]);
-
-    scene.input.keyboard?.on('keydown-BACK_SLASH', () => {
-      this.timeline.stop();
-      this.message.setDialog();
-      this.onComplete();
-    });
-  }
-
-  add(m: string | string[], portrait: string, time: number = 500) {
-    const messages: string[] = typeof m === 'string' ? [m] : m;
-    this.timeline.add({
-      from: time,
-      run: () => {
-        this.timeline.pause();
-        this.message.setDialog({ messages, onCompleted: () => this.timeline.resume() }, undefined, portrait);
-      },
-    });
-  }
-
-  setComplete(fn: () => void) {
-    this.onComplete = fn;
-
-    this.timeline.add({
-      from: 500,
-      run: fn,
-    });
-  }
-}
-
 function initTownMeeting(player: Player) {
   const scene = player.scene;
 
@@ -552,8 +492,12 @@ function initTownMeeting(player: Player) {
 }
 
 function completeTownMeeting(player: Player, dialog: DialogTimeline, villagers: GameObjects.Image[]) {
-  dialog.add('Well, it is getting late. I should head to the inn and turn in for the night.', 'player_portrait', 1500);
-  dialog.setComplete(() => {
+  dialog.addDialog(
+    'Well, it is getting late. I should head to the inn and turn in for the night.',
+    'player_portrait',
+    1500
+  );
+  dialog.setOnComplete(() => {
     fadeOut(player.scene, 250, () => {
       lockCamera(player);
       warpTo(WarpType.InnEntrance, WarpType.Inn, player);
@@ -561,19 +505,19 @@ function completeTownMeeting(player: Player, dialog: DialogTimeline, villagers: 
     });
   });
 
-  dialog.timeline.play();
+  dialog.start();
 }
 
 export function townMeeting1(player: Player) {
   const { dialog, villagers } = initTownMeeting(player);
 
-  dialog.add(
+  dialog.addDialog(
     'It looks like the town is having a meeting. I should listen in to see if I can learn anything else about the clocktower.',
     'player_portrait',
     1500
   );
 
-  dialog.add(
+  dialog.addDialog(
     [
       "Alright everyone, let's get started with the meeting tonight.",
       `For those unaware, we have a new person joining tonight. ${playerFirstName} has been investigating the clocktower mystery.`,
@@ -583,17 +527,17 @@ export function townMeeting1(player: Player) {
     2500
   );
 
-  dialog.add(
+  dialog.addDialog(
     `Welcome ${playerFirstName}! We are thrilled to have you here. Great job on investigating the mystery of the clock tower!`,
     'innkeeper_portrait'
   );
 
-  dialog.add(
+  dialog.addDialog(
     "Now, let's get to the main topic of the evening. Has anyone noticed any oddities? Yesterday, the clock stopped and today I heard from Johan that some of his tools were missing.",
     'mayor_portrait'
   );
 
-  dialog.add('TODO MORE DIALOG', 'player_portrait');
+  dialog.addDialog('TODO MORE DIALOG', 'player_portrait');
 
   completeTownMeeting(player, dialog, villagers);
 }
@@ -601,7 +545,7 @@ export function townMeeting1(player: Player) {
 export function townMeeting2(player: Player) {
   const { dialog, villagers } = initTownMeeting(player);
 
-  dialog.add('TODO MORE DIALOG', 'player_portrait');
+  dialog.addDialog('TODO MORE DIALOG', 'player_portrait');
 
   completeTownMeeting(player, dialog, villagers);
 }
