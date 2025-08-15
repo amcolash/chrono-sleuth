@@ -38,6 +38,6 @@
   },
   "optionalDependencies": {
     "@here/harp-atlas-tools": "^0.28.0",
-    "sharp": "^0.34.1"
+    "sharp": "^0.34.2"
   }
 }
